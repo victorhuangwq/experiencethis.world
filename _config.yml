@@ -6,7 +6,7 @@ title: Victor Huang
 tagline: 'funky stuff ahead'
 email: victorhuangwq@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Always trying new technologies, on a lookout for new experiences. 
+  Always trying new tech, on the lookout for new experiences. 
   Product & Software. CS @ Carnegie Mellon
 baseurl: '/' # the subpath of your site, e.g. /blog
 url: http://victorhuangwq.github.io
