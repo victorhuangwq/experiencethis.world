@@ -3,10 +3,10 @@ markdown:         kramdown
 highlighter:      rouge
 
 title: Victor Huang
-tagline: 'Product & Software'
+tagline: 'funky stuff ahead'
 email: victorhuangwq@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Always on the lookout for new technologies and experiences. 
+  Always trying new technologies, on a lookout for new experiences. 
   Product & Software. CS @ Carnegie Mellon
 baseurl: '/' # the subpath of your site, e.g. /blog
 url: http://victorhuangwq.github.io

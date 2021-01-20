@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "LoVR - virtual reality dating"
+date:   2019-09-30 07:32:11 -0500
+categories: projects hackathons
+tags:
+    - VR
+    - virtual reality
+    - hackathon
+    - award
+    - fun
+    - quirky
+---
+![LoVR Screenshot](/assets/images/LoVR.jpg)
+> LoVR - Virtual Reality, Real Love.
+
+In this project we rethink what dating apps can be, and used VR technology to create a completely different online matchmaking experience.
+
+When the user puts on the virtual reality headset and then use LoVR, it will show you a 3D mockup of a possible match. From there you can see a 15 seconds snapshot of them, together with actions and recording, allowing you to **feel that they are right in front of you**. This is alongside the typical picture and self-introduction. As per most dating apps, swipe right if you like the person, swipe left if you don't!
+
+We came up with the idea by realizing that **the problem with current dating apps is that a person's personality is left out of the equation**! We as love-seekers understand a person's personality from their behavior and how they speak, much more than some pictures and flavor text.
+
+Our team's demonstration was definitely one of the highlight during the hackathon's project exhibition. People particularly enjoyed the effort we put into injecting interesting personalities in the dating matches available in the demo (the voice acting and model movement really sold it). They also *really really* felt satisfaction from seeing the model fly away when they swiped left. 
+
+This project is done in a team of four for HackCMU 2019. It won the **first prize**. [Our Hackathon DevPost](https://devpost.com/software/lovr-find-real-dates-through-vr). If you are interested in more VR goodness, do check out [Matthew Komar](https://compuginger.com/), he is the VR enthusiast on our team.
