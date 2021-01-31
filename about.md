@@ -6,7 +6,7 @@ sidebar_link: true
 
 <img style="align:center;height:20rem;padding-left:10rem,padding-right:10rem;" src="/assets/images/cut_cake.png" alt="display pic">
 
-I'm born and raised in Singapore, the sunny amazing island near the equator. Currently in Pittsburgh, Pennsylvania for my undergraduate studies. I made this website so that I can *somewhat* document all the projects I have worked on, all the musings and ideas that I had. I try to write to entertain; if you aren't satisifed you can send a strongly worded email to me :).
+I'm born and raised in Singapore, the sunny amazing island near the equator. Currently in Pittsburgh, Pennsylvania for my undergraduate studies. I made this website so that I can *somewhat* document all the projects I have worked on, all the musings and ideas that I had. I try to write to entertain; if you aren't satisifed you can send a strongly worded email to me.
 
 If anything on the site has caught your eyes, feel free to reach out via email to chat with me! 
 
