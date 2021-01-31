@@ -2,6 +2,12 @@
 # Use a comment to ensure Jekyll reads the file to be transformed into CSS later
 # only main files contain this front matter, not partials.
 ---
-$sidebar-bg-color: #ac4142   ;
+$sidebar-bg-color: #ac4142;
 $sidebar-sticky: false;
 @import "hydeout";
+
+#sidebar {
+    .site-title {
+        font-family: 'Pangolin', sans-serif;
+    }
+}

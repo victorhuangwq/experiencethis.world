@@ -19,7 +19,7 @@ Wanted Circles is a novel job referral application that makes use of **ephemeral
  - A user has only **30 seconds** to decide whether to apply to the job or refer his friends! 
  - If user does not refer or apply, the job posting will disappear temporary (for a day or so), to reappear on the main job website.
 
-This creates greater, more **RELEVANT** reach for the job posting! Because people would know about jobs that they might not have known about, and for jobs that they might be a better fit for (as determined by their friends)! The time pressure from disappearing content makes people more eager to refer their friends.
+This creates greater, more **relevant** reach for the job posting! Because people would know about jobs that they might not have known about, and for jobs that they might be a better fit for (as determined by their friends)! The time pressure from disappearing content makes people more eager to refer their friends.
 
 
 This project was a result of a challenge by a hackathon sponsor, [wanted jobs](https://www.wanted.jobs/), on how to gamify their job referral process to faciliate and scale job referrals on their website. We worked on this project at [HackOMania 2019](https://hackomania.geekshacking.com/), where we won **first runner up**. The prototype was created using Unity 3D.

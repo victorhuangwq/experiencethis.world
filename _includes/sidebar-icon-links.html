@@ -1,9 +1,14 @@
 <nav id="sidebar-icon-links">
+      <a id="contact"
+      class="icon" title="Contact" aria-label="Contact"
+      href="mailto:victorhuangwq@gmail.com">
+      {% include svg/contact.svg %}
+    </a>
 
     <a id="github-link"
         class="icon" title="Github Page" aria-label="Github Page"
         href="https://github.com/victorhuangwq">
-    {% include svg/github.svg %}
+        {% include svg/github.svg %}
     </a>
 
     <a id="linkedin-link"
@@ -11,7 +16,7 @@
        href="https://www.linkedin.com/in/victorhuangwq/">
       {% include svg/linkedin.svg %}
     </a>
-  
+
     {% comment %}
       Check if we have tag or search pages page active before linking to it.
     {% endcomment %}
