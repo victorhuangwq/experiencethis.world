@@ -16,7 +16,7 @@ The amazing sketch of me cutting a cake is done by my friend, [Bradley Teo](http
 
 - **Carnegie Mellon University, Aug 2019 - Current**
  
-    Major in Computer Science. Intending to minor in HCI or Machine Learning
+    BSc in Computer Science, Additional Major in Human-Computer Interaction
 
 - **NUS High School, Jan 2011 - Dec 2016**
  
