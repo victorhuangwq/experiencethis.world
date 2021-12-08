@@ -16,7 +16,7 @@ tags:
 
 **Team**  
 Lily Ting, Mia Tang, Victor Huang (me) & Theo Mandin-Lee  
-We are adorably named, Lagrange Mean Value Theorem (LMVT)
+Our team is adorably named as, Lagrange Mean Value Theorem (LMVT)
 
 **My roles**  
 - UX Researcher, contributed in UX research by interviewing users and gathering insights
