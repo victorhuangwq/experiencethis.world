@@ -2,7 +2,7 @@
 layout: post
 title:  "ReportChat - Better feedback for users"
 date:   2020-12-06 08:00:00 -0500
-categories: projects ucre school
+categories: projects school
 tags:
     - social media
     - user research
