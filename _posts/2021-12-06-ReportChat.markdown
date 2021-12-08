@@ -15,7 +15,7 @@ tags:
 
 
 **Team**  
-Lily Ting, Mia Tang, Victor Huang (me) & Theo Mandin-Lee
+Lily Ting, Mia Tang, Victor Huang (me) & Theo Mandin-Lee  
 We are adorably named, Lagrange Mean Value Theorem (LMVT)
 
 **My roles**  
