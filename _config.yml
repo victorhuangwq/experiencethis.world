@@ -25,6 +25,7 @@ plugins:
   - jekyll-feed
   - jekyll-gist
   - jekyll-paginate
+  - jekyll-redirect-from
 
 sidebar_home_link:  true
 
