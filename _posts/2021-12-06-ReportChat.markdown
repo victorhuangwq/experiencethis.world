@@ -1,7 +1,9 @@
 ---
 layout: post
 title:  "ReportChat - Better feedback for users"
-date:   2020-12-06 08:00:00 -0500
+date:   2021-12-06 08:00:00 -0500
+redirect_from:
+    - /projects/school/2020/12/06/ReportChat.html
 categories: projects school
 tags:
     - social media
