@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Community Improver - improving Reddit communities through engagement"
+title:  "Improving Reddit communities through engagement"
 date:   2022-12-11 08:00:00 -0500
 categories: projects school
 tags:
