@@ -16,7 +16,7 @@ author:
   name: 'Victor Huang'
   url: https://www.linkedin.com/in/victorhuangwq/
 
-paginate: 5
+paginate: 10
 
 # Build settings
 remote_theme: fongandrew/hydeout

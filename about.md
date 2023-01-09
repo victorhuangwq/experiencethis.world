@@ -14,7 +14,7 @@ The amazing sketch of me cutting a cake is done by my friend, [Bradley Teo](http
 
 ### Education
 
-- **Carnegie Mellon University, Aug 2019 - Current**
+- **Carnegie Mellon University, Aug 2019 - May 2023**
  
     BSc in Computer Science, Additional Major in Human-Computer Interaction
 
