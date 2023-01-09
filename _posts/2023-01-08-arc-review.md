@@ -9,7 +9,6 @@ tags:
 ---
 
 ![Arc Screenshot](/assets/images/arc-ss.png)
-
 What is one word that you use to describe the experience with your browser?
 
 Mine would be the various synonyms of the word: **messy** 
