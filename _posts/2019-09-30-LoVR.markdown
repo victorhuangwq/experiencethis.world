@@ -10,6 +10,8 @@ tags:
     - award
     - fun
     - quirky
+hidden: false
+
 ---
 ![LoVR Screenshot](/assets/images/LoVR.jpg)
 > LoVR - Virtual Reality, Real Love.

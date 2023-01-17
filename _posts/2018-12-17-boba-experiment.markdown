@@ -8,6 +8,7 @@ tags:
     - do by learning
     - food
     - cute
+hidden: false
 ---
 
 ![Boba Development](/assets/images/boba_development.gif)

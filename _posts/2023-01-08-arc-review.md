@@ -6,6 +6,7 @@ categories: reviews
 tags:
     - reviews
     - browser
+hidden: false
 ---
 
 ![Arc Screenshot](/assets/images/arc-ss.png)

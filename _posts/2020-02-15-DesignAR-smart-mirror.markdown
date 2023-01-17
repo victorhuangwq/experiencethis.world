@@ -9,6 +9,7 @@ tags:
     - hackathon
     - award
     - fun
+hidden: false
 ---
 
 ![Diagram](/assets/images/original.jfif)

@@ -9,6 +9,7 @@ tags:
     - award
     - sponsored
     - gamification
+hidden: false
 ---
 
 ![Wanted Circles](/assets/images/wanted_circles.gif)

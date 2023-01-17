@@ -8,6 +8,7 @@ tags:
     - prototyping
     - reddit
     - fun
+hidden: false
 ---
 
 Reddit can be a toxic place, sadly. According to this [New Scientist](https://www.newscientist.com/article/2334043-more-than-one-in-eight-reddit-users-publish-toxic-posts/#:~:text=More%20than%20one%20in%20eight%20Reddit%20users%20publish%20toxic%20content,the%20social%20news%20aggregation%20platform.) article

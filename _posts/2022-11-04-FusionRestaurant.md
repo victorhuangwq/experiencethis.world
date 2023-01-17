@@ -7,6 +7,7 @@ tags:
     - AI
     - prototyping
     - fun
+hidden: false
 ---
 
 What if we can take a Korean and Japanese restaurant, we can merge and form a new virtual Asian Fusion restaurant? In a prototype, I explored the idea taking brand concepts from each restaurant to piece together a new virtual restaurant concept, so as to encourage cross-restaurant sales.

@@ -11,6 +11,7 @@ tags:
     - design
     - school
     - chatbot
+hidden: false
 ---
 
 ![Reportchat](/assets/images/report-chat-solution.jpg)
