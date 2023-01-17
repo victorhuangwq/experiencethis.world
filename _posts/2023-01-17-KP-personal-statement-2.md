@@ -13,4 +13,4 @@ More than about developing products, this experience taught me what I should be 
 
 I learnt that I should work on products that solve problems that I’m personally invested in. When the campaign started to show signs of failure - I spent time figuring out how to run better social media ads, instead of learning why people don’t see the value of the product; I was not inherently driven to solve the underlying problem. I also realized that I needed to own the product that I work on, and be proud of it. I was afraid of sharing what I made with my friends and family because I was afraid of judgment, when in fact sharing with them would have gotten us more feedback on the product, and also more potential first customers.
 
-I’m glad I had this experience - I understand that my own personal motivation and alignment with the problem that I’m solving will greatly affect the results.
+I’m glad I had this experience - I understand that how I personally align with the problem that I'm solving can greatly affect the results.
