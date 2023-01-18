@@ -7,7 +7,7 @@ hidden: true
 
 ### What impact do you want to have on the world and why?
 
-I want effective teaching to be widely available, so that people can be inspired, understand the content better and enjoy learning.
+I want effective teaching to be widely available, so that people can enjoy learning, understand the content better, and be inspired.
 
 The right pedagogy matters in education, just as important as the content that is provided. The learning experience of a student will affect their impression of the content and the field that the content is in. Learning how the mechanics of how an airplane works is one thing, being inspired and fascinated by the intricacies while learning is another. This affects who gets inspired to pursue a STEM career, or further studies in History.
 
