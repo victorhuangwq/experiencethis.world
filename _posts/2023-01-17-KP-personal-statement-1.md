@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  "Kleiner Perkins Fellow Personal Statement 1"
+title:  "Kleiner Perkins Personal Statement 1"
 date:   2023-01-17 08:00:00 -0500
 hidden: true
 ---
 
 ### What impact do you want to have on the world and why?
 
-I want good teaching to be widely available. Effective teaching enables people to learn better, with more enjoyment.
+I want effective teaching to be widely available, so that people can be inspired, learn better and enjoy learning.
 
 The right pedagogy matters in education, just as important as the content that is provided. The learning experience of a student will affect their impression of the content and the field that the content is in. Learning how the mechanics of how an airplane works is one thing, being inspired and fascinated by the intricacies while learning is another. This affects who gets inspired to pursue a STEM career, or further studies in History.
 
