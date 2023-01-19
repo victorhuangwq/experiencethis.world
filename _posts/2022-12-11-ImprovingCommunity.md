@@ -2,12 +2,13 @@
 layout: post
 title:  "Improving Reddit communities through engagement"
 date:   2022-12-11 08:00:00 -0500
-categories: projects school
+categories: projects
 tags:
     - AI
     - prototyping
     - reddit
     - fun
+    - school
 hidden: false
 ---
 
