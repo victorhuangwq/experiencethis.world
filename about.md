@@ -20,14 +20,10 @@ The amazing sketch of me cutting a cake is done by my friend, [Bradley Teo](http
  
     BSc in Computer Science, Additional Major in Human-Computer Interaction
 
-- **NUS High School, Jan 2011 - Dec 2016**
- 
-    Major with Honors in Physics, Chemistry and Computer Science. Major in Mathematics. Graduated with high distinction.
-
 ### Hobbies / Interests
 
 - Escape Rooms [Morty](https://morty.app/@xtrkil)
-- Improvisation Comedy 
-- Music (Vocals)
+- Climbing (Bouldering / Top Rope), just like everyone else in Seattle
+- Comedy (Stand-up, Improv)
 - Amatuer Film Critique (or.. I just like talking about movies)
-- Japanese Language & Culture
+- Have been learning Japanese for while, I can survive as a tourist in Japan, but I still can't watch anime without subtitles (yet).
