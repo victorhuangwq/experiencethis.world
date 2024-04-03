@@ -2,11 +2,10 @@
 markdown:         kramdown
 highlighter:      rouge
 
-title: Victor Huang
-tagline: 'interesting things ahead'
+title: experience this
 email: victorhuangwq@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  On the lookout for new experiences
+  thoughts by victor
 baseurl: '/' # the subpath of your site, e.g. /blog
 url: http://victorhuangwq.github.io
 
