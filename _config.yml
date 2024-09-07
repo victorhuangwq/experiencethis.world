@@ -4,6 +4,7 @@ highlighter:      rouge
 
 title: experience this
 email: victorhuangwq@gmail.com
+tagline: blog post detailing my projects, travels and opinions
 description: >- # this means to ignore newlines until "baseurl:"
   thoughts by victor
 baseurl: '/' # the subpath of your site, e.g. /blog

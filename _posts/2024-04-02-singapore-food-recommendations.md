@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Singapore Food Recommendations"
+description: "A list of food recommendations for my friends visiting Singapore. I grew up in Singapore, and these are the places I like to eat at. Meant to be a good sampler of the variety of food in Singapore."
 date:   2024-04-10 08:00:01 -0500
 categories: travel
 tags:
