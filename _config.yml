@@ -21,6 +21,7 @@ plugins:
   - jekyll-gist
   - jekyll-paginate
   - jekyll-redirect-from
+  - jekyll-seo-tag
 
 sidebar_home_link:  true
 
