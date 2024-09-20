@@ -19,3 +19,17 @@ $sidebar-bg-color: #ac4142;
         font-size: 1.5rem !important; /* smaller font for phones */
     }
 }
+
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.alert-info {
+    color: #305d5f;
+    background-color: #dcebeb;
+    border-color: #cee5e5;
+}
