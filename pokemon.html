@@ -1,0 +1,238 @@
+---
+permalink: /pokemon.html
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>pokémon draft: 2000s nostalgia</title>
+  <!-- ensure mobile-friendly scaling on modern devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* 2000s style: let's add some cheesy flare */
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: monospace;
+      background: linear-gradient(45deg, #ffdddd, #ddffff);
+      color: #111;
+    }
+
+    /* basic container for mobile-first */
+    .container {
+      width: 100%;
+      min-height: 100vh;
+      padding: 1rem;
+      position: relative;
+    }
+
+    /* a marquee for super old-school vibes */
+    marquee {
+      color: #c00;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* blinking text animation for comedic effect */
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .blink {
+      animation: blink 1s infinite;
+      color: #d00;
+      font-weight: bold;
+    }
+
+    h1, h2, h3, p, pre {
+      margin: 0.5rem 0;
+      line-height: 1.4;
+    }
+
+    a {
+      color: #3366bb;
+      text-decoration: underline;
+      cursor: pointer;
+      word-wrap: break-word;
+    }
+
+    .ascii-art {
+      font-size: 0.65rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    button {
+      background: #fffdc0;
+      border: 2px dashed #666;
+      padding: 0.5rem;
+      border-radius: 5px;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      cursor: pointer;
+      word-wrap: break-word;
+    }
+    button:hover {
+      background: #f2f2d0;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #quipBox {
+      margin: 0.5rem 0;
+      font-style: italic;
+    }
+
+    /* bigger screens, let's fix the container width */
+    @media (min-width: 600px) {
+      .container {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <marquee behavior="scroll" direction="left">welcome to my 2000s-inspired pokémon tcg draft mania!</marquee>
+
+    <div class="ascii-art">
+<pre>
+⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⠀⠀⠀⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠁
+⣧⡀⠀⠀⠀⠀⠙⠿⠿⠿⠿⠻⠿⠿⠟⠿⠛⠉⠀⠀⠀⠀⠀
+⣿⣷⣄⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴
+⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⣿⣿
+⣿⣿⡟⠀⠀⢰⣹⡆⠀⠀⠀⠀⠀⠀⣭⣷⠀⠀⠀⠸⣿⣿
+⣿⣿⠃⠀⠀⠈⠉⠀⠀⠤⠄⠀⠀⠀⠉⠁⠀⠀⠀⠀⢿⣿
+⣿⣿⢾⣿⣷⠀⠀⠀⠀⡠⠤⢄⠀⠀⠀⠠⣿⣿⣷⠀⢸⣿
+⣿⣿⡀⠉⠀⠀⠀⠀⠀⢄⠀⢀⠀⠀⠀⠀⠉⠉⠁⠀⠀⣿
+⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹
+</pre>
+    </div>
+
+    <h1>you're invited to a pokémon tcg draft</h1>
+    <p>
+      come join our <strong>super chill, beginner-friendly tournament</strong>! we’ll crack open
+      build & battle boxes, play a few relaxed rounds, and see if anyone pulls something spicy.
+      
+    </p>
+
+    <button onclick="toggleSpoiler()">click if you're a skeptic</button>
+    <div id="spoiler" class="hidden">
+      i just want an excuse to blow my wallet on booster packs, hoping to glimpse a secret rare—even though you keep your pulls, sigh.
+    </div>
+
+    <button onclick="randomQuip()">random poke-quip</button>
+    <div id="quipBox"></div>
+
+<h2>the deets</h2>
+    <p>
+      <strong>entry fee:</strong> $22 or so each (covers a build & battle box). never know if you’ll
+      unbox a masterpiece worth big bucks.
+    </p>
+
+    <h3>schedule (tentative: saturday or sunday, feb 15/16)</h3>
+    <pre>
+[1:00 - 2:00]  rules crash course (snacks included)
+[2:00 - 2:30]  deck tinkering
+[2:30 - 4:30]  ~3 rounds of battling (about 20 mins each)
+    </pre>
+    <p>
+      we're shooting for a lazy-afternoon vibe—roll in half-awake if you want.
+    </p>
+
+    <button onclick="toggleFaqs()">show faqs</button>
+    <div id="faqs" class="hidden" style="margin-bottom:1rem;">
+      <h3>faqs</h3>
+      <p><strong>q:</strong> do i need to bring cards?<br>
+      <strong>a:</strong> negative. your build & battle box has a pre-made deck + boosters. zero prep.
+      </p>
+
+      <p><strong>q:</strong> i’m terrible at this.<br>
+      <strong>a:</strong> no sweat. we’ll fumble together. maybe we’ll all misplay. it’s fine.
+      </p>
+
+      <p><strong>q:</strong> which sets are we using?<br>
+      <strong>a:</strong> scalpers kinda ransacked our options, so likely:
+        <a href="https://www.justinbasil.com/visual/sv5" target="_blank">sv5</a> or
+        <a href="https://www.justinbasil.com/visual/ss9" target="_blank">ss9</a>. blame capitalism.
+      </p>
+
+      <p><strong>q:</strong> what’s the tournament format?<br>
+      <strong>a:</strong> a swiss-system (<a href="https://en.wikipedia.org/wiki/Swiss-system_tournament" target="_blank">wiki link</a>),
+      meaning multiple rounds with no early send-offs.
+      </p>
+
+      <p><strong>q:</strong> are we feasting or what?<br>
+      <strong>a:</strong> i’ll bring something small, you can bring something too. synergy, my friend.
+      </p>
+
+      <p><strong>q:</strong> can i get rich from a single booster pack?<br>
+      <strong>a:</strong> maybe you’ll stumble on that $100 card. or you’ll get a cute common. we don’t judge.
+      </p>
+
+<p><strong>q:</strong> how long did it take to cobble this website together?<br>
+<strong>a:</strong> let's just say i burned an entire tuesday night forging this glorious y2k-ish tapestry. yes, it was a questionable life choice, but zero regrets.
+</p>
+
+</div>
+
+<h3>🦖 don't make me drag you here 🦖</h3>
+    <p>
+      commit now, or forever regret missing out on shiny cardboard:
+      <span class="blink" style="font-size:1.2rem;">
+        <a href="https://forms.gle/CyWPFNah9KbKd9Xk6" target="_blank">[ rsvp here ]</a>
+      </span>
+    </p>
+  </div>
+
+  <script type="text/javascript">
+    function toggleSpoiler() {
+      const spoiler = document.getElementById('spoiler');
+      spoiler.classList.toggle('hidden');
+    }
+
+    function toggleFaqs() {
+      const faqs = document.getElementById('faqs');
+      faqs.classList.toggle('hidden');
+    }
+
+    const quips = [
+      "did you know magikarp is basically a flopping legend?",
+      "psyduck's headache is my spirit animal rn.",
+      "rare pulls can pay rent... or so i hope.",
+      "snorlax is total #lifegoals.",
+      "some say mew hides in old cartridges. i say it hides in my wallet.",
+      "pikachu once said 'pika pi'—wise words indeed.",
+      "charmander is basically a spicy salamander, no?"
+    ];
+
+    function randomQuip() {
+      const quip = quips[Math.floor(Math.random() * quips.length)];
+      document.getElementById('quipBox').textContent = quip;
+    }
+  </script>
+</body>
+</html>
