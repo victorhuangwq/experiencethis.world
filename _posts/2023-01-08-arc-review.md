@@ -10,6 +10,9 @@ hidden: false
 ---
 
 ![Arc Screenshot](/assets/images/arc-ss.png)
+
+!caveat! This is outdated information - I am no longer using ARC as my daily driver...
+
 What is one word that you use to describe the experience with your browser?
 
 Mine would be the variations of the word: **messy** 
