@@ -20,122 +20,143 @@ The list only contains ~15~ 17 items, and it's not meant to represent all the be
 
 My main thought when choosing these places is to highlight the variety of food in Singapore. I have included a mix of food that I think are unique to Singapore, and generally comfortable for someone foreign to try. i.e. they are not too out there, and are in a comfortable setting.
 
+<!-- Filter Controls -->
 
-## Description of the Food List
+*Food Filter*
+<div style="margin: 20px 0;">
+    <label style="margin-right: 10px;">
+        <input type="checkbox" id="vegToggle" style="margin-right: 5px;" />
+        Vegetarian options available
+    </label>
+    <label>
+        <input type="checkbox" id="breakfastToggle" style="margin-right: 5px;" />
+        Breakfast appropriate
+    </label>
+</div>
 
+<script>
+  function applyFilters() {
+
+    const isVegFilterActive = document.getElementById('vegToggle').checked;
+    const isBreakfastFilterActive = document.getElementById('breakfastToggle').checked;
+
+    // For all list items in the post:
+    const listItems = document.querySelectorAll('ol li');
+    listItems.forEach(li => {
+
+      // Look for that span containing the filter classes
+      const attrSpan = li.querySelector('.food-attrs');
+      if (!attrSpan) return;
+
+      const isVeg = attrSpan.classList.contains('veg-true');
+      const isBreakfast = attrSpan.classList.contains('breakfast-true');
+
+      const vegMatch = isVegFilterActive ? isVeg : true;
+      const breakfastMatch = isBreakfastFilterActive ? isBreakfast : true;
+      
+      li.style.display = (vegMatch && breakfastMatch) ? '' : 'none';
+    });
+  }
+
+  // Add event listeners to the checkboxes to apply filters when their state changes
+  ['vegToggle','breakfastToggle'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+
+</script>
 
 ### Singaporean Cuisine
 
-1. **Ya Kun Kaya Toast**
+1. **Ya Kun Kaya Toast** <span class="food-attrs veg-true breakfast-true"></span>  
+   Ya Kun Kaya Toast is a chain of cafes in Singapore that serves traditional Singaporean breakfast. This is what I ate at coffee shops growing up in Singapore, and it's a hit with all my friends who visited. 
 
-    Ya Kun Kaya Toast is a chain of cafes in Singapore that serves traditional Singaporean breakfast. This is what I ate at coffee shops growing up in Singapore, and it's a hit with all my friends who visited. 
+   I usually order the Kaya Toast Set, which comes with Kaya Toast, soft boiled eggs, and coffee or tea. Although I am now a decaf coffee drinker, I can vouch for their dark roasted coffee with condensed milk. 
 
-    I usually order the Kaya Toast Set, which comes with Kaya Toast, soft boiled eggs, and coffee or tea. Although I am now a decaf coffee drinker, I can vouch for their dark roasted coffee with condensed milk. 
+   *How I eat it:*
+   - Season the soft boiled eggs with a bit of soy sauce and white pepper
+   - Dip the Kaya Toast in the eggs.
+   - Drink the coffee
 
-    *How I eat it:*
-    - Season the soft boiled eggs with a bit of soy sauce and white pepper
-    - Dip the Kaya Toast in the eggs.
-    - Drink the coffee
+2. **Song Fa Bak Kut Teh** <span class="food-attrs veg-false breakfast-false"></span>  
+   Bak Kut Teh is a pork rib soup that is cooked with garlic, pepper, and other herbs. It's a dish that is popular in Malaysia and Singapore, there's a difference in the way it's cooked in both countries, with Singapore's version being more peppery and the soup is clear. It's the way I ate growing up so I prefer it.
 
-1. **Song Fa Bak Kut Teh**
+   Song Fa is a chain of Bak Kut Teh restaurants in Singapore, and it's one of the best places to try it. I was not surprised it won the Michelin Bib Gourmand award when I went back to Singapore in 2023 (and it's been winning it since 2016!).
 
-    Bak Kut Teh is a pork rib soup that is cooked with garlic, pepper, and other herbs. It's a dish that is popular in Malaysia and Singapore, there's a difference in the way it's cooked in both countries, with Singapore's version being more peppery and the soup is clear. It's the way I ate growing up so I prefer it.
+   I usually order the classic set, which comes with pork ribs, rice, and a side of salted vegetables and I think youtiao (fried dough fritters) too?
 
-    Song Fa is a chain of Bak Kut Teh restaurants in Singapore, and it's one of the best places to try it. I was not surprised it won the Michelin Bib Gourmand award when I went back to Singapore in 2023 (and it's been winning it since 2016!).
+   *How I eat it:*
+   - Season the pork ribs with the dark soy sauce and chili (out of the soup)
+   - Eat the pork ribs with rice, and the salted vegetables
+   - Drink the soup
+   - Dip the youtiao in the soup (if you have it)
 
-    I usually order the classic set, which comes with pork ribs, rice, and a side of salted vegetables and I think youtiao (fried dough fritters) too?
+3. **Tian Tian Hainanese Chicken Rice / Wee Nam Kee Chicken Rice** <span class="food-attrs veg-false breakfast-false"></span>  
+   Chicken Rice is a dish that is popular in Singapore, Malaysia, and Thailand. It's a simple dish of poached chicken and seasoned rice. The chicken is usually served with a chili sauce and ginger paste. There's also a dark soy sauce that you can season the chicken and rice with.
 
-    *How I eat it:*
-    - Season the pork ribs with the dark soy sauce and chili (out of the soup)
-    - Eat the pork ribs with rice, and the salted vegetables
-    - Drink the soup
-    - Dip the youtiao in the soup (if you have it)
+   Tian Tian is a stall in Maxwell Food Centre that is famous for their chicken rice. It's one of the places that [Anthony Bourdain](https://www.wikipedia.org/wiki/Anthony_Bourdain) visited when he was in Singapore. It's a location close to the downtown area, and it's a good place to try chicken rice. It does get crowded so be prepared to wait in line.
 
-2. **Tian Tian Hainanese Chicken Rice / Wee Nam Kee Chicken Rice**
+   Wee Nam Kee is the place I have been going to since I was a kid, and it's a sit-down restaurant. I like the roasted chicken there, over the poached chicken.
 
-    Chicken Rice is a dish that is popular in Singapore, Malaysia, and Thailand. It's a simple dish of poached chicken and seasoned rice. The chicken is usually served with a chili sauce and ginger paste. There's also a dark soy sauce that you can season the chicken and rice with.
+   I usually order the chicken rice set, which comes with chicken, rice, and a side of soup.
 
-    Tian Tian is a stall in Maxwell Food Centre that is famous for their chicken rice. It's one of the places that [Anthony Bourdain](https://www.wikipedia.org/wiki/Anthony_Bourdain) visited when he was in Singapore. It's a location close to the downtown area, and it's a good place to try chicken rice. It does get crowded so be prepared to wait in line.
+   *How I eat it:*
+   - Season the chicken with the dark soy sauce and chili
+   - Eat the chicken with rice, and the soup
+   - Dip the chicken in the ginger paste
 
-    Wee Nam Kee is the place I have been going to since I was a kid, and it's a sit-down restaurant. I like the roasted chicken there, over the poached chicken.
+4. **Hill Street Tai Hwa Pork Noodle** <span class="food-attrs veg-false breakfast-false"></span>  
+   Hill Street Tai Hwa Pork Noodle is a Michelin-starred noodle stall in Singapore. It's a noodle dish that is cooked with vinegar, chili, and minced pork. I joke with my friends that I am treating them to Michelin-starred food when I bring them here. It's good, and honestly it's worth the wait. Pork Noodle is definitely a dish that people have opinions about where the best one is, and they will often have their favorite stall.
 
-    I usually order the chicken rice set, which comes with chicken, rice, and a side of soup.
+   I usually order the dry noodle, which comes with noodles, minced pork, and a side of soup.
 
-    *How I eat it:*
-    - Season the chicken with the dark soy sauce and chili
-    - Eat the chicken with rice, and the soup
-    - Dip the chicken in the ginger paste
-  
-3. **Hill Street Tai Hwa Pork Noodle**
+5. **328 Katong Laksa** <span class="food-attrs veg-false breakfast-false"></span>  
+   Laksa is a dish cooked with coconut milk, chili, and noodles. It's a dish that is popular in Malaysia and Singapore, and there are different variations of it. The one at 328 Katong is a good place to try it. It's a location close to the downtown area, and it's a good place to try laksa.
 
-    Hill Street Tai Hwa Pork Noodle is a Michelin-starred noodle stall in Singapore. It's a noodle dish that is cooked with vinegar, chili, and minced pork. I joke with my friends that I am treating them to Michelin-starred food when I bring them here. It's good, and honestly it's worth the wait. Pork Noodle is definitely a dish that people have opinions about where the best one is, and they will often have their favorite stall.
+6. **Yat Ka Yan Dessert (Fortune Centre)** <span class="food-attrs veg-true breakfast-false"></span>  
+   Yat Ka Yan is a dessert stall in Fortune Centre that serves traditional Chinese desserts. I always get the chendol, which is a classic cold Singaporean dessert. It comes with coconut milk, green jelly noodles, red beans, and gula melaka (palm sugar).
 
-    I usually order the dry noodle, which comes with noodles, minced pork, and a side of soup.
+7. **Springleaf Prata Place** <span class="food-attrs veg-true breakfast-true"></span>  
+   I describe Prata as a cross between a pancake and a croissant, and usually eaten savory with curry. Springleaf Prata Place is my favorite chain of prata, mainly because of its unique prata creations. They started the trend of having Ultimate Murtabak and then they started having new prata creations every year. It's also a Michelin Bib Gourmand winner!
 
-4. **328 Katong Laksa**
+   Personally I like the salted egg prawn prata, and the ultimate murtabak. I also like the coin prata, which is a small prata that is crispy on the outside and chewy on the inside.
 
-    Laksa is a dish cooked with coconut milk, chili, and noodles. It's a dish that is popular in Malaysia and Singapore, and there are different variations of it. The one at 328 Katong is a good place to try it. It's a location close to the downtown area, and it's a good place to try laksa.
+8. **JUMBO Seafood** <span class="food-attrs veg-false breakfast-false"></span>  
+   Chili Crab is my favorite special occasion dish growing up. It's a dish cooked with chili and egg and is sweet and spicy. It's usually eaten with mantou (fried buns). JUMBO Seafood is a chain of seafood restaurants in Singapore, it's a little pricey, and they do take reservations. The deep umami flavor of the Sri Lankan Crab is what makes it special.
 
-5. **Yat Ka Yan Dessert (Fortune Centre)**
-   
-    Yat Ka Yan is a dessert stall in Fortune Centre that serves traditional Chinese desserts. I always get the chendol, which is a classic cold Singaporean dessert. It comes with coconut milk, green jelly noodles, red beans, and gula melaka (palm sugar).
+   I usually order the chili crab, and the black pepper crab. I also like the fried mantou.
 
-6. **Springleaf Prata Place**
+9. **Kampong Glam Cafe** <span class="food-attrs veg-false breakfast-true"></span>  
+   Kampong Glam Cafe is a cafe in the Kampong Glam area that serves traditional Malay food. I liked the Nasi Lemak there, but it seems to be temporarily closed.
 
-    I describe Prata as a cross between a pancake and a croissant, and usually eaten savory with curry. Springleaf Prata Place is my favorite chain of prata, mainly because of its unique prata creations. They started the trend of having Ultimate Murtabak and then they started having new prata creations every year. It's also a Michelin Bib Gourmand winner!
+   I honestly don't have any other Nasi Lemak place to strongly recommend yet. So I will keep this on the list until I find a better place.
 
-    Personally I like the salted egg prawn prata, and the ultimate murtabak. I also like the coin prata, which is a small prata that is crispy on the outside and chewy on the inside.
-
-7. **JUMBO Seafood**
-
-    Chili Crab is my favorite special occasion dish growing up. It's a dish cooked with chili and egg and is sweet and spicy. It's usually eaten with mantou (fried buns). JUMBO Seafood is a chain of seafood restaurants in Singapore, it's a little pricey, and they do take reservations. The deep umami flavor of the Sri Lankan Crab is what makes it special.
-
-    I usually order the chili crab, and the black pepper crab. I also like the fried mantou.
-
-8. **Kampong Glam Cafe**
-
-    Kampong Glam Cafe is a cafe in the Kampong Glam area that serves traditional Malay food. I liked the Nasi Lemak there, but it seems to be temporarily closed.
-
-    I honestly don't have any other Nasi Lemak place to strongly recommend yet. So I will keep this on the list until I find a better place.
-
-9. **3 Meals a Day**
-    
+10. **3 Meals a Day** <span class="food-attrs veg-false breakfast-false"></span>  
     It's tucked away in Sim Lim Square, a computer hardware mall in Singapore (featured by [Linus Tech Tips](https://www.youtube.com/watch?v=XUBdUJjgmQY)!) It's known for it's salted egg yolk chicken rice. It's a decadent, creamy dish that is truly a hit. I often went to this mall growing up - so check it out, and get the food too :)
 
-10 **Kampong Carrot Cake**
-
+11. **Kampong Carrot Cake** <span class="food-attrs veg-true breakfast-true"></span>  
     Carrot cake in Singapore is not the same as the Western dessert. It's a dish cooked with radish cake, eggs, and preserved radish. The one at Kampong Carrot Cake is a good place to try it. Personally I think it's a breakfast dish, but you can eat it anytime.
 
     I personally like the white version, because I think the black version is too sweet. 
 
-11. **Koh Brother Pig's Organ Soup**
-    
+12. **Koh Brother Pig's Organ Soup** <span class="food-attrs veg-false breakfast-false"></span>  
     Chinese soup cooked with pig's organs - think liver, intestines, stomach, etc. It's a good hearty soup, dip it in chilli and eat with rice. 
 
 ### Other Food
 
-These aren't exactly Singaporean cuisine, but I like them!
+1. **Hey! Yakiniku** <span class="food-attrs veg-false breakfast-false"></span>  
+   Fun casual Japanese Yakiniku place, where you grill your own portion of meat!
 
-1. **Hey! Yakiniku**
+2. **O.BBa Jjajang** <span class="food-attrs veg-true breakfast-false"></span>  
+   Korea restaurant with good variety of Korean dishes. They also have Korean BBQ as well! I mostly eat their Korean dishes.
 
-    Fun casual Japanese Yakiniku place, where you grill your own portion of meat!
+3. **Birds of Paradise Gelato Boutique** <span class="food-attrs veg-true breakfast-false"></span>  
+   Unique gelato flavors that are inspired by nature. They specialize in botanical flavors, and when they first opened they had a very long line. I liked the White Chrysanthemum flavor, and their thyme cone.
 
-1. **O.BBa Jjajang**
-    
-    Korea restaurant with good variety of Korean dishes. They also have Korean BBQ as well! I mostly eat their Korean dishes.
+4. **Blue Label Pizza & Wine** <span class="food-attrs veg-true breakfast-false"></span>  
+   Good pizza place! Very atas (fancy) vibes, do make a reservation.
 
-1. **Birds of Paradise Gelato Boutique**
+5. **Two Men Bagel House** <span class="food-attrs veg-true breakfast-true"></span>  
+   Good bagels! Love them for breakfast.
 
-    Unique gelato flavors that are inspired by nature. They specialize in botanical flavors, and when they first opened they had a very long line. I liked the White Chrysanthemum flavor, and their thyme cone.
-
-1. **Blue Label Pizza & Wine**
-
-    Good pizza place! Very atas (fancy) vibes, do make a reservation.
-
-1. **Two Men Bagel House**
-
-    Good bagels! Love them for breakfast.
-
-2. **Menya Kokoro Mazesoba**
-
-    Mazesoba is a dry ramen dish, great for slurping! Follow their instructions, and end it mixing a rice into the remaining sauce.
+6. **Menya Kokoro Mazesoba** <span class="food-attrs veg-true breakfast-false"></span>  
+   Mazesoba is a dry ramen dish, great for slurping! Follow their instructions, and end it mixing a rice into the remaining sauce.
