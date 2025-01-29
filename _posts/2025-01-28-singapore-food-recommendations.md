@@ -2,7 +2,7 @@
 layout: post
 title:  "Singapore Food Recommendations"
 description: "A list of food recommendations for my friends visiting Singapore. I grew up in Singapore, and these are the places I like to eat at. Meant to be a good sampler of the variety of food in Singapore."
-date:   2024-04-10 08:00:01 -0500
+date:   2025-01-28 08:00:01 -0500
 categories: travel
 tags:
     - reviews
@@ -16,7 +16,7 @@ As one of the only Singaporeans in various social situations, I get asked about 
 
 ## Context
 
-The list only contains 15 items, and it's not meant to represent all the best places in Singapore. I chose these places because these are the places I have been to, and they are also located closer to the downtown area of Singapore, which I know most of my friends will likely be staying when they visit.
+The list only contains ~15~ 17 items, and it's not meant to represent all the best places in Singapore. I chose these places because these are the places I have been to, and they are also located closer to the downtown area of Singapore, which I know most of my friends will likely be staying when they visit.
 
 My main thought when choosing these places is to highlight the variety of food in Singapore. I have included a mix of food that I think are unique to Singapore, and generally comfortable for someone foreign to try. i.e. they are not too out there, and are in a comfortable setting.
 
@@ -98,6 +98,20 @@ My main thought when choosing these places is to highlight the variety of food i
 
     I honestly don't have any other Nasi Lemak place to strongly recommend yet. So I will keep this on the list until I find a better place.
 
+9. **3 Meals a Day**
+    
+    It's tucked away in Sim Lim Square, a computer hardware mall in Singapore (featured by [Linus Tech Tips](https://www.youtube.com/watch?v=XUBdUJjgmQY)!) It's known for it's salted egg yolk chicken rice. It's a decadent, creamy dish that is truly a hit. I often went to this mall growing up - so check it out, and get the food too :)
+
+10 **Kampong Carrot Cake**
+
+    Carrot cake in Singapore is not the same as the Western dessert. It's a dish cooked with radish cake, eggs, and preserved radish. The one at Kampong Carrot Cake is a good place to try it. Personally I think it's a breakfast dish, but you can eat it anytime.
+
+    I personally like the white version, because I think the black version is too sweet. 
+
+11. **Koh Brother Pig's Organ Soup**
+    
+    Chinese soup cooked with pig's organs - think liver, intestines, stomach, etc. It's a good hearty soup, dip it in chilli and eat with rice. 
+
 ### Other Food
 
 These aren't exactly Singaporean cuisine, but I like them!
@@ -121,3 +135,7 @@ These aren't exactly Singaporean cuisine, but I like them!
 1. **Two Men Bagel House**
 
     Good bagels! Love them for breakfast.
+
+2. **Menya Kokoro Mazesoba**
+
+    Mazesoba is a dry ramen dish, great for slurping! Follow their instructions, and end it mixing a rice into the remaining sauce.
