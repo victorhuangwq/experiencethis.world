@@ -1,0 +1,319 @@
+---
+title: Pokemon TCG Prerelease Rules Cheatsheet
+permalink: /pokemon/rules
+---
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    background: linear-gradient(45deg, #ffdddd, #ddffff);
+    color: #111;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 800px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .toc {
+    background: #fffdc0;
+    border: 2px dashed #666;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .toc h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #666;
+  }
+
+  .toc ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .toc li {
+    margin: 0.5rem 0;
+  }
+
+  .toc a {
+    color: #3366bb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .toc a:hover {
+    text-decoration: underline;
+  }
+
+  section {
+    background: #fff;
+    border: 2px solid #666;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 4px 4px 0 #666;
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 1rem 0 1.5rem 0;
+    color: #333;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    color: #c00;
+    margin: 0.5rem 0 1rem 0;
+    border-bottom: 2px dashed #666;
+    padding-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  li {
+    margin: 0.8rem 0;
+    padding-left: 0.5rem;
+  }
+
+  .nested-list {
+    margin: 0.8rem 0 0.8rem 1.5rem;
+  }
+
+  .nested-list li {
+    margin: 0.6rem 0;
+  }
+
+  strong {
+    color: #c00;
+  }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #fffdc0;
+    border: 2px dashed #666;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 3px 3px 0 #666;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1000;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+  }
+
+  .back-to-top:hover {
+    background: #f2f2d0;
+  }
+
+  @media (max-width: 1000px) {
+    body {
+      font-size: 18px;
+    }
+
+    .container {
+      padding: 0.8rem;
+    }
+
+    section {
+      padding: 1.2rem;
+      margin: 1rem 0;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    ul, ol {
+      padding-left: 3rem;
+    }
+
+    li {
+      margin: 1rem 0;
+    }
+
+    .back-to-top {
+      font-size: 1.5rem;
+      bottom: 2rem;
+      right: 2rem;
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+</style>
+
+<div class="container">
+    <h1>Pokemon TCG Prerelease Rules</h1>
+
+    <div class="toc">
+        <h2>Quick Navigation</h2>
+        <ul>
+            <li>👉 <a href="#setup">Game Setup</a></li>
+            <li>🏆 <a href="#win-condition">How to Win</a></li>
+            <li>🎮 <a href="#turn-structure">Your Turn</a></li>
+            <li>1️⃣ <a href="#first-turn-rules">First Turn Rules</a></li>
+            <li>💫 <a href="#status-conditions">Status Conditions</a></li>
+            <li>📋 <a href="#special-rules">Important Rules</a></li>
+            <li>⏰ <a href="#time-rules">Time Limit Rules</a></li>
+            <li>🏠 <a href="/pokemon/"> Back to Home</a></li>
+        </ul>
+    </div>
+
+    <section id="setup">
+        <h2>Game Setup</h2>
+        <ul>
+            <li>Shuffle your 40-card deck 🔀</li>
+            <li>Draw 7 cards for your starting hand</li>
+            <li>Place 4 Prize cards face down</li>
+            <li>Place 1 Basic Pokemon as your Active Pokemon ⭐</li>
+            <li>Place up to 5 Basic Pokemon on your Bench (optional)</li>
+            <li>If you don't have any Basic Pokemon in hand:
+                <ul class="nested-list">
+                    <li>Reveal your hand</li>
+                    <li>Shuffle and draw 7 new cards</li>
+                    <li>Opponent draws +1 card per mulligan</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section id="win-condition">
+        <h2>How to Win</h2>
+        <ul>
+            <li>Collect all 4 of your Prize cards 🏆</li>
+            <li>Knock out all of your opponent's Pokemon in play</li>
+            <li>If your opponent cannot draw a card when required</li>
+        </ul>
+    </section>
+
+    <section id="turn-structure">
+        <h2>Your Turn</h2>
+        <ol>
+            <li>Draw a card (except first player's first turn)</li>
+            <li>You may do any of these in any order:
+                <ul class="nested-list">
+                    <li>Put Basic Pokemon on your Bench (max 5)</li>
+                    <li>Evolve your Pokemon</li>
+                    <li>Attach 1 Energy card ⚡</li>
+                    <li>Play Trainer cards</li>
+                    <li>Retreat your Active Pokemon</li>
+                    <li>Use Abilities</li>
+                </ul>
+            </li>
+            <li>Attack with your Active Pokemon (ends your turn) 🎯</li>
+        </ol>
+    </section>
+
+    <section id="first-turn-rules">
+        <h2>First Turn Rules</h2>
+        <ul>
+            <li>First player does not draw a card ❌🃏</li>
+            <li>First player cannot attack 🚫🎯</li>
+            <li>First player cannot play Supporter cards 🚫📝</li>
+            <li>Both players can evolve Pokemon 🔄</li>
+        </ul>
+    </section>
+
+    <section id="status-conditions">
+        <h2>Status Conditions</h2>
+        <ul>
+            <li><strong>Asleep:</strong> Flip coin between turns. Heads = wake up</li>
+            <li><strong>Confused:</strong> Flip coin to attack. Tails = 30 damage to self</li>
+            <li><strong>Paralyzed:</strong> Cannot attack or retreat. Removed at end of turn</li>
+            <li><strong>Poisoned:</strong> Place 1 damage counter between turns</li>
+            <li><strong>Burned:</strong> Place 2 damage counters between turns, flip coin. Heads = remove condition</li>
+        </ul>
+    </section>
+
+    <section id="special-rules">
+        <h2>Important Rules</h2>
+        <ul>
+            <li>You can have multiple of the same Basic Pokemon on your Bench 🪑</li>
+            <li>You can only attach one Energy card per turn ⚡</li>
+            <li>When a Pokemon is knocked out, all cards attached to it go to the discard pile 🗑️</li>
+            <li>You must have a Basic Pokemon in the Active spot at all times ⭐</li>
+            <li>If your Active Pokemon is knocked out, you must replace it with a Benched Pokemon 🔄</li>
+        </ul>
+    </section>
+
+    <section id="time-rules">
+        <h2>Time Limit Rules</h2>
+        <p>When time is called in a tournament match:</p>
+        <ol>
+            <li>Complete the current turn</li>
+            <li>Play three additional turns ("+3 turns")</li>
+            <li>If no winner is determined through normal win conditions, use the tiebreaker:</li>
+        </ol>
+
+        <h3>Tiebreaker Rules</h3>
+        <ul>
+            <li>Compare remaining Prize cards for both players</li>
+            <li>Player with fewer Prize cards remaining wins</li>
+            <li>If both players have the same number of Prize cards, the match is a tie</li>
+        </ul>
+
+        <div style="background: #fffdc0; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+            <strong>Note:</strong> This procedure follows official Pokemon TCG tournament rules for time limit situations. 
+        </div>
+    </section>
+</div>
+
+<a href="#" class="back-to-top" aria-label="Scroll to top">⬆️</a>
+
+<script>
+  // Show/hide back to top button based on scroll position
+  const backToTop = document.querySelector('.back-to-top');
+  
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  });
+
+  // Smooth scroll to top
+  backToTop.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+

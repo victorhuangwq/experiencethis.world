@@ -1,0 +1,251 @@
+---
+title: Pokemon TCG Event Day
+permalink: /pokemon/
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pokemon TCG Event Day</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: monospace;
+            background: linear-gradient(45deg, #ffdddd, #ddffff);
+            color: #111;
+            overflow-x: hidden;  /* Prevent horizontal scroll */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 1rem;
+            overflow-x: hidden;  /* Prevent horizontal scroll */
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .section {
+            background: #fff;
+            border: 2px solid #666;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 4px 4px 0 #666;
+        }
+
+        .schedule-item {
+            display: flex;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(255, 253, 192, 0.5);
+            border: 1px dashed #666;
+            border-radius: 4px;
+            align-items: flex-start;
+        }
+
+        .schedule-time {
+            flex: 0 0 90px;
+            font-weight: bold;
+            color: #c00;
+            padding-right: 0.5rem;
+        }
+
+        .schedule-description {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .link-card {
+            background: #fffdc0;
+            border: 2px dashed #666;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .link-card:hover {
+            transform: translateY(-2px);
+            background: #f2f2d0;
+        }
+
+        a {
+            color: #3366bb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .pokemon-sprite {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+        }
+
+        .important-note {
+            background: #ffe6e6;
+            border: 2px solid #c00;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                padding: 0.8rem;
+            }
+
+            .schedule-item {
+                flex-direction: column;
+            }
+
+            .schedule-time {
+                margin-bottom: 0.5rem;
+            }
+
+            .section {
+                padding: 1rem;
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }   
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .section {
+                padding: 0.8rem;
+                margin: 1rem 0;  /* Remove left/right margins */
+                border-radius: 6px;
+            }
+
+            .schedule-item {
+                flex-direction: column;
+                padding: 0.8rem;
+                margin: 0.5rem 0;
+            }
+
+            .schedule-time {
+                flex: none;
+                margin-bottom: 0.3rem;
+                font-size: 0.9rem;
+            }
+
+            .schedule-description {
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .section {
+                padding: 1rem;
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }   
+        }
+
+        .pokemon-sprite pre {
+            max-width: 100%;
+            overflow-x: auto;
+            font-size: 0.7rem;  /* Slightly smaller on mobile */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pokemon-sprite">
+<pre>
+  ,___,
+ (O,O)
+ (   )
+--"-"---
+</pre>
+        </div>
+        
+        <h1>Pokemon TCG Event Day</h1>
+        <div class="section">
+            <h2>🗓️ Event Details</h2>
+            <p><strong>Date:</strong> Sunday, February 17th, 2024</p>
+            <p><strong>Location:</strong> TBD</p>
+            <p><strong>What to bring:</strong> Just yourself and excitement! We'll provide the cards.</p>
+        </div>
+
+        <div class="section">
+            <h2>📅 Schedule</h2>
+            <div class="schedule-item">
+                <div class="schedule-time">1:30 - 2:30</div>
+                <div class="schedule-description">Rules crash course & deck building tutorial (with snacks!)</div>
+            </div>
+            <div class="schedule-item">
+                <div class="schedule-time">2:30 - 3:00</div>
+                <div class="schedule-description">Deck building & fine-tuning</div>
+            </div>
+            <div class="schedule-item">
+                <div class="schedule-time">3:00 - 4:30</div>
+                <div class="schedule-description">Tournament matches (3 rounds)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Quick Links</h2>
+            <div class="links-grid">
+                <a href="/pokemon/rules" class="link-card">
+                    <h3>📋 Rules Cheatsheet</h3>
+                    <p>Quick reference for game rules</p>
+                </a>
+                <a href="/pokemon/timer" class="link-card">
+                    <h3>⏱️ Match Timer</h3>
+                    <p>Official tournament timer</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎮 Tournament Format</h2>
+            <ul>
+                <li>Swiss-style tournament (everyone plays all rounds)</li>
+                <li>30 minutes per game</li>
+                <li>Best of 1 match per round</li>
+                <li>Prizes for top players!</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
