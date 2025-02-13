@@ -88,6 +88,21 @@ permalink: /pokemon/timer
             transform: none;
         }
 
+        .fullscreen-button {
+            background: #e0f0ff;
+            border-color: #3366bb;
+        }
+
+        .fullscreen-button:hover {
+            background: #d0e0ff;
+        }
+
+        @media (min-width: 1024px) {
+            .fullscreen-button {
+                display: none;  /* Hide on desktop */
+            }
+        }
+
         .player {
             padding: 10px;
             margin: 0;
@@ -205,6 +220,7 @@ permalink: /pokemon/timer
             <button onclick="toggleStart()" id="startButton">Start</button>
             <button class="home-button" onclick="window.location.href='/pokemon/'">Home</button>
             <button onclick="togglePause()" id="pauseButton" disabled>Pause</button>
+            <button onclick="toggleFullscreen()" class="fullscreen-button">Fullscreen</button>
         </div>
 
         <div class="player" id="playerBottom">
@@ -221,6 +237,25 @@ permalink: /pokemon/timer
     </div>
 
     <script>
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // Lock screen orientation to portrait if supported
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('portrait').catch(err => {
+                console.log('Orientation lock failed:', err);
+            });
+        }
+
         let matchTime = 30 * 60; // 30 minutes in seconds
         let turnTime = 2 * 60;   // 2 minutes in seconds
         let matchTimer, turnTimer;
