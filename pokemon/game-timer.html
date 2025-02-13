@@ -238,24 +238,23 @@ permalink: /pokemon/timer
 
     <script>
         function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable fullscreen: ${err.message}`);
-                });
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else if (document.documentElement.webkitRequestFullscreen) { // iOS Safari
+                    document.documentElement.webkitRequestFullscreen();
+                }
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // iOS Safari
+                    document.webkitExitFullscreen();
                 }
             }
         }
         
-        // Lock screen orientation to portrait if supported
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('portrait').catch(err => {
-                console.log('Orientation lock failed:', err);
-            });
-        }
-
         let matchTime = 30 * 60; // 30 minutes in seconds
         let turnTime = 2 * 60;   // 2 minutes in seconds
         let matchTimer, turnTimer;
