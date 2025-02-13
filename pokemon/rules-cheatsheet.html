@@ -8,19 +8,14 @@ permalink: /pokemon/rules
     box-sizing: border-box;
   }
 
-  html {
-    font-size: 1rem;
-    scroll-behavior: smooth;
-  }
-
   body {
     margin: 0;
     padding: 0;
     font-family: monospace;
     background: linear-gradient(45deg, #ffdddd, #ddffff);
     color: #111;
-    font-size: 1rem;
     line-height: 1.6;
+    overflow-x: hidden;
   }
 
   .container {
@@ -29,6 +24,7 @@ permalink: /pokemon/rules
     min-height: 100vh;
     margin: 0 auto;
     padding: 1rem;
+    overflow-x: hidden;
   }
 
   .toc {
@@ -71,14 +67,13 @@ permalink: /pokemon/rules
     padding: 1.5rem;
     margin: 1.5rem 0;
     box-shadow: 4px 4px 0 #666;
-    font-size: 1rem;
   }
 
   h1 {
     font-size: 2rem;
-    margin: 1rem 0 1.5rem 0;
+    margin: 1rem 0;
     color: #333;
-    line-height: 1.2;
+    text-align: center;
   }
 
   h2 {
@@ -87,7 +82,6 @@ permalink: /pokemon/rules
     margin: 0.5rem 0 1rem 0;
     border-bottom: 2px dashed #666;
     padding-bottom: 0.5rem;
-    line-height: 1.3;
   }
 
   ul, ol {
@@ -180,6 +174,37 @@ permalink: /pokemon/rules
       right: 2rem;
       width: 4rem;
       height: 4rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      padding: 0.5rem;
+    }
+
+    section {
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .back-to-top {
+      bottom: 1rem;
+      right: 1rem;
+      width: 3rem;
+      height: 3rem;
     }
   }
 </style>
