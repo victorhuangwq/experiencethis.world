@@ -76,9 +76,10 @@ permalink: /pokemon/
 
         .links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr); /* Changed to always show 2 columns */
+            max-width: 600px; /* Added to constrain grid width */
+            margin: 1rem auto; /* Center the grid */
             gap: 1rem;
-            margin: 1rem 0;
         }
 
         .link-card {
@@ -88,6 +89,7 @@ permalink: /pokemon/
             border-radius: 8px;
             text-align: center;
             transition: transform 0.2s;
+            height: 100%; /* Ensure consistent height */
         }
 
         .link-card:hover {
@@ -178,6 +180,24 @@ permalink: /pokemon/
                 margin-left: 1rem;
                 margin-right: 1rem;
             }   
+
+            .links-grid {
+                grid-template-columns: 1fr; /* Stack on mobile */
+            }
+
+            .link-card {
+                padding: 0.5rem; /* Reduce padding on mobile */
+            }
+
+            .link-card h3 {
+                margin: 0.5rem 0; /* Reduce margins on mobile */
+                font-size: 1.1rem;
+            }
+
+            .link-card p {
+                margin: 0.3rem 0; /* Reduce margins on mobile */
+                font-size: 0.9rem;
+            }
         }
 
         .pokemon-sprite pre {
@@ -237,6 +257,10 @@ permalink: /pokemon/
                 <a href="/pokemon/strategy" class="link-card">
                     <h3>📚 Strategy Guide</h3>
                     <p>Tips for deck building</p>
+                </a>
+                <a href="https://challonge.com/brilliantstars" class="link-card">
+                    <h3>🏆 Tournament Bracket</h3>
+                    <p>View live tournament standings</p>
                 </a>
             </div>
         </div>
