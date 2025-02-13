@@ -20,9 +20,11 @@ permalink: /pokemon/timer
             font-family: monospace;
             background: linear-gradient(45deg, #ffdddd, #ddffff);
             color: #111;
-            min-height: 100vh;
+            height: 80vh;
+            max-height: 80vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .container {
@@ -86,21 +88,6 @@ permalink: /pokemon/timer
             cursor: not-allowed;
             opacity: 0.5;
             transform: none;
-        }
-
-        .fullscreen-button {
-            background: #e0f0ff;
-            border-color: #3366bb;
-        }
-
-        .fullscreen-button:hover {
-            background: #d0e0ff;
-        }
-
-        @media (min-width: 1024px) {
-            .fullscreen-button {
-                display: none;  /* Hide on desktop */
-            }
         }
 
         .player {
@@ -220,7 +207,6 @@ permalink: /pokemon/timer
             <button onclick="toggleStart()" id="startButton">Start</button>
             <button class="home-button" onclick="window.location.href='/pokemon/'">Home</button>
             <button onclick="togglePause()" id="pauseButton" disabled>Pause</button>
-            <button onclick="toggleFullscreen()" class="fullscreen-button">Fullscreen</button>
         </div>
 
         <div class="player" id="playerBottom">
@@ -237,24 +223,6 @@ permalink: /pokemon/timer
     </div>
 
     <script>
-        function toggleFullscreen() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
-                    });
-                } else if (document.documentElement.webkitRequestFullscreen) { // iOS Safari
-                    document.documentElement.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { // iOS Safari
-                    document.webkitExitFullscreen();
-                }
-            }
-        }
-        
         let matchTime = 30 * 60; // 30 minutes in seconds
         let turnTime = 2 * 60;   // 2 minutes in seconds
         let matchTimer, turnTimer;
