@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCG Idle Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="header">
+            <h1>TCG Simulator</h1>
+            <div id="resources">
+                <div id="money">Money: $<span id="money-value">0</span></div>
+                <div id="income-rate">Income: $<span id="income-value">0.10</span>/sec</div>
+                <div id="packs">Packs: <span id="packs-value">0</span></div>
+            </div>
+            
+            <div id="dev-menu" class="hidden">
+                <h3>Developer Settings</h3>
+                <div class="settings-group">
+                    <label for="speed-multiplier">Game Speed:</label>
+                    <select id="speed-multiplier">
+                        <option value="1">Normal (1x)</option>
+                        <option value="2">Fast (2x)</option>
+                        <option value="5">Very Fast (5x)</option>
+                        <option value="10">Super Fast (10x)</option>
+                    </select>
+                </div>
+                <div class="settings-group">
+                    <label for="instant-collection">Collection Boost:</label>
+                    <button id="add-100-cards">Add 100 Random Cards</button>
+                    <button id="add-10k-money">Add $10,000</button>
+                </div>
+                <div class="settings-group">
+                    <label for="delete-save">Save Management:</label>
+                    <button id="delete-save" class="danger-button">Delete Save File</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="main-content">
+            <div id="game-log"></div>
+            
+            <div id="actions">
+                <div id="basic-actions">
+                    <button id="buy-pack">Buy Pack ($5)</button>
+                    <button id="open-pack" disabled>Open Pack</button>
+                </div>
+                <div id="tournaments" class="hidden">
+                    <h3>Tournaments</h3>
+                    <div id="tournament-list"></div>
+                </div>
+                <div id="shop" class="hidden">
+                    <h3>Your Card Shop</h3>
+                    <div id="shop-controls">
+                        <button id="toggle-shop">Open Shop</button>
+                        <div id="shop-status" class="hidden">
+                            <p>Status: <span id="shop-status-value">Closed</span></p>
+                            <p>Reputation: <span id="shop-reputation">0</span></p>
+                            <p>Customers: <span id="shop-customers">0</span> (<span id="customer-rate">1</span>/min)</p>
+                        </div>
+                    </div>
+                    <div id="shop-upgrades" class="hidden">
+                        <h4>Shop Upgrades</h4>
+                        <button id="upgrade-advertising" class="shop-upgrade">Advertising ($100)</button>
+                        <button id="upgrade-displays" class="shop-upgrade">Display Cases ($150)</button>
+                        <button id="upgrade-location" class="shop-upgrade">Better Location ($500)</button>
+                    </div>
+                    <div id="recent-sales" class="hidden">
+                        <h4>Recent Sales</h4>
+                        <div id="sales-list"></div>
+                    </div>
+                </div>
+                <div id="upgrades" class="hidden">
+                    <h3>Upgrades</h3>
+                    <button id="auto-opener" class="upgrade">Auto Opener ($30)</button>
+                    <button id="auto-buyer" class="upgrade">Auto Buyer ($50)</button>
+                    <button id="auto-seller" class="upgrade">Auto Seller ($75)</button>
+                    <button id="better-packs" class="upgrade">Better Packs ($100)</button>
+                    <button id="income-boost" class="upgrade">Income Boost ($25)</button>
+                </div>
+            </div>
+            
+            <div id="collection">
+                <h3>Your Collection</h3>
+                <div id="collection-content"></div>
+            </div>
+        </div>
+        
+        <div id="game-status">
+            <div id="phase">Phase: <span id="phase-value">Collector</span></div>
+            <div id="auto-status" class="hidden">Auto Opening: <span id="auto-status-value">Off</span></div>
+            <div id="dev-menu-toggle" class="hidden-toggle"></div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/card-data.js"></script>
+    <script src="js/game-state.js"></script>
+    <script src="js/tournament.js"></script>
+    <script src="js/shop-system.js"></script>
+    <script src="js/deck-builder.js"></script>
+    <script src="js/battle-system.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/game-manager.js"></script>
+    <script src="js/dev-menu.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

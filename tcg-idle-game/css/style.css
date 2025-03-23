@@ -1,0 +1,681 @@
+body {
+    font-family: monospace;
+    background-color: #000;
+    color: #ddd;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+#resources {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+}
+
+#dev-menu-toggle {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    border: none;
+}
+
+.hidden-toggle {
+    opacity: 0;
+}
+
+#dev-menu {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    background-color: #111;
+    border: 1px solid #444;
+    padding: 15px;
+    z-index: 100;
+    width: 300px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.settings-group {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.settings-group:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.settings-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #999;
+}
+
+.settings-group select,
+.settings-group button {
+    margin-top: 5px;
+    width: 100%;
+}
+
+select {
+    background-color: #000;
+    color: #ddd;
+    border: 1px solid #444;
+    padding: 5px;
+    font-family: monospace;
+}
+
+.danger-button {
+    background-color: #300;
+    color: #ddd;
+    border: 1px solid #600;
+}
+
+.danger-button:hover {
+    background-color: #500;
+    border-color: #900;
+}
+
+#main-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#game-log {
+    width: 100%;
+    height: 150px;
+    border: 1px solid #444;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #111;
+}
+
+#actions {
+    width: 30%;
+    padding-right: 20px;
+}
+
+#collection {
+    width: 65%;
+    border: 1px solid #444;
+    padding: 10px;
+    height: 400px;
+    overflow-y: auto;
+}
+
+button {
+    background-color: #000;
+    color: #ddd;
+    border: 1px solid #444;
+    padding: 8px 12px;
+    margin: 5px 0;
+    cursor: pointer;
+    font-family: monospace;
+    display: block;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background-color: #222;
+    border-color: #666;
+}
+
+button:disabled {
+    color: #555;
+    border-color: #333;
+    cursor: not-allowed;
+}
+
+#game-status {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.card, .battle-card {
+    border: 1px solid #444;
+    padding: 5px;
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+/* Deck Builder Styles */
+#deck-builder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.deck-builder-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.deck-builder-section {
+    margin-bottom: 20px;
+}
+
+.card-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #444;
+    padding: 10px;
+}
+
+.card-type-section {
+    margin-bottom: 15px;
+}
+
+.card-type-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.selected-deck {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 150px;
+    border: 1px solid #444;
+    padding: 10px;
+}
+
+.battle-card {
+    width: 150px;
+    border: 1px solid #444;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #111;
+}
+
+.battle-card.selectable {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.battle-card.selectable:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border-color: #666;
+}
+
+.battle-card.selected {
+    border-color: #666;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.card-ability {
+    margin: 5px 0;
+    padding: 3px 0;
+    border-top: 1px dotted #333;
+    border-bottom: 1px dotted #333;
+    font-size: 11px;
+}
+
+.card-rarity {
+    text-align: right;
+    font-style: italic;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.deck-builder-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Battle System Styles */
+#battle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.battle-field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.player-area, .opponent-area {
+    width: 45%;
+    text-align: center;
+}
+
+.active-card-container {
+    display: flex;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.battle-card.active {
+    width: 200px;
+    height: 180px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.battle-card.attacking {
+    animation: attack-flash 0.4s;
+}
+
+.battle-card.damaged {
+    animation: damage-flash 0.5s;
+}
+
+@keyframes attack-flash {
+    0% { transform: scale(1); box-shadow: none; }
+    25% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); }
+    100% { transform: scale(1); box-shadow: none; }
+}
+
+@keyframes damage-flash {
+    0% { background-color: #111; }
+    25% { background-color: #500; }
+    50% { background-color: #800; }
+    75% { background-color: #500; }
+    100% { background-color: #111; }
+}
+
+.battle-card.error {
+    width: 200px;
+    height: 180px;
+    border: 2px dashed #800;
+    background-color: #200;
+    color: #f88;
+    position: relative;
+}
+
+.card-error-message {
+    color: #f88;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+    font-style: italic;
+}
+
+.card-health-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #333;
+    margin: 5px 0;
+    position: relative;
+}
+
+.health-bar-fill {
+    height: 100%;
+    background-color: #080;
+    transition: width 0.3s;
+}
+
+.health-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.battle-log-container {
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+.battle-log {
+    height: calc(100% - 30px);
+    border: 1px solid #444;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #111;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.log-entry.super-effective {
+    color: #4f4;
+    font-weight: bold;
+}
+
+.log-entry.not-effective {
+    color: #f88;
+    font-style: italic;
+}
+
+.log-entry.ability {
+    color: #8af;
+    font-weight: bold;
+}
+
+.log-entry.defeat {
+    color: #f88;
+    font-weight: bold;
+}
+
+.log-entry.victory {
+    color: #ff4;
+    font-weight: bold;
+}
+
+.battle-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.battle-actions button {
+    width: 200px;
+    transition: all 0.3s;
+}
+
+.battle-actions button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+#attack-button {
+    background-color: #300;
+    border-color: #600;
+}
+
+#attack-button:hover:not(:disabled) {
+    background-color: #500;
+    border-color: #800;
+}
+
+#skip-button {
+    background-color: #111;
+    border-color: #444;
+}
+
+#skip-button:hover:not(:disabled) {
+    background-color: #222;
+    border-color: #666;
+}
+
+.continue-button {
+    width: 300px !important;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #050;
+    border-color: #080;
+}
+
+.continue-button:hover {
+    background-color: #070;
+    border-color: #0a0;
+}
+
+.strategy-button {
+    width: 200px !important;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #005;
+    border-color: #008;
+}
+
+.strategy-button:hover {
+    background-color: #007;
+    border-color: #00a;
+}
+
+/* Card Switching Styles */
+.deck-selector {
+    margin-top: 10px;
+}
+
+.deck-cards {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #111;
+    border: 1px solid #333;
+    margin-top: 5px;
+}
+
+.deck-cards.show {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.mini-card {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #444;
+    background-color: #0a0a0a;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mini-card:hover {
+    background-color: #222;
+    transform: translateX(5px);
+}
+
+.mini-card-name {
+    font-weight: bold;
+}
+
+.mini-card-type {
+    float: right;
+    font-style: italic;
+}
+
+.mini-card-stats {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/* Strategy Menu Styles */
+.strategy-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: #111;
+    border: 2px solid #444;
+    padding: 20px;
+    z-index: 100;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.strategy-options h3, 
+.reorder-section h3 {
+    text-align: center;
+    margin-top: 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.strategy-options button {
+    margin: 10px 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.reorder-section p {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.reorder-card-list {
+    min-height: 150px;
+    border: 1px solid #333;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.reorder-card {
+    padding: 8px;
+    margin: 5px 0;
+    background-color: #222;
+    border: 1px solid #444;
+    cursor: move;
+    user-select: none;
+}
+
+.reorder-card.dragging {
+    opacity: 0.5;
+    border: 2px dashed #666;
+}
+
+.reorder-card-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.reorder-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.reorder-buttons button {
+    flex: 1;
+    padding: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Default black and white for normal cards */
+.common { color: #ddd; }
+
+/* We only add colors for special rarities, to create a "climactic moment" */
+.uncommon { color: #ddd; }
+.rare { color: #ddd; } 
+.ultra-rare { color: #f0f; } /* Purple for ultra-rare */
+.legendary { color: #ff0; } /* Gold for legendary */
+
+.hidden {
+    display: none;
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+#upgrades, #tournaments, #shop, #shop-upgrades, #recent-sales {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+}
+
+.tournament, .sale {
+    border: 1px solid #444;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.tournament-info, .sale-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+#shop-status p {
+    margin: 5px 0;
+}
+
+#shop-status {
+    margin-top: 10px;
+}
+
+.shop-upgrade {
+    margin: 5px 0;
+}
+
+h3 {
+    margin-top: 0;
+}
+
+/* ASCII art styles */
+.ascii-art {
+    white-space: pre;
+    line-height: 1.2;
+    font-size: 12px;
+    margin: 10px 0;
+}
