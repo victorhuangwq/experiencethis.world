@@ -301,33 +301,51 @@ class DeckBuilder {
             return; // Deck not complete
         }
         
-        // Make deep copy of the selected cards to prevent reference issues
-        const selectedDeckCopy = this.selectedCards.map(card => {
-            // Create a new object with all the properties of the original card
-            return {
-                ...card,
-                // Ensure these crucial battle properties are included and are numbers
-                hp: Number(card.hp) || 50,
-                maxHp: Number(card.maxHp) || 50,
-                attack: Number(card.attack) || 10,
-                // Preserve type and other properties
-                type: card.type || 'Nature',
-                rarity: card.rarity || 'common',
-                name: card.name || 'Unknown Card',
-                id: card.id || `card-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                // Preserve special ability if it exists
-                specialAbility: card.specialAbility ? { ...card.specialAbility } : null
-            };
-        });
-        
-        console.log('Confirmed deck with cards:', selectedDeckCopy);
-        
-        // Close the deck builder
-        this.close();
-        
-        // Call the tournament callback with selected deck and level
-        if (this.tournamentCallback) {
-            this.tournamentCallback(selectedDeckCopy, this.tournamentLevel);
+        try {
+            // Make deep copy of the selected cards to prevent reference issues
+            const selectedDeckCopy = this.selectedCards.map(card => {
+                // Create a new object with all the properties of the original card
+                return {
+                    ...card,
+                    // Ensure these crucial battle properties are included and are numbers
+                    hp: Number(card.hp) || 50,
+                    maxHp: Number(card.maxHp) || 50,
+                    attack: Number(card.attack) || 10,
+                    // Preserve type and other properties
+                    type: card.type || 'Nature',
+                    rarity: card.rarity || 'common',
+                    name: card.name || 'Unknown Card',
+                    id: card.id || `card-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                    // Preserve special ability if it exists
+                    specialAbility: card.specialAbility ? { ...card.specialAbility } : null
+                };
+            });
+            
+            console.log('Confirmed deck with cards:', selectedDeckCopy);
+            
+            // Store callback and arguments
+            const callback = this.tournamentCallback;
+            const tournamentLevel = this.tournamentLevel;
+            const deck = selectedDeckCopy;
+            
+            // Close the deck builder first
+            this.close();
+            
+            // Call the tournament callback with selected deck and level using setTimeout 
+            // to ensure UI is updated before proceeding to battle
+            if (callback) {
+                setTimeout(() => {
+                    try {
+                        callback(deck, tournamentLevel);
+                    } catch (error) {
+                        console.error('Error in tournament callback execution:', error);
+                    }
+                }, 50);
+            }
+        } catch (error) {
+            console.error('Error confirming deck:', error);
+            // Make sure to close the deck builder even if there's an error
+            this.close();
         }
     }
     

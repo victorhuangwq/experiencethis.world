@@ -36,62 +36,73 @@ class BattleSystem {
      * @param {number} tournamentLevel - Tournament level index
      */
     startTournament(playerDeck, tournamentLevel) {
-        if (!playerDeck) {
-            // Player cancelled deck selection
-            console.log('Tournament cancelled - no deck provided');
-            return;
-        }
-        
-        // Validate the player deck before proceeding
-        if (!Array.isArray(playerDeck) || playerDeck.length === 0) {
-            console.error('Invalid player deck format:', playerDeck);
-            if (this.gameManager.ui) {
-                this.gameManager.ui.logMessage('Error: Invalid deck format. Tournament cancelled.');
+        try {
+            if (!playerDeck) {
+                // Player cancelled deck selection
+                console.log('Tournament cancelled - no deck provided');
+                return;
             }
-            return;
-        }
-        
-        // No need to deep copy again since deck-builder already creates a deep copy
-        this.playerDeck = playerDeck;
-        console.log('Starting tournament with player deck:', this.playerDeck);
-        
-        // Perform a full validation of all cards in the deck
-        const invalidCards = this.playerDeck.filter(card => {
-            const validation = this.validateCardForBattle(card);
-            return !validation.isValid;
-        });
-        
-        if (invalidCards.length > 0) {
-            console.error('Invalid cards in player deck:', invalidCards);
-            if (this.gameManager.ui) {
-                this.gameManager.ui.logMessage(`Error: ${invalidCards.length} invalid cards in deck. Tournament cancelled.`);
+            
+            // Validate the player deck before proceeding
+            if (!Array.isArray(playerDeck) || playerDeck.length === 0) {
+                console.error('Invalid player deck format:', playerDeck);
+                if (this.gameManager.ui) {
+                    this.gameManager.ui.logMessage('Error: Invalid deck format. Tournament cancelled.');
+                }
+                return;
             }
-            return;
+            
+            // No need to deep copy again since deck-builder already creates a deep copy
+            this.playerDeck = playerDeck;
+            console.log('Starting tournament with player deck:', this.playerDeck);
+            
+            // Perform a full validation of all cards in the deck
+            const invalidCards = this.playerDeck.filter(card => {
+                const validation = this.validateCardForBattle(card);
+                return !validation.isValid;
+            });
+            
+            if (invalidCards.length > 0) {
+                console.error('Invalid cards in player deck:', invalidCards);
+                if (this.gameManager.ui) {
+                    this.gameManager.ui.logMessage(`Error: ${invalidCards.length} invalid cards in deck. Tournament cancelled.`);
+                }
+                return;
+            }
+            
+            this.tournamentLevel = tournamentLevel;
+            
+            // Determine number of battles required based on tournament level
+            switch(tournamentLevel) {
+                case 0: // Local tournament
+                    this.battlesRequired = 2;
+                    break;
+                case 1: // Regional tournament
+                    this.battlesRequired = 3;
+                    break;
+                case 2: // National tournament
+                    this.battlesRequired = 4;
+                    break;
+                default:
+                    this.battlesRequired = 2;
+            }
+            
+            if (this.gameManager.ui) {
+                this.gameManager.ui.logMessage(`Tournament started! You'll need to win ${this.battlesRequired} battles.`);
+            }
+            
+            this.currentBattle = 0;
+            
+            // Use setTimeout to ensure the UI is properly updated before starting the battle
+            setTimeout(() => {
+                this.startNextBattle();
+            }, 100);
+        } catch (error) {
+            console.error('Error starting tournament:', error);
+            if (this.gameManager.ui) {
+                this.gameManager.ui.logMessage('An error occurred starting the tournament. Please try again.');
+            }
         }
-        
-        this.tournamentLevel = tournamentLevel;
-        
-        // Determine number of battles required based on tournament level
-        switch(tournamentLevel) {
-            case 0: // Local tournament
-                this.battlesRequired = 2;
-                break;
-            case 1: // Regional tournament
-                this.battlesRequired = 3;
-                break;
-            case 2: // National tournament
-                this.battlesRequired = 4;
-                break;
-            default:
-                this.battlesRequired = 2;
-        }
-        
-        if (this.gameManager.ui) {
-            this.gameManager.ui.logMessage(`Tournament started! You'll need to win ${this.battlesRequired} battles.`);
-        }
-        
-        this.currentBattle = 0;
-        this.startNextBattle();
     }
     
     /**
