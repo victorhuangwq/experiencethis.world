@@ -65,8 +65,8 @@ h2.page-title {
 article + *,
 .post-body ~ section {
   border-top: 1px solid $border-color;
-  margin-top: $section-spacing;
-  padding-top: $section-spacing;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
 
   > h2:first-child,
   > h3:first-child {

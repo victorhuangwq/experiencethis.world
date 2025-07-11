@@ -4,7 +4,7 @@ title: About
 sidebar_link: true
 ---
 
-<img style="align:center;height:20rem;padding-left:10rem,padding-right:10rem;" src="/assets/images/cut_cake.png" alt="display pic">
+<img class="about-image" src="/assets/images/cut_cake.png" alt="display pic">
 
 I'm born and raised in Singapore, the amazing sunny island state near the equator. I was last in Singapore in 2023 and I miss the food already.
 
