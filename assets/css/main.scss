@@ -3,7 +3,8 @@
 # only main files contain this front matter, not partials.
 ---
 
-$sidebar-bg-color: #ac4142;
+// Modern color scheme override
+$sidebar-bg-color: #1e293b;
 
 @import "hydeout";
 
@@ -32,4 +33,63 @@ $sidebar-bg-color: #ac4142;
     color: #305d5f;
     background-color: #dcebeb;
     border-color: #cee5e5;
+}
+
+// Modern enhancements
+.container {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+// Improved link styling
+a {
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: #8b5cf6;
+    }
+}
+
+// Enhanced sidebar links
+#sidebar a {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+        transform: translateX(4px);
+        opacity: 0.9;
+    }
+}
+
+// Modern card-like styling for posts
+.post-meta {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+// Improved code blocks
+pre,
+code {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-radius: 6px;
+    border: 1px solid #475569;
+}
+
+// Modern button styling
+.btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
 }

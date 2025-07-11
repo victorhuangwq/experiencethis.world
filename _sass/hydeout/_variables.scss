@@ -1,16 +1,21 @@
-$gray-1: #f9f9f9 !default;
-$gray-2: #e5e5e5 !default;
-$gray-3: #ccc !default;
-$gray-4: #767676 !default;
-$gray-5: #515151 !default;
-$gray-6: #313131 !default;
+// Modern neutral palette
+$gray-1: #fafafa !default;
+$gray-2: #f4f4f5 !default;
+$gray-3: #e4e4e7 !default;
+$gray-4: #71717a !default;
+$gray-5: #3f3f46 !default;
+$gray-6: #27272a !default;
 
-$red: #ac4142 !default;
-$orange: #d28445 !default;
-$yellow: #f4bf75 !default;
-$green: #90a959 !default;
-$cyan: #75b5aa !default;
-$blue: #268bd2 !default;
+// Modern accent colors
+$red: #ef4444 !default;
+$orange: #f97316 !default;
+$yellow: #eab308 !default;
+$green: #22c55e !default;
+$cyan: #06b6d4 !default;
+$blue: #3b82f6 !default;
+$purple: #8b5cf6 !default;
+$pink: #ec4899 !default;
+$indigo: #6366f1 !default;
 $brown: #8f5536 !default;
 
 $root-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif !default;
@@ -20,7 +25,7 @@ $root-line-height: 1.5 !default;
 $body-color: $gray-5 !default;
 $body-muted: $gray-4 !default;
 $body-bg: #fff !default;
-$link-color: $blue !default;
+$link-color: $indigo !default;
 $heading-color: $gray-6 !default;
 
 $border-color: $gray-2 !default;
@@ -41,13 +46,13 @@ $default-box-shadow: $box-shadow-size $box-shadow-size $box-shadow-size rgba(0, 
 $code-font-family: Menlo, Monaco, 'Courier New', monospace !default;
 $code-color: #bf616a !default;
 
-// Hyde theming
-$sidebar-bg-color: #202020 !default;
-$sidebar-fg-color: #fff !default;
+// Hyde theming - Modern dark theme
+$sidebar-bg-color: #1e293b !default;
+$sidebar-fg-color: #f8fafc !default;
 $sidebar-sticky: true !default;
 $layout-reverse: false !default;
 
 $sidebar-title-color: $sidebar-fg-color !default;
-$sidebar-link-color: $sidebar-fg-color !default;
-$sidebar-text-color: rgba($sidebar-fg-color, 0.75) !default;
-$sidebar-icon-color: rgba($sidebar-fg-color, 0.85) !default;
+$sidebar-link-color: rgba($sidebar-fg-color, 0.9) !default;
+$sidebar-text-color: rgba($sidebar-fg-color, 0.7) !default;
+$sidebar-icon-color: rgba($sidebar-fg-color, 0.8) !default;
