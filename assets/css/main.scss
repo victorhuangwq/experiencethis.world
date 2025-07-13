@@ -623,12 +623,64 @@ code {
                 margin-bottom: 0;
                 letter-spacing: -0.01em;
                 
+                a {
+                    color: inherit;
+                    text-decoration: none;
+                    
+                    &:hover {
+                        color: #4b5563;
+                        text-decoration: none;
+                    }
+                    
+                    &:visited {
+                        color: inherit;
+                    }
+                }
+                
                 @media (max-width: 768px) {
                     font-size: 0.95rem;
                     line-height: 1.5;
                     color: #4b5563;
+                    
+                    a {
+                        &:hover {
+                            color: #374151;
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+// Mobile pagination button optimization
+.pagination {
+    // Apply modern border radius for all screen sizes
+    > a {
+        border-radius: 8px !important;
+    }
+    
+    // Desktop - elegant and compact
+    @media (min-width: 769px) {
+        > a {
+            width: auto !important;
+            max-width: none !important;
+            padding: 0.6rem 1.5rem !important;
+            font-size: 0.85rem;
+            display: inline-block;
+            min-width: 80px;
+        }
+    }
+    
+    // Mobile - larger touch targets
+    @media (max-width: 768px) {
+        > a {
+            width: auto !important;
+            max-width: none !important;
+            padding: 1rem 2.5rem !important;
+            font-size: 0.9rem;
+            display: inline-block;
+            min-width: 120px;
         }
     }
 }
