@@ -1,56 +1,44 @@
 ---
 layout: post
-title: "I Went Deep Into Tambourine Voice's Code to Understand Why It Feels Different"
+title: "Tambourine Voice: Open Source Dictation That Actually Gets Your Words Right"
 date: 2026-02-12 08:00:00 -0500
 categories: projects
 tags:
     - ai
     - voice
     - dictation
-    - code review
+    - open source
     - developer tools
 hidden: false
 ---
 
-I've been spending a lot of time with Tambourine Voice lately. Not just using it — studying it. I wanted to understand why this particular dictation tool feels different from everything else I've tried. So I did what any obsessive person would do: I pulled up the source code and traced every line from microphone input to text output.
+I've been dictating a lot recently. Emails, Slack messages, notes, even commit messages. And the tool I keep reaching for is [Tambourine Voice](https://github.com/nicholasgcoles/tambourine-voice) — an open source dictation app that I stumbled onto and now can't stop using.
 
-Here's what I found.
+What got me interested wasn't just that it works well (it does), but that it's open source. You can pull up the code, see exactly how it processes your voice, and — this is the part that really hooked me — write your own prompt packs to teach it your vocabulary. I went through the source code to understand why it feels so different from every other dictation tool I've tried, and I want to walk through what I found.
 
-## The Pipeline: More Than Meets the Ear
+## It's not just transcription
 
-When you hit the hotkey and start speaking, your audio travels through a WebRTC connection to a Python server running Pipecat. Standard stuff so far. The audio hits one of eleven supported STT providers — Deepgram, Speechmatics, Whisper running locally, or eight others — and comes out as raw transcription.
+Most dictation tools work like this: speech goes in, text comes out. Whatever the speech-to-text engine gives you, that's what you get. Filler words, bad punctuation, mangled technical terms and all.
 
-But here's where it diverges from every other dictation tool I've used.
+Tambourine does something different. Your audio goes through a speech-to-text provider (it supports eleven of them — Deepgram, Speechmatics, Whisper running locally, a bunch of others), but the raw transcription isn't what ends up at your cursor. It passes through an LLM first. Claude, Gemini, GPT, Groq, even Ollama locally. You pick.
 
-That transcription doesn't go straight to your cursor. Instead, it flows through what the codebase calls a "turn controller" — a state machine that tracks whether you're still speaking, waits for voice activity detection to confirm you've stopped, and then drains any late-arriving transcription fragments. It's solving the awkward "when is the user actually done?" problem that plagues real-time transcription.
-
-Then comes the real trick: the text passes through an LLM — Claude, Gemini, GPT, Groq, or even Ollama running locally. Your choice.
-
-## The LLM Isn't a Chatbot — It's a Formatter
-
-This is the insight that makes Tambourine click. The system prompt explicitly tells the model:
+Here's the key though — the LLM isn't acting as a chatbot. The system prompt explicitly says:
 
 > "Do NOT reply conversationally or engage with the content — you are a text processor, not a conversational assistant."
 
-If you dictate "What time is the meeting?" — you get *What time is the meeting?* typed at your cursor. Not an answer. Not a clarification. Just clean, formatted text.
+So if I dictate "What time is the meeting?" I get *What time is the meeting?* typed at my cursor. Not an answer. Just clean, properly formatted text. It strips filler words, adds punctuation, fixes obvious transcription errors. If I say "comma" it types `,`. If I say "new paragraph" it actually makes a new paragraph.
 
-The prompt is modular, built from three sections that get concatenated together:
+I really like this framing. The LLM is a formatter, not an assistant.
 
-**Main** handles universal dictation rules. Remove filler words. Add punctuation. Convert "comma" to `,` and "new paragraph" to an actual paragraph break. Fix obvious transcription errors without changing meaning.
+## The prompt packs are the whole point
 
-**Advanced** handles something I've never seen in other dictation tools: mid-sentence corrections. Say "at 2 actually 3" and it outputs `at 3`. Say "I'll bring cookies scratch that brownies" and it outputs `I'll bring brownies`. It also detects when you're dictating a list ("one... two... three...") and formats it with proper numbering.
+This is the part I think is most interesting, and honestly the reason I wanted to write this post.
 
-**Dictionary** is where domain expertise lives. Phonetic mappings, technical terms, proper nouns. This is the customization layer.
+The prompt system is modular — there's a main prompt for universal dictation rules, an advanced prompt that handles things like mid-sentence corrections (say "at 2 actually 3" and it outputs `at 3`, which is wild), and then there's the dictionary layer. The dictionary is where you teach it your domain.
 
-## How It Actually Reaches Your Cursor
+The repo ships with example prompt packs for cardiology, legal contracts, immunology, and Meta advertising. Each one teaches the LLM the vocabulary of a specific profession.
 
-One detail I found satisfying: the "types anywhere" trick is a clipboard dance. When the LLM finishes formatting your text, the app saves whatever's currently on your clipboard, swaps in the new text, simulates Ctrl+V (or Cmd+V on Mac), and then quietly restores your original clipboard contents 100 milliseconds later. You never notice. It just appears at your cursor, in whatever app has focus, as if you typed it.
-
-## The Domain Packs Are Where It Gets Interesting
-
-The examples folder contains prompt packs for cardiology, legal contracts, immunology, and Meta advertising. Each one teaches the LLM the vocabulary of a profession.
-
-Looking at the cardiology dictionary, I found entries like:
+Looking at the cardiology dictionary:
 
 ```
 - metoprolol
@@ -59,46 +47,46 @@ Looking at the cardiology dictionary, I found entries like:
 - HFrEF = HFrEF (heart failure with reduced ejection fraction)
 ```
 
-The legal pack italicizes Latin terms (*force majeure*), converts "section symbol" to §, and knows the difference between Lessor and Lessee.
+The legal pack knows to italicize Latin terms (*force majeure*), converts "section symbol" to §, and gets Lessor vs. Lessee right.
 
 The Meta Ads pack maps "row as" to ROAS, "see pee em" to CPM, and "advantage plus" to Advantage+.
 
-This is solving a real problem. Every STT system I've used mangles technical vocabulary. Tambourine lets you teach it your domain, once, and then it just works.
+Every speech-to-text system I've used mangles technical vocabulary. It's the thing that always made dictation feel like a toy for me. Tambourine's answer is: don't fix the STT, fix the output. Let the LLM clean it up, and give it a dictionary of your domain so it knows what you actually mean. You write the pack once, and then it just works.
 
-## What I Think Should Come Next
+Because it's open source, anyone can write and share these packs. A radiologist could write one, share it on GitHub, and every other radiologist using Tambourine benefits. That's a really compelling model — the community builds out domain expertise, one prompt pack at a time.
 
-After tracing through the code, a few gaps feel obvious:
+## How it gets text to your cursor
 
-**Memory.** Right now, every session starts fresh. The system doesn't learn that I prefer bullet points over numbered lists, or that I always want "okay" spelled as "OK." The architecture could support this — you'd inject learned preferences into the prompt — but nobody's built it yet.
+One detail I found fun: the "types anywhere" trick is a clipboard swap. The app saves your current clipboard, puts the formatted text on the clipboard, simulates Ctrl+V (or Cmd+V on Mac), then restores your original clipboard 100 milliseconds later. You don't notice. It just appears wherever your cursor is. I use it in Slack, in VS Code, in email, wherever.
 
-**Context awareness.** The app doesn't know what application I'm typing into. Dictating a Slack message should feel different from dictating a legal brief. The prompt system is already modular; someone just needs to wire it up to the active window.
+## The open source angle matters
 
-**Learning from corrections.** When I edit the output, that's signal. If I consistently change "per se" to "in itself," the system should notice. This feedback loop doesn't exist yet, but it could.
+I want to be clear about why the open source part is a big deal to me. Dictation is personal. You're literally speaking your thoughts into a computer. With a closed-source tool, your voice data goes... somewhere. You trust the company. With Tambourine, you can run the STT locally (Whisper), run the LLM locally (Ollama), and keep everything on your machine. Or you can use cloud providers if you prefer the speed. Your choice.
 
-These feel like the obvious next steps. The foundation is there.
+And because it's open source, if it doesn't do something you want, you can just build it. The prompt packs are literally text files. You don't need to be a developer to write one — you just need to know your domain.
 
-## My Personal Experience: Voice Changed How I Work
+## What I'd love to see next
 
-Here's the thing about Tambourine that surprised me: I actually use it.
+A few things I think would make this even better:
 
-There's something delightful about the tambourine-like audio cue when you start recording. It's a small touch, but it makes the tool feel friendly. Not clinical, not enterprise software — just a cute little chime that says "I'm listening."
+**Memory across sessions.** Right now, every session starts fresh. It doesn't learn that I prefer "OK" over "okay" or that I like bullet points. The architecture could support this — you'd inject preferences into the prompt — but nobody's built it yet.
 
-I find myself reaching for it constantly now. Quick emails. Slack messages. Jotting down notes. Commit messages. The friction of typing feels unnecessary when I can just... talk.
+**Context awareness.** It doesn't know if I'm typing in Slack or in a legal document. The prompt system is already modular, so wiring it up to the active window feels doable.
 
-And it's had a spillover effect I didn't expect. Because I'm using voice input more with Tambourine, I've started using voice features everywhere else too. Sending voice messages to friends. Talking to Claude instead of typing. Voice has become a primary input method for me in a way it never was before.
+**Learning from corrections.** When I edit the output, that's useful signal. If I keep changing "per se" to "in itself," the system should pick that up eventually.
 
-But there's a tradeoff I'm still figuring out.
+These all feel very buildable. The foundation is there.
 
-When I'm speaking, I can't listen to music. And I really like listening to music while I work. So now I'm caught in this weird tension — voice is faster and more expressive, but it costs me my soundtrack. I haven't solved this yet. Maybe I need to batch my voice input into focused sessions. Maybe I need to accept that some tasks are typing tasks and some are speaking tasks.
+## It actually changed how I work
 
-Voice is a powerful medium. More powerful than I gave it credit for. But it demands your audio channel completely, and that's a bigger deal than I initially realized.
+Here's the thing that surprised me — I actually use this. Every day. There's a tambourine-like audio cue when you start recording, which is a small touch but it makes the tool feel friendly. Not clinical, not enterprise software. Just a cute chime that says "I'm listening."
 
-## The Bottom Line
+I find myself reaching for it constantly now. Quick emails, Slack messages, jotting down notes. The friction of typing feels unnecessary when I can just... talk. And it's had a spillover effect I didn't expect — I've started using voice features everywhere. Sending voice messages to friends. Talking to Claude instead of typing.
 
-Tambourine Voice is clever in a way that doesn't announce itself. The magic isn't the transcription — it's the post-processing. It treats the LLM as a formatting engine, not a chatbot. It lets you build domain-specific vocabularies. And it types directly at your cursor, in any app, anywhere.
+There's a tradeoff though. When I'm speaking, I can't listen to music. And I really like listening to music while I work. So I'm caught in this weird tension where voice is faster and more expressive, but it costs me my soundtrack. Haven't solved this yet. Maybe some tasks are typing tasks and some are speaking tasks.
 
-For professionals with dense vocabularies — doctors, lawyers, researchers — this could be genuinely transformative. For the rest of us, it's just a really good dictation tool that makes voice input feel polished instead of janky.
+## Try it out
 
-I'm excited to see where it goes next. Memory, context, learning — the roadmap writes itself. Someone just needs to build it.
+If you're someone with a dense professional vocabulary — a doctor, a lawyer, a researcher, anyone who's been frustrated by dictation tools mangling your terminology — I think this is worth trying. It's open source, the prompt packs are easy to write, and you can run the whole thing locally if you care about privacy.
 
-In the meantime, I'll be here, talking to my computer, trying to figure out when to speak and when to put my headphones back on.
+And if you write a prompt pack for your field, share it. That's kind of the whole point.
