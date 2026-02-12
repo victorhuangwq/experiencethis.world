@@ -18,13 +18,13 @@ Here's what I found.
 
 ## The Pipeline: More Than Meets the Ear
 
-When you hit the hotkey and start speaking, your audio travels through a WebRTC connection to a Python server running Pipecat. Standard stuff so far. The audio hits an STT provider — Deepgram, Whisper, whatever you've configured — and comes out as raw transcription.
+When you hit the hotkey and start speaking, your audio travels through a WebRTC connection to a Python server running Pipecat. Standard stuff so far. The audio hits one of eleven supported STT providers — Deepgram, Speechmatics, Whisper running locally, or eight others — and comes out as raw transcription.
 
 But here's where it diverges from every other dictation tool I've used.
 
 That transcription doesn't go straight to your cursor. Instead, it flows through what the codebase calls a "turn controller" — a state machine that tracks whether you're still speaking, waits for voice activity detection to confirm you've stopped, and then drains any late-arriving transcription fragments. It's solving the awkward "when is the user actually done?" problem that plagues real-time transcription.
 
-Then comes the real trick: the text passes through an LLM.
+Then comes the real trick: the text passes through an LLM — Claude, Gemini, GPT, Groq, or even Ollama running locally. Your choice.
 
 ## The LLM Isn't a Chatbot — It's a Formatter
 
@@ -41,6 +41,10 @@ The prompt is modular, built from three sections that get concatenated together:
 **Advanced** handles something I've never seen in other dictation tools: mid-sentence corrections. Say "at 2 actually 3" and it outputs `at 3`. Say "I'll bring cookies scratch that brownies" and it outputs `I'll bring brownies`. It also detects when you're dictating a list ("one... two... three...") and formats it with proper numbering.
 
 **Dictionary** is where domain expertise lives. Phonetic mappings, technical terms, proper nouns. This is the customization layer.
+
+## How It Actually Reaches Your Cursor
+
+One detail I found satisfying: the "types anywhere" trick is a clipboard dance. When the LLM finishes formatting your text, the app saves whatever's currently on your clipboard, swaps in the new text, simulates Ctrl+V (or Cmd+V on Mac), and then quietly restores your original clipboard contents 100 milliseconds later. You never notice. It just appears at your cursor, in whatever app has focus, as if you typed it.
 
 ## The Domain Packs Are Where It Gets Interesting
 
