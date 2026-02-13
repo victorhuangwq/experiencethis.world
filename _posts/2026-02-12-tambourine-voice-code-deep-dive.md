@@ -38,22 +38,17 @@ This is the part I think is most interesting, and honestly the reason I wanted t
 
 The prompt system is modular. There's a main prompt for universal dictation rules, an advanced prompt for things like those mid-sentence corrections I mentioned, and then there's the dictionary layer. The dictionary is where you teach it your domain.
 
-The repo ships with example prompt packs for cardiology, legal contracts, immunology, and Meta advertising. Each one teaches the LLM the vocabulary of a specific profession.
+The repo ships with example prompt packs for cardiology, legal contracts, immunology, and Meta advertising. When I first heard "prompt packs" I assumed it was just a glossary of terms. It's not. Each pack teaches the LLM how an entire profession formats its writing.
 
-Looking at the cardiology dictionary:
+Take the cardiology pack. Yes, the dictionary maps terms like "b n p" to BNP and knows that "Eliquis" should be written as "Eliquis (apixaban)." But the main prompt goes way further. It tells the LLM to format vitals as "BP 120/80 mmHg" and "HR 72 bpm." It formats medications with dose and frequency, like "metoprolol 25 mg BID." Lab values always get units: "troponin 0.04 ng/mL." And when you're dictating clinical notes, it can organize your output into SOAP format (Subjective, Objective, Assessment, Plan). It even catches transcription errors specific to medicine, like correcting "better blocker" to "beta blocker."
 
-```
-- metoprolol
-- Eliquis = Eliquis (apixaban)
-- b n p = BNP
-- HFrEF = HFrEF (heart failure with reduced ejection fraction)
-```
+The legal pack is a different world entirely. It enforces Oxford commas. It capitalizes defined terms the way lawyers expect: "the Agreement," "the Company," "the Effective Date." It italicizes Latin terms like *force majeure* and *mutatis mutandis*. It supports legal numbering styles like (a), (b), (c) and i, ii, iii. And it knows to preserve long, complex sentences instead of chopping them up, because legal precision demands it.
 
-The legal pack knows to italicize Latin terms (*force majeure*), converts "section symbol" to §, and gets Lessor vs. Lessee right.
+The Meta Ads pack has a whole section dedicated to numbers and currency. Say "twenty percent" and you get "20%." Say "ten thousand" and you get "10,000." It capitalizes Meta product names correctly: "Advantage+" with the plus sign, "Lookalike Audience" in title case, "Pixel" capitalized. It maps "row as" to ROAS and "see pee em" to CPM.
 
-The Meta Ads pack maps "row as" to ROAS, "see pee em" to CPM, and "advantage plus" to Advantage+.
+This is what makes the prompt packs more than a spellchecker. Each one encodes how a profession thinks about formatting. A cardiologist and a lawyer both use text, but they format it in completely different ways. The prompt packs capture that.
 
-Every speech-to-text system I've used mangles technical vocabulary. It's the thing that always made dictation feel like a toy for me. Tambourine's answer is: don't fix the STT, fix the output. Let the LLM clean it up, and give it a dictionary of your domain so it knows what you actually mean. You write the pack once, and then it just works.
+Every speech-to-text system I've used mangles technical vocabulary. It's the thing that always made dictation feel like a toy for me. Tambourine's answer is: don't fix the STT, fix the output. Let the LLM clean it up, and give it a full set of formatting rules for your domain. You write the pack once, and then it just works.
 
 Because it's open source, anyone can write and share these packs. A radiologist could write one, share it on GitHub, and every other radiologist using Tambourine benefits. That's a really compelling model. The community builds out domain expertise, one prompt pack at a time.
 
