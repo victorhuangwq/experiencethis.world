@@ -40,11 +40,39 @@ The prompt system is modular. There's a main prompt for universal dictation rule
 
 The repo ships with example prompt packs for cardiology, legal contracts, immunology, and Meta advertising. When I first heard "prompt packs" I assumed it was just a glossary of terms. It's not. Each pack teaches the LLM how an entire profession formats its writing.
 
-Take the cardiology pack. Yes, the dictionary maps terms like "b n p" to BNP and knows that "Eliquis" should be written as "Eliquis (apixaban)." But the main prompt goes way further. It tells the LLM to format vitals as "BP 120/80 mmHg" and "HR 72 bpm." It formats medications with dose and frequency, like "metoprolol 25 mg BID." Lab values always get units: "troponin 0.04 ng/mL." And when you're dictating clinical notes, it can organize your output into SOAP format (Subjective, Objective, Assessment, Plan). It even catches transcription errors specific to medicine, like correcting "better blocker" to "beta blocker."
+### Cardiology
 
-The legal pack is a different world entirely. It enforces Oxford commas. It capitalizes defined terms the way lawyers expect: "the Agreement," "the Company," "the Effective Date." It italicizes Latin terms like *force majeure* and *mutatis mutandis*. It supports legal numbering styles like (a), (b), (c) and i, ii, iii. And it knows to preserve long, complex sentences instead of chopping them up, because legal precision demands it.
+The dictionary maps spoken medical shorthand to proper terms, but the main prompt goes further — it knows how to format vitals, medications, lab values, and organize clinical notes into SOAP format (Subjective, Objective, Assessment, Plan).
 
-The Meta Ads pack has a whole section dedicated to numbers and currency. Say "twenty percent" and you get "20%." Say "ten thousand" and you get "10,000." It capitalizes Meta product names correctly: "Advantage+" with the plus sign, "Lookalike Audience" in title case, "Pixel" capitalized. It maps "row as" to ROAS and "see pee em" to CPM.
+> **Terminology:** "b n p" → `BNP` / "Eliquis" → `Eliquis (apixaban)`
+>
+> **Vitals:** "BP 120 over 80" → `BP 120/80 mmHg` / "heart rate 72" → `HR 72 bpm`
+>
+> **Medications:** "metoprolol 25 milligrams twice daily" → `metoprolol 25 mg BID`
+>
+> **Lab values:** "troponin 0.04" → `troponin 0.04 ng/mL`
+>
+> **Error correction:** "better blocker" → `beta blocker`
+
+### Legal
+
+The legal pack is a different world entirely. It enforces Oxford commas, preserves long complex sentences instead of chopping them up, and supports legal numbering styles like (a), (b), (c) and i, ii, iii — because legal precision demands it.
+
+> **Defined terms:** "the agreement" → `the Agreement` / "the company" → `the Company` / "the effective date" → `the Effective Date`
+>
+> **Latin terms:** automatically italicized — *force majeure*, *mutatis mutandis*
+>
+> **Numbering:** supports legal styles like (a), (b), (c) and i, ii, iii
+
+### Meta Ads
+
+The Meta Ads pack has a whole section dedicated to numbers, currency, and product naming. It knows how every Meta product name should be capitalized and how spoken metrics map to industry abbreviations.
+
+> **Numbers:** "twenty percent" → `20%` / "ten thousand" → `10,000`
+>
+> **Product names:** "Advantage plus" → `Advantage+` / "lookalike audience" → `Lookalike Audience`
+>
+> **Metrics:** "row as" → `ROAS` / "see pee em" → `CPM`
 
 This is what makes the prompt packs more than a spellchecker. Each one encodes how a profession thinks about formatting. A cardiologist and a lawyer both use text, but they format it in completely different ways. The prompt packs capture that.
 
