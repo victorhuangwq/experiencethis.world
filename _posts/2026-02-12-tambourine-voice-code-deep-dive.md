@@ -12,7 +12,7 @@ tags:
 hidden: false
 ---
 
-I've been dictating a lot recently. Emails, Slack messages, notes, even commit messages. And the tool I keep reaching for is [Tambourine Voice](https://github.com/kstonekuan/tambourine-voice). It's an open source dictation app built by my friend [Kingston Kuan](https://github.com/kstonekuan), and I can't stop using it.
+I've been dictating a lot recently. Emails, Slack messages, notes, even commit messages. And the tool I keep reaching for is [Tambourine Voice](https://github.com/kstonekuan/tambourine-voice). It's an open source dictation app started by my friend [Kingston Kuan](https://github.com/kstonekuan), and I've been contributing to it as well. I can't stop using it.
 
 What got me interested wasn't just that it works well (it does), but that it's open source. You can pull up the code, see exactly how it processes your voice, and write your own prompt packs to teach it your vocabulary. That last part is what really hooked me. I went through the source code to understand why it feels so different from every other dictation tool I've tried, and I want to walk through what I found.
 
