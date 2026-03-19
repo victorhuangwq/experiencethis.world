@@ -25,6 +25,7 @@
       <h2>{{ tag }}</h2>
       <ul class="posts-list">
         {% for post in site.tags[tag] %}
+          {% if post.hidden %}{% continue %}{% endif %}
           <li>
             <h3>
               <a href="{{ post.url | relative_url }}">

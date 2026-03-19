@@ -9,6 +9,7 @@ layout: page
 <ul class="posts-list">
   {% assign category = page.category | default: page.title %}
   {% for post in site.categories[category] %}
+    {% if post.hidden %}{% continue %}{% endif %}
     <li>
       <small>{{ post.date | date_to_string }}</small>
       <h3>

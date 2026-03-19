@@ -130,3 +130,18 @@ I work on a browser used by hundreds of millions of people. Most of what I do is
 The experiment is still running. I'm not counting chickens. But I really hope it lands.
 
 That's what I'm writing this down for — before I know how it ends.
+
+<!--
+## TODOs before publishing
+
+- [ ] Screenshot 1: New tab opened from an AI chat (e.g. Copilot or ChatGPT) — back button greyed out/disabled
+- [ ] Screenshot 2: Back button enabled on a new tab from Bing or a chat (with BackToOpener active)
+- [ ] Screenshot 3: Long-press back button dropdown showing "Close and return to [Opener Title]" label
+- [ ] Screenshot 4: BackToOpener in action — back clicked, tab closes, original tab comes into focus
+- [ ] Screenshot 5: MSN or Bing page in a new tab with BackToOpener active
+- [ ] Add images to /assets/images/ with kebab-case names (e.g. backtoopener-back-button-disabled.png)
+- [ ] Replace *[Screenshot placeholder: ...]* lines with actual image tags
+- [ ] Add link to Dominic Denicola's profile on first mention
+- [ ] Remove `hidden: true` from front matter
+- [ ] Update date in front matter if needed
+-->

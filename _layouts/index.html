@@ -9,6 +9,7 @@ layout: default
 
   <div class="home-posts">
     {% for post in paginator.posts %}
+      {% if post.hidden %}{% continue %}{% endif %}
       <article class="home-post">
         <div class="home-post-meta">
           <small>{{ post.date | date_to_string }}</small>
