@@ -1,25 +1,58 @@
 // Masthead
 //
-// Super small header above the content for site name and short description.
+// Slim editorial header: site title at left, nav at right, thin rule below.
+// Flex wrapping doubles as the mobile treatment -- no JS, no hamburger.
+
+.masthead-wrap {
+  border-bottom: 1px solid $border-color;
+}
 
 .masthead {
-  margin-bottom: 3rem;
-  padding-bottom: 1rem;
-  padding-top: 1rem;
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: $masthead-width;
+  padding: 1.25rem 1.5rem;
 }
 
 .masthead-title {
-  color: $gray-5;
-  margin-bottom: 0;
-  margin-top: 0;
+  color: $heading-color;
+  font-family: $display-font-family;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    color: $link-color;
+    text-decoration: none;
+  }
+}
+
+.masthead-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.4rem;
 
   a {
-    color: inherit;
-  }
+    color: $body-muted;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 
-  small {
-    font-size: 75%;
-    font-weight: 400;
-    opacity: 0.5;
+    &:hover,
+    &:focus {
+      color: $link-color;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    &.active {
+      color: $link-color;
+    }
   }
 }

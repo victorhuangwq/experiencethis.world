@@ -1,58 +1,49 @@
-// Modern neutral palette
-$gray-1: #fafafa !default;
-$gray-2: #f4f4f5 !default;
-$gray-3: #e4e4e7 !default;
-$gray-4: #71717a !default;
-$gray-5: #3f3f46 !default;
-$gray-6: #27272a !default;
+// Warm editorial palette
+$paper: #faf6f0 !default; // cream paper background
+$ink: #1a1612 !default; // heading ink
+$ink-soft: #2b241d !default; // body ink
+$ink-muted: #6e6258 !default; // meta / muted text
+$terracotta: #c2410c !default; // accent
+$terracotta-dark: #9a3412 !default; // inline code accent
+$hairline: #e7decf !default; // warm hairline borders
+$wash: #f4eee3 !default; // code blocks / tinted panels
+$wash-strong: #f1eae0 !default; // table headers
 
-// Modern accent colors
-$red: #ef4444 !default;
-$orange: #f97316 !default;
-$yellow: #eab308 !default;
-$green: #22c55e !default;
-$cyan: #06b6d4 !default;
-$blue: #3b82f6 !default;
-$purple: #8b5cf6 !default;
-$pink: #ec4899 !default;
-$indigo: #6366f1 !default;
-$brown: #8f5536 !default;
+// Warm neutral scale (kept for partials that expect grays)
+$gray-1: #f3ede3 !default;
+$gray-2: $hairline !default;
+$gray-3: #d8ccb9 !default;
+$gray-4: $ink-muted !default;
+$gray-5: $ink-soft !default;
+$gray-6: $ink !default;
 
-$root-font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !default;
-$root-font-size: 0.95rem !default;
-$root-line-height: 1.5 !default;
+$display-font-family: 'Fraunces', Georgia, 'Times New Roman', serif !default;
+$root-font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif !default;
+$root-font-size: 1.0625rem !default;
+$root-line-height: 1.7 !default;
 
-$body-color: $gray-5 !default;
-$body-muted: $gray-4 !default;
-$body-bg: #fff !default;
-$link-color: $indigo !default;
-$heading-color: $gray-6 !default;
+$body-color: $ink-soft !default;
+$body-muted: $ink-muted !default;
+$body-bg: $paper !default;
+$link-color: $terracotta !default;
+$heading-color: $ink !default;
 
-$border-color: $gray-2 !default;
-$border-radius: 300px !default;
+$border-color: $hairline !default;
+$border-radius: 6px !default;
 $padding-v: 1em !default;
 $padding-h: 1.5em !default;
 $heading-spacing: 0.5rem !default;
 $section-spacing: 2rem !default;
-$sidebar-width: 18rem !default;
+
+$measure: 42rem !default; // comfortable reading measure
+$masthead-width: 52rem !default;
 
 $large-breakpoint: 49rem !default;
-$large-font-size: 1.25rem !default;
+$large-font-size: 1.125rem !default;
 
 $box-shadow-size: 1px !default;
 $box-shadow-opacity: 0.16 !default;
 $default-box-shadow: $box-shadow-size $box-shadow-size $box-shadow-size rgba(0, 0, 0, $box-shadow-opacity);
 
-$code-font-family: Menlo, Monaco, 'Courier New', monospace !default;
-$code-color: #bf616a !default;
-
-// Hyde theming - Modern dark theme
-$sidebar-bg-color: #1e293b !default;
-$sidebar-fg-color: #f8fafc !default;
-$sidebar-sticky: true !default;
-$layout-reverse: false !default;
-
-$sidebar-title-color: $sidebar-fg-color !default;
-$sidebar-link-color: rgba($sidebar-fg-color, 0.9) !default;
-$sidebar-text-color: rgba($sidebar-fg-color, 0.7) !default;
-$sidebar-icon-color: rgba($sidebar-fg-color, 0.8) !default;
+$code-font-family: ui-monospace, 'SF Mono', Menlo, Monaco, 'Courier New', monospace !default;
+$code-color: $terracotta-dark !default;

@@ -47,7 +47,7 @@ h2.page-title {
   }
 
   li small {
-    color: #999;
+    color: $body-muted;
     font-size: 75%;
     white-space: nowrap;
   }
@@ -62,7 +62,6 @@ h2.page-title {
   }
 }
 
-article + *,
 .post-body ~ section {
   border-top: 1px solid $border-color;
   margin-top: 1.5rem;

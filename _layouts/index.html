@@ -3,6 +3,13 @@ layout: default
 ---
 
 <div class="content">
+  {% if page.url == "/" %}
+    <section class="home-intro">
+      <h1>{{ site.description }}</h1>
+      <p class="home-tagline">{{ site.tagline }}</p>
+    </section>
+  {% endif %}
+
   {% include pagination-newer.html %}
 
   {{ content }}
@@ -11,23 +18,17 @@ layout: default
     {% for post in paginator.posts %}
       {% if post.hidden %}{% continue %}{% endif %}
       <article class="home-post">
-        <div class="home-post-meta">
-          <small>{{ post.date | date_to_string }}</small>
+        <div class="entry-meta">
+          {% assign category = post.categories | first %}
+          {% if category %}<span class="entry-category">{{ category }}</span> &middot; {% endif %}
+          <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
         </div>
-        <div class="home-post-content">
-          <h3>
-            <a href="{{ post.url | relative_url }}">
-              {{ post.title }}
-            </a>
-          </h3>
-          {% if post.excerpt %}
-            <div class="home-post-excerpt">
-              <a href="{{ post.url | relative_url }}">
-                {{ post.excerpt | strip_html | truncatewords: 25 }}
-              </a>
-            </div>
-          {% endif %}
-        </div>
+        <h2 class="entry-title">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </h2>
+        {% if post.excerpt %}
+          <p class="entry-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>
+        {% endif %}
       </article>
     {% endfor %}
   </div>
