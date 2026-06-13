@@ -1,23 +1,28 @@
-// Warm editorial palette
-$paper: #faf6f0 !default; // cream paper background
-$ink: #1a1612 !default; // heading ink
-$ink-soft: #2b241d !default; // body ink
-$ink-muted: #6e6258 !default; // meta / muted text
-$terracotta: #b23c0a !default; // accent (deepened slightly for AA headroom)
-$terracotta-dark: #9a3412 !default; // inline code accent
-$hairline: #e7decf !default; // warm hairline borders
-$wash: #f4eee3 !default; // code blocks / tinted panels
-$wash-strong: #f1eae0 !default; // table headers
+// Warm newsprint palette
+$paper: #f5f2ec !default; // warm newsprint background (cooler than cream)
+$ink: #1a1714 !default; // headline ink, near-black
+$ink-soft: #29251f !default; // body ink
+$ink-muted: #6a6157 !default; // meta / byline text
+$terracotta: #8c1d18 !default; // masthead red accent (deep oxblood)
+$terracotta-dark: #6f1714 !default; // inline code / pressed accent
+$hairline: #d6cfc1 !default; // story-divider rules
+$rule-strong: #1a1714 !default; // heavy nameplate / section-bar rule
+$wash: #ece8df !default; // code blocks / tinted panels
+$wash-strong: #e7e2d7 !default; // table headers
 
 // Warm neutral scale (kept for partials that expect grays)
-$gray-1: #f3ede3 !default;
+$gray-1: #efebe2 !default;
 $gray-2: $hairline !default;
-$gray-3: #d8ccb9 !default;
+$gray-3: #c7bfae !default;
 $gray-4: $ink-muted !default;
 $gray-5: $ink-soft !default;
 $gray-6: $ink !default;
 
-$display-font-family: 'Fraunces', Georgia, 'Times New Roman', serif !default;
+// Type: Caslon for the nameplate + headlines, a Franklin sans for labels and
+// decks, a readable serif for body copy. Sans/serif contrast reads "newspaper".
+$nameplate-font-family: 'Libre Caslon Display', Georgia, 'Times New Roman', serif !default;
+$display-font-family: 'Libre Caslon Text', Georgia, 'Times New Roman', serif !default;
+$sans-font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !default;
 $root-font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif !default;
 $root-font-size: 1.0625rem !default;
 $root-line-height: 1.7 !default;
@@ -29,14 +34,14 @@ $link-color: $terracotta !default;
 $heading-color: $ink !default;
 
 $border-color: $hairline !default;
-$border-radius: 6px !default;
+$border-radius: 0 !default; // square corners -- newspapers don't round things
 $padding-v: 1em !default;
 $padding-h: 1.5em !default;
 $heading-spacing: 0.5rem !default;
 $section-spacing: 2rem !default;
 
 $measure: 42rem !default; // comfortable reading measure
-$masthead-width: 52rem !default;
+$masthead-width: 54rem !default;
 
 $large-breakpoint: 49rem !default;
 $large-font-size: 1.125rem !default;

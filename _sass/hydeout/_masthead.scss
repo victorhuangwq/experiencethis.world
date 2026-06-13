@@ -1,66 +1,77 @@
-// Masthead
+// Masthead / nameplate
 //
-// Slim editorial header: site title at left, nav at right, thin rule below.
-// Flex wrapping doubles as the mobile treatment -- no JS, no hamburger.
-
-.masthead-wrap {
-  border-bottom: 1px solid $border-color;
-}
+// A broadsheet nameplate: large Caslon wordmark and a dateline, set off by a
+// heavy rule, with a ruled section bar beneath. No JS, no hamburger -- the
+// section bar simply wraps on small screens.
 
 .masthead {
-  align-items: baseline;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  justify-content: space-between;
   margin: 0 auto;
   max-width: $masthead-width;
-  padding: 1.25rem 1.5rem;
+  padding: 1.75rem 1.5rem 0;
 }
 
-.masthead-title {
+.nameplate {
+  border-bottom: 3px solid $rule-strong;
+  padding-bottom: 0.9rem;
+  text-align: center;
+}
+
+.nameplate-title {
   color: $heading-color;
-  font-family: $display-font-family;
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  display: inline-block;
+  font-family: $nameplate-font-family;
+  font-size: 2.6rem;
+  letter-spacing: 0.01em;
+  line-height: 1;
+
+  @media (min-width: $large-breakpoint) {
+    font-size: 3.25rem;
+  }
 
   &:hover,
   &:focus {
-    color: $link-color;
+    color: $heading-color;
     text-decoration: none;
   }
 }
 
-.masthead-nav {
+.nameplate-dateline {
+  color: $body-muted;
+  font-family: $sans-font-family;
+  font-size: 0.66rem;
+  letter-spacing: 0.13em;
+  margin: 0.6rem 0 0;
+  text-transform: uppercase;
+
+  .dateline-sep {
+    margin: 0 0.5rem;
+    opacity: 0.6;
+  }
+}
+
+.section-bar {
+  border-bottom: 1px solid $rule-strong;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.4rem;
+  gap: 0.4rem 1.6rem;
+  justify-content: center;
+  padding: 0.7rem 0;
 
   a {
-    background-image: linear-gradient($link-color, $link-color);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    color: $body-muted;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    padding-bottom: 3px;
+    color: $ink-soft;
+    font-family: $sans-font-family;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    transition:
-      color 0.25s ease,
-      background-size 0.3s ease;
 
     &:hover,
     &:focus {
-      background-size: 100% 1px;
       color: $link-color;
       text-decoration: none;
     }
 
     &.active {
-      background-size: 100% 1px;
       color: $link-color;
     }
   }

@@ -5,129 +5,48 @@
 
 @import "hydeout";
 
-// Warm Editorial component layer
-// Base palette, type, and layout live in _sass/hydeout/*; this file only
-// styles the site-specific components (home list, post page, tags, etc.).
+// Newspaper component layer
+// Base palette, type, and the nameplate live in _sass/hydeout/*; this file
+// styles the site-specific components: the section kicker, the home story
+// list, post bylines, and the tag/category/related lists.
 
-// Home intro
-.home-intro {
-  margin-bottom: 1.75rem;
-
-  .home-kicker {
-    align-items: center;
-    color: $link-color;
-    display: flex;
-    font-family: $root-font-family;
-    font-size: 0.72rem;
-    font-weight: 600;
-    gap: 0.6rem;
-    letter-spacing: 0.18em;
-    margin: 0 0 0.85rem;
-    text-transform: uppercase;
-
-    &::before {
-      background: $link-color;
-      content: '';
-      display: inline-block;
-      height: 1px;
-      width: 1.75rem;
-    }
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
-
-    @media (min-width: $large-breakpoint) {
-      font-size: 2.75rem;
-    }
-  }
-
-  .home-tagline {
-    color: $body-muted;
-    font-style: italic;
-    margin: 0;
-  }
-}
-
-// Flourish divider between the intro and the post list
-.ornament {
-  color: rgba($terracotta, 0.55);
-  font-size: 1.4rem;
-  line-height: 1;
-  margin: 0 0 2.75rem;
-  text-align: center;
-}
-
-// Small-caps style meta line (home entries + post pages)
-.entry-meta,
-.post-meta {
-  color: $body-muted;
-  font-size: 0.72rem;
-  font-style: normal;
-  letter-spacing: 0.1em;
+// Section kicker -- the red sans label above a headline (home + post head)
+.story-kicker {
+  color: $link-color;
+  font-family: $sans-font-family;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  margin: 0 0 0.5rem;
   text-transform: uppercase;
-
-  .entry-category {
-    color: $link-color;
-  }
-
-  a {
-    color: $link-color;
-  }
 }
 
-// "Latest" pill on the lead entry
-.entry-flag {
-  background: $link-color;
-  border-radius: 999px;
-  color: $paper;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  margin-right: 0.6rem;
-  padding: 0.15em 0.55em;
-  vertical-align: 0.08em;
-}
+// Home story list: hairline-divided stories, no cards, no ornament
+.story-list {
+  .story {
+    border-top: 1px solid $hairline;
+    padding: 1.75rem 0;
 
-// Editorial post list on the home page
-.home-posts .home-post {
-  border-bottom: 1px solid $border-color;
-  display: flex;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+    &:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
 
-  &:last-child {
-    border-bottom: 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  // Hanging magazine-style index numeral
-  .entry-index {
-    color: rgba($terracotta, 0.5);
-    flex-shrink: 0;
-    font-family: $display-font-family;
-    font-feature-settings: 'tnum' 1;
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.9;
-    width: 1.6rem;
-
-    @media (min-width: $large-breakpoint) {
-      font-size: 1.15rem;
+    &:last-child {
+      padding-bottom: 0;
     }
   }
 
-  .entry-body {
-    min-width: 0;
-  }
+  .story-headline {
+    font-family: $display-font-family;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.16;
+    margin: 0 0 0.5rem;
 
-  .entry-title {
-    font-size: 1.6rem;
-    line-height: 1.2;
-    margin: 0.4rem 0 0.5rem;
+    @media (min-width: $large-breakpoint) {
+      font-size: 1.75rem;
+    }
 
     a {
       color: $heading-color;
@@ -140,86 +59,100 @@
     }
   }
 
-  .entry-excerpt {
-    color: #5a4f44;
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin: 0;
+  .story-deck {
+    color: $ink-soft;
+    font-family: $sans-font-family;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin: 0 0 0.6rem;
   }
 
-  // Lead story: larger billing for the newest post
-  &.is-lead {
-    .entry-index {
-      line-height: 2.4;
-    }
+  .story-byline {
+    color: $body-muted;
+    font-family: $sans-font-family;
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    margin: 0;
+    text-transform: uppercase;
 
-    .entry-title {
-      font-size: 2.1rem;
-      line-height: 1.12;
+    .byline-sep {
+      margin: 0 0.35rem;
+      opacity: 0.6;
+    }
+  }
+
+  // Lead story: a front-page splash with a larger headline + deck
+  .story--lead {
+    .story-headline {
+      font-size: 2rem;
 
       @media (min-width: $large-breakpoint) {
-        font-size: 2.35rem;
+        font-size: 2.7rem;
       }
     }
 
-    .entry-excerpt {
+    .story-deck {
       font-size: 1.05rem;
-      line-height: 1.7;
+      line-height: 1.6;
     }
   }
 }
 
-// Post pages
+// Post byline (date / reading time) below the headline
 .post-meta {
-  margin-bottom: 2rem;
+  color: $body-muted;
+  font-family: $sans-font-family;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  margin-bottom: 2.25rem;
+  margin-top: 1.25rem;
+  text-transform: uppercase;
+
+  .meta-sep {
+    margin: 0 0.4rem;
+    opacity: 0.6;
+  }
 }
 
+// Post body
 .post-body {
   line-height: 1.75;
 
   img {
-    border-radius: $border-radius;
     margin: 1.5rem 0;
   }
 
-  // Inline links: terracotta underline that wipes in on hover
+  // In-text links: a plain newspaper underline that thickens on hover
   p a,
   li a {
-    background-image: linear-gradient($link-color, $link-color);
-    background-position: 0 1.15em;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    transition: background-size 0.3s ease;
+    color: $link-color;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
 
     &:hover,
     &:focus {
-      background-size: 100% 1px;
-      text-decoration: none;
+      text-decoration-thickness: 2px;
     }
   }
 }
 
-// Drop cap on the opening paragraph; opt out per-post with `dropcap: false`
-.dropcap > p:first-of-type::first-letter {
-  color: $link-color;
-  float: left;
-  font-family: $display-font-family;
-  font-size: 3.4em;
-  font-weight: 600;
-  line-height: 0.85;
-  padding: 0.05em 0.08em 0 0;
-}
-
-// Tags below posts: quiet #tag links
+// Tags below a post: quiet #tag links
 .post-tags {
+  border-top: 1px solid $hairline;
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+
   > a,
   > span {
     color: $body-muted;
     display: inline-block;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
+    font-family: $sans-font-family;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
     margin-right: 1rem;
-    opacity: 1;
+    text-transform: uppercase;
     white-space: nowrap;
 
     .icon {
@@ -237,14 +170,18 @@
   }
 }
 
-// Related posts + tag page post lists (title with inline date)
+// Related posts + tag-page lists: a sans section label over serif headlines
 .related,
 .posts-for-tag {
+  border-top: 1px solid $hairline;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+
   h2 {
-    color: $body-muted;
-    font-family: $root-font-family;
-    font-size: 0.8rem;
-    font-weight: 600;
+    color: $ink;
+    font-family: $sans-font-family;
+    font-size: 0.78rem;
+    font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
@@ -253,7 +190,9 @@
     margin-bottom: 1rem;
 
     h3 {
+      font-family: $display-font-family;
       font-size: 1.15rem;
+      font-weight: 700;
       margin: 0;
 
       a {
@@ -271,7 +210,9 @@
       }
 
       small {
-        font-family: $root-font-family;
+        color: $body-muted;
+        font-family: $sans-font-family;
+        font-size: 0.7rem;
         font-weight: 400;
         letter-spacing: 0.06em;
         margin-left: 0.5rem;
@@ -281,7 +222,7 @@
   }
 }
 
-// Category pages: date + title rows
+// Category pages: date + headline rows
 .category .posts-list li {
   align-items: baseline;
   display: flex;
@@ -289,19 +230,20 @@
   margin-bottom: 0.85rem;
 
   small {
+    color: $body-muted;
     flex-shrink: 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
+    font-family: $sans-font-family;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
     min-width: 6.5rem;
     text-transform: uppercase;
   }
 
   h3 {
-    font-family: $root-font-family;
-    font-size: 1.05rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    line-height: 1.4;
+    font-family: $display-font-family;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
     margin: 0;
 
     a {
@@ -318,7 +260,6 @@
 
 // About page portrait
 .about-image {
-  border-radius: $border-radius;
   display: block;
   margin: 1.5rem auto;
   max-width: 300px;
@@ -331,113 +272,61 @@
 // ---------------------------------------------------------------------------
 // Phone optimizations
 //
-// Scoped to <= 40rem so the desktop (>= $large-breakpoint) and tablet layouts
-// are left exactly as-is. This block only refines the small-screen reading and
-// navigation experience: a stacked masthead, gentler type scale so long titles
-// don't fragment, tighter index numerals, and no accidental horizontal scroll.
+// Scoped to <= 40rem so the desktop and tablet layouts are left as-is. Only
+// scales the nameplate, story headlines, and gutters for a narrow column.
 // ---------------------------------------------------------------------------
 $phone-breakpoint: 40rem;
 
 @media (max-width: $phone-breakpoint) {
-  // Two-row masthead: title, then a full-width nav with bigger tap targets
   .masthead {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem 1.15rem 0.9rem;
+    padding: 1.25rem 1.15rem 0;
   }
 
-  .masthead-nav {
-    gap: 0.2rem 1.3rem;
-
-    a {
-      // Taller hit area while keeping the underline tight to the text
-      padding-bottom: 0.4rem;
-      padding-top: 0.2rem;
-    }
+  .nameplate-title {
+    font-size: 2rem;
   }
 
-  // Tighter, more comfortable reading gutters
+  .nameplate-dateline {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .section-bar {
+    gap: 0.3rem 1.1rem;
+    padding: 0.6rem 0;
+  }
+
   .container {
     padding: 1.75rem 1.15rem 2.5rem;
   }
 
-  // Keep long titles, URLs, and inline code from forcing the page sideways
+  // Keep long titles, URLs, and inline code from forcing horizontal scroll
   .post-body,
-  .entry-title,
-  .entry-excerpt,
-  .post-title,
-  .page-title {
+  .story-headline,
+  .story-deck,
+  .post-title {
     overflow-wrap: break-word;
   }
 
-  // Home intro: smaller headline, less air before the list
-  .home-intro {
-    margin-bottom: 1.5rem;
+  .story-list {
+    .story-headline {
+      font-size: 1.35rem;
+    }
 
-    h1 {
-      font-size: 2rem;
+    .story--lead .story-headline {
+      font-size: 1.7rem;
+    }
+
+    .story--lead .story-deck {
+      font-size: 1rem;
     }
   }
 
-  .ornament {
-    margin-bottom: 2.25rem;
+  .container > header h1,
+  .container > header h2 {
+    font-size: 1.7rem;
   }
 
-  // Tighten the hanging index numeral so titles keep their width
-  .home-posts .home-post {
-    gap: 0.85rem;
-
-    .entry-index {
-      font-size: 0.92rem;
-      line-height: 1.7;
-      width: 1.2rem;
-    }
-
-    .entry-title {
-      font-size: 1.4rem;
-    }
-
-    .entry-excerpt {
-      font-size: 0.95rem;
-    }
-
-    // Lead story stays the largest, but sized for a narrow column
-    &.is-lead {
-      .entry-index {
-        line-height: 2;
-      }
-
-      .entry-title {
-        font-size: 1.75rem;
-      }
-
-      .entry-excerpt {
-        font-size: 1rem;
-      }
-    }
-  }
-
-  // Post/page titles render in .container > header
-  .container > header {
-    margin-bottom: 1.25rem;
-
-    h1,
-    h2 {
-      font-size: 1.85rem;
-    }
-
-    &::after {
-      margin-top: 0.9rem;
-    }
-  }
-
-  // A smaller drop cap so it doesn't crowd a narrow measure
-  .dropcap > p:first-of-type::first-letter {
-    font-size: 2.8em;
-  }
-
-  // Roomier footer tap targets
   .site-footer .footer-links a {
     display: inline-block;
     padding: 0.3rem 0;
