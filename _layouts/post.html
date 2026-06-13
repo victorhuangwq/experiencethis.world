@@ -2,15 +2,13 @@
 layout: default
 ---
 
-<header class="post-head">
-  {% assign category = page.categories | first %}
-  {% if category %}<p class="story-kicker">{{ category }}</p>{% endif %}
+<header>
   <h1 class="post-title">{{ page.title }}</h1>
 </header>
 <div class="content">
   {% include post-meta.html post=page %}
 
-  <div class="post-body">
+  <div class="post-body{% unless page.dropcap == false %} dropcap{% endunless %}">
     {{ content }}
     {% include post-tags.html post=page %}
   </div>

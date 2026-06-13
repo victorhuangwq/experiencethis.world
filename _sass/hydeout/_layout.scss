@@ -1,11 +1,12 @@
 /*
   Layout
 
-  Broadsheet layout: a centered nameplate + ruled section bar across the top
-  (see _masthead.scss) and a single column of content beneath it.
+  Warm editorial layout: a slim masthead across the top of the page
+  (see _masthead.scss) and a single centered column of content beneath it.
 
     body
-    > header.masthead
+    > .masthead-wrap
+      > header.masthead
     > .container
       > header (post/page title, outside .content)
       > .content
@@ -14,14 +15,45 @@
 
 body {
   background-color: $body-bg;
+  // Layered, intentionally subtle: a soft light glow up top and a faint warm
+  // wash at the foot give the paper depth, over a barely-there print grain
+  // (monochrome feTurbulence). No visible pattern -- just tactility.
+  background-image:
+    radial-gradient(115% 70% at 50% -12%, rgba(255, 252, 246, 0.85), rgba(255, 252, 246, 0) 55%),
+    radial-gradient(90% 50% at 50% 100%, rgba(178, 60, 10, 0.045), rgba(178, 60, 10, 0) 72%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, repeat;
   color: $body-color;
   min-height: 100vh;
+}
+
+// Gentle rise-in on the main reading column
+.content {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none;
+  }
 }
 
 .container {
   margin: 0 auto;
   max-width: $measure;
-  padding: 2.5rem 1.25rem 3rem;
+  padding: 2rem 1.25rem 3rem;
 
   @media (min-width: $large-breakpoint) {
     padding: 3rem 1.5rem 4rem;
@@ -30,27 +62,30 @@ body {
 
 // Post and page titles render inside .container > header, outside .content
 .container > header {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 
   h1,
   h2 {
     color: $heading-color;
     font-family: $display-font-family;
-    font-size: 2.1rem;
-    font-weight: 700;
-    line-height: 1.12;
+    font-size: 2.25rem;
+    line-height: 1.15;
     margin: 0;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.6rem;
+      font-size: 2.5rem;
     }
   }
-}
 
-// Post header: section kicker sits above the headline
-.post-head {
-  border-bottom: 1px solid $hairline;
-  padding-bottom: 1.25rem;
+  // Short accent rule beneath post/page titles
+  &::after {
+    background: $link-color;
+    content: '';
+    display: block;
+    height: 2px;
+    margin-top: 1.1rem;
+    width: 2.5rem;
+  }
 }
 
 .site-footer {
@@ -81,7 +116,7 @@ body {
 }
 
 @media print {
-  .masthead,
+  .masthead-wrap,
   .site-footer {
     display: none;
   }
