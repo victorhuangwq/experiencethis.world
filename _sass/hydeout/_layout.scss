@@ -15,8 +15,14 @@
 
 body {
   background-color: $body-bg;
-  // Barely-there print grain for tactile warmth (monochrome feTurbulence)
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  // Layered, intentionally subtle: a soft light glow up top and a faint warm
+  // wash at the foot give the paper depth, over a barely-there print grain
+  // (monochrome feTurbulence). No visible pattern -- just tactility.
+  background-image:
+    radial-gradient(115% 70% at 50% -12%, rgba(255, 252, 246, 0.85), rgba(255, 252, 246, 0) 55%),
+    radial-gradient(90% 50% at 50% 100%, rgba(178, 60, 10, 0.045), rgba(178, 60, 10, 0) 72%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, repeat;
   color: $body-color;
   min-height: 100vh;
 }
