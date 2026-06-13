@@ -5,72 +5,38 @@
 
 @import "hydeout";
 
-// Warm Editorial component layer
-// Base palette, type, and layout live in _sass/hydeout/*; this file only
-// styles the site-specific components (home list, post page, tags, etc.).
+// Warm editorial component layer
+// Base palette, type, and layout live in _sass/hydeout/*; this file styles the
+// site-specific components (home list, post page, tags, etc.).
 
 // Home intro
 .home-intro {
-  margin-bottom: 1.75rem;
-
-  .home-kicker {
-    align-items: center;
-    color: $link-color;
-    display: flex;
-    font-family: $root-font-family;
-    font-size: 0.72rem;
-    font-weight: 600;
-    gap: 0.6rem;
-    letter-spacing: 0.18em;
-    margin: 0 0 0.85rem;
-    text-transform: uppercase;
-
-    &::before {
-      background: $link-color;
-      content: '';
-      display: inline-block;
-      height: 1px;
-      width: 1.75rem;
-    }
-  }
+  margin-bottom: 2.5rem;
 
   h1 {
-    font-size: 2.5rem;
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
+    font-size: 2.4rem;
+    line-height: 1.12;
+    margin-bottom: 0.6rem;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.75rem;
+      font-size: 2.6rem;
     }
   }
 
   .home-tagline {
     color: $body-muted;
-    font-style: italic;
     margin: 0;
   }
 }
 
-// Flourish divider between the intro and the post list
-.ornament {
-  color: rgba($terracotta, 0.55);
-  font-size: 1.4rem;
-  line-height: 1;
-  margin: 0 0 2.75rem;
-  text-align: center;
-}
-
-// Small-caps style meta line (home entries + post pages)
+// Meta line (home entries + post pages)
 .entry-meta,
 .post-meta {
   color: $body-muted;
-  font-size: 0.72rem;
-  font-style: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
 
   .entry-category {
-    color: $link-color;
+    text-transform: capitalize;
   }
 
   a {
@@ -78,23 +44,9 @@
   }
 }
 
-// "Latest" pill on the lead entry
-.entry-flag {
-  background: $link-color;
-  border-radius: 999px;
-  color: $paper;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  margin-right: 0.6rem;
-  padding: 0.15em 0.55em;
-  vertical-align: 0.08em;
-}
-
-// Editorial post list on the home page
+// Post list on the home page
 .home-posts .home-post {
   border-bottom: 1px solid $border-color;
-  display: flex;
-  gap: 1.25rem;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 
@@ -104,30 +56,10 @@
     padding-bottom: 0;
   }
 
-  // Hanging magazine-style index numeral
-  .entry-index {
-    color: rgba($terracotta, 0.5);
-    flex-shrink: 0;
-    font-family: $display-font-family;
-    font-feature-settings: 'tnum' 1;
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.9;
-    width: 1.6rem;
-
-    @media (min-width: $large-breakpoint) {
-      font-size: 1.15rem;
-    }
-  }
-
-  .entry-body {
-    min-width: 0;
-  }
-
   .entry-title {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
     line-height: 1.2;
-    margin: 0.4rem 0 0.5rem;
+    margin: 0.35rem 0 0.5rem;
 
     a {
       color: $heading-color;
@@ -141,31 +73,8 @@
   }
 
   .entry-excerpt {
-    color: #5a4f44;
-    font-size: 0.95rem;
-    line-height: 1.65;
+    color: $body-color;
     margin: 0;
-  }
-
-  // Lead story: larger billing for the newest post
-  &.is-lead {
-    .entry-index {
-      line-height: 2.4;
-    }
-
-    .entry-title {
-      font-size: 2.1rem;
-      line-height: 1.12;
-
-      @media (min-width: $large-breakpoint) {
-        font-size: 2.35rem;
-      }
-    }
-
-    .entry-excerpt {
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
   }
 }
 
@@ -181,33 +90,6 @@
     border-radius: $border-radius;
     margin: 1.5rem 0;
   }
-
-  // Inline links: terracotta underline that wipes in on hover
-  p a,
-  li a {
-    background-image: linear-gradient($link-color, $link-color);
-    background-position: 0 1.15em;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
-    transition: background-size 0.3s ease;
-
-    &:hover,
-    &:focus {
-      background-size: 100% 1px;
-      text-decoration: none;
-    }
-  }
-}
-
-// Drop cap on the opening paragraph; opt out per-post with `dropcap: false`
-.dropcap > p:first-of-type::first-letter {
-  color: $link-color;
-  float: left;
-  font-family: $display-font-family;
-  font-size: 3.4em;
-  font-weight: 600;
-  line-height: 0.85;
-  padding: 0.05em 0.08em 0 0;
 }
 
 // Tags below posts: quiet #tag links
@@ -219,7 +101,6 @@
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
     margin-right: 1rem;
-    opacity: 1;
     white-space: nowrap;
 
     .icon {
@@ -237,16 +118,11 @@
   }
 }
 
-// Related posts + tag page post lists (title with inline date)
+// Related posts + tag page post lists
 .related,
 .posts-for-tag {
   h2 {
-    color: $body-muted;
-    font-family: $root-font-family;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 1.3rem;
   }
 
   .posts-list li {
@@ -271,11 +147,9 @@
       }
 
       small {
-        font-family: $root-font-family;
+        color: $body-muted;
         font-weight: 400;
-        letter-spacing: 0.06em;
         margin-left: 0.5rem;
-        text-transform: uppercase;
       }
     }
   }
@@ -289,18 +163,15 @@
   margin-bottom: 0.85rem;
 
   small {
+    color: $body-muted;
     flex-shrink: 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
+    font-size: 0.8rem;
     min-width: 6.5rem;
-    text-transform: uppercase;
   }
 
   h3 {
-    font-family: $root-font-family;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 500;
-    letter-spacing: 0;
     line-height: 1.4;
     margin: 0;
 
@@ -331,38 +202,23 @@
 // ---------------------------------------------------------------------------
 // Phone optimizations
 //
-// Scoped to <= 40rem so the desktop (>= $large-breakpoint) and tablet layouts
-// are left exactly as-is. This block only refines the small-screen reading and
-// navigation experience: a stacked masthead, gentler type scale so long titles
-// don't fragment, tighter index numerals, and no accidental horizontal scroll.
+// Scoped to <= 40rem so the desktop and tablet layouts are left as-is: a
+// stacked masthead, gentler headline sizes, and no horizontal overflow.
 // ---------------------------------------------------------------------------
 $phone-breakpoint: 40rem;
 
 @media (max-width: $phone-breakpoint) {
-  // Two-row masthead: title, then a full-width nav with bigger tap targets
   .masthead {
     align-items: stretch;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
     padding: 1rem 1.15rem 0.9rem;
   }
 
-  .masthead-nav {
-    gap: 0.2rem 1.3rem;
-
-    a {
-      // Taller hit area while keeping the underline tight to the text
-      padding-bottom: 0.4rem;
-      padding-top: 0.2rem;
-    }
-  }
-
-  // Tighter, more comfortable reading gutters
   .container {
     padding: 1.75rem 1.15rem 2.5rem;
   }
 
-  // Keep long titles, URLs, and inline code from forcing the page sideways
   .post-body,
   .entry-title,
   .entry-excerpt,
@@ -371,73 +227,19 @@ $phone-breakpoint: 40rem;
     overflow-wrap: break-word;
   }
 
-  // Home intro: smaller headline, less air before the list
-  .home-intro {
-    margin-bottom: 1.5rem;
-
-    h1 {
-      font-size: 2rem;
-    }
+  .home-intro h1 {
+    font-size: 2rem;
   }
 
-  .ornament {
-    margin-bottom: 2.25rem;
+  .home-posts .home-post .entry-title {
+    font-size: 1.35rem;
   }
 
-  // Tighten the hanging index numeral so titles keep their width
-  .home-posts .home-post {
-    gap: 0.85rem;
-
-    .entry-index {
-      font-size: 0.92rem;
-      line-height: 1.7;
-      width: 1.2rem;
-    }
-
-    .entry-title {
-      font-size: 1.4rem;
-    }
-
-    .entry-excerpt {
-      font-size: 0.95rem;
-    }
-
-    // Lead story stays the largest, but sized for a narrow column
-    &.is-lead {
-      .entry-index {
-        line-height: 2;
-      }
-
-      .entry-title {
-        font-size: 1.75rem;
-      }
-
-      .entry-excerpt {
-        font-size: 1rem;
-      }
-    }
+  .container > header h1,
+  .container > header h2 {
+    font-size: 1.85rem;
   }
 
-  // Post/page titles render in .container > header
-  .container > header {
-    margin-bottom: 1.25rem;
-
-    h1,
-    h2 {
-      font-size: 1.85rem;
-    }
-
-    &::after {
-      margin-top: 0.9rem;
-    }
-  }
-
-  // A smaller drop cap so it doesn't crowd a narrow measure
-  .dropcap > p:first-of-type::first-letter {
-    font-size: 2.8em;
-  }
-
-  // Roomier footer tap targets
   .site-footer .footer-links a {
     display: inline-block;
     padding: 0.3rem 0;

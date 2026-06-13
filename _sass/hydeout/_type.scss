@@ -82,13 +82,10 @@ abbr {
 }
 
 blockquote {
-  background: rgba($terracotta, 0.04);
-  border-left: 3px solid $link-color;
-  border-radius: 0 $border-radius $border-radius 0;
-  color: #5a4f44;
-  font-style: italic;
-  margin: 1.25rem 0;
-  padding: 0.75rem 1.25rem;
+  border-left: 3px solid $gray-3;
+  color: $body-muted;
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
 
   p:last-child {
     margin-bottom: 0;

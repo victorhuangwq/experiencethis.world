@@ -8,7 +8,7 @@ layout: default
 <div class="content">
   {% include post-meta.html post=page %}
 
-  <div class="post-body{% unless page.dropcap == false %} dropcap{% endunless %}">
+  <div class="post-body">
     {{ content }}
     {% include post-tags.html post=page %}
   </div>

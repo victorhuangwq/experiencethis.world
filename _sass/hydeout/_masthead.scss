@@ -39,28 +39,18 @@
   gap: 0.25rem 1.4rem;
 
   a {
-    background-image: linear-gradient($link-color, $link-color);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0% 1px;
     color: $body-muted;
     font-size: 0.75rem;
     letter-spacing: 0.08em;
-    padding-bottom: 3px;
     text-transform: uppercase;
-    transition:
-      color 0.25s ease,
-      background-size 0.3s ease;
 
     &:hover,
     &:focus {
-      background-size: 100% 1px;
       color: $link-color;
       text-decoration: none;
     }
 
     &.active {
-      background-size: 100% 1px;
       color: $link-color;
     }
   }
