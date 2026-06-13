@@ -327,3 +327,119 @@
     max-width: 250px;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Phone optimizations
+//
+// Scoped to <= 40rem so the desktop (>= $large-breakpoint) and tablet layouts
+// are left exactly as-is. This block only refines the small-screen reading and
+// navigation experience: a stacked masthead, gentler type scale so long titles
+// don't fragment, tighter index numerals, and no accidental horizontal scroll.
+// ---------------------------------------------------------------------------
+$phone-breakpoint: 40rem;
+
+@media (max-width: $phone-breakpoint) {
+  // Two-row masthead: title, then a full-width nav with bigger tap targets
+  .masthead {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.15rem 0.9rem;
+  }
+
+  .masthead-nav {
+    gap: 0.2rem 1.3rem;
+
+    a {
+      // Taller hit area while keeping the underline tight to the text
+      padding-bottom: 0.4rem;
+      padding-top: 0.2rem;
+    }
+  }
+
+  // Tighter, more comfortable reading gutters
+  .container {
+    padding: 1.75rem 1.15rem 2.5rem;
+  }
+
+  // Keep long titles, URLs, and inline code from forcing the page sideways
+  .post-body,
+  .entry-title,
+  .entry-excerpt,
+  .post-title,
+  .page-title {
+    overflow-wrap: break-word;
+  }
+
+  // Home intro: smaller headline, less air before the list
+  .home-intro {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .ornament {
+    margin-bottom: 2.25rem;
+  }
+
+  // Tighten the hanging index numeral so titles keep their width
+  .home-posts .home-post {
+    gap: 0.85rem;
+
+    .entry-index {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      width: 1.2rem;
+    }
+
+    .entry-title {
+      font-size: 1.4rem;
+    }
+
+    .entry-excerpt {
+      font-size: 0.95rem;
+    }
+
+    // Lead story stays the largest, but sized for a narrow column
+    &.is-lead {
+      .entry-index {
+        line-height: 2;
+      }
+
+      .entry-title {
+        font-size: 1.75rem;
+      }
+
+      .entry-excerpt {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  // Post/page titles render in .container > header
+  .container > header {
+    margin-bottom: 1.25rem;
+
+    h1,
+    h2 {
+      font-size: 1.85rem;
+    }
+
+    &::after {
+      margin-top: 0.9rem;
+    }
+  }
+
+  // A smaller drop cap so it doesn't crowd a narrow measure
+  .dropcap > p:first-of-type::first-letter {
+    font-size: 2.8em;
+  }
+
+  // Roomier footer tap targets
+  .site-footer .footer-links a {
+    display: inline-block;
+    padding: 0.3rem 0;
+  }
+}
