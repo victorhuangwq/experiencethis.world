@@ -11,7 +11,28 @@
 
 // Home intro
 .home-intro {
-  margin-bottom: 3rem;
+  margin-bottom: 1.75rem;
+
+  .home-kicker {
+    align-items: center;
+    color: $link-color;
+    display: flex;
+    font-family: $root-font-family;
+    font-size: 0.72rem;
+    font-weight: 600;
+    gap: 0.6rem;
+    letter-spacing: 0.18em;
+    margin: 0 0 0.85rem;
+    text-transform: uppercase;
+
+    &::before {
+      background: $link-color;
+      content: '';
+      display: inline-block;
+      height: 1px;
+      width: 1.75rem;
+    }
+  }
 
   h1 {
     font-size: 2.5rem;
@@ -28,6 +49,15 @@
     font-style: italic;
     margin: 0;
   }
+}
+
+// Flourish divider between the intro and the post list
+.ornament {
+  color: rgba($terracotta, 0.55);
+  font-size: 1.4rem;
+  line-height: 1;
+  margin: 0 0 2.75rem;
+  text-align: center;
 }
 
 // Small-caps style meta line (home entries + post pages)
@@ -48,9 +78,23 @@
   }
 }
 
+// "Latest" pill on the lead entry
+.entry-flag {
+  background: $link-color;
+  border-radius: 999px;
+  color: $paper;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  margin-right: 0.6rem;
+  padding: 0.15em 0.55em;
+  vertical-align: 0.08em;
+}
+
 // Editorial post list on the home page
 .home-posts .home-post {
   border-bottom: 1px solid $border-color;
+  display: flex;
+  gap: 1.25rem;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 
@@ -58,6 +102,26 @@
     border-bottom: 0;
     margin-bottom: 0;
     padding-bottom: 0;
+  }
+
+  // Hanging magazine-style index numeral
+  .entry-index {
+    color: rgba($terracotta, 0.5);
+    flex-shrink: 0;
+    font-family: $display-font-family;
+    font-feature-settings: 'tnum' 1;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.9;
+    width: 1.6rem;
+
+    @media (min-width: $large-breakpoint) {
+      font-size: 1.15rem;
+    }
+  }
+
+  .entry-body {
+    min-width: 0;
   }
 
   .entry-title {
@@ -82,6 +146,27 @@
     line-height: 1.65;
     margin: 0;
   }
+
+  // Lead story: larger billing for the newest post
+  &.is-lead {
+    .entry-index {
+      line-height: 2.4;
+    }
+
+    .entry-title {
+      font-size: 2.1rem;
+      line-height: 1.12;
+
+      @media (min-width: $large-breakpoint) {
+        font-size: 2.35rem;
+      }
+    }
+
+    .entry-excerpt {
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+  }
 }
 
 // Post pages
@@ -95,6 +180,22 @@
   img {
     border-radius: $border-radius;
     margin: 1.5rem 0;
+  }
+
+  // Inline links: terracotta underline that wipes in on hover
+  p a,
+  li a {
+    background-image: linear-gradient($link-color, $link-color);
+    background-position: 0 1.15em;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.3s ease;
+
+    &:hover,
+    &:focus {
+      background-size: 100% 1px;
+      text-decoration: none;
+    }
   }
 }
 

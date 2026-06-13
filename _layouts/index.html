@@ -5,9 +5,11 @@ layout: default
 <div class="content">
   {% if page.url == "/" %}
     <section class="home-intro">
+      <p class="home-kicker">Field Notes</p>
       <h1>{{ site.description }}</h1>
       <p class="home-tagline">{{ site.tagline }}</p>
     </section>
+    <div class="ornament" aria-hidden="true">&#10087;</div>
   {% endif %}
 
   {% include pagination-newer.html %}
@@ -17,18 +19,24 @@ layout: default
   <div class="home-posts">
     {% for post in paginator.posts %}
       {% if post.hidden %}{% continue %}{% endif %}
-      <article class="home-post">
-        <div class="entry-meta">
-          {% assign category = post.categories | first %}
-          {% if category %}<span class="entry-category">{{ category }}</span> &middot; {% endif %}
-          <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+      {% assign is_lead = false %}
+      {% if forloop.first and paginator.page == 1 %}{% assign is_lead = true %}{% endif %}
+      <article class="home-post{% if is_lead %} is-lead{% endif %}">
+        <span class="entry-index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        <div class="entry-body">
+          <div class="entry-meta">
+            {% if is_lead %}<span class="entry-flag">Latest</span>{% endif %}
+            {% assign category = post.categories | first %}
+            {% if category %}<span class="entry-category">{{ category }}</span> &middot; {% endif %}
+            <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+          </div>
+          <h2 class="entry-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h2>
+          {% if post.excerpt %}
+            <p class="entry-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>
+          {% endif %}
         </div>
-        <h2 class="entry-title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h2>
-        {% if post.excerpt %}
-          <p class="entry-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>
-        {% endif %}
       </article>
     {% endfor %}
   </div>

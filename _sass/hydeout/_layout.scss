@@ -14,9 +14,34 @@
 */
 
 body {
-  background: $body-bg;
+  background-color: $body-bg;
+  // Barely-there print grain for tactile warmth (monochrome feTurbulence)
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   color: $body-color;
   min-height: 100vh;
+}
+
+// Gentle rise-in on the main reading column
+.content {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none;
+  }
 }
 
 .container {
@@ -44,6 +69,16 @@ body {
     @media (min-width: $large-breakpoint) {
       font-size: 2.5rem;
     }
+  }
+
+  // Short accent rule beneath post/page titles
+  &::after {
+    background: $link-color;
+    content: '';
+    display: block;
+    height: 2px;
+    margin-top: 1.1rem;
+    width: 2.5rem;
   }
 }
 
