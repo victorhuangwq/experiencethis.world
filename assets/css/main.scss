@@ -86,15 +86,13 @@
 .post-body {
   line-height: 1.75;
 
-  // Figures: a lightly framed image with a quiet, centered caption beneath.
-  // Captions are authored as an italic line right under the image, so they
-  // render as `<p><img> <em>caption</em></p>`.
   img {
-    border: 1px solid $hairline;
     border-radius: $border-radius;
-    margin: 1.5rem auto 0;
+    margin: 1.5rem 0 0;
   }
 
+  // Captions are authored as an italic line right under the image, so they
+  // render as `<p><img> <em>caption</em></p>`. Render that as a real caption.
   p img:only-child {
     margin-bottom: 1.5rem;
   }
@@ -107,27 +105,6 @@
     margin: 0.6rem 0 1.5rem;
     text-align: center;
   }
-}
-
-// Footer voice -- a personal sign-off and a small colophon
-.footer-note {
-  color: $body-color;
-  font-family: $display-font-family;
-  font-size: 1rem;
-  font-style: italic;
-  line-height: 1.5;
-  margin: 0 auto 1.25rem;
-  max-width: 30rem;
-
-  a {
-    color: $link-color;
-  }
-}
-
-.footer-colophon {
-  font-size: 0.72rem;
-  letter-spacing: 0.03em;
-  opacity: 0.85;
 }
 
 // Tags below posts: quiet #tag links

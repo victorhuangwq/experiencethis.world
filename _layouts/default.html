@@ -12,11 +12,6 @@
     </main>
 
     <footer class="site-footer">
-      <p class="footer-note">
-        Written between Singapore and Seattle. If something here caught your eye,
-        <a href="mailto:{{ site.email }}">send me a note</a> &mdash; strongly worded
-        emails welcome too.
-      </p>
       <p class="footer-links">
         <a href="mailto:{{ site.email }}">Email</a> &middot;
         <a href="https://github.com/{{ site.author.github }}">GitHub</a> &middot;
@@ -26,7 +21,6 @@
         <a href="{{ tags_page.url | relative_url }}">Tags</a>
         {%- endif %}
       </p>
-      <p class="footer-colophon">Set in Fraunces &amp; Source Serif.</p>
       {% include copyright.html %}
     </footer>
 

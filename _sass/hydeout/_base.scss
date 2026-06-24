@@ -14,7 +14,6 @@ body {
 
 html {
   font-family: $root-font-family;
-  font-feature-settings: 'onum' 1, 'kern' 1; // old-style figures + kerning
   font-size: $root-font-size;
   line-height: $root-line-height;
 
