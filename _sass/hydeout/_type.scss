@@ -18,6 +18,12 @@ h6,
   text-rendering: optimizeLegibility;
 }
 
+// Fraunces' wonky alternates, saved for the biggest display moments only
+h1,
+.site-title {
+  font-variation-settings: 'WONK' 1;
+}
+
 h1 {
   font-size: 2rem;
 }

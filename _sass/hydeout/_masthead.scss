@@ -22,6 +22,7 @@
   color: $heading-color;
   font-family: $display-font-family;
   font-size: 1.4rem;
+  font-variation-settings: 'WONK' 1;
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -47,7 +48,9 @@
     &:hover,
     &:focus {
       color: $link-color;
-      text-decoration: none;
+      text-decoration: underline wavy;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
     }
 
     &.active {

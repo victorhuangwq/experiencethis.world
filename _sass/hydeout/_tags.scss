@@ -14,6 +14,15 @@
   padding-right: 0.6em;
 }
 
+// Rotate pill accents; purely decorative, no color carries meaning
+.tags-list a:nth-child(3n + 2) .tag-count {
+  background: $mustard;
+}
+
+.tags-list a:nth-child(3n) .tag-count {
+  background: $teal;
+}
+
 .tags-list a:hover {
   opacity: 1;
   text-decoration: none;

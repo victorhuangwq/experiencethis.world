@@ -36,8 +36,23 @@
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.4rem;
   text-transform: uppercase;
+}
+
+// Hand-drawn squiggle accenting each section label
+.squiggle {
+  color: $terracotta;
+  display: block;
+  margin: 0 0 1.25rem;
+  opacity: 0.7;
+  width: 4.5rem;
+
+  svg {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
 }
 
 // Things I build & run
@@ -70,6 +85,17 @@
       color: $link-color;
       text-decoration: none;
     }
+  }
+
+  // Decorative accent rotation on hover only; resting state stays quiet
+  li:nth-child(3n + 2) a:hover,
+  li:nth-child(3n + 2) a:focus {
+    color: $mustard;
+  }
+
+  li:nth-child(3n) a:hover,
+  li:nth-child(3n) a:focus {
+    color: $teal;
   }
 
   .project-blurb {
@@ -138,6 +164,20 @@
 // Post pages
 .post-meta {
   margin-bottom: 2rem;
+}
+
+// Content links get a draw-in underline instead of the theme's instant one
+.post-body a:not([href^='#fn']) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+
+  &:hover,
+  &:focus {
+    background-size: 100% 1px;
+    text-decoration: none;
+  }
 }
 
 .post-body {
@@ -327,6 +367,53 @@
 
   @media (max-width: 768px) {
     max-width: 250px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Micro-motion
+//
+// All motion opts in via no-preference so reduced-motion users get the plain
+// static design with zero overrides.
+// ---------------------------------------------------------------------------
+@media (prefers-reduced-motion: no-preference) {
+  .home-projects li a {
+    transition: transform 160ms ease, color 160ms ease;
+
+    &:hover,
+    &:focus {
+      transform: translateY(-2px) rotate(-0.5deg);
+    }
+  }
+
+  .post-body a:not([href^='#fn']) {
+    transition: background-size 220ms ease;
+  }
+
+  @keyframes home-rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .home .home-intro {
+    animation: home-rise 0.45s ease-out both;
+  }
+
+  .home .home-projects {
+    animation: home-rise 0.45s ease-out 0.08s both;
+  }
+
+  .home .home-posts,
+  .home .content > .home-section-title,
+  .home .content > .squiggle {
+    animation: home-rise 0.45s ease-out 0.16s both;
   }
 }
 
