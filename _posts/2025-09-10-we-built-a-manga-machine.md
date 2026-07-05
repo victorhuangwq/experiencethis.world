@@ -63,4 +63,10 @@ We wanted to be a little meta, and it shows exactly what the tool can do — tur
 
 ![The generated manga panels from our meta sample story](/assets/images/story-to-manga-meta-panels.png)
 
+## How it turned out
+
+We didn't place in the hackathon. What we did get, which I didn't expect, is a steady trickle of people finding the site through search ever since — apparently "turn my story into manga" is a thing people genuinely go looking for.
+
+The generator itself is also not perfect. Character consistency is what made this possible at all, but it still slips — a character will drift in some panels, especially in longer stories. And the image models are expensive to run; at one point we simply ran out of tokens. Keeping a free tool like this alive costs real money per generation, which is a problem we haven't fully worked out.
+
 If you want to try it, it's at [app.storytomanga.com](https://app.storytomanga.com) — paste in any story under 500 words (feel free to use that embarrassing thing from last week). It's still hackathon code, so be kind to it.

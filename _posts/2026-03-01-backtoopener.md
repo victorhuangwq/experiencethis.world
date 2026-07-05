@@ -37,15 +37,15 @@ So the workaround was slow *and* janky. What struck me was that the user problem
 
 ## The first idea, and why it was wrong
 
-My first instinct was a web platform API. Sites would opt in — a signal that says "if a user opens a link from me, give them a back button that returns here." I put together a proposal and brought it to Dominic Denicola, a web standards engineer at Google based in Tokyo. We'd worked together before and he's someone who gives you honest feedback fast.
+My first instinct was a web platform API. Sites would opt in — a signal that says "if a user opens a link from me, give them a back button that returns here." I wrote up [an explainer](https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/BackToOpener/explainer.md) proposing exactly that: a site could add `rel="addOpenerToHistory"` to a link (or a `window.open` flag) to opt in. I brought it to [Domenic Denicola](https://github.com/domenic), a web standards engineer at Google based in Tokyo. We'd worked together before and he's someone who gives you honest feedback fast.
 
-His take: this feels inconsistent. If returning to the opener is useful, why should it only work on sites that remembered to opt in? The user's experience shouldn't depend on whether a developer added an attribute.
+His take — [filed in the open on the explainer repo](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1068) — was that the opt-in was the weak part. If returning to the opener is useful, why should it only work on sites that remembered to ask for it? Worse, an opt-in means the back button behaves differently from site to site, and that per-site inconsistency is itself more confusing for users than just applying the behavior everywhere.
 
-Honestly, I misread that feedback at first. I thought it meant he wasn't interested in the feature at all — like it just didn't land. I sat with that for a bit. But when I went back and thought about it more carefully, I realized I'd gotten it backwards. He wasn't rejecting the idea. He was rejecting the API approach. He actually thought the behavior was *good* — good enough that it should just work everywhere, without any site having to ask for it.
+My first read of that feedback was opposition — like the idea just hadn't landed. On a second read it was something more specific: right behavior, wrong layer, wrong consistency. He wasn't rejecting the feature. He thought the behavior was *good* — good enough that it should just work everywhere, without any site having to ask for it.
 
-Once that clicked, the next step was obvious. Don't build an API. Build it into Chromium itself. No opt-in needed. The browser detects when a tab was opened from another tab and enables the behavior automatically.
+Once that clicked, the next step was obvious. Don't build an API. Build it into Chromium itself. No opt-in needed. The browser detects when a tab was opened from another tab and enables the behavior automatically. (The explainer is now archived with a one-line summary of the pivot: "We are pursuing this feature as a Chromium feature instead of a web platform one.")
 
-I sent a follow-up email making that case, and Dominic connected me with a Chrome engineer who had been thinking about the same thing from their side.
+I sent a follow-up email making that case, and Domenic connected me with a Chrome engineer who had been thinking about the same thing from their side.
 
 ---
 
@@ -67,7 +67,7 @@ My first instinct was: just navigate the destination tab to the opener's URL. So
 
 The Chromium engineers pushed back on this pretty hard. Navigation history stacks are append-only — that's not just a convention, it's an invariant that a lot of browser internals and web developers both rely on. History has a max size (50 entries). Security partitioning, referrer handling, all sorts of other features assume history only ever grows forward. Prepending breaks that assumption in ways that create subtle, hard-to-track bugs all the way down.
 
-So we made the simpler call: if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here — it navigates to the opener URL and wipes your forward history in the process. We chose the more conservative path.)
+So we made the simpler call: if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here — it navigates to the opener URL and wipes your forward history in the process. We chose the more conservative path.) Domenic had [raised the same principle from the web developer's side](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1067): the feature should stay purely user-facing, without touching the session history that pages can observe through JavaScript.
 
 One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item — it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari's solution is to label it explicitly: "Close and return to [page title]." We followed the same pattern. One small label change, but it communicates a lot.
 
@@ -95,7 +95,7 @@ All of it goes away with BackToOpener: one native browser behavior, and years of
 
 ## Where it stands
 
-BackToOpener is currently running as an A/B test in Chromium, so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress — the whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
+BackToOpener is currently running as an A/B test in Chromium ([tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress — the whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
 *[Screenshot placeholder: BackToOpener in action — back button clicked on a new tab, tab closes, original tab comes into focus]*
 
@@ -119,7 +119,6 @@ The experiment is still running and I'm not counting chickens. That's why I'm wr
 - [ ] Screenshot 5: MSN or Bing page in a new tab with BackToOpener active
 - [ ] Add images to /assets/images/ with kebab-case names (e.g. backtoopener-back-button-disabled.png)
 - [ ] Replace *[Screenshot placeholder: ...]* lines with actual image tags
-- [ ] Add link to Dominic Denicola's profile on first mention
 - [ ] Remove `hidden: true` from front matter
 - [ ] Update date in front matter if needed
 -->
