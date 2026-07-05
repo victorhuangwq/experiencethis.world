@@ -1,0 +1,35 @@
+{% comment %}
+  Older/newer navigation between visible posts. Jekyll's built-in
+  page.previous/page.next would surface posts marked `hidden: true`,
+  so neighbors are computed against the filtered list instead.
+{% endcomment %}
+{% assign visible = site.posts | where_exp: "p", "p.hidden != true" %}
+{% for p in visible %}
+  {% if p.url == page.url %}
+    {% if forloop.index0 > 0 %}
+      {% assign newer_i = forloop.index0 | minus: 1 %}
+      {% assign newer = visible[newer_i] %}
+    {% endif %}
+    {% unless forloop.last %}
+      {% assign older_i = forloop.index0 | plus: 1 %}
+      {% assign older = visible[older_i] %}
+    {% endunless %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% if older or newer %}
+<nav class="post-nav" aria-label="Post navigation">
+  {% if older %}
+    <a class="post-nav-item post-nav-older" href="{{ older.url | relative_url }}">
+      <span class="post-nav-label">Older</span>
+      <span class="post-nav-title">{{ older.title }}</span>
+    </a>
+  {% endif %}
+  {% if newer %}
+    <a class="post-nav-item post-nav-newer" href="{{ newer.url | relative_url }}">
+      <span class="post-nav-label">Newer</span>
+      <span class="post-nav-title">{{ newer.title }}</span>
+    </a>
+  {% endif %}
+</nav>
+{% endif %}

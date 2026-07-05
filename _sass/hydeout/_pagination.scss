@@ -1,72 +1,43 @@
 /*
   Pagination
 
-  Super lightweight (HTML-wise) blog pagination. Should only be visible
-  when there is navigation available -- single buttons at top or bottom
-  of each page.
+  Quiet text buttons centered above/below the post list. Should only be
+  visible when there is navigation available.
 */
 
 .pagination {
-  color: $gray-3;
   margin-bottom: $section-spacing;
   text-align: center;
 
   > a {
-    background: $body-bg;
-    border: solid $border-color;
-    border-radius: $border-radius;
-    border-width: 1px;
-    box-shadow: $default-box-shadow;
+    border: 1px solid $border-color;
+    border-radius: 999px;
+    color: $body-muted;
     display: inline-block;
-    max-width: $sidebar-width;
-    padding: $padding-v $padding-h;
-    width: 60%;
-  }
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 0.5em 1.8em;
+    text-transform: uppercase;
+    transition: color 0.2s ease, border-color 0.2s ease;
 
-  > a:hover {
-    background-color: $border-color;
+    &:hover,
+    &:focus {
+      border-color: $link-color;
+      color: $link-color;
+      text-decoration: none;
+    }
+
+    &.newer::before {
+      content: '\2190\00a0'; // left arrow
+    }
+
+    &.older::after {
+      content: '\00a0\2192'; // right arrow
+    }
   }
 }
 
 // Bottom -> margin-top;
 * + .pagination {
   margin-top: $section-spacing;
-}
-
-// Push above header if newer on mobile
-.content .pagination:first-child {
-  margin-top: -$section-spacing * 2;
-}
-
-// Make room for larger header by extending margin below title
-.index #sidebar {
-  padding-bottom: calc(#{$section-spacing} + #{$padding-v});
-}
-
-// But not on page1
-.home.index #sidebar {
-  padding-bottom: $section-spacing;
-}
-
-// Undo for larger screens
-@media (min-width: $large-breakpoint) {
-  .pagination > a {
-    box-shadow: none;
-
-    &:hover { box-shadow: $default-box-shadow; }
-  }
-
-  .content .pagination:first-child {
-    margin-top: 0;
-
-    + * {
-      border-top: 1px solid $border-color;
-      margin-top: $section-spacing;
-      padding-top: $section-spacing;
-    }
-  }
-
-  .index #sidebar {
-    padding-bottom: $section-spacing;
-  }
 }

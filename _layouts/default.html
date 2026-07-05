@@ -5,11 +5,24 @@
 
   <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}">
 
-    {% include sidebar.html %}
+    {% include masthead.html %}
 
     <main class="container">
       {{ content }}
     </main>
+
+    <footer class="site-footer">
+      <p class="footer-links">
+        <a href="mailto:{{ site.email }}">Email</a> &middot;
+        <a href="https://github.com/{{ site.author.github }}">GitHub</a> &middot;
+        <a href="{{ site.author.url }}">LinkedIn</a>
+        {%- assign tags_page = site.pages | where: "layout", "tags" | first -%}
+        {%- if tags_page %} &middot;
+        <a href="{{ tags_page.url | relative_url }}">Tags</a>
+        {%- endif %}
+      </p>
+      {% include copyright.html %}
+    </footer>
 
     {% include custom-foot.html %}
   </body>

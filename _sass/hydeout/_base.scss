@@ -36,6 +36,7 @@ section {
 a {
   color: $link-color;
   text-decoration: none;
+  text-underline-offset: 2px;
 
   // `:focus` is linked to `:hover` for basic accessibility
   &:hover,
@@ -49,7 +50,7 @@ a {
 }
 
 img {
-  border-radius: 5px;
+  border-radius: $border-radius;
   display: block;
   height: auto; // prevent max-width from squishing images with defined height
   margin: 0 0 1rem;
@@ -71,6 +72,7 @@ th {
 }
 
 th {
+  background-color: $wash-strong;
   text-align: left;
 }
 

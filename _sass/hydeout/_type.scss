@@ -10,7 +10,9 @@ h5,
 h6,
 .site-title {
   color: $heading-color;
+  font-family: $display-font-family;
   font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.25;
   margin-bottom: $heading-spacing;
   text-rendering: optimizeLegibility;
@@ -22,11 +24,11 @@ h1 {
 
 h2 {
   font-size: 1.5rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   margin-top: 1.5rem;
 }
 
@@ -43,7 +45,7 @@ p {
 }
 
 strong {
-  color: #303030;
+  color: $heading-color;
 }
 
 ul,
@@ -63,14 +65,12 @@ dd {
 
 hr {
   border: 0;
-  border-bottom: 1px solid #fff;
-  border-top: 1px solid #eee;
-  margin: 1.5rem 0;
-  position: relative;
+  border-top: 1px solid $border-color;
+  margin: 2rem 0;
 }
 
 abbr {
-  color: #555;
+  color: $body-muted;
   font-size: 85%;
   font-weight: bold;
   text-transform: uppercase;
@@ -82,18 +82,13 @@ abbr {
 }
 
 blockquote {
-  border-left: 0.25rem solid $border-color;
-  color: #7a7a7a;
-  margin: 0.8rem 0;
-  padding: 0.5rem 1rem;
+  border-left: 3px solid $gray-3;
+  color: $body-muted;
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
 
   p:last-child {
     margin-bottom: 0;
-  }
-
-  @media (min-width: 30em) {
-    padding-left: 1.25rem;
-    padding-right: 5rem;
   }
 }
 
@@ -112,8 +107,11 @@ a[href^='#fnref:'] {
 
 // List of footnotes
 .footnotes {
+  border-top: 1px solid $border-color;
+  color: $body-muted;
   font-size: 85%;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
 }
 
 // Custom type

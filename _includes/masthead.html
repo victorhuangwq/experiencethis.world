@@ -1,0 +1,10 @@
+<div class="masthead-wrap">
+  <header class="masthead">
+    <a class="masthead-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+    <nav class="masthead-nav">
+      <a class="{% if page.url == '/' %}active{% endif %}" href="{{ '/' | relative_url }}">Home</a>
+      {% include category-links.html %}
+      {% include page-links.html %}
+    </nav>
+  </header>
+</div>
