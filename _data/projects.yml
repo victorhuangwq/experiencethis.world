@@ -1,0 +1,19 @@
+# Live things linked from the home page's "Things I build & run" section.
+# Fields: name, url (external or site-relative), blurb, optional note.
+- name: Story to Manga Machine
+  url: https://app.storytomanga.com
+  blurb: Paste a story, watch it become manga. Built in 48 hours across nine time zones.
+  note: with Kingston Kuan
+
+- name: Tambourine Voice
+  url: https://github.com/kstonekuan/tambourine-voice
+  blurb: Open-source dictation that actually gets your words right.
+  note: contributor
+
+- name: Pokemon TCG Event Day
+  url: /pokemon/
+  blurb: Rules, timers, and tools for the prerelease events I run.
+
+- name: TCG Idle Game
+  url: /tcg-idle-game/
+  blurb: An ASCII idle game — from casual collector to card shop owner.

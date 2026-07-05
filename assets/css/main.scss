@@ -29,6 +29,63 @@
   }
 }
 
+// Quiet section labels dividing the home page into a table of contents
+.home-section-title {
+  color: $body-muted;
+  font-family: $root-font-family;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  margin: 0 0 1.25rem;
+  text-transform: uppercase;
+}
+
+// Things I build & run
+.home-projects {
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+
+  .projects-list {
+    display: grid;
+    gap: 1.25rem 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (min-width: $large-breakpoint) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  li a {
+    color: $heading-color;
+    display: inline-block;
+    font-family: $display-font-family;
+    font-size: 1.15rem;
+    font-weight: 600;
+
+    &:hover,
+    &:focus {
+      color: $link-color;
+      text-decoration: none;
+    }
+  }
+
+  .project-blurb {
+    color: $body-color;
+    display: block;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .project-note {
+    color: $body-muted;
+    display: block;
+    font-size: 0.8rem;
+  }
+}
+
 // Meta line (home entries + post pages)
 .entry-meta,
 .post-meta {

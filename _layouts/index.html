@@ -8,11 +8,30 @@ layout: default
       <h1>{{ site.description }}</h1>
       <p class="home-tagline">{{ site.tagline }}</p>
     </section>
+
+    {% if site.data.projects %}
+      <section class="home-projects">
+        <h2 class="home-section-title">Things I build &amp; run</h2>
+        <ul class="projects-list">
+          {% for project in site.data.projects %}
+            <li>
+              <a href="{% if project.url contains '://' %}{{ project.url }}{% else %}{{ project.url | relative_url }}{% endif %}">{{ project.name }}</a>
+              <span class="project-blurb">{{ project.blurb }}</span>
+              {% if project.note %}<span class="project-note">{{ project.note }}</span>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
   {% endif %}
 
   {% include pagination-newer.html %}
 
   {{ content }}
+
+  {% if page.url == "/" %}
+    <h2 class="home-section-title">Writing</h2>
+  {% endif %}
 
   <div class="home-posts">
     {% for post in paginator.posts %}
