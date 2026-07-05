@@ -12,6 +12,7 @@ layout: default
     {% if site.data.projects %}
       <section class="home-projects">
         <h2 class="home-section-title">Things I build &amp; run</h2>
+        <span class="squiggle">{% include svg/squiggle.svg %}</span>
         <ul class="projects-list">
           {% for project in site.data.projects %}
             <li>
@@ -31,6 +32,7 @@ layout: default
 
   {% if page.url == "/" %}
     <h2 class="home-section-title">Writing</h2>
+    <span class="squiggle">{% include svg/squiggle.svg %}</span>
   {% endif %}
 
   <div class="home-posts">
