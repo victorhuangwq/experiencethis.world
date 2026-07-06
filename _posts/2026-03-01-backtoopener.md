@@ -13,13 +13,13 @@ hidden: true
 description: "The story of BackToOpener — a Chromium feature that gives the back button back to users in an era where AI chat apps have made new tabs the default."
 ---
 
-A few months ago I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, I'd read the page, and then I'd reach for the back button to get back to the chat — and it was greyed out. New tab, no history, nothing to go back to. So I'd squint at a tab bar with forty tabs in it, fail to find the conversation, and half the time just open a fresh chat and start over.
+Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, I'd read the page, and then I'd reach for the back button to get back to the chat — and it was greyed out. New tab, no history, nothing to go back to. So I'd squint at a tab bar with forty tabs in it, fail to find the conversation, and half the time just open a fresh chat and start over.
 
 For a long time I assumed this was simply how browsers work. It turns out it's how browsers work *so far*.
 
 ---
 
-## A 20-year-old behavior meets a new world
+## A decades-old behavior meets a new world
 
 The back button has worked the same way since browsers were invented. When you open a link in a new tab, that tab starts fresh — no history, back disabled. For most of the web's history, this barely mattered. Search engines like Google opened links in the same tab, so back just worked. You read a result, pressed back, and you were on the results page again.
 
@@ -29,7 +29,7 @@ Which is totally rational! But the side effect is that users get stranded. You'r
 
 This isn't a Bing problem or a ChatGPT problem. It's a browser problem. And it was getting worse as more of the web became context-dependent.
 
-When I started digging into this, I found that Bing had already tried to patch it — years before I touched the problem. There was a workaround: a redirect page that added a fake entry to the new tab's history stack, so pressing back would at least do *something*. It worked, but it cost around 100ms on every single navigation. That might sound small, but at search engine scale it's not: navigation slowdown directly correlates with engagement drop. Users who hit friction open fewer links. The fix was actively hurting the metric it was designed to support.
+When I started digging into this, I found that Bing had already tried to patch it — years before I touched the problem. There was a workaround: a redirect page that added a fake entry to the new tab's history stack, so pressing back would at least do *something*. It worked, but it added a measurable latency cost to every single navigation — and at search-engine scale, that kind of friction adds up. The fix was working against the very engagement it was meant to support.
 
 So the workaround was slow *and* janky. What struck me was that the user problem and the business problem were the same problem viewed from different angles — fix the root cause and you help both.
 
@@ -39,9 +39,9 @@ So the workaround was slow *and* janky. What struck me was that the user problem
 
 My first instinct was a web platform API. Sites would opt in — a signal that says "if a user opens a link from me, give them a back button that returns here." I wrote up [an explainer](https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/BackToOpener/explainer.md) proposing exactly that: a site could add `rel="addOpenerToHistory"` to a link (or a `window.open` flag) to opt in. I brought it to [Domenic Denicola](https://github.com/domenic), a web standards engineer at Google based in Tokyo. We'd worked together before and he's someone who gives you honest feedback fast.
 
-His take — [filed in the open on the explainer repo](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1068) — was that the opt-in was the weak part. If returning to the opener is useful, why should it only work on sites that remembered to ask for it? Worse, an opt-in means the back button behaves differently from site to site, and that per-site inconsistency is itself more confusing for users than just applying the behavior everywhere.
+His take — [filed in the open on the explainer repo](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1068) — was that the opt-in was the weak part. The biggest question mark, he wrote, was whether this should be opt-in at all or just applied across the entire browser. My own arguments for why the problem mattered steered him toward applying it everywhere; Chrome for Android already does. And if opt-in was the right call, where were the clear examples of the behavior being confusing or harmful?
 
-My first read of that feedback was opposition — like the idea just hadn't landed. On a second read it was something more specific: right behavior, wrong layer, wrong consistency. He wasn't rejecting the feature. He thought the behavior was *good* — good enough that it should just work everywhere, without any site having to ask for it.
+My first read of that feedback was opposition — like the idea just hadn't landed. On a second read it was something more specific: right behavior, wrong layer. He wasn't rejecting the feature. He thought the behavior was *good* — good enough that it should just work everywhere, without any site having to ask for it. And the way I came to see it, he was right about the consistency too: an opt-in means the back button behaves differently from site to site, and that per-site inconsistency would itself confuse users more than just turning the behavior on everywhere.
 
 Once that clicked, the next step was obvious. Don't build an API. Build it into Chromium itself. No opt-in needed. The browser detects when a tab was opened from another tab and enables the behavior automatically. (The explainer is now archived with a one-line summary of the pivot: "We are pursuing this feature as a Chromium feature instead of a web platform one.")
 
@@ -51,7 +51,7 @@ I sent a follow-up email making that case, and Domenic connected me with a Chrom
 
 ## "You're messing with something users know"
 
-The harder sell was actually internal. The back button hasn't changed in fifteen years. That's not just a technical fact — it's kind of a social contract. The pushback I got was real: you're changing something people have deeply internalized. What if users click back expecting a normal navigation and their tab just closes?
+The harder sell was actually internal. The back button hasn't meaningfully changed in decades. That's not just a technical fact — it's kind of a social contract. The pushback I got was real: you're changing something people have deeply internalized. What if users click back expecting a normal navigation and their tab just closes?
 
 The counter I kept coming back to: this doesn't take anything away. For users who never want to go back to an opener, the feature is completely invisible to them. For users who *do* want to go back, it's now possible when it wasn't before. It's optionality. And honestly — as a user myself, this is something I genuinely wished I had.
 
@@ -83,9 +83,9 @@ Shipping the Chromium feature was only half the project for Edge. The old Bing a
 
 Working with the Bing and MSN teams to remove the hacks was the less glamorous part of this. Aligning timelines, validating coverage, making sure nothing quietly broke — the part that doesn't show up in any announcement.
 
-MSN was enthusiastic — and honestly, when I dug into why, I understood. Their existing hack only covered normal content links. Not sponsored links. And ads, of all things, are exactly the kind of link a user is most likely to want to go back from. The workaround also only applied to the MSN New Tab Page feed, not MSN.com itself. It had shipped years ago with a narrow scope and never fully caught up.
+MSN was enthusiastic — and honestly, when I dug into why, I understood. Their existing workaround had shipped years ago with a narrow scope and never fully caught up — whole categories of links and surfaces it simply didn't cover.
 
-Bing had a whole list. Beyond the 100ms penalty, the redirect links were bloating the search results page — each link a long encoded URL with extra metadata baked in, adding weight to the DOM on every single page load. And whenever a user copied a link from Bing results, they'd paste the redirect URL rather than the actual destination. A small thing, but it happens constantly.
+Bing had a whole list too. Beyond the latency cost, the redirect links were long encoded URLs that added weight to every results page. And whenever a user copied a link from Bing results, they'd paste the redirect URL rather than the actual destination. A small thing, but it happens constantly.
 
 All of it goes away with BackToOpener: one native browser behavior, and years of accumulated workarounds become unnecessary. It's not often that the browser team, the search team, and the content team all want the same change at the same time.
 
