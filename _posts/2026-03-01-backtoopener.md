@@ -89,15 +89,13 @@ Bing had a whole list too. Beyond the latency cost, the redirect links were long
 
 All of it goes away with BackToOpener: one native browser behavior, and years of accumulated workarounds become unnecessary. It's not often that the browser team, the search team, and the content team all want the same change at the same time.
 
-*[Screenshot placeholder: MSN or Bing page open in a new tab, back button enabled with BackToOpener]*
-
 ---
 
 ## Where it stands
 
-BackToOpener is currently running as an A/B test in Chromium ([tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
+BackToOpener is currently running as an A/B experiment in Edge Stable ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
-*[Screenshot placeholder: BackToOpener in action, back button clicked on a new tab, tab closes, original tab comes into focus]*
+*[GIF placeholder: BackToOpener in action, back button clicked on a new tab, tab closes, original tab comes into focus]*
 
 ---
 
@@ -112,13 +110,10 @@ The experiment is still running and I'm not counting chickens. That's why I'm wr
 <!--
 ## TODOs before publishing
 
-- [ ] Screenshot 1: New tab opened from an AI chat (e.g. Copilot or ChatGPT), back button greyed out/disabled
-- [ ] Screenshot 2: Back button enabled on a new tab from Bing or a chat (with BackToOpener active)
-- [ ] Screenshot 3: Long-press back button dropdown showing "Close and return to [Opener Title]" label
-- [ ] Screenshot 4: BackToOpener in action: back clicked, tab closes, original tab comes into focus
-- [ ] Screenshot 5: MSN or Bing page in a new tab with BackToOpener active
-- [ ] Add images to /assets/images/ with kebab-case names (e.g. backtoopener-back-button-disabled.png)
-- [ ] Replace *[Screenshot placeholder: ...]* lines with actual image tags
-- [ ] Remove `hidden: true` from front matter
-- [ ] Update date in front matter if needed
+- [ ] Asset 1: Long-press back button dropdown showing "Close and return to [Opener Title]" label
+- [ ] Asset 2: Back button enabled on a new tab opened from Bing or an AI chat (BackToOpener active)
+- [ ] Asset 3 (GIF): BackToOpener in action: back clicked, tab closes, original tab comes into focus
+- [ ] Add assets to /assets/images/ with kebab-case names (e.g. backtoopener-dropdown-label.png)
+- [ ] Replace placeholder lines with actual image tags + alt text
+- [ ] Remove `hidden: true` from front matter (date stays 2026-03-01)
 -->
