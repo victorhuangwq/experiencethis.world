@@ -10,7 +10,7 @@ tags:
     - web development
 ---
 
-Kingston and I are manga fans, and we'd been following AI image generation pretty closely. At the start of this year you could already generate manga panels with AI, but character consistency was the dealbreaker — your protagonist would look like a different person in every panel, which makes storytelling impossible.
+Kingston and I are manga fans, and we'd been following AI image generation pretty closely. At the start of this year you could already generate manga panels with AI, but character consistency was the dealbreaker: your protagonist would look like a different person in every panel, which makes storytelling impossible.
 
 Then Google announced Gemini 2.5 Flash Image for the [Nano Banana hackathon](https://www.kaggle.com/competitions/banana). We played with it for about five minutes in the chat interface and the character consistency seemed to actually be there. We had 48 hours, so we built something.
 
@@ -18,15 +18,15 @@ Then Google announced Gemini 2.5 Flash Image for the [Nano Banana hackathon](htt
 
 ## Keeping it simple
 
-We knew from the start that if we wanted people to actually use this, it had to be dead simple. Nobody's going to sit around for 10 minutes crafting the perfect prompt or tweaking parameters — they want to drop in a story and see manga. So we built exactly that: a machine. You paste a story (max 500 words), hit generate, and watch your characters come to life.
+We knew from the start that if we wanted people to actually use this, it had to be dead simple. Nobody's going to sit around for 10 minutes crafting the perfect prompt or tweaking parameters. They want to drop in a story and see manga. So we built exactly that: a machine. You paste a story (max 500 words), hit generate, and watch your characters come to life.
 
 ## Racing against time zones
 
-Kingston was in Europe, I was on the West Coast — a nine hour time difference. While I was debugging at midnight in California, Kingston was having his morning coffee, ready to take over. We passed the baton across continents and kept development going more or less around the clock.
+Kingston was in Europe, I was on the West Coast, a nine hour time difference. While I was debugging at midnight in California, Kingston was having his morning coffee, ready to take over. We passed the baton across continents and kept development going more or less around the clock.
 
 ## The technical quirks that almost broke us
 
-Gemini 2.5 Flash Image has some interesting behaviors. It doesn't just return an image — it returns text like "Let me generate this picture for you...", then the image, then more text. We had to loop through responses to extract the actual images.
+Gemini 2.5 Flash Image has some interesting behaviors. It doesn't just return an image. It returns text like "Let me generate this picture for you...", then the image, then more text. We had to loop through responses to extract the actual images.
 
 The funniest bug: we asked for "Japanese manga style" in our prompts, and suddenly all our speech bubbles were in Japanese, despite the input stories being in English. We had to explicitly add "output text in English" to fix it. Sometimes AI is too literal.
 
@@ -59,14 +59,14 @@ Our sample story is literally about Kingston and me frantically building this to
 > Victor eyed the timer: 01:00:00. "Plenty of time."
 > Kingston sighed. "That sentence always ages badly. We need to move."
 
-We wanted to be a little meta, and it shows exactly what the tool can do — turn any moment into visual storytelling.
+We wanted to be a little meta, and it shows exactly what the tool can do: turn any moment into visual storytelling.
 
 ![The generated manga panels from our meta sample story](/assets/images/story-to-manga-meta-panels.png)
 
 ## How it turned out
 
-We didn't place in the hackathon. What we did get, which I didn't expect, is a steady trickle of people finding the site through search ever since — apparently "turn my story into manga" is a thing people genuinely go looking for.
+We didn't place in the hackathon. What we did get, which I didn't expect, is a steady trickle of people finding the site through search ever since. Apparently "turn my story into manga" is a thing people genuinely go looking for.
 
-The generator itself is also not perfect. Character consistency is what made this possible at all, but it still slips — a character will drift in some panels, especially in longer stories. And the image models are expensive to run; at one point we simply ran out of tokens. Keeping a free tool like this alive costs real money per generation, which is a problem we haven't fully worked out.
+The generator itself is also not perfect. Character consistency is what made this possible at all, but it still slips: a character will drift in some panels, especially in longer stories. And the image models are expensive to run; at one point we simply ran out of tokens. Keeping a free tool like this alive costs real money per generation, which is a problem we haven't fully worked out.
 
-If you want to try it, it's at [app.storytomanga.com](https://app.storytomanga.com) — paste in any story under 500 words (feel free to use that embarrassing thing from last week). It's still hackathon code, so be kind to it.
+If you want to try it, it's at [app.storytomanga.com](https://app.storytomanga.com). Paste in any story under 500 words (feel free to use that embarrassing thing from last week). It's still hackathon code, so be kind to it.
