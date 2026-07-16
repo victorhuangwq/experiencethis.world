@@ -69,9 +69,9 @@ The Chromium engineers pushed back on this pretty hard. Navigation history stack
 
 So we made the simpler call: if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here: it navigates to the opener URL and wipes your forward history in the process. We chose the more conservative path.) Domenic had [raised the same principle from the web developer's side](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1067): the feature should stay purely user-facing, without touching the session history that pages can observe through JavaScript.
 
-One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari's solution is to label it explicitly: "Close and return to [page title]." We followed the same pattern. One small label change, but it communicates a lot.
+One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari's solution is to label it explicitly: "Close and return to [page title]." We followed the same pattern; in Edge the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
 
-*[Screenshot placeholder: Long-press back button dropdown showing "Close and return to [Opener Title]" at the top of the list]*
+*[Screenshot placeholder: Long-press back button dropdown showing "Close and go back to [Opener Title]" at the top of the list]*
 
 *[Screenshot placeholder: Back button enabled on a new tab opened from Bing or an AI chat]*
 
@@ -110,7 +110,7 @@ The experiment is still running and I'm not counting chickens. That's why I'm wr
 <!--
 ## TODOs before publishing
 
-- [ ] Asset 1: Long-press back button dropdown showing "Close and return to [Opener Title]" label
+- [ ] Asset 1: Long-press back button dropdown showing "Close and go back to [Opener Title]" label
 - [ ] Asset 2: Back button enabled on a new tab opened from Bing or an AI chat (BackToOpener active)
 - [ ] Asset 3 (GIF): BackToOpener in action: back clicked, tab closes, original tab comes into focus
 - [ ] Add assets to /assets/images/ with kebab-case names (e.g. backtoopener-dropdown-label.png)
