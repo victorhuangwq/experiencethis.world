@@ -14,6 +14,9 @@ description: "The story of BackToOpener, a Chromium feature that gives the back 
 
 Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, I'd read the page, and then I'd reach for the back button to get back to the chat. It was greyed out. New tab, no history, nothing to go back to. So I'd squint at a tab bar with forty tabs in it, fail to find the conversation, and half the time just open a fresh chat and start over.
 
+![Animation of the stranded state in Chrome: a recipe page opened from a Claude chat has a greyed-out back button, so the tab has to be closed by hand before hunting for the conversation in the tab bar](/assets/images/backtoopener-before-stranded.gif)
+*The status quo. A page opened from a Claude chat, a dead back button, and the walk back through the tab bar by hand.*
+
 For a long time I assumed this was simply how browsers work. It turns out it's how browsers work *so far*.
 
 ---
@@ -68,7 +71,7 @@ The Chromium engineers pushed back on this pretty hard. Navigation history stack
 
 So we made the simpler call: if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here: it navigates to the opener URL and wipes your forward history in the process. We chose the more conservative path.) Domenic had [raised the same principle from the web developer's side](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1067): the feature should stay purely user-facing, without touching the session history that pages can observe through JavaScript.
 
-One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari's solution is to label it explicitly: "Close and return to [page title]." We followed the same pattern; in Edge the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
+One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry as the action it performs rather than disguising it as a normal history item, and we followed that pattern: in Edge, the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
 
 ![Edge's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
 *The long-press menu in Edge. The entry is labeled as what it actually does: close this tab, go back to the chat.*
