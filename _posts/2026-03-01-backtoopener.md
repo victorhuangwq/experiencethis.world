@@ -65,19 +65,24 @@ What helped was pulling in evidence. Safari already does this on macOS and iOS. 
 
 The core behavior fits in one sentence: press back on a new tab → close the tab → return focus to the tab that opened it. But there was a design question underneath it that opened up a lot of complexity. What happens if the opener tab is already closed by the time you click back?
 
+![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png)
+*The core behavior in Edge. A recipe opened from ChatGPT in a new tab, and the back button, historically greyed out here, is live.*
+
 My first instinct was: just navigate the destination tab to the opener's URL. So even if the original tab is gone, the user lands somewhere familiar. That required prepending an entry to the navigation history stack.
 
 The Chromium engineers pushed back on this pretty hard. Navigation history stacks are append-only, and that's not just a convention. It's an invariant that a lot of browser internals and web developers both rely on. History has a max size (50 entries). Security partitioning, referrer handling, all sorts of other features assume history only ever grows forward. Prepending breaks that assumption in ways that create subtle, hard-to-track bugs all the way down.
 
 So we made the simpler call: if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here: it navigates to the opener URL and wipes your forward history in the process. We chose the more conservative path.) Domenic had [raised the same principle from the web developer's side](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1067): the feature should stay purely user-facing, without touching the session history that pages can observe through JavaScript.
 
-One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry as the action it performs rather than disguising it as a normal history item, and we followed that pattern: in Edge, the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
+One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry as the action it performs rather than disguising it as a normal history item: in current Safari, the entry reads "Close and Return to [opener title]."
 
-![Edge's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
-*The long-press menu in Edge. The entry is labeled as what it actually does: close this tab, go back to the chat.*
+![Safari's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and Return to ChatGPT"](/assets/images/backtoopener-safari-close-and-return.png)
+*Safari's prior art, today. The long-press menu labels the action instead of faking a history entry.*
 
-![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png)
-*A recipe opened from ChatGPT in a new tab. The back button, historically greyed out here, is now live.*
+We followed that pattern in Edge, where the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
+
+![Edge's long-press back button menu on the same recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
+*The same page, the same menu, in Edge with BackToOpener.*
 
 ---
 
