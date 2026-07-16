@@ -9,7 +9,6 @@ tags:
     - edge
     - product
     - web platform
-hidden: true
 description: "The story of BackToOpener, a Chromium feature that gives the back button back to users in an era where AI chat apps have made new tabs the default."
 ---
 
@@ -71,9 +70,11 @@ So we made the simpler call: if the opener tab is gone, the back button is just 
 
 One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari's solution is to label it explicitly: "Close and return to [page title]." We followed the same pattern; in Edge the entry reads "Close and go back to [opener title]." One small label change, but it communicates a lot.
 
-*[Screenshot placeholder: Long-press back button dropdown showing "Close and go back to [Opener Title]" at the top of the list]*
+![Edge's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
+*The long-press menu in Edge. The entry is labeled as what it actually does: close this tab, go back to the chat.*
 
-*[Screenshot placeholder: Back button enabled on a new tab opened from Bing or an AI chat]*
+![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png)
+*A recipe opened from ChatGPT in a new tab. The back button, historically greyed out here, is now live.*
 
 ---
 
@@ -95,7 +96,8 @@ All of it goes away with BackToOpener: one native browser behavior, and years of
 
 BackToOpener is currently running as an A/B experiment in Edge Stable ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
-*[GIF placeholder: BackToOpener in action, back button clicked on a new tab, tab closes, original tab comes into focus]*
+![Animation of BackToOpener in Chrome: a recipe page opened from a Gemini conversation is closed with the back button, returning focus to the chat](/assets/images/backtoopener-in-action.gif)
+*The whole loop, this time in Chrome: a page opened from a Gemini chat, one press of back, and you're back in the conversation. Same feature, different browser. That's the point of fixing it in Chromium.*
 
 ---
 
@@ -107,13 +109,3 @@ I work on a browser used by hundreds of millions of people, and most of what I d
 
 The experiment is still running and I'm not counting chickens. That's why I'm writing this down now, before I know how it ends.
 
-<!--
-## TODOs before publishing
-
-- [ ] Asset 1: Long-press back button dropdown showing "Close and go back to [Opener Title]" label
-- [ ] Asset 2: Back button enabled on a new tab opened from Bing or an AI chat (BackToOpener active)
-- [ ] Asset 3 (GIF): BackToOpener in action: back clicked, tab closes, original tab comes into focus
-- [ ] Add assets to /assets/images/ with kebab-case names (e.g. backtoopener-dropdown-label.png)
-- [ ] Replace placeholder lines with actual image tags + alt text
-- [ ] Remove `hidden: true` from front matter (date stays 2026-03-01)
--->
