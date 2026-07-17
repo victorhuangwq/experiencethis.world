@@ -23,9 +23,9 @@ For a long time I assumed this was simply how browsers work. It turns out it's h
 
 ## A decades-old behavior meets a new world
 
-The back button has worked the same way since browsers were invented. When you open a link in a new tab, that tab starts fresh: no history, back disabled. For most of the web's history, this barely mattered. Search engines like Google opened links in the same tab, so back just worked. You read a result, pressed back, and you were on the results page again.
+The back button has been disabled in new tabs for as long as tabs have existed. Open a link in a new tab and it starts fresh: no history, nothing to go back to. For most of the web's history, this barely mattered. Search engines like Google opened links in the same tab, so back just worked. You read a result, pressed back, and you were on the results page again. And for the people it did bother, there were workarounds: extensions and add-ons that tried to bolt on a way back. But nothing default.
 
-That changed with AI chat. ChatGPT, Copilot, Google AI Mode, Perplexity: these aren't search results pages. They're long-running conversations. If you click a link and navigate away from the chat, you lose your thread. So they open links in new tabs deliberately, to keep the conversation alive while you read.
+Then came the AI chat apps. ChatGPT, Copilot, Google AI Mode, Perplexity: these aren't search results pages. They're long-running conversations. If you click a link and navigate away from the chat, you lose your thread. So they open links in new tabs deliberately, to keep the conversation alive while you read.
 
 Which is totally rational! But the side effect is that users get stranded. You're in a new tab, the back button is useless, and your chat is buried somewhere behind forty other tabs.
 
