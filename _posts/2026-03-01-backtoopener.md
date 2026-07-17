@@ -12,7 +12,7 @@ tags:
 description: "The story of BackToOpener, a Chromium feature that gives the back button back to users in an era where AI chat apps have made new tabs the default."
 ---
 
-Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, I'd read the page, and then I'd reach for the back button to get back to the chat. It was greyed out. New tab, no history, nothing to go back to. So I'd squint at a tab bar with forty tabs in it, fail to find the conversation, and half the time just open a fresh chat and start over.
+Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, I'd read the page, and then I'd reach for the back button to get back to the chat. And it just wasn't there: greyed out, new tab, no history, nothing to go back to. So I'd close the tab instead. Sometimes the chat was just the next tab over, and closing dropped me right back into it. Other times I'd squint at a tab bar with forty tabs, fail to find the conversation, and just open a fresh chat and start over.
 
 ![Animation of the stranded state in Chrome: a recipe page opened from a Claude chat has a greyed-out back button, so the tab has to be closed by hand before hunting for the conversation in the tab bar](/assets/images/backtoopener-before-stranded.gif)
 *The status quo. A page opened from a Claude chat, a dead back button, and the walk back through the tab bar by hand.*
