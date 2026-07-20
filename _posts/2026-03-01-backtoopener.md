@@ -33,8 +33,6 @@ To me, this is an old browser design crossing a new wave of website design, resu
 
 When I started digging, I found Bing had already tried to patch this years earlier with a redirect page that slipped a fake entry into the new tab's history, so pressing back would at least do *something*. It worked, but it added latency to every navigation, and at search-engine scale that adds up: the fix was working against the very engagement it was meant to support.
 
-So the workaround was slow *and* janky, and what struck me was that the user problem and the business problem were the same problem viewed from different angles: fixing the root cause would help both.
-
 ---
 
 ## The first idea, and why it was wrong
@@ -47,17 +45,17 @@ My first read of that feedback felt like opposition, as if the idea just hadn't 
 
 Once that clicked, the next step was obvious: instead of building an API, build the behavior into Chromium itself, with no opt-in needed. The browser detects when a tab was opened from another tab and enables the behavior automatically. (The explainer is now archived with a one-line summary of the pivot: "We are pursuing this feature as a Chromium feature instead of a web platform one.")
 
-I sent a follow-up email making that case, and Domenic connected me with a Chrome engineer who had been thinking about the same thing from their side.
+I sent a follow-up email making that case, and Domenic connected me with a Chrome engineer who oversees this area.
 
 ---
 
 ## "You're messing with something users know"
 
-The harder sell was actually internal, because the back button hasn't meaningfully changed in decades, to the point where its behavior is kind of a social contract with users. The pushback I got was real: you're changing something people have deeply internalized, so what happens when users click back expecting a normal navigation and their tab just closes?
+Actually, there were people I spoke to that were pushing back, because the back button hasn't meaningfully changed in decades, to the point where its behavior is kind of a social contract with users. The pushback I got was real: you're changing something people have deeply internalized, so what happens when users click back expecting a normal navigation and their tab just closes?
 
 The counter I kept coming back to was that this doesn't take anything away. For users who never want to go back to an opener, the feature is completely invisible, and for users who do want to go back, it's now possible when it wasn't before. And honestly, as a user myself, this is something I genuinely wished I had.
 
-What helped was pulling in evidence: Safari already does this on macOS and iOS, Android's system back button already handles this, and developers in the community had *already* built browser extensions for exactly this gap, like [Tab Origin](https://microsoftedge.microsoft.com/addons/detail/tab-origin/pjokhhddbfamccemjneocheekkoognbo?hl=en-US), [Last Tab Back](https://chromewebstore.google.com/detail/last-tab-back/oijipkokfkhgojikimbbcafnbppebnhe?pli=1), and, in legacy Firefox, [BackTrack Tab History](https://www.ghacks.net/2017/03/01/backtrack-tab-history-add-on-for-firefox/). The demand existed and people had shipped workarounds, but nobody had solved it natively in Chromium.
+What helped was pulling in evidence: Safari already does this on macOS and iOS, and Android's system back button already handles this.
 
 ---
 
@@ -72,7 +70,7 @@ My first instinct was to just navigate the destination tab to the opener's URL, 
 
 The Chromium engineers pushed back on this pretty hard, because navigation history stacks being append-only is an invariant that a lot of browser internals and web developers rely on. History has a max size of 50 entries, security partitioning and referrer handling assume history only ever grows forward, and prepending breaks those assumptions in ways that create subtle, hard-to-track bugs all the way down.
 
-So we made the simpler call, which is that if the opener tab is gone, the back button is just disabled. (iOS Safari actually goes a different route here, navigating to the opener URL and wiping your forward history in the process; we chose the more conservative path.) Domenic had [raised the same principle from the web developer's side](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/1067): the feature should stay purely user-facing, without touching the session history that pages can observe through JavaScript.
+So we made the simpler call, which is that if the opener tab is gone, the back button is just disabled. iOS Safari actually goes a different route here, navigating to the opener URL and wiping your forward history in the process, and that manipulation is actually visible to web developers: a page could check `history.length` and figure out that it was probably opened as a new tab. We chose the more conservative path of keeping the feature purely user-facing, without touching the session history that pages can observe through JavaScript.
 
 One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry with the action it performs: in current Safari, the entry reads "Close and Return to [opener title]."
 
@@ -90,7 +88,7 @@ We followed that pattern in Edge, where the entry reads "Close and go back to [o
 
 Shipping the Chromium feature was only half the project for Edge. The old Bing and MSN redirect hacks were still running, and now that the browser handled this natively, they needed to go.
 
-Working with the Bing and MSN teams to remove the hacks was the less glamorous part of this, aligning timelines, validating coverage, and making sure nothing quietly broke. It's the kind of work that doesn't show up in any announcement.
+Working with the Bing and MSN teams to remove the hacks was the less glamorous part of this, aligning timelines, validating coverage, and making sure nothing quietly broke.
 
 MSN was enthusiastic, and when I dug into why, I understood: their existing workaround had shipped years ago with a narrow scope and never fully caught up, leaving whole categories of links and surfaces uncovered.
 
@@ -102,7 +100,7 @@ All of it goes away with BackToOpener: one native browser behavior, and years of
 
 ## Where it stands
 
-BackToOpener is currently running as an A/B experiment in Edge Stable ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
+BackToOpener is currently running as an A/B experiment in both Edge and Chrome ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
 ![Animation of BackToOpener in Chrome: a recipe page opened from a Gemini conversation is closed with the back button, returning focus to the chat](/assets/images/backtoopener-in-action.gif)
 *Here's the whole loop in Chrome: a page opened from a Gemini chat, one press of back, and you're back in the conversation at the right place. It's the same feature in a different browser, which is the point of building it into Chromium.*
