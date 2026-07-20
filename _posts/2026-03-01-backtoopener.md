@@ -57,7 +57,7 @@ The harder sell was actually internal. The back button hasn't meaningfully chang
 
 The counter I kept coming back to: this doesn't take anything away. For users who never want to go back to an opener, the feature is completely invisible to them. For users who *do* want to go back, it's now possible when it wasn't before. It's optionality. And honestly, as a user myself, this is something I genuinely wished I had.
 
-What helped was pulling in evidence. Safari already does this on macOS and iOS. Android's system back button already handles this. And developers in the community had *already* built browser extensions for exactly this gap: Tab Origin, Last Tab Back, BackTrack Tab History. The demand existed, people had shipped workarounds, but nobody had solved it natively in Chromium.
+What helped was pulling in evidence. Safari already does this on macOS and iOS. Android's system back button already handles this. And developers in the community had *already* built browser extensions for exactly this gap: [Tab Origin](https://microsoftedge.microsoft.com/addons/detail/tab-origin/pjokhhddbfamccemjneocheekkoognbo?hl=en-US), [Last Tab Back](https://chromewebstore.google.com/detail/last-tab-back/oijipkokfkhgojikimbbcafnbppebnhe?pli=1), and, in legacy Firefox, [BackTrack Tab History](https://www.ghacks.net/2017/03/01/backtrack-tab-history-add-on-for-firefox/). The demand existed, people had shipped workarounds, but nobody had solved it natively in Chromium.
 
 ---
 
