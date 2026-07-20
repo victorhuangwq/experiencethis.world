@@ -27,7 +27,7 @@ The back button has been disabled in new tabs for as long as tabs have existed. 
 
 Then came the AI chat apps in 2022. ChatGPT, Copilot, Google AI Mode, Perplexity are all long-running conversations, and if a link navigated you away from the chat, you would lose your thread and your place in it. So it's totally logical that these interfaces open links in new tabs, because the conversation stays open at exactly the right place while you read.
 
-But the side effect is that users get stranded. You're in a new tab, the back button is useless, and your chat is buried somewhere behind forty other tabs.
+But the side effect is that users get stranded. You're in a new tab, the back button is useless, and your chat can be buried somewhere behind forty other tabs.
 
 To me, this is an old browser design crossing a new wave of website design, resulting in a poor user flow, rather than a problem with ChatGPT or Bing specifically. When tabs were introduced, the idea was that each tab is a separate browsing context, so it made sense not to link their histories together. But now that chat apps have become a major use case, and they open every link in a new tab, the two tabs have an obvious mental linkage in the user's head: this page came from that conversation. The browser simply has no concept of that connection.
 
