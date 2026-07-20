@@ -31,7 +31,7 @@ But the side effect is that users get stranded. You're in a new tab, the back bu
 
 This isn't a ChatGPT problem or a Bing problem. It's an old browser design crossing a new website design, and producing a bad flow. When tabs were introduced, the idea was that each tab is a separate browsing context, so it made sense not to link their histories together. But with chat apps becoming a major use case, and opening every link in a new tab, the two tabs now have an obvious mental linkage: this page came from that conversation. The user feels that connection. The browser has no concept of it.
 
-When I started digging into this, I found that Bing had already tried to patch it, years before I touched the problem. There was a workaround: a redirect page that added a fake entry to the new tab's history stack, so pressing back would at least do *something*. It worked, but it added a measurable latency cost to every single navigation, and at search-engine scale that kind of friction adds up. The fix was working against the very engagement it was meant to support.
+When I started digging, I found Bing had already tried to patch this years earlier with a redirect page that slipped a fake entry into the new tab's history, so pressing back would at least do *something*. It worked, but it added latency to every navigation, and at search-engine scale that adds up: the fix was working against the very engagement it was meant to support.
 
 So the workaround was slow *and* janky. What struck me was that the user problem and the business problem were the same problem viewed from different angles: fix the root cause and you help both.
 
