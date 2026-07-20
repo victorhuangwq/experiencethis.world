@@ -15,7 +15,7 @@ description: "The story of BackToOpener, a Chromium feature that gives the back 
 Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, and after reading the page I'd instinctively click the back button to get back to the chat, except the button was greyed out and there was nothing to click. Then comes the little realization that back isn't available because this is a new tab, so I'd go find the X button instead. If the chat was the adjacent tab (which happens when the link is the newest thing I opened), closing the tab drops me right back into the conversation. Other times, when I had forty tabs open and the chat wasn't next door because I had opened a pile of links or shuffled my tabs around, I'd have to go hunt for it, or just give up and open a fresh chat.
 
 ![Animation of the stranded state in Chrome: a recipe page opened from a Claude chat has a greyed-out back button, so the tab has to be closed by hand before hunting for the conversation in the tab bar](/assets/images/backtoopener-before-stranded.gif)
-*This is the status quo: a page opened from a Claude chat, a dead back button, and me closing the tab by hand to get back to the conversation.*
+*This is the status quo: a page opened from a Claude chat and a dead back button, so I instead had to shift over and find the X button to get back to the conversation.*
 
 For a long time I assumed this was simply how browsers work, and it turns out that this is only how browsers work *so far*.
 
