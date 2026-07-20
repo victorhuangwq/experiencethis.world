@@ -113,4 +113,4 @@ When coworkers started trying BackToOpener internally, the common reaction was a
 
 I work on a browser used by hundreds of millions of people, which is a part of a bigger open source project used by billions (thanks Chromium), and most of what I do is too diffuse to point at. If this ships, I'll be able to point at the back button and say: I did that. That's a pretty fun thing to get to say at a party.
 
-The experiment is still running, so I'm not counting my chickens just yet. But that's exactly why I wanted to write this all down now, before I know how it ends.
+The experiment is still running, so nothing is final and I don't want to celebrate too early. But that's exactly why I wanted to write this all down now, before I know how it ends.
