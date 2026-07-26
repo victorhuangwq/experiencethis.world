@@ -47,9 +47,15 @@ Then three problems that needed solving:
 
 I took this to the Community Group's face-to-face at [TPAC in Kobe](https://www.w3.org/2025/11/11-webmachinelearning-minutes.html) in November, as a short deck with worked examples.
 
-It went the way you want this kind of thing to go: people made it better. Dominique Hazaël-Massieux took the over-parameterization case and sharpened it in a way I've quoted ever since — the sensitive attribute isn't someone's dietary preference, it's whether they're pregnant, or where they travel. Those are inferable from field combinations that look completely mundane one at a time. That's a better version of my point than the one I brought.
+It went the way you want this kind of thing to go: people made it better. Dominique Hazaël-Massieux took the over-parameterization case and sharpened it into the version I've used ever since:
 
-The thing I most wanted on the record, though, was the other half of the argument, and the minutes have it: WebMCP "is going to be good for the general privacy and security because it provides a standard way to interact with the Web."
+> I don't want a site to know a user is pregnant or is visiting Japan at the moment, for example … privacy issue is quite substantial
+
+We were, at that moment, all sitting in Japan. The point being that neither of those facts is a field anyone asks for. They're inferable from combinations of fields that look completely mundane one at a time, which is a better statement of my own argument than the one I'd brought.
+
+The thing I most wanted on the record, though, was the other half of it, and the minutes have that too:
+
+> from a privacy and security perspective, WebMCP is going to be good for the general privacy and security because it provides a standard way to interact with the Web, rather than computer vision and automated interactions
 
 That's the part I'd underline, because the alternative to WebMCP isn't a world where agents leave your bank account alone. Agents are already doing this. Today, through computer use clicking coordinates on a rendered page, or through Playwright and its cousins driving the DOM by selector. The mechanisms differ, but the shape is identical: the site is being operated from the outside, through a surface nobody designed for the purpose, because that's the only door available. Declining to standardize a better one doesn't prevent any of it. It just means it keeps happening in the least inspectable way we could have chosen. Not building a golden path is closing our eyes to what agents are already trying to do.
 
@@ -82,7 +88,11 @@ remove attacks on tool implementation for a separate PR in the future
 
 The last one matters more than it looks. Khushal, reviewing, flagged one attack vector as needing more thought. Rather than hold the document while I worked it out, I cut that section, shipped the rest, and brought it back three days later as [its own PR](https://github.com/webmachinelearning/webmcp/pull/59). A document that lands is worth more than a document that's complete.
 
-It merged on December 5th. On a call that week I said we were "70-80% done identifying the threats" — meant as a progress report, in the sense of: the map is good enough now, we can start building on it. Eight months on, that estimate has held up, which for a technology this young feels like getting away with something.
+It merged on December 5th. On the call that week I gave a progress report — "we're 70-80% done identifying the threats" — meaning the map is good enough now, we can start building on it. Eight months on, that estimate has held up, which for a technology this young feels like getting away with something.
+
+The other thing I said on that call is the one I'd defend hardest, because it's the discipline the whole exercise depends on: security and privacy considerations "should not … go into hypothetical territory, wait and see how the adoption will be."
+
+It's easy to write a threat model that is really a list of everything imaginable. Those documents are useless, because when everything is a risk there's no signal about what to build first, and the engineers correctly stop reading. On the same call I argued *against* one of the items on my own list — that input injection might not be a WebMCP concern at all, since a site taking tool input into its own LLM has a problem that exists with or without this API. Being the person who wrote the threat model doesn't mean defending every entry in it. Half the value is in the things you take back off the list.
 
 A detail I like: I wrote the security document for this specification on November 14th, and was formally welcomed as a new participant in the Working Group on December 18th. The work came first. That's usually the order, and it's a good thing about how this group operates.
 
@@ -108,7 +118,11 @@ In March, François Beaufort found that `provideContext()` let a script clear an
 
 That issue lived twenty-three minutes before being folded into [Dominic's broader design issue](https://github.com/webmachinelearning/webmcp/issues/130), which is the right outcome and still slightly funny to watch happen in real time. `provideContext` is gone from the spec now, and registration takes a signal that scopes a tool's lifetime to whoever created it. The idea got there; my issue number didn't. In a working group those are the same result.
 
-The second was in May, on whether tools should carry a hint marking consequential actions. The instinct was to inherit MCP's naming and call it `destructive`. I argued for a different shape: "reversible" describes a larger and more useful set than "destructive," and — the part I actually cared about — the default decides what happens to the majority of developers who never touch the field at all. Get it wrong and every unlabelled tool from a developer who didn't know the field existed gets treated as dangerous, agents start prompting constantly, and users learn to click straight through the prompts. The group [resolved](https://www.w3.org/2026/05/28-webmachinelearning-minutes.html) to specify a consequential hint defaulting to false.
+The second was in May, on whether tools should carry a hint marking consequential actions. The instinct was to inherit MCP's naming and call it `destructive`. I argued for a different shape — "reversible is a bigger set, consequential is a subset" — and, more importantly, against copying MCP's design wholesale, on the grounds that "not much consideration was put in the design of MCP hints" and that the two systems have different users:
+
+> In MCP clients, people need to enlist into use of the hints, only then they can be used … We vet websites before use, thus defaults are more important than in MCP
+
+That's the whole argument in one line. MCP hints are opt-in among people who went looking for them. On the web, the field's default is what happens to every developer who never learns it exists. Get it wrong and every unlabelled tool gets treated as dangerous, agents prompt constantly, and users learn to click straight through the prompts — which is worse than not prompting at all. The group [resolved](https://www.w3.org/2026/05/28-webmachinelearning-minutes.html) to specify a consequential hint defaulting to false.
 
 Defaults are the part of an API most developers never see, which is exactly why they determine what it does in practice. Making the safe path the easy path is most of the job.
 
@@ -118,7 +132,7 @@ Defaults are the part of an API most developers never see, which is exactly why 
 
 In May, on a call about getting WebMCP in front of the W3C's horizontal review groups, Johann said the considerations document I'd started was "already pretty solid" and should move into the specification itself. It did, and I sent [a cleanup PR](https://github.com/webmachinelearning/webmcp/pull/194) deleting the original and repointing the links — the least glamorous commit I've ever been pleased with.
 
-Then Dominic pointed out we needed the answers to the W3C's Security and Privacy self-review questionnaire written down somewhere citable. I'd worked through that questionnaire privately while writing the original document, so I offered to open the PR. Twenty-two questions about what the specification exposes, what it does with personal data, how it interacts with private browsing. Twenty-six commits, four reviewers, [merged on June 16th](https://github.com/webmachinelearning/webmcp/pull/195).
+Then Dominic pointed out we needed the answers to the W3C's Security and Privacy self-review questionnaire written down somewhere citable. As I said on the call, I'd "looked at the self-review questionnaire while authoring the initial S&P consideration" — it had been the scaffolding for the original document, I'd just never written the answers down where anyone could cite them. So I offered to open the PR. Twenty-two questions about what the specification exposes, what it does with personal data, how it interacts with private browsing. Twenty-six commits, four reviewers, [merged on June 16th](https://github.com/webmachinelearning/webmcp/pull/195).
 
 It unblocked the requests for formal review from the TAG, the Privacy Working Group, and the Security Working Group. Which is the actual ending: not a launch, but the document that lets a much larger group of people start asking harder questions than mine.
 
