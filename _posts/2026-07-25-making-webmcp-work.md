@@ -15,7 +15,7 @@ description: "To contribute fixes to a new web standard, I first had to work out
 
 WebMCP is one of the better ideas I've seen come through the web platform in a while, and I want it to ship.
 
-The pitch is simple. Right now, when an AI agent uses a website on your behalf, it mostly does it by looking at your screen and guessing: this rectangle is probably the "add to cart" button, that box is probably the quantity field. It works until the site changes its layout. WebMCP lets a site skip all of that and just say what it can do — here is a function called `add_to_cart`, here is what it takes, here is what happens when you call it. The agent stops guessing.
+The pitch is simple. Right now, when an AI agent uses a website on your behalf, it does it from the outside. Either by looking at your screen and guessing — this rectangle is probably the "add to cart" button, that box is probably the quantity field — or by driving the page with an automation framework, clicking selectors written against markup that was never meant to be an API. Both work until the site changes. WebMCP lets a site skip all of that and just say what it can do — here is a function called `add_to_cart`, here is what it takes, here is what happens when you call it. The agent stops guessing, and the developer gets a say in what's on offer, which turns out to matter more than it sounds.
 
 I've spent the last eight months working on the security and privacy side of it in the [W3C's Web Machine Learning Community Group](https://webmachinelearning.github.io/webmcp/). Not because I think it's dangerous. Because I think it's good, and I wanted to help fix the parts that weren't ready yet.
 
@@ -51,7 +51,13 @@ It went the way you want this kind of thing to go: people made it better. Domini
 
 The thing I most wanted on the record, though, was the other half of the argument, and the minutes have it: WebMCP "is going to be good for the general privacy and security because it provides a standard way to interact with the Web."
 
-That's the part I'd underline. The alternative to WebMCP isn't a world where agents leave your bank account alone. It's the world we already have, where they operate by screenshotting your screen and clicking coordinates — no declared surface, no schema, nothing for the browser to reason about and nothing to show the user before something happens. A declared tool is a thing you can put a permission prompt on. A screenshot isn't.
+That's the part I'd underline, because the alternative to WebMCP isn't a world where agents leave your bank account alone. Agents are already doing this. Today, through computer use clicking coordinates on a rendered page, or through Playwright and its cousins driving the DOM by selector. The mechanisms differ, but the shape is identical: the site is being operated from the outside, through a surface nobody designed for the purpose, because that's the only door available. Declining to standardize a better one doesn't prevent any of it. It just means it keeps happening in the least inspectable way we could have chosen. Not building a golden path is closing our eyes to what agents are already trying to do.
+
+Building one changes two things that matter.
+
+The first is that the developer gets a say. When something drives a site from the outside, the people who built that site have no involvement in it whatsoever — no way to indicate which flows are meant for an agent and which aren't, no way to tell an agent from a person, no way to participate in the interaction at all. With WebMCP the developer decides what to expose. That's a design decision handed back to the people who know their own application.
+
+The second is that the attack surface becomes finite. Anything driving the UI from outside can do whatever a user could do in that interface, which is to say everything. A set of declared tools is a list — bounded, enumerable, reviewable. You can look at it and reason about the worst case, which is not a sentence anyone can say about a screenshot or a selector script. It's also a thing a browser can put a permission prompt on.
 
 Enumerating the problems and believing in the technology aren't in tension. The enumeration is what lets you argue for it honestly.
 
@@ -124,6 +130,6 @@ My name is in the acknowledgements of the spec, in a list of twelve, and that's 
 
 What I've come to think the product job is here: make the problems legible enough that the engineers can solve them. Not by raising alarms — an alarm mostly makes people defensive about a thing they've been building for a year. By writing down the assumptions everyone is arguing past, naming the failure modes so proposals have something to attach to, keeping the document open enough that everyone else fills it in, and doing the unglamorous paperwork when that's what's in the way.
 
-The reason to do any of it is that you want the thing to exist. I'd rather agents interacted with the web through a declared, inspectable interface than by squinting at pixels, and the fastest route there was working out what stood in the way.
+The reason to do any of it is that you want the thing to exist. I'd rather agents interacted with the web through an interface the developer chose and the browser can reason about, than through a screenshot or a selector script that nobody agreed to and nobody can bound. That's a better web than the one we're drifting toward by default, and the fastest route to it was working out what stood in the way.
 
 Section 6 of the spec has my headings in it. Almost none of the text underneath them is mine anymore, and that was the entire point.
