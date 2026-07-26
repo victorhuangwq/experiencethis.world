@@ -3,7 +3,7 @@
 
   {% include head.html %}
 
-  <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}">
+  <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}{% assign body_category = page.categories | first | default: page.category %}{% if body_category %} category-{{ body_category }}{% endif %}">
 
     {% include masthead.html %}
 

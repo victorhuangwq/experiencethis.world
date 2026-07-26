@@ -5,21 +5,35 @@
 
 @import "hydeout";
 
-// Warm editorial component layer
-// Base palette, type, and layout live in _sass/hydeout/*; this file styles the
-// site-specific components (home list, post page, tags, etc.).
+// "Shophouse Spec" component layer
+// Tokens and base styles live in _sass/hydeout/*; this file styles the
+// site-specific components (home list, post page, tags, category flavors).
+
+// Comment labels: the site's annotation layer. Anything mono + muted with a
+// leading "// " reads as marginalia on the spec doc.
+%comment-label {
+  color: $body-muted;
+  font-family: $mono-font-family;
+  font-size: 0.78rem;
+  text-transform: lowercase;
+
+  &::before {
+    color: $link-color;
+    content: '// ';
+  }
+}
 
 // Home intro
 .home-intro {
   margin-bottom: 2.5rem;
 
   h1 {
-    font-size: 2.4rem;
-    line-height: 1.12;
+    font-size: 2rem;
+    line-height: 1.15;
     margin-bottom: 0.6rem;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.6rem;
+      font-size: 2.3rem;
     }
   }
 
@@ -29,41 +43,21 @@
   }
 }
 
-// Quiet section labels dividing the home page into a table of contents
+// Section labels dividing the home page into a table of contents
 .home-section-title {
-  color: $body-muted;
-  font-family: $root-font-family;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  margin: 0 0 0.4rem;
-  text-transform: uppercase;
+  @extend %comment-label;
+  font-weight: 400;
+  margin: 0 0 1.1rem;
 }
 
-// Hand-drawn squiggle accenting each section label
-.squiggle {
-  color: $terracotta;
-  display: block;
-  margin: 0 0 1.25rem;
-  opacity: 0.7;
-  width: 4.5rem;
-
-  svg {
-    display: block;
-    height: auto;
-    width: 100%;
-  }
-}
-
-// Things I build & run
+// Things I build & run: a terrace row where every shophouse is painted
+// its own pastel. Color cycles with position, one house per project.
 .home-projects {
-  border-bottom: 1px solid $border-color;
   margin-bottom: 2.5rem;
-  padding-bottom: 2.5rem;
 
   .projects-list {
     display: grid;
-    gap: 1.25rem 2.5rem;
+    gap: 1rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -73,58 +67,97 @@
     }
   }
 
+  li {
+    --chip: var(--mint);
+    --chip-deep: var(--mint-deep);
+    background: var(--chip);
+    border-left: 3px solid var(--chip-deep);
+    border-radius: $border-radius;
+    padding: 0.9rem 1.1rem;
+  }
+
+  li:nth-child(4n + 2) {
+    --chip: var(--sky);
+    --chip-deep: var(--sky-deep);
+  }
+
+  li:nth-child(4n + 3) {
+    --chip: var(--rose);
+    --chip-deep: var(--rose-deep);
+  }
+
+  li:nth-child(4n) {
+    --chip: var(--tealpale);
+    --chip-deep: var(--tealpale-deep);
+  }
+
   li a {
-    color: $heading-color;
+    color: var(--chip-deep);
     display: inline-block;
     font-family: $display-font-family;
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
 
     &:hover,
     &:focus {
-      color: $link-color;
-      text-decoration: none;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
     }
-  }
-
-  // Decorative accent rotation on hover only; resting state stays quiet
-  li:nth-child(3n + 2) a:hover,
-  li:nth-child(3n + 2) a:focus {
-    color: $mustard;
-  }
-
-  li:nth-child(3n) a:hover,
-  li:nth-child(3n) a:focus {
-    color: $teal;
   }
 
   .project-blurb {
     color: $body-color;
     display: block;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     line-height: 1.5;
+    margin-top: 0.15rem;
   }
 
   .project-note {
     color: $body-muted;
     display: block;
-    font-size: 0.8rem;
+    font-family: $mono-font-family;
+    font-size: 0.72rem;
+    margin-top: 0.3rem;
   }
 }
 
-// Meta line (home entries + post pages)
+// Meta line (home entries + post pages), styled as a code comment
 .entry-meta,
 .post-meta {
-  color: $body-muted;
-  font-size: 0.8rem;
-
-  .entry-category {
-    text-transform: capitalize;
-  }
+  @extend %comment-label;
 
   a {
-    color: $link-color;
+    color: var(--cat, #{$link-color});
   }
+}
+
+// Category chips: each writing category is a differently painted house,
+// so a post's colors identify it before its title does.
+.cat-projects,
+.category-projects {
+  --cat: var(--sky-deep);
+  --cat-chip: var(--sky);
+}
+
+.cat-travel,
+.category-travel {
+  --cat: var(--rose-deep);
+  --cat-chip: var(--rose);
+}
+
+.cat-reviews,
+.category-reviews {
+  --cat: var(--mint-deep);
+  --cat-chip: var(--mint);
+}
+
+.entry-category {
+  background: var(--cat-chip, var(--wash));
+  border-radius: 4px;
+  color: var(--cat, #{$body-muted});
+  padding: 0.1em 0.5em;
 }
 
 // Post list on the home page
@@ -140,9 +173,9 @@
   }
 
   .entry-title {
-    font-size: 1.55rem;
-    line-height: 1.2;
-    margin: 0.35rem 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin: 0.5rem 0;
 
     a {
       color: $heading-color;
@@ -164,6 +197,10 @@
 // Post pages
 .post-meta {
   margin-bottom: 2rem;
+
+  .post-categories {
+    text-transform: lowercase;
+  }
 }
 
 // Content links get a draw-in underline instead of the theme's instant one
@@ -181,7 +218,7 @@
 }
 
 .post-body {
-  line-height: 1.75;
+  line-height: 1.7;
 
   img {
     border-radius: $border-radius;
@@ -219,6 +256,52 @@
   }
 }
 
+// ---------------------------------------------------------------------------
+// Category flavors
+//
+// One shared skeleton; each category gets its color (set on --cat/--cat-chip
+// above via the body class) plus one structural mannerism.
+// ---------------------------------------------------------------------------
+
+// Projects read like a spec doc: numbered h2 sections in the category color.
+.category-projects .post-body {
+  counter-reset: spec;
+
+  > h2 {
+    counter-increment: spec;
+
+    &::before {
+      color: var(--cat);
+      content: counter(spec) '. ';
+    }
+  }
+}
+
+// Travel reads like a photo log: roomier leading, captions as comments.
+.category-travel .post-body {
+  line-height: 1.8;
+
+  p img + em {
+    font-family: $mono-font-family;
+    font-size: 0.78rem;
+    font-style: normal;
+
+    &::before {
+      color: var(--cat);
+      content: '// ';
+    }
+  }
+}
+
+// Reviews: blockquotes carry the verdict.
+.category-reviews .post-body blockquote {
+  background: var(--cat-chip);
+  border-left: 3px solid var(--cat);
+  border-radius: 0 $border-radius $border-radius 0;
+  color: $body-color;
+  padding: 0.75rem 1.25rem;
+}
+
 // Older/newer navigation at the foot of a post
 .post-nav {
   border-top: 1px solid $border-color;
@@ -248,28 +331,28 @@
   }
 
   .post-nav-label {
-    color: $body-muted;
+    @extend %comment-label;
     display: block;
     font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 
   .post-nav-title {
     color: $heading-color;
     font-family: $display-font-family;
-    font-size: 1.05rem;
-    line-height: 1.3;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
   }
 }
 
-// Tags below posts: quiet #tag links
+// Tags below posts: quiet #tag links in the comment layer
 .post-tags {
   > a,
   > span {
     color: $body-muted;
     display: inline-block;
-    font-size: 0.85rem;
+    font-family: $mono-font-family;
+    font-size: 0.8rem;
     margin-bottom: 0.5rem;
     margin-right: 1rem;
     white-space: nowrap;
@@ -293,14 +376,14 @@
 .related,
 .posts-for-tag {
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
   }
 
   .posts-list li {
     margin-bottom: 1rem;
 
     h3 {
-      font-size: 1.15rem;
+      font-size: 1rem;
       margin: 0;
 
       a {
@@ -319,6 +402,7 @@
 
       small {
         color: $body-muted;
+        font-family: $mono-font-family;
         font-weight: 400;
         margin-left: 0.5rem;
       }
@@ -336,12 +420,14 @@
   small {
     color: $body-muted;
     flex-shrink: 0;
-    font-size: 0.8rem;
+    font-family: $mono-font-family;
+    font-size: 0.75rem;
     min-width: 6.5rem;
   }
 
   h3 {
-    font-size: 1.1rem;
+    font-family: $root-font-family;
+    font-size: 1.05rem;
     font-weight: 500;
     line-height: 1.4;
     margin: 0;
@@ -351,19 +437,23 @@
 
       &:hover,
       &:focus {
-        color: $link-color;
+        color: var(--cat, #{$link-color});
         text-decoration: none;
       }
     }
   }
 }
 
-// About page portrait
+// About page portrait: the cake sketch gets a pastel mat so the hand-drawn
+// original sits inside the shophouse system instead of floating.
 .about-image {
+  background: var(--rose);
+  border-left: 3px solid var(--rose-deep);
   border-radius: $border-radius;
   display: block;
   margin: 1.5rem auto;
   max-width: 300px;
+  padding: 0.9rem;
 
   @media (max-width: 768px) {
     max-width: 250px;
@@ -371,49 +461,38 @@
 }
 
 // ---------------------------------------------------------------------------
-// Micro-motion
+// Micro-motion: playful on touch
 //
-// All motion opts in via no-preference so reduced-motion users get the plain
-// static design with zero overrides.
+// Everything reacts to a poke, nothing performs on page load. All motion
+// opts in via no-preference so reduced-motion users get the static design.
 // ---------------------------------------------------------------------------
 @media (prefers-reduced-motion: no-preference) {
-  .home-projects li a {
-    transition: transform 160ms ease, color 160ms ease;
+  .home-projects li {
+    transition: transform 140ms ease;
 
     &:hover,
-    &:focus {
-      transform: translateY(-2px) rotate(-0.5deg);
+    &:focus-within {
+      transform: translateY(-2px);
     }
   }
 
   .post-body a:not([href^='#fn']) {
-    transition: background-size 220ms ease;
+    transition: background-size 150ms ease;
   }
 
-  @keyframes home-rise {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
+  .post-tags > a {
+    transition: transform 120ms ease, color 120ms ease;
 
-    to {
-      opacity: 1;
-      transform: none;
+    &:hover,
+    &:focus {
+      transform: translateX(2px);
     }
   }
 
-  .home .home-intro {
-    animation: home-rise 0.45s ease-out both;
-  }
-
-  .home .home-projects {
-    animation: home-rise 0.45s ease-out 0.08s both;
-  }
-
-  .home .home-posts,
-  .home .content > .home-section-title,
-  .home .content > .squiggle {
-    animation: home-rise 0.45s ease-out 0.16s both;
+  .masthead-nav a,
+  .entry-title a,
+  .post-nav-title {
+    transition: color 120ms ease;
   }
 }
 
@@ -446,16 +525,16 @@ $phone-breakpoint: 40rem;
   }
 
   .home-intro h1 {
-    font-size: 2rem;
+    font-size: 1.7rem;
   }
 
   .home-posts .home-post .entry-title {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
   }
 
   .container > header h1,
   .container > header h2 {
-    font-size: 1.85rem;
+    font-size: 1.55rem;
   }
 
   .site-footer .footer-links a {

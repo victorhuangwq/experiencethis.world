@@ -1,7 +1,7 @@
 // Code
 //
-// Inline and block-level code snippets. Light, warm-toned treatment that
-// keeps the vendored Pygments/Rouge light syntax theme readable.
+// Inline and block-level code snippets on the neutral wash surface; the
+// syntax theme in _syntax.scss swaps for dark mode via tokens.
 
 code,
 pre {
@@ -9,7 +9,7 @@ pre {
 }
 
 code {
-  background-color: #f1e9dc;
+  background-color: $wash;
   border-radius: 4px;
   color: $code-color;
   font-size: 85%;

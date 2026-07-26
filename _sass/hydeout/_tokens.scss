@@ -1,0 +1,75 @@
+// Design tokens
+//
+// "Shophouse Spec": near-white plaster paper, four Peranakan pastel chips
+// (each with a text-safe deep of the same hue), and one hot chili accent.
+// Dark mode swaps the whole set via prefers-color-scheme; every pairing
+// below clears WCAG AA 4.5:1 against the surface it sits on.
+
+:root {
+  --paper: #fdfdfb;
+  --ink: #1d1f24;
+  --ink-soft: #2a2d33;
+  --ink-muted: #5d6068;
+
+  --chili: #c22e3a;
+  --chili-tint: #f6d6d4; // solid selection tint; alpha blends inconsistently across browsers
+
+  --mint: #d9efe2;
+  --mint-deep: #256a4d;
+  --sky: #d9e8f6;
+  --sky-deep: #22578f;
+  --rose: #f7dee4;
+  --rose-deep: #9e2f4f;
+  --tealpale: #d7edee;
+  --tealpale-deep: #186167;
+
+  --hairline: #e7e6e1;
+  --wash: #f4f4f1;
+  --wash-strong: #ededea;
+  --rule-soft: #c9c9c4; // blockquote border weight between hairline and muted ink
+
+  // Syntax highlighting (GitHub-light-ish, chili-adjacent keyword red)
+  --syn-comment: #6a737d;
+  --syn-keyword: #c22e3a;
+  --syn-string: #0a3069;
+  --syn-number: #953800;
+  --syn-function: #6639ba;
+  --syn-type: #22578f;
+  --syn-tag: #116329;
+  --syn-error: #82071e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15171b;
+    --ink: #e9e9e4;
+    --ink-soft: #c9cbc9;
+    --ink-muted: #8b8f94;
+
+    --chili: #ff6b5e;
+    --chili-tint: #5a2622;
+
+    --mint: #1c3329;
+    --mint-deep: #7ed0a8;
+    --sky: #1b2c3e;
+    --sky-deep: #82b5e8;
+    --rose: #3a2229;
+    --rose-deep: #e896ad;
+    --tealpale: #16312f;
+    --tealpale-deep: #7bc6c9;
+
+    --hairline: #2a2d33;
+    --wash: #20232a;
+    --wash-strong: #262a32;
+    --rule-soft: #3a3e46;
+
+    --syn-comment: #8b949e;
+    --syn-keyword: #ff7b72;
+    --syn-string: #a5d6ff;
+    --syn-number: #ffa657;
+    --syn-function: #d2a8ff;
+    --syn-type: #79c0ff;
+    --syn-tag: #7ee787;
+    --syn-error: #ffa198;
+  }
+}

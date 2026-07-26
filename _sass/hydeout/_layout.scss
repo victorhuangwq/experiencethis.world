@@ -1,8 +1,8 @@
 /*
   Layout
 
-  Warm editorial layout: a slim masthead across the top of the page
-  (see _masthead.scss) and a single centered column of content beneath it.
+  A slim masthead across the top of the page (see _masthead.scss) and a
+  single centered column of content beneath it.
 
     body
     > .masthead-wrap
@@ -37,12 +37,12 @@ body {
   h2 {
     color: $heading-color;
     font-family: $display-font-family;
-    font-size: 2.25rem;
-    line-height: 1.15;
+    font-size: 1.9rem;
+    line-height: 1.2;
     margin: 0;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.5rem;
+      font-size: 2.1rem;
     }
   }
 }
@@ -50,7 +50,8 @@ body {
 .site-footer {
   border-top: 1px solid $border-color;
   color: $body-muted;
-  font-size: 0.8rem;
+  font-family: $mono-font-family;
+  font-size: 0.75rem;
   margin: 0 auto;
   max-width: $masthead-width;
   padding: 1.5rem;

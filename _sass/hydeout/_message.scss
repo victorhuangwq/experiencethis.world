@@ -4,8 +4,9 @@
 // or to a parent if there are multiple elements to show.
 
 .message {
-  background-color: #f9f9f9;
-  color: #717171;
+  background-color: $wash;
+  border-radius: $border-radius;
+  color: $body-muted;
   margin-bottom: 1rem;
   padding: 1rem;
 }

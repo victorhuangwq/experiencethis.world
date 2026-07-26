@@ -1,33 +1,38 @@
-// Warm editorial palette
-$paper: #faf6f0 !default; // cream paper background
-$ink: #1a1612 !default; // heading ink
-$ink-soft: #2b241d !default; // body ink
-$ink-muted: #6e6258 !default; // meta / muted text
-$terracotta: #b23c0a !default; // accent (deepened slightly for AA headroom)
-$terracotta-dark: #9a3412 !default; // inline code accent
-$mustard: #9a6d0b !default; // warm ochre; playful secondary accent
-$teal: #2b6e6a !default; // muted pine; the single cool note
-$hairline: #e7decf !default; // warm hairline borders
-$wash: #f4eee3 !default; // code blocks / tinted panels
-$wash-strong: #f1eae0 !default; // table headers
+// Sass-level settings. Colors live in _tokens.scss as CSS custom properties
+// (so dark mode can swap them at runtime); the aliases below keep the theme
+// partials compiling unchanged. Only values that feed Sass math (measure,
+// breakpoints, spacing) stay as plain Sass values.
 
-// Warm neutral scale (kept for partials that expect grays)
-$gray-1: #f3ede3 !default;
-$gray-2: $hairline !default;
-$gray-3: #d8ccb9 !default;
-$gray-4: $ink-muted !default;
-$gray-5: $ink-soft !default;
-$gray-6: $ink !default;
+$paper: var(--paper) !default;
+$ink: var(--ink) !default;
+$ink-soft: var(--ink-soft) !default;
+$ink-muted: var(--ink-muted) !default;
+$chili: var(--chili) !default;
+$hairline: var(--hairline) !default;
+$wash: var(--wash) !default;
+$wash-strong: var(--wash-strong) !default;
 
-$display-font-family: 'Fraunces', Georgia, 'Times New Roman', serif !default;
-$root-font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif !default;
+// Neutral scale (kept for partials that expect grays)
+$gray-1: var(--wash) !default;
+$gray-2: var(--hairline) !default;
+$gray-3: var(--rule-soft) !default;
+$gray-4: var(--ink-muted) !default;
+$gray-5: var(--ink-soft) !default;
+$gray-6: var(--ink) !default;
+
+// Space Mono carries headlines and the "// comment" layer; body text is the
+// platform's own sans. Code blocks stay on the native mono stack so code
+// reads as code, not as site chrome.
+$display-font-family: 'Space Mono', ui-monospace, 'SF Mono', Menlo, Monaco, monospace !default;
+$mono-font-family: $display-font-family !default;
+$root-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !default;
 $root-font-size: 1.0625rem !default;
-$root-line-height: 1.7 !default;
+$root-line-height: 1.6 !default;
 
 $body-color: $ink-soft !default;
 $body-muted: $ink-muted !default;
 $body-bg: $paper !default;
-$link-color: $terracotta !default;
+$link-color: $chili !default;
 $heading-color: $ink !default;
 
 $border-color: $hairline !default;
@@ -48,4 +53,4 @@ $box-shadow-opacity: 0.16 !default;
 $default-box-shadow: $box-shadow-size $box-shadow-size $box-shadow-size rgba(0, 0, 0, $box-shadow-opacity);
 
 $code-font-family: ui-monospace, 'SF Mono', Menlo, Monaco, 'Courier New', monospace !default;
-$code-color: $terracotta-dark !default;
+$code-color: var(--ink) !default;

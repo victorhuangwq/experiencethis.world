@@ -21,10 +21,9 @@
 .masthead-title {
   color: $heading-color;
   font-family: $display-font-family;
-  font-size: 1.4rem;
-  font-variation-settings: 'WONK' 1;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 
   &:hover,
@@ -41,14 +40,14 @@
 
   a {
     color: $body-muted;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: $mono-font-family;
+    font-size: 0.78rem;
+    text-transform: lowercase;
 
     &:hover,
     &:focus {
       color: $link-color;
-      text-decoration: underline wavy;
+      text-decoration: underline;
       text-decoration-thickness: 1px;
       text-underline-offset: 4px;
     }

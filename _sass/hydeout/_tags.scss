@@ -1,30 +1,38 @@
 .tags-list a {
+  font-family: $mono-font-family;
+  font-size: 0.85em;
   margin-right: 0.5em;
-  opacity: 0.75;
   white-space: nowrap;
 }
 
 .tags-list a .tag-count {
-  background: $link-color;
+  background: var(--mint);
   border-radius: 1000px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--mint-deep);
   font-size: 0.75em;
   margin-left: 0.25em;
   padding-left: 0.6em;
   padding-right: 0.6em;
 }
 
-// Rotate pill accents; purely decorative, no color carries meaning
-.tags-list a:nth-child(3n + 2) .tag-count {
-  background: $mustard;
+// Shophouse row: each pill painted its own pastel, cycling down the street
+.tags-list a:nth-child(4n + 2) .tag-count {
+  background: var(--sky);
+  color: var(--sky-deep);
 }
 
-.tags-list a:nth-child(3n) .tag-count {
-  background: $teal;
+.tags-list a:nth-child(4n + 3) .tag-count {
+  background: var(--rose);
+  color: var(--rose-deep);
+}
+
+.tags-list a:nth-child(4n) .tag-count {
+  background: var(--tealpale);
+  color: var(--tealpale-deep);
 }
 
 .tags-list a:hover {
-  opacity: 1;
+  color: $link-color;
   text-decoration: none;
 }
 
