@@ -37,21 +37,35 @@ body {
   h2 {
     color: $heading-color;
     font-family: $display-font-family;
-    font-size: 1.9rem;
+    font-size: 2.1rem;
+    font-weight: 800;
     line-height: 1.2;
     margin: 0;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.1rem;
+      font-size: 2.35rem;
     }
   }
 }
 
 .site-footer {
-  border-top: 1px solid $border-color;
   color: $body-muted;
-  font-family: $mono-font-family;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+
+  // Matching tile strip at the five-foot way
+  &::before {
+    background: repeating-linear-gradient(
+      90deg,
+      var(--mint-deep) 0 3rem,
+      var(--sky-deep) 3rem 6rem,
+      var(--rose-deep) 6rem 9rem,
+      var(--tealpale-deep) 9rem 12rem
+    );
+    content: '';
+    display: block;
+    height: 4px;
+    margin-bottom: 1.25rem;
+  }
   margin: 0 auto;
   max-width: $masthead-width;
   padding: 1.5rem;

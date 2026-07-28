@@ -36,9 +36,9 @@ layout: default
   <div class="home-posts">
     {% for post in paginator.posts %}
       {% if post.hidden %}{% continue %}{% endif %}
-      <article class="home-post">
+      {% assign category = post.categories | first %}
+      <article class="home-post{% if category %} cat-{{ category }}{% endif %}">
         <div class="entry-meta">
-          {% assign category = post.categories | first %}
           {% if category %}<span class="entry-category cat-{{ category }}">{{ category }}</span> &middot; {% endif %}
           <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
         </div>
