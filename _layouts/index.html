@@ -5,8 +5,8 @@ layout: default
 <div class="content">
   {% if page.url == "/" %}
     <section class="home-intro">
-      <h1>{{ site.description }}</h1>
-      <p class="home-tagline">{{ site.tagline }}</p>
+      <h1>{{ site.home_headline | default: site.description }}</h1>
+      <p class="home-tagline">{{ site.home_tagline | default: site.tagline }}</p>
     </section>
 
     {% if site.data.projects %}

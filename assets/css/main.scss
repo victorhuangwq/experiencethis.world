@@ -57,14 +57,15 @@
   background: var(--sky-deep);
 }
 
-// Things I build & run: a terrace row where every shophouse is painted
-// its own pastel. Color cycles with position, one house per project.
+// Things I build & run: quiet rows with a painted tile square per project
+// and the pastel marker sweeping in on hover -- same interaction language
+// as the writing list, so the color whispers at rest instead of shouting.
 .home-projects {
   margin-bottom: 2.5rem;
 
   .projects-list {
     display: grid;
-    gap: 1rem;
+    gap: 1.4rem 2.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -77,10 +78,6 @@
   li {
     --chip: var(--mint);
     --chip-deep: var(--mint-deep);
-    background: var(--chip);
-    border-left: 3px solid var(--chip-deep);
-    border-radius: $border-radius;
-    padding: 0.9rem 1.1rem;
   }
 
   li:nth-child(4n + 2) {
@@ -99,17 +96,29 @@
   }
 
   li a {
-    color: var(--chip-deep);
+    background-image: linear-gradient(transparent 62%, var(--chip) 62%);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    color: $heading-color;
     display: inline-block;
     font-family: $display-font-family;
     font-size: 1.1rem;
     font-weight: 700;
 
+    &::before {
+      background: var(--chip-deep);
+      border-radius: 2px;
+      content: '';
+      display: inline-block;
+      height: 0.55em;
+      margin-right: 0.5em;
+      width: 0.55em;
+    }
+
     &:hover,
     &:focus {
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 3px;
+      background-size: 100% 100%;
+      text-decoration: none;
     }
   }
 
@@ -457,13 +466,8 @@
 // opts in via no-preference so reduced-motion users get the static design.
 // ---------------------------------------------------------------------------
 @media (prefers-reduced-motion: no-preference) {
-  .home-projects li {
-    transition: transform 140ms ease;
-
-    &:hover,
-    &:focus-within {
-      transform: translateY(-2px);
-    }
+  .home-projects li a {
+    transition: background-size 180ms ease;
   }
 
   .home-posts .home-post .entry-title a {

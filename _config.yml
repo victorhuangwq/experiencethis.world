@@ -16,6 +16,12 @@ author:
   name: 'Victor Huang'
   url: https://www.linkedin.com/in/victorhuangwq/
 
+# Home page intro. Reword these freely -- if removed, the home page falls
+# back to `description` and `tagline` above. (`description` still feeds the
+# SEO meta description, so it stays as-is.)
+home_headline: "Hi, I'm Victor."
+home_tagline: "I work on browsers in Seattle, and write about the things I build, the places I eat, and opinions nobody asked for."
+
 paginate: 10
 
 plugins:
