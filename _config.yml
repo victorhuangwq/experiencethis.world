@@ -21,11 +21,11 @@ author:
 # SEO meta description, so it stays as-is.)
 #
 # Other headlines that were on the shortlist, if this one wears thin:
-#   "Browser engineer. Amateur everything else."
+#   "I work on browsers and write about everything else."
 #   "I fixed the back button. You're welcome."
-#   "Milk tea is just bubble tea without the bubbles."
-home_headline: "I write to entertain. Results may vary."
-home_tagline: "Browser engineer. Projects, travel, and opinions nobody asked for."
+#   "I write to entertain. Results may vary."
+home_headline: "Browser engineer. Amateur everything else."
+home_tagline: "Projects, travel, and opinions nobody asked for."
 
 paginate: 10
 
