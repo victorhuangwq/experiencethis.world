@@ -4,19 +4,7 @@
 // Flex wrapping doubles as the mobile treatment -- no JS, no hamburger.
 
 .masthead-wrap {
-  // Peranakan tile strip at the threshold instead of a plain hairline
-  &::after {
-    background: repeating-linear-gradient(
-      90deg,
-      var(--mint-deep) 0 3rem,
-      var(--sky-deep) 3rem 6rem,
-      var(--rose-deep) 6rem 9rem,
-      var(--tealpale-deep) 9rem 12rem
-    );
-    content: '';
-    display: block;
-    height: 4px;
-  }
+  border-bottom: 1px solid $border-color;
 }
 
 .masthead {

@@ -1,10 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <clipPath id="r"><rect width="64" height="64" rx="12"/></clipPath>
-  <g clip-path="url(#r)">
-    <rect x="0" y="0" width="32" height="32" fill="#d9efe2"/>
-    <rect x="32" y="0" width="32" height="32" fill="#d9e8f6"/>
-    <rect x="0" y="32" width="32" height="32" fill="#f7dee4"/>
-    <rect x="32" y="32" width="32" height="32" fill="#d7edee"/>
-    <text x="32" y="43" font-family="'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="800" fill="#1d1f24" text-anchor="middle">et</text>
-  </g>
+  <rect width="64" height="64" rx="8" fill="#c22e3a"/>
+  <text x="32" y="43" font-family="'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="800" fill="#ffffff" text-anchor="middle">et</text>
 </svg>

@@ -10,20 +10,18 @@
   text-align: center;
 
   > a {
-    border: 1px solid $border-color;
-    border-radius: 999px;
     color: $body-muted;
     display: inline-block;
     font-size: 0.85rem;
-    padding: 0.5em 1.8em;
+    padding: 0.5em 1.2em;
     text-transform: lowercase;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color 0.15s ease;
 
     &:hover,
     &:focus {
-      border-color: $link-color;
       color: $link-color;
-      text-decoration: none;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     &.newer::before {

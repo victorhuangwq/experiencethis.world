@@ -5,15 +5,18 @@
 
 @import "hydeout";
 
-// "Shophouse" component layer
+// Site component layer
 // Tokens and base styles live in _sass/hydeout/*; this file styles the
-// site-specific components (home list, post page, tags, category colors).
-// The street metaphor: pastel facades (cards, chips), painted signage
-// (marker-highlight titles), tile strips at the masthead and footer.
+// site-specific components (home lists, post page, tags, category colors).
+//
+// Colour rule: every colour means something. Category identity is sky for
+// projects, rose for travel, mint for reviews, applied consistently wherever
+// a post is named. Chili is reserved for interactive text. Nothing rotates
+// by position, and nothing is tinted for decoration.
 
 // Home intro
 .home-intro {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 
   h1 {
     font-size: 2.2rem;
@@ -32,40 +35,25 @@
   }
 }
 
-// Section labels: signage with a short painted underline
+// Section labels: hierarchy comes from size, weight and the space above,
+// not from a rule or a mark.
 .home-section-title {
-  color: $heading-color;
+  color: $body-muted;
   font-family: $display-font-family;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  margin: 0 0 1.1rem;
+  margin: 0 0 1.4rem;
   text-transform: lowercase;
-
-  &::after {
-    background: var(--mint-deep);
-    border-radius: 2px;
-    content: '';
-    display: block;
-    height: 4px;
-    margin-top: 0.35rem;
-    width: 2.5rem;
-  }
 }
 
-// "Writing" sits directly in .content; its underline is painted sky
-.content > .home-section-title::after {
-  background: var(--sky-deep);
-}
-
-// Things I build & run: quiet rows with a painted tile square per project
-// and the pastel marker sweeping in on hover -- same interaction language
-// as the writing list, so the color whispers at rest instead of shouting.
+// Things I build & run. Plain text blocks in two columns -- deliberately a
+// different composition from the date-led writing list below it.
 .home-projects {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3.25rem;
 
   .projects-list {
     display: grid;
-    gap: 1.4rem 2.5rem;
+    gap: 1.6rem 3rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -75,49 +63,16 @@
     }
   }
 
-  li {
-    --chip: var(--mint);
-    --chip-deep: var(--mint-deep);
-  }
-
-  li:nth-child(4n + 2) {
-    --chip: var(--sky);
-    --chip-deep: var(--sky-deep);
-  }
-
-  li:nth-child(4n + 3) {
-    --chip: var(--rose);
-    --chip-deep: var(--rose-deep);
-  }
-
-  li:nth-child(4n) {
-    --chip: var(--tealpale);
-    --chip-deep: var(--tealpale-deep);
-  }
-
   li a {
-    background-image: linear-gradient(transparent 62%, var(--chip) 62%);
-    background-repeat: no-repeat;
-    background-size: 0% 100%;
     color: $heading-color;
     display: inline-block;
     font-family: $display-font-family;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
-
-    &::before {
-      background: var(--chip-deep);
-      border-radius: 2px;
-      content: '';
-      display: inline-block;
-      height: 0.55em;
-      margin-right: 0.5em;
-      width: 0.55em;
-    }
 
     &:hover,
     &:focus {
-      background-size: 100% 100%;
+      color: $link-color;
       text-decoration: none;
     }
   }
@@ -127,7 +82,7 @@
     display: block;
     font-size: 0.9rem;
     line-height: 1.5;
-    margin-top: 0.15rem;
+    margin-top: 0.2rem;
   }
 
   .project-note {
@@ -138,64 +93,34 @@
   }
 }
 
-// Meta line (home entries + post pages)
-.entry-meta,
-.post-meta {
-  color: $body-muted;
-  font-size: 0.82rem;
-  text-transform: lowercase;
-
-  a {
-    color: var(--cat, #{$link-color});
-  }
-}
-
-// Category colors: each writing category is a differently painted house,
-// so a post's colors identify it before its title does.
+// Category identity. Set on the article (home list) or the body (post and
+// category pages), read by the category label and by in-post accents.
 .cat-projects,
 .category-projects {
   --cat: var(--sky-deep);
-  --cat-chip: var(--sky);
 }
 
 .cat-travel,
 .category-travel {
   --cat: var(--rose-deep);
-  --cat-chip: var(--rose);
 }
 
 .cat-reviews,
 .category-reviews {
   --cat: var(--mint-deep);
-  --cat-chip: var(--mint);
 }
 
 .entry-category {
-  background: var(--cat-chip, var(--wash));
-  border-radius: 4px;
   color: var(--cat, #{$body-muted});
-  padding: 0.1em 0.5em;
+  text-transform: lowercase;
 }
 
-// Painted signage: post and page titles carry a marker highlight in their
-// category's pastel (plain wash for uncategorized pages). The inner span
-// keeps the highlight hugging the text lines instead of filling the block.
-.post-title span,
-.page-title span {
-  background-image: linear-gradient(transparent 62%, var(--cat-chip, var(--wash)) 62%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 0.15em;
-  margin-left: -0.15em;
-}
-
-// Post list on the home page
+// Writing list: an eight-year archive, so the date leads and forms a spine
+// down the left of the column on wide screens.
 .home-posts .home-post {
   border-bottom: 1px solid $border-color;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
 
   &:last-child {
     border-bottom: 0;
@@ -203,23 +128,38 @@
     padding-bottom: 0;
   }
 
+  @media (min-width: $large-breakpoint) {
+    display: grid;
+    gap: 0 1.75rem;
+    grid-template-columns: 7rem 1fr;
+  }
+
+  .entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.7rem;
+
+    @media (min-width: $large-breakpoint) {
+      display: block;
+      padding-top: 0.3rem; // sits optically level with the title
+    }
+  }
+
   .entry-title {
-    font-size: 1.45rem;
-    line-height: 1.25;
-    margin: 0.5rem 0;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    margin: 0.3rem 0 0.4rem;
+
+    @media (min-width: $large-breakpoint) {
+      margin-top: 0;
+    }
 
     a {
-      background-image: linear-gradient(transparent 62%, var(--cat-chip, var(--wash)) 62%);
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      background-size: 0% 100%;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
       color: $heading-color;
 
       &:hover,
       &:focus {
-        background-size: 100% 100%;
+        color: $link-color;
         text-decoration: none;
       }
     }
@@ -231,9 +171,21 @@
   }
 }
 
+.entry-meta {
+  color: $body-muted;
+  font-size: 0.82rem;
+}
+
 // Post pages
 .post-meta {
+  color: $body-muted;
+  font-size: 0.82rem;
   margin-bottom: 2rem;
+  text-transform: lowercase;
+
+  a {
+    color: var(--cat, #{$link-color});
+  }
 }
 
 // Content links get a draw-in underline instead of the theme's instant one
@@ -287,20 +239,11 @@
       display: inline-block;
     }
   }
-}
 
-// Travel posts breathe like a photo album
-.category-travel .post-body {
-  line-height: 1.8;
-}
-
-// Reviews: blockquotes carry the verdict on a painted panel
-.category-reviews .post-body blockquote {
-  background: var(--cat-chip);
-  border-left: 3px solid var(--cat);
-  border-radius: 0 $border-radius $border-radius 0;
-  color: $body-color;
-  padding: 0.75rem 1.25rem;
+  // A quote is set off by a rule, not by a filled panel
+  blockquote {
+    border-left: 2px solid var(--cat, #{$border-color});
+  }
 }
 
 // Older/newer navigation at the foot of a post
@@ -347,7 +290,7 @@
   }
 }
 
-// Tags below posts: quiet #tag links
+// Tags below posts
 .post-tags {
   > a,
   > span {
@@ -410,18 +353,22 @@
   }
 }
 
-// Category pages: date + title rows
+// Category pages: the same date spine as the home writing list
+.category .posts-list {
+  margin-top: 2rem;
+}
+
 .category .posts-list li {
   align-items: baseline;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
+  gap: 1.75rem;
+  margin-bottom: 0.9rem;
 
   small {
     color: $body-muted;
     flex-shrink: 0;
-    font-size: 0.8rem;
-    min-width: 6.5rem;
+    font-size: 0.82rem;
+    min-width: 7rem;
   }
 
   h3 {
@@ -436,23 +383,18 @@
 
       &:hover,
       &:focus {
-        color: var(--cat, #{$link-color});
+        color: $link-color;
         text-decoration: none;
       }
     }
   }
 }
 
-// About page portrait: the cake sketch gets a pastel mat so the hand-drawn
-// original sits inside the shophouse system instead of floating.
+// About page portrait, left to stand as the drawing it is
 .about-image {
-  background: var(--rose);
-  border-left: 3px solid var(--rose-deep);
-  border-radius: $border-radius;
   display: block;
-  margin: 1.5rem auto;
+  margin: 1.5rem auto 2rem;
   max-width: 300px;
-  padding: 0.9rem;
 
   @media (max-width: 768px) {
     max-width: 250px;
@@ -460,34 +402,20 @@
 }
 
 // ---------------------------------------------------------------------------
-// Micro-motion: playful on touch
+// Motion
 //
-// Everything reacts to a poke, nothing performs on page load. All motion
-// opts in via no-preference so reduced-motion users get the static design.
+// Only state changes that confirm a target is interactive. Opted into via
+// no-preference so reduced-motion users get the static design.
 // ---------------------------------------------------------------------------
 @media (prefers-reduced-motion: no-preference) {
-  .home-projects li a {
-    transition: background-size 180ms ease;
-  }
-
-  .home-posts .home-post .entry-title a {
-    transition: background-size 180ms ease;
-  }
-
   .post-body a:not([href^='#fn']) {
     transition: background-size 150ms ease;
   }
 
-  .post-tags > a {
-    transition: transform 120ms ease, color 120ms ease;
-
-    &:hover,
-    &:focus {
-      transform: translateX(2px);
-    }
-  }
-
+  .home-projects li a,
+  .home-posts .entry-title a,
   .masthead-nav a,
+  .post-tags > a,
   .post-nav-title {
     transition: color 120ms ease;
   }
@@ -526,7 +454,7 @@ $phone-breakpoint: 40rem;
   }
 
   .home-posts .home-post .entry-title {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
 
   .container > header h1,

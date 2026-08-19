@@ -1,7 +1,11 @@
 // Design tokens
 //
-// "Shophouse Spec": near-white plaster paper, four Peranakan pastel chips
-// (each with a text-safe deep of the same hue), and one hot chili accent.
+// Near-white paper, one chili accent reserved for interactive text, and
+// three hues that exist to identify a category of writing: sky = projects,
+// rose = travel, mint = reviews. Each has a pale fill and a text-safe deep
+// of the same hue. No colour here is decorative -- if something is tinted,
+// the tint is telling you what it is.
+//
 // Dark mode swaps the whole set via prefers-color-scheme; every pairing
 // below clears WCAG AA 4.5:1 against the surface it sits on.
 
@@ -20,8 +24,6 @@
   --sky-deep: #22578f;
   --rose: #f7dee4;
   --rose-deep: #9e2f4f;
-  --tealpale: #d7edee;
-  --tealpale-deep: #186167;
 
   --hairline: #e7e6e1;
   --wash: #f4f4f1;
@@ -55,8 +57,6 @@
     --sky-deep: #82b5e8;
     --rose: #3a2229;
     --rose-deep: #e896ad;
-    --tealpale: #16312f;
-    --tealpale-deep: #7bc6c9;
 
     --hairline: #2a2d33;
     --wash: #20232a;

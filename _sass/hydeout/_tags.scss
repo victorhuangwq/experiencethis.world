@@ -1,33 +1,17 @@
+// The whole index is links, so colouring every one accent-red just makes a
+// red wall; they read as ink and pick up the accent on hover instead.
 .tags-list a {
+  color: $body-color;
   font-size: 0.9em;
   margin-right: 0.5em;
   white-space: nowrap;
 }
 
+// The count is data, so it reads as a plain numeral beside the tag
 .tags-list a .tag-count {
-  background: var(--mint);
-  border-radius: 1000px;
-  color: var(--mint-deep);
-  font-size: 0.75em;
+  color: $body-muted;
+  font-size: 0.8em;
   margin-left: 0.25em;
-  padding-left: 0.6em;
-  padding-right: 0.6em;
-}
-
-// Shophouse row: each pill painted its own pastel, cycling down the street
-.tags-list a:nth-child(4n + 2) .tag-count {
-  background: var(--sky);
-  color: var(--sky-deep);
-}
-
-.tags-list a:nth-child(4n + 3) .tag-count {
-  background: var(--rose);
-  color: var(--rose-deep);
-}
-
-.tags-list a:nth-child(4n) .tag-count {
-  background: var(--tealpale);
-  color: var(--tealpale-deep);
 }
 
 .tags-list a:hover {
