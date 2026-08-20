@@ -20,12 +20,13 @@ author:
 # back to `description` and `tagline` above. (`description` still feeds the
 # SEO meta description, so it stays as-is.)
 #
+# Deliberately claims no job title -- it describes the site, not the resume.
 # Other headlines that were on the shortlist, if this one wears thin:
-#   "I work on browsers and write about everything else."
+#   "I work on browsers, and a lot of other things."
 #   "I fixed the back button. You're welcome."
 #   "I write to entertain. Results may vary."
-home_headline: "Browser engineer. Amateur everything else."
-home_tagline: "Projects, travel, and opinions nobody asked for."
+home_headline: "Things I build, places I eat, and opinions nobody asked for."
+home_tagline: "By Victor Huang, writing here since 2018."
 
 paginate: 10
 
