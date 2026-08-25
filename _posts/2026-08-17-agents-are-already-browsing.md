@@ -52,7 +52,7 @@ That's where I've landed now. It isn't where I started. I started by listing eve
 
 ## Figuring out how it breaks
 
-My day job is in the trust and security corners of a browser: navigation, site isolation, the machinery that decides which page is allowed to know what about which other page. I was already looking at the ecosystem through that lens when my manager pointed me at WebMCP in late 2025. (Everything here is my own view, not my employer's.)
+My day job is in the trust and security corners of a browser: navigation, site isolation, content security policies, the machinery that decides which page is allowed to know what about which other page. I was already looking at the ecosystem through that lens when my manager pointed me at WebMCP in late 2025. (Everything here is my own view, not my employer's.)
 
 In October 2025 I opened [issue #45, "Privacy & security considerations for WebMCP"](https://github.com/webmachinelearning/webmcp/issues/45). It laid out three risks, written as questions for the group rather than warnings:
 
