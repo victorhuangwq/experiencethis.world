@@ -110,9 +110,9 @@ Other people build on the threat model too, which is the point of it being a liv
 
 ## Before the data comes in
 
-All of this is getting graded now. The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) and the questionnaire I wrote is attached to it. Wide review with the W3C's Security and Privacy groups is underway, with a debrief on the community group agenda this month, and internationalization and accessibility reviews behind that. The API is also out of the lab: origin trials are live in Chrome 149 and Edge 150, and Brave is experimenting with it in Leo. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
+The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) and the questionnaire I wrote is attached to it. Wide review with the W3C's Security and Privacy groups is underway, with a debrief on the community group agenda this month, and internationalization and accessibility reviews behind that. The API is also out of the lab: origin trials are live in Chrome 149 and Edge 150, and Brave is experimenting with it in Leo. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
 
-So the assumptions start meeting reality about now. Some of them will be wrong, which is fine, because the document was built to be revised. It says "living" at the top.
+So the assumptions start meeting reality about now. Some of them will be wrong, which is fine, because the document was built to be revised.
 
 I said at TPAC that we shouldn't expect WebMCP to solve all the problems, and I still think that. Agents are going to keep doing dumb and dangerous things, and a lot of the burden sits with agent and browser implementers no matter what the spec says. What WebMCP changes is the default. Right now agents act on sites that can't see them. With this, a site can say what it offers, mark what's risky, and ask for a human where it wants one.
 
