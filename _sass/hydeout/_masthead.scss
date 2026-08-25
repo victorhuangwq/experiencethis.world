@@ -1,7 +1,8 @@
 // Masthead
 //
-// Slim editorial header: site title at left, nav at right, thin rule below.
-// Flex wrapping doubles as the mobile treatment -- no JS, no hamburger.
+// Slim logbook header: wordmark at left ("experience this" + mono jade
+// ".world"), nav at right, thin rule below. Flex wrapping doubles as the
+// mobile treatment -- no JS, no hamburger.
 
 .masthead-wrap {
   border-bottom: 1px solid $border-color;
@@ -21,11 +22,19 @@
 .masthead-title {
   color: $heading-color;
   font-family: $display-font-family;
-  font-size: 1.4rem;
-  font-variation-settings: 'WONK' 1;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   white-space: nowrap;
+
+  .masthead-tld {
+    color: $link-color;
+    font-family: $mono-font-family;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 0.1rem;
+  }
 
   &:hover,
   &:focus {
@@ -41,14 +50,15 @@
 
   a {
     color: $body-muted;
-    font-size: 0.75rem;
+    font-family: $mono-font-family;
+    font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 
     &:hover,
     &:focus {
       color: $link-color;
-      text-decoration: underline wavy;
+      text-decoration: underline;
       text-decoration-thickness: 1px;
       text-underline-offset: 4px;
     }

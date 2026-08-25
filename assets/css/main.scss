@@ -5,9 +5,9 @@
 
 @import "hydeout";
 
-// Warm editorial component layer
+// Logbook component layer
 // Base palette, type, and layout live in _sass/hydeout/*; this file styles the
-// site-specific components (home list, post page, tags, etc.).
+// site-specific components (log index, post page, tags, etc.).
 
 // Home intro
 .home-intro {
@@ -15,44 +15,31 @@
 
   h1 {
     font-size: 2.4rem;
-    line-height: 1.12;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
     margin-bottom: 0.6rem;
 
     @media (min-width: $large-breakpoint) {
-      font-size: 2.6rem;
+      font-size: 2.7rem;
     }
   }
 
   .home-tagline {
     color: $body-muted;
+    font-style: italic;
     margin: 0;
   }
 }
 
-// Quiet section labels dividing the home page into a table of contents
+// Mono section labels dividing the home page like register headings
 .home-section-title {
   color: $body-muted;
-  font-family: $root-font-family;
-  font-size: 0.8rem;
+  font-family: $mono-font-family;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  margin: 0 0 0.4rem;
-  text-transform: uppercase;
-}
-
-// Hand-drawn squiggle accenting each section label
-.squiggle {
-  color: $terracotta;
-  display: block;
+  letter-spacing: 0.14em;
   margin: 0 0 1.25rem;
-  opacity: 0.7;
-  width: 4.5rem;
-
-  svg {
-    display: block;
-    height: auto;
-    width: 100%;
-  }
+  text-transform: uppercase;
 }
 
 // Things I build & run
@@ -77,25 +64,15 @@
     color: $heading-color;
     display: inline-block;
     font-family: $display-font-family;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
 
     &:hover,
     &:focus {
       color: $link-color;
       text-decoration: none;
     }
-  }
-
-  // Decorative accent rotation on hover only; resting state stays quiet
-  li:nth-child(3n + 2) a:hover,
-  li:nth-child(3n + 2) a:focus {
-    color: $mustard;
-  }
-
-  li:nth-child(3n) a:hover,
-  li:nth-child(3n) a:focus {
-    color: $teal;
   }
 
   .project-blurb {
@@ -112,24 +89,33 @@
   }
 }
 
-// Meta line (home entries + post pages)
-.entry-meta,
+// The log line (home entries + post pages): typed mono marginalia
 .post-meta {
   color: $body-muted;
-  font-size: 0.8rem;
+  font-family: $mono-font-family;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 
-  .entry-category {
-    text-transform: capitalize;
+  .log-number {
+    color: $link-color;
+    font-weight: 600;
   }
 
-  a {
-    color: $link-color;
+  .entry-category a {
+    color: $body-muted;
+
+    &:hover,
+    &:focus {
+      color: $link-color;
+      text-decoration: underline;
+    }
   }
 }
 
-// Post list on the home page
+// Post list on the home page: entries ruled apart like logbook lines
 .home-posts .home-post {
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px dotted $gray-3;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 
@@ -139,10 +125,15 @@
     padding-bottom: 0;
   }
 
+  .post-meta {
+    margin: 0 0 0.4rem;
+  }
+
   .entry-title {
-    font-size: 1.55rem;
-    line-height: 1.2;
-    margin: 0.35rem 0 0.5rem;
+    font-size: 1.5rem;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    margin: 0 0 0.5rem;
 
     a {
       color: $heading-color;
@@ -162,7 +153,8 @@
 }
 
 // Post pages
-.post-meta {
+.post .post-meta,
+.page .post-meta {
   margin-bottom: 2rem;
 }
 
@@ -204,7 +196,7 @@
   }
 
   // Gentle breakout: on large screens, paragraphs that hold an image widen
-  // past the 39rem content box to ~50rem. Images narrower than the box stay
+  // past the content box to ~50rem. Images narrower than the box stay
   // natural size and center; browsers without :has() keep column width.
   @media (min-width: 54rem) {
     p:has(> img) {
@@ -250,7 +242,8 @@
   .post-nav-label {
     color: $body-muted;
     display: block;
-    font-size: 0.72rem;
+    font-family: $mono-font-family;
+    font-size: 0.68rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -259,17 +252,19 @@
     color: $heading-color;
     font-family: $display-font-family;
     font-size: 1.05rem;
+    font-weight: 600;
     line-height: 1.3;
   }
 }
 
-// Tags below posts: quiet #tag links
+// Tags below posts: quiet #tag links in the utility face
 .post-tags {
   > a,
   > span {
     color: $body-muted;
     display: inline-block;
-    font-size: 0.85rem;
+    font-family: $mono-font-family;
+    font-size: 0.78rem;
     margin-bottom: 0.5rem;
     margin-right: 1rem;
     white-space: nowrap;
@@ -319,6 +314,8 @@
 
       small {
         color: $body-muted;
+        font-family: $mono-font-family;
+        font-size: 0.72rem;
         font-weight: 400;
         margin-left: 0.5rem;
       }
@@ -326,7 +323,7 @@
   }
 }
 
-// Category pages: date + title rows
+// Category pages: date + title rows read like a register
 .category .posts-list li {
   align-items: baseline;
   display: flex;
@@ -336,8 +333,9 @@
   small {
     color: $body-muted;
     flex-shrink: 0;
-    font-size: 0.8rem;
-    min-width: 6.5rem;
+    font-family: $mono-font-family;
+    font-size: 0.72rem;
+    min-width: 7rem;
   }
 
   h3 {
@@ -382,7 +380,7 @@
 
     &:hover,
     &:focus {
-      transform: translateY(-2px) rotate(-0.5deg);
+      transform: translateY(-2px);
     }
   }
 
@@ -411,8 +409,7 @@
   }
 
   .home .home-posts,
-  .home .content > .home-section-title,
-  .home .content > .squiggle {
+  .home .content > .home-section-title {
     animation: home-rise 0.45s ease-out 0.16s both;
   }
 }

@@ -12,7 +12,6 @@ layout: default
     {% if site.data.projects %}
       <section class="home-projects">
         <h2 class="home-section-title">Things I build &amp; run</h2>
-        <span class="squiggle">{% include svg/squiggle.svg %}</span>
         <ul class="projects-list">
           {% for project in site.data.projects %}
             <li>
@@ -31,19 +30,14 @@ layout: default
   {{ content }}
 
   {% if page.url == "/" %}
-    <h2 class="home-section-title">Writing</h2>
-    <span class="squiggle">{% include svg/squiggle.svg %}</span>
+    <h2 class="home-section-title">The log</h2>
   {% endif %}
 
   <div class="home-posts">
     {% for post in paginator.posts %}
       {% if post.hidden %}{% continue %}{% endif %}
       <article class="home-post">
-        <div class="entry-meta">
-          {% assign category = post.categories | first %}
-          {% if category %}<span class="entry-category">{{ category }}</span> &middot; {% endif %}
-          <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
-        </div>
+        {% include post-meta.html post=post %}
         <h2 class="entry-title">
           <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
         </h2>
