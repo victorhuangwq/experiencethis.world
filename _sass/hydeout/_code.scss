@@ -1,6 +1,6 @@
 // Code
 //
-// Inline and block-level code snippets. Light, warm-toned treatment that
+// Inline and block-level code snippets. Light, cool-toned treatment that
 // keeps the vendored Pygments/Rouge light syntax theme readable.
 
 code,
@@ -9,7 +9,7 @@ pre {
 }
 
 code {
-  background-color: #f1e9dc;
+  background-color: $wash-strong;
   border-radius: 4px;
   color: $code-color;
   font-size: 85%;
