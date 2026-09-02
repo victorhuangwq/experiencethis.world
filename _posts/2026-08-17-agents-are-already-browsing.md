@@ -106,10 +106,12 @@ The WebMCP repo has been a lively place for a while now, and I've been in it thr
 
 ---
 
-## Before the data comes in
+## People are actually using this now
 
-The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) and the questionnaire I wrote is attached to it. Wide review with the W3C's Security and Privacy groups is underway, with a debrief on the community group agenda this month, and internationalization and accessibility reviews behind that. The API is also out of the lab. Origin trials are live in Chrome 149 and Edge 150, Brave is experimenting with it in Leo, and OpenAI has added WebMCP support to the browser in the ChatGPT desktop app, so ChatGPT and Codex can pick up tools from a page without a separate connector. There are real sites behind it too, with Shopify storefronts enabled and companies like Expedia, Instacart and Target trying it out. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
+The API is out of the lab, and it moved quickly. Origin trials are live in Chrome 149 and Edge 150, Brave is experimenting with it in Leo, and OpenAI has added WebMCP support to the browser in the ChatGPT desktop app, so ChatGPT and Codex can pick up tools straight off a page without a separate connector. There are real sites behind it too, with Shopify storefronts enabled and companies like Expedia, Instacart and Target trying it out. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
 
-So the assumptions start meeting reality about now. The trial data will show which bits of the threat model were paranoid and which bits were naive, and with sites picking this up as fast as they are, we'll find out sooner than I thought. Some of it will be wrong, and that's fine, because the whole thing was written to be revised.
+The review machinery is running alongside all of that. The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) with the questionnaire I wrote attached to it, wide review with the W3C's Security and Privacy groups is underway with a debrief on the community group agenda this month, and internationalization and accessibility reviews are behind that.
+
+Which means the assumptions are meeting reality right now. The trial data will show which bits of the threat model were paranoid and which bits were naive, and with this many people testing it at once, we'll find out sooner than I thought. Some of it will be wrong, and that's fine, because the whole thing was written to be revised.
 
 I said at TPAC that we shouldn't expect WebMCP to solve all the problems, and I still think that. Agents are going to keep doing dumb and dangerous things, and a lot of the burden sits with agent and browser implementers no matter what the spec says. What it changes is the default, which right now is that agents act on sites that can't see them. With this, a site gets to say what it offers, mark what's risky, and ask for a human where it wants one.
