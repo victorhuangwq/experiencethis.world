@@ -108,7 +108,7 @@ The WebMCP repo has been a lively place for a while now, and I've been in it thr
 
 ## Before the data comes in
 
-The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) and the questionnaire I wrote is attached to it. Wide review with the W3C's Security and Privacy groups is underway, with a debrief on the community group agenda this month, and internationalization and accessibility reviews behind that. The API is also out of the lab: origin trials are live in Chrome 149 and Edge 150, and Brave is experimenting with it in Leo. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
+The [TAG design review was filed in June](https://github.com/w3ctag/design-reviews/issues/1238) and the questionnaire I wrote is attached to it. Wide review with the W3C's Security and Privacy groups is underway, with a debrief on the community group agenda this month, and internationalization and accessibility reviews behind that. The API is also out of the lab. Origin trials are live in Chrome 149 and Edge 150, Brave is experimenting with it in Leo, and OpenAI has added WebMCP support to the browser in the ChatGPT desktop app, so ChatGPT and Codex can pick up tools from a page without a separate connector. There are real sites behind it too, with Shopify storefronts enabled and companies like Expedia, Instacart and Target trying it out. Firefox and Safari haven't taken positions yet, which is normal for a proposal this young, and worth saying so nobody reads this as a victory lap.
 
 So the assumptions start meeting reality about now. Some of them will be wrong, which is fine, because the document was built to be revised.
 
