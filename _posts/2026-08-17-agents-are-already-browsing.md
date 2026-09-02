@@ -25,9 +25,9 @@ Sites don't have a good response available either. They can try to detect automa
 
 ---
 
-## The golden path
+## Where WebMCP came from
 
-[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 a few people arrived at roughly the same idea separately. Jason McGhee published a library on the thesis that websites should offer native LLM experiences without API keys. Alex Nahas built MCP-B, a Chrome extension that let a site expose MCP tools through the browser session the user was already signed into. Microsoft wrote a Web Model Context explainer, and Chrome had a proposal called Script Tools. Those converged into a joint Edge and Chrome proposal in August 2025, and the W3C Web Machine Learning Community Group picked it up that September. The idea is that instead of agents guessing at your pixels, your page hands them tools.
+[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 several people landed on roughly the same idea separately, and those efforts converged into a joint Edge and Chrome proposal in August 2025. The W3C Web Machine Learning Community Group picked it up that September. The idea is that instead of agents guessing at your pixels, your page hands them tools.
 
 ```js
 navigator.modelContext.registerTool({
