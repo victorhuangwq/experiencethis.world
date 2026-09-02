@@ -25,7 +25,7 @@ Sites don't have a good response available either. They can try to detect automa
 
 ---
 
-## Where WebMCP came from
+## What's WebMCP all about
 
 [WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 several people landed on roughly the same idea separately, and those efforts converged into a joint Edge and Chrome proposal in August 2025. It's being incubated in the W3C Web Machine Learning Community Group, and the idea is that instead of agents guessing at your pixels, your page hands them tools.
 
