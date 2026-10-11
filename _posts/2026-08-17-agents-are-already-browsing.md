@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Agents Are Already Browsing — and How to Give the Web a Say"
+title: "The agents are already browsing — and how to give the web a say"
 date: 2026-08-17 10:00:00 -0700
 last_modified_at: 2026-10-11
 categories: projects
