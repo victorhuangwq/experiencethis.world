@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="180" viewBox="0 0 680 180" role="img" aria-labelledby="title description">
+  <title id="title">A WebMCP tool call</title>
+  <desc id="description">An agent calls a tool. The browser invokes the tool registered by the webpage. The webpage runs its own code.</desc>
+  <rect width="680" height="180" rx="12" fill="#faf6f0"/>
+  <g fill="none" stroke="#2b6e6a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M182 71h52m-9-8 9 8-9 8"/>
+    <path d="M447 71h52m-9-8 9 8-9 8"/>
+  </g>
+  <g fill="#1a1612" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" text-anchor="middle">
+    <g font-size="32" font-weight="700">
+      <text x="105" y="81">Agent</text>
+      <text x="340" y="81">Browser</text>
+      <text x="580" y="81">Page</text>
+    </g>
+    <g font-size="24">
+      <text x="105" y="119">Calls a tool</text>
+      <text x="340" y="119">Invokes registered tool</text>
+      <text x="580" y="119">Runs own code</text>
+    </g>
+  </g>
+</svg>
