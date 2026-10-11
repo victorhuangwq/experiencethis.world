@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Autolab Metrics - helping instructors identify at risk students for early intervention"
+title:  "Autolab metrics - helping instructors identify at risk students for early intervention"
 date:   2020-12-16 08:00:00 -0500
 categories: projects
 tags:
