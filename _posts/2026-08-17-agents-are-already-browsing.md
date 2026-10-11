@@ -11,14 +11,14 @@ tags:
     - privacy
     - w3c
     - ai agents
-description: "A year of security and privacy work on WebMCP: how I ended up writing the threat model, what it changed, and why I think giving agents a real path into websites is good for the web."
+description: "AI agents are already using websites. WebMCP gives sites a way to participate. Here's what I worked on in its security and privacy design."
 ---
 
 The agents are already browsing, whether websites were built for them or not. They can find the *Add to cart* button, click it, and move on to the next step. A site can become part of an agent's workflow without its developer ever building an interface for that agent.
 
 The tooling comes from the people building the agents. They can give an agent screenshots and mouse and keyboard controls, or let it inspect the DOM and accessibility tree. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) packages browser automation tools for this: screenshots, accessibility snapshots, element interactions and JavaScript execution. Those capabilities can work together. The agent can find a button by its label, click it by reference, and take a screenshot to see what changed.
 
-The website developer can try to detect automation, and can already ask for confirmation before an action. But there isn't a widely supported browser API for the page to offer operations directly to agents and describe what each one does. The agent still has to work out how to use the ordinary interface.
+The website developer can try to detect automation and can already ask for confirmation before an action. But there isn't a widely supported browser API for the page to offer operations directly to agents and describe what each one does. The agent still has to work out how to use the ordinary interface.
 
 To me, that's the gap worth fixing. If agents are going to use websites anyway, the sites should have a way to participate, rather than just being something the agent works its way around.
 
@@ -26,7 +26,7 @@ To me, that's the gap worth fixing. If agents are going to use websites anyway, 
 
 ## What's WebMCP all about
 
-[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 several people landed on roughly the same idea separately, and those efforts [converged into a joint Edge and Chrome proposal in August 2025](https://github.com/webmachinelearning/meetings/blob/main/telcons/2025-08-18-cg-minutes.md). It's being incubated in the W3C Web Machine Learning Community Group, and the idea is that instead of agents working out how to operate your page, your page hands them tools.
+[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025, several people landed on roughly the same idea separately, and those efforts [converged into a joint Edge and Chrome proposal in August 2025](https://github.com/webmachinelearning/meetings/blob/main/telcons/2025-08-18-cg-minutes.md). It's being incubated in the W3C Web Machine Learning Community Group, and the idea is that instead of agents working out how to operate your page, your page hands them tools.
 
 ```js
 await document.modelContext.registerTool({
@@ -48,7 +48,7 @@ Here, `addToCart` is the site's own cart function. The browser handles the tool 
 
 It's in the spirit of [Model Context Protocol](https://modelcontextprotocol.io/), but built into the browser and scoped to the page. The agent gets a list of tools the site chose to offer, with names and schemas.
 
-I've come to think of this as a golden path, one that doesn't make agents safe by default but does give the developer a say. The developer chooses which operations to expose through WebMCP, so that part of the attack surface becomes something you can point at and review. The security people I've talked to about this keep landing on the same point. Giving agents a defined set of tools to use is a win for security, even though it doesn't stop them from interacting with the rest of the page. If we don't build this path we don't get fewer agents, we get the same agents doing the same things through interfaces that were never meant for them.
+I've come to think of this as a golden path, one that doesn't make agents safe by default but does give the developer a say. The developer chooses which operations to expose through WebMCP, so that part of the attack surface becomes something you can point at and review. The security people I've talked to about this keep landing on the same point. Giving agents a defined set of tools to use is a win for security, even though it doesn't stop them from interacting with the rest of the page. If we don't build this path, we don't get fewer agents. We get the same agents doing the same things through interfaces that were never meant for them.
 
 An obvious question here is why we need another API when the page already has an accessibility tree. [As one issue puts it](https://github.com/webmachinelearning/webmcp/issues/91):
 
@@ -62,13 +62,13 @@ To me, the useful difference is how the developer describes an action. The acces
 
 ## Figuring out how it breaks
 
-My day job is in the trust and security corners of a browser: navigation, site isolation, content security policies, the machinery that decides which page is allowed to know what about which other page. I was already looking at the ecosystem through that lens when I was asked to review WebMCP in the last quarter of 2025. (Everything here is my own view, not my employer's.)
+My day job is in the trust and security corners of a browser: navigation, site isolation, content security policies, the machinery that decides what one page is allowed to know about another. I was already looking at the ecosystem through that lens when I was asked to review WebMCP in the last quarter of 2025. (Everything here is my own view, not my employer's.)
 
-So I spent quite a bit of time looking at how MCP's security model would translate to the web, and talking it through with security people I trust. WebMCP feels a lot like MCP, and concerns like prompt injection apply to both. But I wanted to work out which assumptions still held once the tools were running inside a browser, and which ones needed a different analysis.
+So I spent quite a bit of time looking at how MCP's security model would translate to the web and talking it through with security people I trust. WebMCP feels a lot like MCP, and concerns like prompt injection apply to both. But I wanted to work out which assumptions still held once the tools were running inside a browser, and which ones needed a different analysis.
 
 One of the big differences is that the user may already be signed in. If you're on Amazon, for example, the page often already has your account session. A WebMCP tool runs in that page, so calling it can trigger actions using that session. MCP also supports authenticated tools, but WebMCP brings them into a page the user is already using, with the account and permissions they already have there. There's also the [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), which keeps different origins isolated. An agent can visit several of those sites and carry information between them, so we have to think about what crosses those boundaries through the agent as well.
 
-So in October 2025 I opened [issue #45](https://github.com/webmachinelearning/webmcp/issues/45) and shared my draft of the privacy and security considerations with the group for discussion. Here are the risks I wrote down:
+In October 2025, I opened [issue #45](https://github.com/webmachinelearning/webmcp/issues/45) and shared my draft of the privacy and security considerations with the group for discussion. Here are the risks I wrote down:
 
 **Prompt injection.** Tool descriptions and tool outputs go straight into a model's context, so a malicious page can hide instructions in either one and the model may well follow them. It's the standard agent attack, and WebMCP gives it new places to hide.
 
@@ -82,9 +82,9 @@ My thinking was that if this is going to be a real thing, we should build it rig
 
 ## A coffee break in Kobe
 
-TPAC 2025 in Kobe that November was the first time this was a room of people instead of a GitHub thread. I'd made slides, and I asked Anssi Kostiainen, the chair, over IRC whether I could present them after the coffee break. ([The minutes are public](https://www.w3.org/2025/11/11-webmachinelearning-minutes.html), which is one of the genuinely good things about doing this at the W3C. You can go read what everyone said.)
+TPAC 2025 in Kobe that November was the first time we discussed this in a room rather than a GitHub thread. I'd made slides, and I asked Anssi Kostiainen, the chair, over IRC whether I could present them after the coffee break. ([The minutes are public](https://www.w3.org/2025/11/11-webmachinelearning-minutes.html), which is one of the genuinely good things about doing this at the W3C. You can go read what everyone said.)
 
-I'd wondered if I'd come across as the guy pouring cold water on something the room was excited about, and that went away quickly. The discussion moved almost immediately from whether to worry to who owns which mitigation. In the [minutes](https://www.w3.org/2025/11/11-webmachinelearning-minutes.html), Dominique Hazaël-Massieux put the privacy concern this way:
+I'd wondered if I'd come across as the guy pouring cold water on something the room was excited about, but that worry went away quickly. The discussion moved almost immediately from whether to worry to who owns which mitigation. In the [minutes](https://www.w3.org/2025/11/11-webmachinelearning-minutes.html), Dominique Hazaël-Massieux put the privacy concern this way:
 
 > I don't want a site to know a user is pregnant or is visiting Japan at the moment, for example.
 
@@ -99,11 +99,11 @@ But I also argued that this could change over time. As the models get better and
 ![Two illustrations of a self-driving car with an autonomous route and sensor display: the user watches closely with hands on the wheel at first, then sits back with hands in their lap as confidence grows](/assets/images/webmcp-self-driving-oversight.webp)
 *Close supervision at first, then potentially less involvement as the system improves and the user gains confidence. Illustration generated for this post.*
 
-The second one is me learning something in the middle of the meeting. Khushal pointed out the problem of testing non-deterministic behavior. The browser can test that a tool was registered or called, but part of what we're interested in depends on what the agent decides to do. My response in IRC was:
+The second was me learning something in the middle of the meeting. Khushal pointed out the problem of testing non-deterministic behavior. The browser can test that a tool was registered or called, but part of what we're interested in depends on what the agent decides to do. My response in IRC was:
 
 > oh wow that's true
 
-Somewhere in there I also said the thing I'd been circling for weeks — from a privacy and security perspective, WebMCP is going to be good for the web, because it gives agents a standard way to interact with it rather than computer vision and automated interactions. Kobe was where I realized the room already saw it that way too.
+Somewhere in there I also said the thing I'd been circling for weeks — from a privacy and security perspective, WebMCP is going to be good for the web, because it gives agents a standard way to interact with it rather than having them work out which controls to click. Kobe was where I realized the room already saw it that way too.
 
 ---
 
@@ -115,7 +115,7 @@ Soon after TPAC, I opened [a pull request](https://github.com/webmachinelearning
 
 ## The design questions I weighed in on
 
-The WebMCP repo has been a lively place for a while now, and I've been in it throughout, weighing in wherever something touched security or privacy, and plenty of times where it didn't. Here are a few of the questions I spent time on:
+The WebMCP repo has been a lively place for a while now. I've been weighing in on security and privacy questions, and plenty of others too. Here are a few of the questions I spent time on:
 
 ### What should `consequentialHint` default to?
 
@@ -125,7 +125,7 @@ I still [argued for defaulting to `false`](https://github.com/webmachinelearning
 
 ### Should iframes get to declare tools?
 
-For [this one](https://github.com/webmachinelearning/webmcp/issues/57) I wrote up the two use cases hiding inside the feature request: an embedded widget (think a scheduling iframe) exposing its tools to the browser's agent, and a parent page reading the tools of a page it embeds. They have completely different security stories, and [I argued](https://github.com/webmachinelearning/webmcp/issues/57#issuecomment-4095354463) that if the first use case is all we need, the parent frame never needs to see the child's tools at all. I also [pushed for Document Policy over Permissions Policy](https://github.com/webmachinelearning/webmcp/issues/57) as the opt-in mechanism, since the embedding needs both sides to agree.
+For [this one](https://github.com/webmachinelearning/webmcp/issues/57), I wrote up the two use cases hiding inside the feature request: an embedded widget (think a scheduling iframe) exposing its tools to the browser's agent, and a parent page reading the tools of a page it embeds. They have completely different security stories, and [I argued](https://github.com/webmachinelearning/webmcp/issues/57#issuecomment-4095354463) that if the first use case is all we need, the parent frame never needs to see the child's tools at all. I also [pushed for Document Policy over Permissions Policy](https://github.com/webmachinelearning/webmcp/issues/57) as the opt-in mechanism, since the embedding needs both sides to agree.
 
 ### In-page agents
 
