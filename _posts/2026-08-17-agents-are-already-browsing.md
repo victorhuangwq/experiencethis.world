@@ -13,15 +13,15 @@ tags:
 description: "A year of security and privacy work on WebMCP: how I ended up writing the threat model, what it changed, and why I think giving agents a real path into websites is good for the web."
 ---
 
-There are two ways an AI agent uses a website today, and neither of them involves the website.
+An AI agent can use a website today without the developer building anything specifically for it.
 
-The first is computer use, where the agent takes a screenshot, looks at the pixels, works out where the "Add to cart" button probably is, moves a synthetic mouse there, clicks, takes another screenshot, and goes again.
+One approach is screenshot-based computer use, where the agent looks at the page, works out where the "Add to cart" button is, clicks at those coordinates, and takes another screenshot to see what changed. It can do this through mouse and keyboard actions without reading the DOM.
 
-The second is to drive the page the way a test suite does, and [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) is the common example. It hands the model the page's accessibility tree, so it gets roles, labels and element references like `e21` instead of pixels, and clicks by reference. It's faster and cheaper than screenshots and it doesn't need a vision model at all.
+Another is to drive the page the way a test suite does. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) gives the model an accessibility snapshot, with roles, labels and element references like `e21`, so it can find a button and click it by reference. That part doesn't need a vision model. It also lets the agent take screenshots, inspect the page and run JavaScript, so the agent can use more than one way of understanding the page.
 
-Both of these work, and in both cases the site has no idea any of it is happening. The developer who built the page doesn't get to say which actions an agent may take, doesn't get to mark the dangerous ones, and doesn't even find out an agent came by.
+These approaches overlap, and an agent can use both. What they have in common is that the agent is working out how to use an interface built for people, rather than calling operations the site has explicitly provided for agents.
 
-Sites don't have a good response available either. They can try to detect automation and block it, or they can ignore it, but what they can't do is cooperate on purpose. There's no way for a site to say: here's what I'll let an agent do, and here's where I want a human to confirm first.
+Sites can try to detect automation, and they can already require confirmation for an action. What is missing is a standard browser API for a page to offer an agent a set of operations, describe what each one does, and indicate which ones need more care.
 
 ---
 
@@ -40,11 +40,11 @@ navigator.modelContext.registerTool({
 
 It's in the spirit of [Model Context Protocol](https://modelcontextprotocol.io/), but built into the browser and scoped to the page. The agent gets a list of tools the site chose to offer, with names and schemas, and the site's own code runs when a tool is called.
 
-I've come to think of this as a golden path, one that doesn't make agents safe by default but does give the developer a say. The developer decides what an agent can do on their site, and the attack surface becomes something you can point at, instead of whatever a vision model decides to click on. The security people I've talked to about this keep landing on the same point. Limiting the scope of what an agent can do on a site, down to a set of tools the site chose to offer, is by itself a win for security. If we don't build this path we don't get fewer agents, we get the same agents doing the same things through interfaces that were never meant for them.
+I've come to think of this as a golden path, one that doesn't make agents safe by default but does give the developer a say. The developer chooses which operations to expose through WebMCP, so that part of the attack surface becomes something you can point at and review. The security people I've talked to about this keep landing on the same point. Giving agents a defined set of tools to use is a win for security, even though it doesn't stop them from interacting with the rest of the page. If we don't build this path we don't get fewer agents, we get the same agents doing the same things through interfaces that were never meant for them.
 
-Anyone who has spent time around both AI and the web will ask about the accessibility tree here. The page already describes itself, so why not point agents at that? [As one issue puts it](https://github.com/webmachinelearning/webmcp/issues/91), "WebMCP introduces a second description of the page alongside the accessibility tree. These will diverge over time." It's a fair worry, and it got a real discussion before the thread was closed.
+An obvious question here is why we need another API when the page already has an accessibility tree. [As one issue puts it](https://github.com/webmachinelearning/webmcp/issues/91), "WebMCP introduces a second description of the page alongside the accessibility tree. These will diverge over time." I think that's a reasonable concern, especially if developers have to maintain both.
 
-My answer is that the two things describe different stuff. The accessibility tree tells you what's on the screen: there's a control here, it's a button, its label is "Place order." A tool tells you what the site is willing to do: here's an operation, here are its arguments and their types, here's whether it changes state, here's whether it needs a human first. A screen reader needs the first one, and an agent acting on your behalf needs the second. Only the second lets the developer decide what gets automated.
+To me, the useful difference is how the developer describes an action. The accessibility tree can tell an agent that there is a button labeled "Place order," and the agent can use it to operate the page. With WebMCP, the developer can expose placing an order as an operation, define its inputs, and provide hints about its consequences. The agent doesn't have to work out the sequence of controls to get there. That doesn't replace the accessibility tree or stop an agent from using the ordinary page, but it gives the developer a way to offer an interface specifically for automation.
 
 ---
 
@@ -62,7 +62,7 @@ So in October 2025 I opened [issue #45](https://github.com/webmachinelearning/we
 
 **Privacy leakage through over-parameterization.** Agents carry a lot of context about their user, and the site writes the tool's input schema. So a site can build a search tool that asks for your age, your location and whether you're pregnant, and it all looks like a normal tool call.
 
-None of that is a reason not to build WebMCP. My thinking was that if this is going to be a real thing then we should build it right, and there's a practical angle underneath that too, because a proposal that takes security seriously is a much easier proposal to get behind. This analysis was going to happen sooner or later either way, and it's better done early by people who want the thing to work. The W3C's Technical Architecture Group had just told the group that the privacy and security aspects "can be challenging, and we would also like to see more explorations," so there was an opening, and I volunteered to drive it.
+My thinking was that if this is going to be a real thing, we should build it right. The security analysis would have to happen sooner or later, and doing it early would help us work through the problems while the proposal was still taking shape. Around that time, the W3C's Technical Architecture Group [asked for more exploration of the privacy and security aspects](https://github.com/webmachinelearning/webmcp/issues/35). Since I was already looking at those questions, I volunteered to drive that work.
 
 ---
 
@@ -84,7 +84,7 @@ Somewhere in there I also said the thing I'd been circling for weeks, and the sc
 
 ## Writing it down
 
-Three days after TPAC I opened [a pull request with a living security and privacy considerations document](https://github.com/webmachinelearning/webmcp/pull/55). It took eighteen commits and three weeks of review to land. The commit messages give away what I was going for: "standardize assets at risk," "address comments around open questions," and my favorite, "soften some language used." Scary writing is usually vague writing, so every attack got the same three-part skeleton instead: who's the threat actor, what's the target, what's actually at risk. The document's job was to help people build the thing with their eyes open, not to talk them out of building it. One section, about attacks on the tools' own implementations, kept growing review threads, so I cut it out and landed it [as a follow-up](https://github.com/webmachinelearning/webmcp/pull/59) a week later instead of holding up the rest.
+Soon after TPAC, I opened [a pull request](https://github.com/webmachinelearning/webmcp/pull/55) to write down WebMCP's security and privacy considerations based on the discussion.
 
 The document has since been ported into the spec as its [Security and Privacy Considerations section](https://webmachinelearning.github.io/webmcp/#security-privacy), where the headings are still the three risks from issue #45. Having written the considerations, I also felt like the natural person to take the lead on WebMCP's answers to the W3C's standard [security and privacy self-review questionnaire](https://w3c.github.io/security-questionnaire/), [which landed in June](https://github.com/webmachinelearning/webmcp/pull/195). That's about thirty pointed questions on what the feature exposes and to whom. It's dull work, and I think it's the most useful thing I've written for this group, because it's where we go on the record about what this API does and doesn't leak.
 
