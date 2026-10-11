@@ -98,7 +98,7 @@ The first was the self-driving car analogy, which came up while we were talking 
 
 But I also argued that this could change over time. As the models get better and people get more comfortable using them, they may not need to be as involved in every action. My point was that we should work out how to keep the user involved at this stage, while leaving room for that relationship to change as the technology improves.
 
-![Two illustrations of the same person using an automated car: watching closely with a hand on the wheel at first, then sitting more comfortably with less active supervision](/assets/images/webmcp-self-driving-oversight.webp)
+![Two illustrations of a self-driving car with an autonomous route and sensor display: the user watches closely with hands on the wheel at first, then sits back with hands in their lap as confidence grows](/assets/images/webmcp-self-driving-oversight.webp)
 *Close supervision at first, then potentially less involvement as the system improves and the user gains confidence. Illustration generated for this post.*
 
 The second one is me learning something in the middle of the meeting. Khushal pointed out the problem of testing non-deterministic behavior. The browser can test that a tool was registered or called, but part of what we're interested in depends on what the agent decides to do. My response in IRC was:
