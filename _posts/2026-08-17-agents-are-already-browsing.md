@@ -13,9 +13,9 @@ tags:
 description: "A year of security and privacy work on WebMCP: how I ended up writing the threat model, what it changed, and why I think giving agents a real path into websites is good for the web."
 ---
 
-An AI agent can use a website today without the developer building anything specifically for it.
+If you're building an AI agent that uses a browser, you can give it tools to use existing websites without the developers of those websites building anything specifically for your agent.
 
-If you're building a computer-use agent, you can give it tools to take screenshots and send mouse and keyboard actions. The agent looks at the page, works out where the "Add to cart" button is, clicks there, and takes another screenshot to see what changed. You can also give it access to the page's DOM or accessibility tree, so it doesn't have to work everything out from pixels.
+Those tools can take screenshots and send mouse and keyboard actions. The agent looks at the page, works out where the "Add to cart" button is, clicks there, and takes another screenshot to see what changed. You can also give it access to the page's DOM or accessibility tree, so it doesn't have to work everything out from pixels.
 
 You don't have to wire all of that up yourself. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) exposes browser automation tools through MCP, so an agent can take screenshots, read an accessibility snapshot, click elements and run JavaScript. The snapshot includes roles, labels and element references like `e21`, which lets the agent find a button and click it by reference. Screenshots are still available when it needs to look at the page.
 
