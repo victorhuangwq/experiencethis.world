@@ -90,22 +90,18 @@ I'd wondered if I'd come across as the guy pouring cold water on something the r
 
 > I don't want a site to know a user is pregnant or is visiting Japan at the moment, for example.
 
-Khushal Sagar from Chrome started separating what the browser could do from what the agent would have to handle. Johann Hofmann, who works on Chrome security, had a breakout on agentic browsing the next day. When I told him I was looking forward to it, he wrote back:
-
-> honestly I'm not sure I can cover it all, definitely looking forward to working on this stuff together :)
+Khushal Sagar from Chrome started separating what the browser could do from what the agent would have to handle. Johann Hofmann, who works on Chrome security, had a breakout on agentic browsing the next day. When I told him I was looking forward to it, he said he wasn't sure he could cover everything, but was looking forward to working on it together.
 
 Two moments from that session stuck with me.
 
-The first is the self-driving car analogy that came up while we were talking about keeping the user involved, the idea being that you want a hand on the steering wheel. I ended up arguing both sides of it. People can get more comfortable with a self-driving car over time, but we're at the start of this one, so it matters that the user stays involved now.
+The first was the self-driving car analogy, which came up while we were talking about when an agent should ask the user to step in. When you first start using something like this, you might want to watch every action and check that it did what you expected. It's a bit like wanting to keep a hand on the steering wheel when you don't quite trust the car yet.
 
-![Illustration of an attentive driver keeping a hand on the wheel while a car follows an assisted route](/assets/images/webmcp-self-driving-oversight.webp)
-*The self-driving car analogy from the discussion: how much should we hand over, and when should the user take control? Illustration generated for this post.*
+But I also argued that this could change over time. As the models get better and people get more comfortable using them, they may not need to be as involved in every action. My point was that we should work out how to keep the user involved at this stage, while leaving room for that relationship to change as the technology improves.
 
-The second one is me learning something in the middle of the meeting. Khushal asked:
+![Two illustrations of the same person using an automated car: watching closely with a hand on the wheel at first, then sitting more comfortably with less active supervision](/assets/images/webmcp-self-driving-oversight.webp)
+*Close supervision at first, then potentially less involvement as the system improves and the user gains confidence. Illustration generated for this post.*
 
-> how do we add tests for non-deterministic APIs
-
-It's a hard problem because the browser can test that a tool was registered or called, but part of the behavior we're interested in depends on what the agent decides to do. My response in IRC was:
+The second one is me learning something in the middle of the meeting. Khushal pointed out the problem of testing non-deterministic behavior. The browser can test that a tool was registered or called, but part of what we're interested in depends on what the agent decides to do. My response in IRC was:
 
 > oh wow that's true
 
@@ -125,15 +121,9 @@ The WebMCP repo has been a lively place for a while now, and I've been in it thr
 
 ### What should `consequentialHint` default to?
 
-MCP has hints like `readOnlyHint` and `destructiveHint`. When Johann [proposed a hint for consequential actions](https://github.com/webmachinelearning/webmcp/issues/176), such as sending an email rather than drafting one, I looked at how real MCP tools use annotations today before saying anything. In the [pull request discussion](https://github.com/webmachinelearning/webmcp/pull/217#issuecomment-5037104607), I wrote:
+MCP has hints like `readOnlyHint` and `destructiveHint`. When Johann [proposed a hint for consequential actions](https://github.com/webmachinelearning/webmcp/issues/176), such as sending an email rather than drafting one, I looked at how real MCP tools use annotations today before saying anything. In the [pull request discussion](https://github.com/webmachinelearning/webmcp/pull/217#issuecomment-5037104607), my concern was that an agent developer might read `consequentialHint = false` as a guarantee of safety, when the site developer might simply have forgotten to set it.
 
-> My original concern was that from an agent developer's perspective, it's an easy mistake to read `consequentialHint = false` as "this is safe," when it might just mean the web developer forgot to set it (or didn't know they should).
-
-I still argued for defaulting to `false`. In [a later comment](https://github.com/webmachinelearning/webmcp/pull/217#issuecomment-5082411446), I explained why:
-
-> if `consequentialHint` is kept optional, we should still default to `false`, as per the discussion in #176, since if it is on by default it will likely dilute what the signal tells the receiver about actual intent.
-
-A flag that's on for everything ends up meaning nothing. The group [resolved to default it to `false` in May](https://github.com/webmachinelearning/webmcp/issues/176#issuecomment-4566158429), and the spec change [merged in September](https://github.com/webmachinelearning/webmcp/pull/217). The hints describe the developer's intent; they don't prove that a tool is safe.
+I still [argued for defaulting to `false`](https://github.com/webmachinelearning/webmcp/pull/217#issuecomment-5082411446). If the flag is on for every tool by default, it doesn't tell the agent much about which actions the developer actually considers consequential. The group [resolved to default it to `false` in May](https://github.com/webmachinelearning/webmcp/issues/176#issuecomment-4566158429), and the spec change [merged in September](https://github.com/webmachinelearning/webmcp/pull/217). The hints describe the developer's intent; they don't prove that a tool is safe.
 
 ### Should iframes get to declare tools?
 
@@ -141,11 +131,7 @@ For [this one](https://github.com/webmachinelearning/webmcp/issues/57) I wrote u
 
 ### In-page agents
 
-When the idea of pages running their own agents came up, the [minutes](https://www.w3.org/2026/03/05-webmachinelearning-minutes.html) have me saying we were:
-
-> trying to solve the problems without good list of use cases for this class of problems.
-
-I wanted us to be clear about what these agents would need to do before deciding which capabilities to give them.
+When the idea of pages running their own agents came up, [I wanted us to establish the use cases first](https://www.w3.org/2026/03/05-webmachinelearning-minutes.html). We needed to be clear about what these agents would do before deciding which capabilities to give them.
 
 ---
 
