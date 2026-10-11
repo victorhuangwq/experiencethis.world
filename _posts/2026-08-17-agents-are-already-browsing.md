@@ -15,11 +15,11 @@ description: "A year of security and privacy work on WebMCP: how I ended up writ
 
 An AI agent can use a website today without the developer building anything specifically for it.
 
-One approach is screenshot-based computer use, where the agent looks at the page, works out where the "Add to cart" button is, clicks at those coordinates, and takes another screenshot to see what changed. It can do this through mouse and keyboard actions without reading the DOM.
+If you're building a computer-use agent, you can give it tools to take screenshots and send mouse and keyboard actions. The agent looks at the page, works out where the "Add to cart" button is, clicks there, and takes another screenshot to see what changed. You can also give it access to the page's DOM or accessibility tree, so it doesn't have to work everything out from pixels.
 
-Another is to drive the page the way a test suite does. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) gives the model an accessibility snapshot, with roles, labels and element references like `e21`, so it can find a button and click it by reference. That part doesn't need a vision model. It also lets the agent take screenshots, inspect the page and run JavaScript, so the agent can use more than one way of understanding the page.
+You don't have to wire all of that up yourself. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) exposes browser automation tools through MCP, so an agent can take screenshots, read an accessibility snapshot, click elements and run JavaScript. The snapshot includes roles, labels and element references like `e21`, which lets the agent find a button and click it by reference. Screenshots are still available when it needs to look at the page.
 
-These approaches overlap, and an agent can use both. What they have in common is that the agent is working out how to use an interface built for people, rather than calling operations the site has explicitly provided for agents.
+Whether you build the tooling yourself or use something like Playwright MCP, the agent is still working out how to use an interface built for people. The site hasn't provided an operation that says "add this item to the cart," so the agent has to figure out which controls to use.
 
 Sites can try to detect automation, and they can already require confirmation for an action. What is missing is a standard browser API for a page to offer an agent a set of operations, describe what each one does, and indicate which ones need more care.
 
@@ -27,7 +27,7 @@ Sites can try to detect automation, and they can already require confirmation fo
 
 ## What's WebMCP all about
 
-[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 several people landed on roughly the same idea separately, and those efforts converged into a joint Edge and Chrome proposal in August 2025. It's being incubated in the W3C Web Machine Learning Community Group, and the idea is that instead of agents guessing at your pixels, your page hands them tools.
+[WebMCP](https://github.com/webmachinelearning/webmcp) is a proposal to close that gap, and it didn't come from any one place. Through 2025 several people landed on roughly the same idea separately, and those efforts converged into a joint Edge and Chrome proposal in August 2025. It's being incubated in the W3C Web Machine Learning Community Group, and the idea is that instead of agents working out how to operate your page, your page hands them tools.
 
 ```js
 navigator.modelContext.registerTool({
