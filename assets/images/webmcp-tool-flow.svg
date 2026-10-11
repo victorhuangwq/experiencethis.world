@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600" role="img" aria-labelledby="title description">
+  <title id="title">A WebMCP tool call</title>
+  <desc id="description">Three steps: an agent calls a named tool; the browser invokes the tool registered by the webpage; the webpage runs its own execute function in the existing page and session context.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M1 1 9 5 1 9" fill="none" stroke="#2b6e6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="900" height="600" rx="20" fill="#faf6f0"/>
+  <g fill="#1a1612" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="450" y="70" text-anchor="middle" font-size="44" font-weight="700">A WebMCP tool call</text>
+
+    <g stroke="#1a1612" stroke-width="2">
+      <rect x="65" y="110" width="770" height="112" rx="14" fill="#fffdf9"/>
+      <rect x="65" y="254" width="770" height="112" rx="14" fill="#fffdf9"/>
+      <rect x="65" y="398" width="770" height="112" rx="14" fill="#fffdf9"/>
+    </g>
+
+    <g fill="none" stroke="#2b6e6a" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M450 227v20"/>
+      <path d="M450 371v20"/>
+    </g>
+
+    <!-- Agent: a small, friendly robot. -->
+    <g fill="none" stroke="#b23c0a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="108" y="140" width="72" height="55" rx="12"/>
+      <path d="M144 140v-12M102 156v22M186 156v22M132 180h24"/>
+      <circle cx="144" cy="124" r="4" fill="#b23c0a" stroke="none"/>
+      <circle cx="128" cy="160" r="4" fill="#b23c0a" stroke="none"/>
+      <circle cx="160" cy="160" r="4" fill="#b23c0a" stroke="none"/>
+    </g>
+    <text x="220" y="153" font-size="36" font-weight="700">Agent</text>
+    <text x="220" y="195" font-size="30">Calls a named tool</text>
+
+    <!-- Browser: familiar window chrome, with a page inside. -->
+    <g fill="none" stroke="#2b6e6a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="106" y="276" width="77" height="68" rx="7"/>
+      <path d="M106 292h77M121 307h44M121 322h29"/>
+      <circle cx="117" cy="284" r="2" fill="#2b6e6a" stroke="none"/>
+      <circle cx="126" cy="284" r="2" fill="#2b6e6a" stroke="none"/>
+    </g>
+    <text x="220" y="297" font-size="36" font-weight="700">Browser</text>
+    <text x="220" y="339" font-size="30">Invokes the page's registered tool</text>
+
+    <!-- Webpage: its own code supplies the tool implementation. -->
+    <g fill="none" stroke="#b23c0a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M119 420h37l18 18v50h-55zM156 420v18h18"/>
+      <path d="m134 454-8 8 8 8m23-16 8 8-8 8m-10-18-5 20"/>
+    </g>
+    <text x="220" y="441" font-size="36" font-weight="700">Webpage</text>
+    <text x="220" y="483" font-size="30">Runs its own execute function</text>
+
+    <text x="450" y="559" text-anchor="middle" font-size="29" fill="#2b6e6a">Using the existing page and session context</text>
+  </g>
+</svg>
