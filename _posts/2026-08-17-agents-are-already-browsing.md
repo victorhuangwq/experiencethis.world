@@ -14,15 +14,13 @@ tags:
 description: "A year of security and privacy work on WebMCP: how I ended up writing the threat model, what it changed, and why I think giving agents a real path into websites is good for the web."
 ---
 
-The agents are already browsing, whether websites are ready for them or not. They can read the page, work out what to click, and carry on. But websites still lack a widely supported way to tell those agents what they offer and how they want it used, so the agents figure out their own path through interfaces built for people.
+The agents are already browsing, whether websites were built for them or not. They can find the *Add to cart* button, click it, and move on to the next step. A site can become part of an agent's workflow without its developer ever building an interface for that agent.
 
-If you're building a browser-use agent, you can give it tools to take screenshots and send mouse and keyboard actions. The agent looks at the page, works out where the *Add to cart* button is, clicks there, and takes another screenshot to see what changed. You can also give it access to the page's DOM or accessibility tree, so it doesn't have to work everything out from pixels.
+The tooling comes from the people building the agents. They can give an agent screenshots and mouse and keyboard controls, or let it inspect the DOM and accessibility tree. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) packages browser automation tools for this: screenshots, accessibility snapshots, element interactions and JavaScript execution. Those capabilities can work together. The agent can find a button by its label, click it by reference, and take a screenshot to see what changed.
 
-You don't have to wire all of that up yourself. [Playwright's MCP server](https://github.com/microsoft/playwright-mcp) exposes browser automation tools through MCP, so an agent can take screenshots, read an accessibility snapshot, click elements and run JavaScript. The snapshot includes roles, labels and element references like `e21`, which lets the agent find a button and click it by reference.
+The website developer can try to detect automation, and can already ask for confirmation before an action. But there isn't a widely supported browser API for the page to offer operations directly to agents and describe what each one does. The agent still has to work out how to use the ordinary interface.
 
-Whether you build the tooling yourself or use something like Playwright MCP, the agent is still working out how to use an interface built for people. In that setup, the site hasn't provided an agent-facing operation to add an item to the cart, so the agent has to figure out which controls to use.
-
-Sites can try to detect automation, and they can already require confirmation for an action. What is missing is a standard browser API for a page to offer an agent a set of operations, describe what each one does, and indicate which ones need more care.
+To me, that's the gap worth fixing. If agents are going to use websites anyway, the sites should have a way to participate, rather than just being something the agent works its way around.
 
 ---
 
