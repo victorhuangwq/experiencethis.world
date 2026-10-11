@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Kleiner Perkins Personal Statement 2"
+title:  "Kleiner Perkins personal statement 2"
 date:   2023-01-17 08:00:01 -0500
 hidden: true
 ---

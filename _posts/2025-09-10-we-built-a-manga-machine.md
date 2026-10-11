@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Building a Manga Machine in 48 Hours"
+title: "Building a manga machine in 48 hours"
 date: 2025-09-10 10:00:00 -0700
 categories: projects
 tags:

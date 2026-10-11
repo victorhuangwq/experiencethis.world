@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Back Button That Wasn't There"
+title: "The back button that wasn't there"
 date: 2026-03-01 10:00:00 -0700
 categories: projects
 tags:

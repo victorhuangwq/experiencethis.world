@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Pokemon Prerelease Event built with LLMs"
+title: "Pokemon prerelease event built with LLMs"
 date: 2025-02-16 14:30:00 -0700
 categories: projects
 tags:

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "wanted circles - gamified job referral system "
+title:  "Wanted Circles - gamified job referral system"
 date:   2019-02-24 19:32:11 +0800
 categories: projects hackathons
 tags:
