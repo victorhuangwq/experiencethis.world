@@ -1,32 +1,43 @@
+{% comment %}
+The log line: every visible post gets its real chronological number in the
+site's register, plus category, date, and (with reading=true) reading time.
+Hidden posts carry no number. Pass post=... and optionally reading=true.
+{% endcomment %}
+{% assign visible_posts = site.posts | where_exp: "p", "p.hidden != true" %}
+{% assign log_total = visible_posts | size %}
+{% assign log_number = nil %}
+{% for p in visible_posts %}
+  {% if p.url == include.post.url %}
+    {% assign log_number = log_total | minus: forloop.index0 %}
+  {% endif %}
+{% endfor %}
 <div class="post-meta">
-  <span class="post-date">{{ include.post.date | date_to_string }}</span>
-  {% assign words = include.post.content | number_of_words %}
-  {% assign minutes = words | divided_by: 200 | plus: 1 %}
-  <span class="post-reading">&bull; {{ minutes }} min read</span>
-  <span class="post-categories">
-    {% for category in include.post.categories %}
-      &bull;
-
-      {% comment %}
-        Check if this category has a corresponding page before decide
-        to link to it. This is an O(n^2) operations so consider removing
-        it and linking for all categories (or no categories) if this
-        site has a lot of pages and/or a lot of categories.
-      {% endcomment %}
-      {% assign category_page = false %}
-      {% for node in site.pages %}
-        {% if node.category == category or node.title == category %}
-          {% assign category_page = node %}
-        {% endif %}
-      {% endfor %}
-
-      {% if category_page %}
-        <a href="{{ category_page.url | relative_url }}">
-          {{ category_page.title | default: category_page.category }}
-        </a>
-      {% else %}
-        {{ category }}
+  {% if log_number %}
+    <span class="log-number">Log {{ log_number | prepend: '00' | slice: -3, 3 }}</span>
+    <span aria-hidden="true">&middot;</span>
+  {% endif %}
+  {% assign category = include.post.categories | first %}
+  {% if category %}
+    {% assign category_page = false %}
+    {% for node in site.pages %}
+      {% if node.category == category or node.title == category %}
+        {% assign category_page = node %}
       {% endif %}
     {% endfor %}
-  </span>
+    <span class="entry-category">
+      {%- if category_page -%}
+        <a href="{{ category_page.url | relative_url }}">{{ category }}</a>
+      {%- else -%}
+        {{ category }}
+      {%- endif -%}
+    </span>
+    <span aria-hidden="true">&middot;</span>
+  {% endif %}
+  <span class="post-date">{{ include.post.date | date: "%b %-d, %Y" }}</span>
+  {% if include.reading %}
+    {% assign words = include.post.content | number_of_words %}
+    {% assign minutes = words | divided_by: 200 | plus: 1 %}
+    <span aria-hidden="true">&middot;</span>
+    <span class="post-reading">{{ minutes }} min</span>
+  {% endif %}
 </div>

@@ -14,13 +14,9 @@
   padding-right: 0.6em;
 }
 
-// Rotate pill accents; purely decorative, no color carries meaning
-.tags-list a:nth-child(3n + 2) .tag-count {
-  background: $mustard;
-}
-
+// Every third pill takes the orchid note; purely decorative, no color meaning
 .tags-list a:nth-child(3n) .tag-count {
-  background: $teal;
+  background: $orchid;
 }
 
 .tags-list a:hover {

@@ -1,37 +1,41 @@
-// Warm editorial palette
-$paper: #faf6f0 !default; // cream paper background
-$ink: #1a1612 !default; // heading ink
-$ink-soft: #2b241d !default; // body ink
-$ink-muted: #6e6258 !default; // meta / muted text
-$terracotta: #b23c0a !default; // accent (deepened slightly for AA headroom)
-$terracotta-dark: #9a3412 !default; // inline code accent
-$mustard: #9a6d0b !default; // warm ochre; playful secondary accent
-$teal: #2b6e6a !default; // muted pine; the single cool note
-$hairline: #e7decf !default; // warm hairline borders
-$wash: #f4eee3 !default; // code blocks / tinted panels
-$wash-strong: #f1eae0 !default; // table headers
+// "Pacific crossing" palette: Singapore's colors under Seattle light.
+// Cool leaf-tinted paper, green-black ink, Peranakan shophouse jade as the
+// working accent, and Vanda orchid violet as a rare secondary note.
+$paper: #f5f7f2 !default; // frost-leaf paper background
+$ink: #1b231e !default; // banyan ink for headings
+$ink-soft: #2c352e !default; // body ink
+$ink-muted: #5c685e !default; // meta / muted text
+$jade: #0e6b60 !default; // shophouse jade; links and primary accent
+$jade-deep: #0a544c !default; // inline code accent / hover deepening
+$orchid: #6d4396 !default; // Vanda orchid violet; rare secondary accent
+$hairline: #dce3d8 !default; // cool hairline borders
+$wash: #ecf0e7 !default; // code blocks / tinted panels
+$wash-strong: #e4eadf !default; // table headers
 
-// Warm neutral scale (kept for partials that expect grays)
-$gray-1: #f3ede3 !default;
+// Cool neutral scale (kept for partials that expect grays)
+$gray-1: #eef2e9 !default;
 $gray-2: $hairline !default;
-$gray-3: #d8ccb9 !default;
+$gray-3: #c3cdbe !default;
 $gray-4: $ink-muted !default;
 $gray-5: $ink-soft !default;
 $gray-6: $ink !default;
 
-$display-font-family: 'Fraunces', Georgia, 'Times New Roman', serif !default;
-$root-font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif !default;
-$root-font-size: 1.0625rem !default;
-$root-line-height: 1.7 !default;
+// Type: grotesque display over a book serif, with a typed-mono utility face
+// for the logbook marginalia (log lines, labels, nav).
+$display-font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif !default;
+$root-font-family: 'Literata', Georgia, 'Times New Roman', serif !default;
+$mono-font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace !default;
+$root-font-size: 1rem !default;
+$root-line-height: 1.72 !default;
 
 $body-color: $ink-soft !default;
 $body-muted: $ink-muted !default;
 $body-bg: $paper !default;
-$link-color: $terracotta !default;
+$link-color: $jade !default;
 $heading-color: $ink !default;
 
 $border-color: $hairline !default;
-$border-radius: 6px !default;
+$border-radius: 4px !default;
 $padding-v: 1em !default;
 $padding-h: 1.5em !default;
 $heading-spacing: 0.5rem !default;
@@ -41,11 +45,11 @@ $measure: 42rem !default; // comfortable reading measure
 $masthead-width: 52rem !default;
 
 $large-breakpoint: 49rem !default;
-$large-font-size: 1.125rem !default;
+$large-font-size: 1.0625rem !default;
 
 $box-shadow-size: 1px !default;
 $box-shadow-opacity: 0.16 !default;
 $default-box-shadow: $box-shadow-size $box-shadow-size $box-shadow-size rgba(0, 0, 0, $box-shadow-opacity);
 
-$code-font-family: ui-monospace, 'SF Mono', Menlo, Monaco, 'Courier New', monospace !default;
-$code-color: $terracotta-dark !default;
+$code-font-family: $mono-font-family !default;
+$code-color: $jade-deep !default;

@@ -12,16 +12,16 @@ h6,
   color: $heading-color;
   font-family: $display-font-family;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   margin-bottom: $heading-spacing;
   text-rendering: optimizeLegibility;
 }
 
-// Fraunces' wonky alternates, saved for the biggest display moments only
+// The biggest display moments lean on Bricolage's heavier cut
 h1,
 .site-title {
-  font-variation-settings: 'WONK' 1;
+  font-weight: 700;
 }
 
 h1 {
