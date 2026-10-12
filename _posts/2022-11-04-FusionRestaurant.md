@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "using Craiyon & OpenAI in creating fusion restaurants"
+title:  "Using Craiyon & OpenAI in creating fusion restaurants"
 date:   2022-11-04 08:00:00 -0500
 categories: projects
 tags:

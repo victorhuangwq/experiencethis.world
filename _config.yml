@@ -29,6 +29,10 @@ sidebar_home_link:  true
 
 google_analytics_4: G-6K905HB89M
 
+# Keep archived writing in Git without publishing it on the site.
+exclude:
+  - _archive/
+
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

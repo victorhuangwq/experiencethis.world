@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ARC: my new daily browser"
+title:  "Arc: my new daily browser"
 date:   2023-01-08 08:00:00 -0500
 categories: reviews
 tags:
