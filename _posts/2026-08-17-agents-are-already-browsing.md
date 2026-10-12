@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The agents are already browsing — giving the web a say"
+title: "Giving the web a say when agents are already browsing"
 date: 2026-08-17 10:00:00 -0700
 last_modified_at: 2026-10-11
 categories: projects
@@ -135,7 +135,9 @@ When the idea of pages running their own agents came up, [I wanted us to establi
 
 ## Giving the web a say
 
-This is starting to happen on actual sites. As of October 2026, [Chrome and Edge have origin trials, Brave is experimenting with it in Leo, and ChatGPT Desktop supports WebMCP](https://github.com/webmachinelearning/webmcp/blob/main/implementation-status.md). [Yoav Weiss describes deploying it to Shopify storefronts](https://github.com/w3ctag/design-reviews/issues/1238#issuecomment-5329869437). Browser support is still uneven: [Mozilla's recorded position is neutral](https://github.com/mozilla/standards-positions/issues/1412), and [WebKit opposes the proposal](https://github.com/WebKit/standards-positions/issues/670).
+This is starting to happen on actual sites. As of October 2026, [Chrome and Edge have origin trials, Brave is experimenting with it in Leo, and ChatGPT Desktop supports WebMCP](https://github.com/webmachinelearning/webmcp/blob/main/implementation-status.md). Browser support is still uneven: [Mozilla's recorded position is neutral](https://github.com/mozilla/standards-positions/issues/1412), and [WebKit opposes the proposal](https://github.com/WebKit/standards-positions/issues/670).
+
+Shopify has [documentation for agent integrations](https://shopify.dev/docs/agents), and [Yoav Weiss describes deploying WebMCP to Shopify storefronts](https://github.com/w3ctag/design-reviews/issues/1238#issuecomment-5329869437). PayPal is also [exploring how to make payments agent-ready with WebMCP](https://developer.paypal.com/community/blog/WebMCP_PayPal_Agent_Ready/). These are the kinds of operations where the security questions become concrete: an agent might be searching for a product, updating a cart, or helping with a payment.
 
 The [TAG design review, filed in June](https://github.com/w3ctag/design-reviews/issues/1238) with the questionnaire I wrote attached, is still open. The group's [October agenda](https://github.com/webmachinelearning/meetings/blob/main/telcons/2026-10-01-cg-agenda.md) also tracks privacy feedback and preparation for accessibility and internationalization reviews. The trials are a chance to see how the decisions we've been discussing work in practice. I expect we'll find things the threat model missed, and things we worried about that turn out to matter less.
 
