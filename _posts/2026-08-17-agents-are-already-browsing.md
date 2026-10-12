@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Giving the web a say when agents are already browsing"
+title: "The agents are already browsing — giving the web a say"
 date: 2026-08-17 10:00:00 -0700
 last_modified_at: 2026-10-11
 categories: projects
