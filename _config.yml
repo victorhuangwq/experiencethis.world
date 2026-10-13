@@ -39,6 +39,7 @@ exclude:
   - Gemfile.lock
   - docs/
   - README.md
+  - AGENTS.md
 
 # Exclude from processing.
 # The following items will not be processed, by default.

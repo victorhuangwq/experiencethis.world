@@ -52,9 +52,9 @@ The homepage supports `home_feature_limit` featured articles (default 3); only
 displayed features are excluded from recent writing. See the [publishing guide](publishing.md)
 for the metadata. PR homepage screenshots are kept in `.github/previews/`.
 
-## Documentation scope
+## Repository documentation
 
-Keep notes technical and examples generic. Avoid copying biographies, personal
-background, private conversations, or motivations into repository documentation.
-This repository is public; excluding files from the website build does not make
-their source private.
+The guides describe publishing, development, and design implementation.
+[AGENTS.md](../AGENTS.md) contains coding-agent instructions. This repository is
+public; excluding documentation from the website build does not make its source
+private.

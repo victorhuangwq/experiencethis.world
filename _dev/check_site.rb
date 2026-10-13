@@ -86,7 +86,7 @@ posts.each do |post|
 end
 
 check(!File.exist?(File.join(OUTPUT, '_archive')), 'Archived writing must remain excluded from the public build')
-['docs', 'README.md', 'README.html'].each do |path|
+['docs', 'README.md', 'README.html', 'AGENTS.md', 'AGENTS.html'].each do |path|
   check(!File.exist?(File.join(OUTPUT, path)), "Repository documentation must not be published: #{path}")
 end
 Dir[File.join(ROOT, '_archive', '*.{md,markdown}')].each do |path|

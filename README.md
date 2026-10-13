@@ -1,8 +1,7 @@
 # Experience This
 
 Built with Jekyll and published through GitHub Pages. Writing, projects, and
-travel articles are organized automatically
-from Markdown.
+travel articles are organized automatically from Markdown.
 
 ## Documentation
 
@@ -10,9 +9,7 @@ from Markdown.
 - [Development guide](docs/README.md): run, build, and check the website.
 - [Design reference](docs/DESIGN.md): the implemented visual system and tokens.
 - [Product context](docs/PRODUCT.md): the site's purpose and content constraints.
-
-Product and design context live in `docs/`. Use those files for future design
-work rather than creating duplicate notes at the repository root.
+- [Coding-agent instructions](AGENTS.md): guidance for automated changes.
 
 ## Source
 
