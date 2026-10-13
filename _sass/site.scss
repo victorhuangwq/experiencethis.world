@@ -220,7 +220,6 @@ pre code { padding: 0; font-size: inherit; background: none; }
 .posts-list h3 a { color: var(--ink); text-decoration: none; }
 .posts-list h3 a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
 .posts-list small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; margin-top: 4px; }
-#search-bar { width: 100%; padding: 10px 12px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
 @media (min-width: 64rem) {
   .post-body p:has(> img) { margin-left: -60px; margin-right: -60px; }
 }

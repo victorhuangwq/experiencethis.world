@@ -7,11 +7,10 @@
   {% assign entry_summary = entry.project_summary | default: entry_summary %}
   {% if entry.link_only %}{% assign entry_url = entry.project_url %}{% endif %}
 {% endif %}
-{% assign heading = include.heading | default: 'h3' %}
-<article class="post-row" data-post-url="{{ entry_url | escape }}">
+<article class="post-row">
   <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: '%b %Y' }}</time>
   <div>
-    <{{ heading }} class="entry-title"><a href="{% if entry_url contains '://' %}{{ entry_url }}{% else %}{{ entry_url | relative_url }}{% endif %}">{{ entry_title | escape }}</a></{{ heading }}>
+    <h3 class="entry-title"><a href="{% if entry_url contains '://' %}{{ entry_url }}{% else %}{{ entry_url | relative_url }}{% endif %}">{{ entry_title | escape }}</a></h3>
     {% if entry_summary %}<p class="entry-summary">{{ entry_summary | strip_html | normalize_whitespace | truncatewords: 32 }}</p>{% endif %}
     {% if include.project %}
       {% if entry.project_aside %}<p class="aside project-aside">({{ entry.project_aside | escape }})</p>{% endif %}
