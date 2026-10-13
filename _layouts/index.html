@@ -1,58 +1,38 @@
 ---
 layout: default
 ---
-
-<div class="content">
-  {% if page.url == "/" %}
-    <section class="home-intro">
-      <h1>{{ site.description }}</h1>
-      <p class="home-tagline">{{ site.tagline }}</p>
-    </section>
-
-    {% if site.data.projects %}
-      <section class="home-projects">
-        <h2 class="home-section-title">Things I build &amp; run</h2>
-        <span class="squiggle">{% include svg/squiggle.svg %}</span>
-        <ul class="projects-list">
-          {% for project in site.data.projects %}
-            <li>
-              <a href="{% if project.url contains '://' %}{{ project.url }}{% else %}{{ project.url | relative_url }}{% endif %}">{{ project.name }}</a>
-              <span class="project-blurb">{{ project.blurb }}</span>
-              {% if project.note %}<span class="project-note">{{ project.note }}</span>{% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
+{% assign visible_posts = site.posts | where_exp: 'post', 'post.hidden != true' %}
+{% assign feature_limit = site.home_feature_limit | default: 3 %}
+{% assign featured_posts = visible_posts | where: 'featured', true | slice: 0, feature_limit %}
+{% assign featured_urls = featured_posts | map: 'url' %}
+<section class="home-intro">
+  <h1>Hi, I’m Victor.</h1>
+  <p>I build things for the web, write about what I’m learning, and collect recommendations for friends.</p>
+  <p class="routes">Explore my <a href="{{ '/projects/' | relative_url }}">projects</a>, find <a href="{{ '/travel/' | relative_url }}">somewhere to eat</a>, or learn <a href="{{ '/about/' | relative_url }}">a little about me</a>.</p>
+</section>
+{% if featured_posts.size > 0 %}
+  <section class="home-features" aria-label="Featured writing">
+    {% include home-feature.html post=featured_posts.first %}
+    {% if featured_posts.size > 1 %}
+      <div class="featured-more">
+        {% for featured in featured_posts offset: 1 %}
+          {% include home-feature.html post=featured compact=true %}
+        {% endfor %}
+      </div>
     {% endif %}
-  {% endif %}
-
-  {% include pagination-newer.html %}
-
-  {{ content }}
-
-  {% if page.url == "/" %}
-    <h2 class="home-section-title">Writing</h2>
-    <span class="squiggle">{% include svg/squiggle.svg %}</span>
-  {% endif %}
-
-  <div class="home-posts">
-    {% for post in paginator.posts %}
-      {% if post.hidden %}{% continue %}{% endif %}
-      <article class="home-post">
-        <div class="entry-meta">
-          {% assign category = post.categories | first %}
-          {% if category %}<span class="entry-category">{{ category }}</span> &middot; {% endif %}
-          <span class="entry-date">{{ post.date | date: "%b %-d, %Y" }}</span>
-        </div>
-        <h2 class="entry-title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h2>
-        {% if post.excerpt %}
-          <p class="entry-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>
-        {% endif %}
-      </article>
-    {% endfor %}
-  </div>
-
-  {% include pagination-older.html %}
-</div>
+  </section>
+{% endif %}
+<section class="latest-writing" aria-labelledby="latest-heading">
+  <div class="section-head"><h2 id="latest-heading">Latest writing</h2></div>
+  {% assign recent_count = 0 %}
+  {% assign recent_limit = site.home_post_limit | default: 3 %}
+  {% for post in visible_posts %}
+    {% if featured_urls contains post.url %}{% continue %}{% endif %}
+    {% include post-row.html post=post %}
+    {% assign recent_count = recent_count | plus: 1 %}
+    {% if recent_count >= recent_limit %}{% break %}{% endif %}
+  {% endfor %}
+  {% if recent_count == 0 %}<p class="empty-note">There’s more to write. Check back soon.</p>{% endif %}
+  <p class="archive-link"><a class="text-link" href="{{ '/writing/' | relative_url }}">All writing</a></p>
+</section>
+{{ content }}

@@ -4,11 +4,11 @@ highlighter:      rouge
 
 title: experience this
 email: victorhuangwq@gmail.com
-tagline: blog post detailing my projects, travels and opinions
+tagline: Writing, projects, and recommendations by Victor Huang
 description: >- # this means to ignore newlines until "baseurl:"
   thoughts by victor
 baseurl: '/' # the subpath of your site, e.g. /blog
-url: http://experiencethis.world
+url: https://www.experiencethis.world
 
 
 author:
@@ -16,22 +16,29 @@ author:
   name: 'Victor Huang'
   url: https://www.linkedin.com/in/victorhuangwq/
 
-paginate: 10
+home_post_limit: 3
+home_feature_limit: 3
+
+collections:
+  projects:
+    output: false
 
 plugins:
   - jekyll-feed
   - jekyll-gist
-  - jekyll-paginate
   - jekyll-redirect-from
   - jekyll-seo-tag
 
-sidebar_home_link:  true
-
 google_analytics_4: G-6K905HB89M
 
-# Keep archived writing in Git without publishing it on the site.
+# Keep archived writing and repository documentation out of the public site.
 exclude:
   - _archive/
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - docs/
+  - README.md
 
 # Exclude from processing.
 # The following items will not be processed, by default.

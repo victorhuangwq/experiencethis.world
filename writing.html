@@ -1,0 +1,17 @@
+---
+layout: page
+title: Writing
+section: writing
+permalink: /writing/
+description: Things I’ve made, places I’ve been, and ideas I’m working through.
+---
+<p class="lede">Things I’ve made, places I’ve been, and ideas I’m working through.</p>
+{% assign visible_posts = site.posts | where_exp: 'post', 'post.hidden != true' %}
+{% assign years = visible_posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
+{% for year in years %}
+  <section class="archive-year" aria-labelledby="year-{{ year.name }}">
+    <h2 class="year-heading" id="year-{{ year.name }}">{{ year.name }}</h2>
+    {% for post in year.items %}{% include post-row.html post=post %}{% endfor %}
+  </section>
+{% endfor %}
+{% if visible_posts.size == 0 %}<p class="empty-note">There’s more to write. Check back soon.</p>{% endif %}

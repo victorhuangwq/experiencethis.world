@@ -1,6 +1,23 @@
 ---
-layout: category
+layout: page
 title: Travel
+section: travel
 category: travel
+permalink: /travel/
+redirect_from:
+  - /category/travel.html
+description: The recommendations I’d send a friend.
 ---
-travel related posts, recommendations and more
+<p class="travel-intro">The recommendations I’d send a friend.</p>
+<p class="aside travel-aside">(I already have a list.)</p>
+<p>I grew up in Singapore. This is where I keep food recommendations and notes for people visiting the places I know.</p>
+{% assign travel_posts = site.posts | where_exp: 'post', "post.categories contains 'travel'" | where_exp: 'post', 'post.hidden != true' %}
+{% for post in travel_posts %}
+  <article class="travel-entry">
+    <h2><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h2>
+    <time class="entry-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%B %Y' }}</time>
+    <p>{{ post.summary | default: post.description | default: post.excerpt | strip_html | normalize_whitespace | truncatewords: 40 }}</p>
+    <a class="text-link" href="{{ post.url | relative_url }}">{{ post.feature_action | default: 'Read the article' | escape }}</a>
+  </article>
+{% endfor %}
+{% if travel_posts.size == 0 %}<p class="empty-note">Recommendations will find their way here as I write them.</p>{% endif %}

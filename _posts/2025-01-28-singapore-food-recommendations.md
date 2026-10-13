@@ -4,6 +4,10 @@ title:  "Singapore food recommendations"
 description: "A list of food recommendations for my friends visiting Singapore. I grew up in Singapore, and these are the places I like to eat at. Meant to be a good sampler of the variety of food in Singapore."
 date:   2025-01-28 08:00:01 -0500
 categories: travel
+featured: true
+summary: Where I send friends visiting Singapore, and what I like to order.
+aside: I miss the food already.
+feature_action: Read the guide
 tags:
     - reviews
     - Singapore
@@ -22,17 +26,17 @@ My main thought when choosing these places is to highlight the variety of food i
 
 <!-- Filter Controls -->
 
-*Food Filter*
-<div style="margin: 20px 0;">
-    <label style="margin-right: 10px;">
-        <input type="checkbox" id="vegToggle" style="margin-right: 5px;" />
+<fieldset class="food-filters">
+    <legend>Food filter</legend>
+    <label>
+        <input type="checkbox" id="vegToggle" />
         Vegetarian options available
     </label>
     <label>
-        <input type="checkbox" id="breakfastToggle" style="margin-right: 5px;" />
+        <input type="checkbox" id="breakfastToggle" />
         Breakfast appropriate
     </label>
-</div>
+</fieldset>
 
 <script>
   function applyFilters() {
@@ -70,7 +74,12 @@ My main thought when choosing these places is to highlight the variety of food i
 1. **Ya Kun Kaya Toast** <span class="food-attrs veg-true breakfast-true"></span>  
    Ya Kun Kaya Toast is a chain of cafes in Singapore that serves traditional Singaporean breakfast. This is what I ate at coffee shops growing up in Singapore, and it's a hit with all my friends who visited. 
 
-   I usually order the Kaya Toast Set, which comes with Kaya Toast, soft boiled eggs, and coffee or tea. Although I am now a decaf coffee drinker, I can vouch for their dark roasted coffee with condensed milk. 
+   <dl class="food-order">
+     <dt>My order</dt>
+     <dd><strong>Kaya Toast Set</strong><span>Kaya toast, soft boiled eggs, and coffee or tea.</span></dd>
+   </dl>
+
+   Although I am now a decaf coffee drinker, I can vouch for their dark roasted coffee with condensed milk.
 
    *How I eat it:*
    - Season the soft boiled eggs with a bit of soy sauce and white pepper

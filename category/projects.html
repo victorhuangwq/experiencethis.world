@@ -1,6 +1,38 @@
 ---
-layout: category
+layout: page
 title: Projects
+section: projects
 category: projects
+permalink: /projects/
+redirect_from:
+  - /category/projects.html
+description: Things I’ve built or helped make. Some useful, some just for fun.
 ---
-All projects that I have done, be it from hackathon, research, school or just a side thing.
+<p class="lede">Things I’ve built or helped make. <span class="aside">(some useful, some just for fun.)</span></p>
+{% assign project_posts = site.posts | where_exp: 'post', "post.categories contains 'projects'" %}
+{% assign projects = project_posts | concat: site.projects | where_exp: 'project', 'project.hidden != true' | where_exp: 'project', 'project.published != false' | sort: 'date' | reverse %}
+{% assign selected = projects | where: 'selected', true %}
+{% if selected.size > 0 %}
+  <section class="selected-projects" aria-label="Selected work">
+    {% for project in selected %}
+      <article class="project-feature">
+        <h2>{{ project.project_name | default: project.title | escape }}</h2>
+        {% if project.project_image %}<img class="project-image" src="{{ project.project_image | relative_url }}" alt="{{ project.project_image_alt | escape }}" width="{{ project.project_image_width }}" height="{{ project.project_image_height }}" />{% endif %}
+        <p>{{ project.project_summary | default: project.description | default: project.excerpt | strip_html | normalize_whitespace | truncatewords: 45 }}</p>
+        {% if project.project_aside %}<p class="aside project-aside">({{ project.project_aside | escape }})</p>{% endif %}
+        <div class="project-links">
+          {% if project.project_url %}<a class="text-link" href="{% if project.project_url contains '://' %}{{ project.project_url }}{% else %}{{ project.project_url | relative_url }}{% endif %}">{{ project.project_action | default: 'Try the project' | escape }}</a>{% endif %}
+          {% unless project.link_only %}<a class="text-link" href="{{ project.url | relative_url }}">Read the story</a>{% endunless %}
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+{% endif %}
+{% assign other_projects = projects | where_exp: 'project', 'project.selected != true' %}
+{% if other_projects.size > 0 %}
+  <section aria-labelledby="more-projects">
+    <div class="section-head"><h2 id="more-projects">{% if selected.size > 0 %}More things I’ve worked on{% else %}Things I’ve worked on{% endif %}</h2></div>
+    {% for project in other_projects %}{% include post-row.html post=project project=true %}{% endfor %}
+  </section>
+{% endif %}
+{% if projects.size == 0 %}<p class="empty-note">Something to tinker with is on the way.</p>{% endif %}

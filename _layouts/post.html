@@ -1,18 +1,20 @@
 ---
 layout: default
 ---
-
-<header>
-  <h1 class="post-title">{{ page.title }}</h1>
-</header>
-<div class="content">
-  {% include post-meta.html post=page %}
-
+<article class="article">
+  {% if page.categories contains 'travel' %}
+    <a class="text-link article-back" href="{{ '/travel/' | relative_url }}">Back to Travel</a>
+  {% else %}
+    <a class="text-link article-back" href="{{ '/writing/' | relative_url }}">All writing</a>
+  {% endif %}
+  <header class="article-header">
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+    {% include post-meta.html post=page %}
+  </header>
   <div class="post-body">
     {{ content }}
-    {% include post-tags.html post=page %}
   </div>
+  {% include post-tags.html post=page %}
   {% include post-nav.html %}
   {% include comments.html %}
-  {% include related_posts.html %}
-</div>
+</article>

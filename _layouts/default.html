@@ -1,29 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: 'en-us'}}">
-
+<html lang="{{ page.lang | default: 'en' }}">
   {% include head.html %}
-
-  <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}">
-
+  <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}{% if page.section %} section-{{ page.section }}{% endif %}{% if page.tags contains 'food' %} food-guide{% endif %}">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     {% include masthead.html %}
-
-    <main class="container">
+    <main class="container" id="main-content" tabindex="-1">
       {{ content }}
     </main>
-
-    <footer class="site-footer">
-      <p class="footer-links">
-        <a href="mailto:{{ site.email }}">Email</a> &middot;
-        <a href="https://github.com/{{ site.author.github }}">GitHub</a> &middot;
-        <a href="{{ site.author.url }}">LinkedIn</a>
-        {%- assign tags_page = site.pages | where: "layout", "tags" | first -%}
-        {%- if tags_page %} &middot;
-        <a href="{{ tags_page.url | relative_url }}">Tags</a>
-        {%- endif %}
-      </p>
-      {% include copyright.html %}
-    </footer>
-
+    {% include footer.html %}
     {% include custom-foot.html %}
   </body>
 </html>

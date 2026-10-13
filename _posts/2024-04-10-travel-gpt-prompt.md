@@ -3,6 +3,7 @@ layout: post
 title:  "Crafting the perfect travel GPT on OpenAI"
 date:   2024-04-10 08:00:01 -0500
 hidden: true
+published: false
 ---
 
 # Crafting the perfect travel GPT on OpenAI
@@ -59,4 +60,4 @@ Embark on Your Journey
 With the itinerary set, all that’s left is for you to enjoy your trip. I'm here to assist with any last-minute changes or additional information you might need.
 ```
 
-I asked GPT-4 to generate a more engaging and clear version of the travel GPT, and it did a good job. It was more engaging and clear, and it was consistent in generating the markdown tables and Dall-E images. 
+I asked GPT-4 to generate a more engaging and clear version of the travel GPT, and it did a good job. It was more engaging and clear, and it was consistent in generating the markdown tables and Dall-E images.

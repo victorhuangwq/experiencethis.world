@@ -3,6 +3,11 @@ layout: post
 title: "Why I've been dictating everything lately"
 date: 2026-02-12 08:00:00 -0500
 categories: projects
+project_name: Tambourine Voice
+project_url: https://github.com/kstonekuan/tambourine-voice
+project_action: View the repository
+project_summary: Open-source dictation. A few contributions, a lot of everyday use.
+project_aside: contributor and resident power user
 tags:
     - ai
     - voice
