@@ -2,6 +2,33 @@
 
 A Jekyll website with writing, projects, and travel articles organized from Markdown.
 
+## How the theme works
+
+The theme lives in this repository's layouts, includes, and styles. It does not
+use a theme gem or `remote_theme`; Hydeout is no longer a dependency. Jekyll and
+GitHub Pages still build and host the site.
+
+At build time, Jekyll converts Markdown to HTML, renders Liquid templates, and
+compiles Sass to CSS. The resulting static site is written to `_site/`.
+
+| File or directory | Role |
+| --- | --- |
+| `_layouts/default.html` | Shared page shell: document head, navigation, main content, and footer. |
+| `_layouts/index.html` | Homepage introduction, featured articles, and recent writing. |
+| `_layouts/page.html`, `_layouts/post.html`, `_layouts/tags.html` | Section/About pages, individual articles, and the tag index. These all inherit the default layout. |
+| `_includes/` | Reusable markup for navigation, article listings, metadata, and features. |
+| `_data/navigation.yml` | Top navigation labels and links. |
+| `_sass/site.scss` | Color and font variables, typography, spacing, and responsive layouts. |
+| `assets/css/main.scss` | Imports the site styles; Jekyll compiles it to `/assets/css/main.css`. |
+| `_includes/head.html` | Loads the CSS and Manrope from Google Fonts (regular and bold), plus page metadata. |
+| `_config.yml` | Site metadata, plugins, project collection, and homepage listing limits. |
+
+The section pages (`writing.html`, `category/projects.html`, and
+`category/travel.html`) select and sort content from Markdown metadata. An
+article can appear in several sections without duplicating its source. Routine
+publishing needs only a Markdown file; edit templates when changing page structure
+and `_sass/site.scss` when changing appearance.
+
 ## Publishing
 
 Add an article to `_posts/YYYY-MM-DD-title.md`:
@@ -40,7 +67,6 @@ bundle exec jekyll serve
 ```
 
 Open http://localhost:4000 on that machine. Build with `bundle exec jekyll build`.
-Templates are in `_layouts/` and `_includes/`; styles are in `_sass/site.scss`.
 
 [AGENTS.md](AGENTS.md) contains coding-agent instructions.
 See [LICENSE.md](LICENSE.md) for the repository license.
