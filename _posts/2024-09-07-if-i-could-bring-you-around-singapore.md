@@ -9,6 +9,7 @@ tags:
     - Singapore
     - itinerary
 hidden: true
+published: false
 ---
 
 So you're coming to Singapore! I'm very excited for you! Whether you are here for a short stopover or a longer stay, I hope you have a great time. 

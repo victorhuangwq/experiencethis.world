@@ -1,0 +1,15 @@
+<footer class="site-footer">
+  <div class="footer-voice">
+    <p>Thanks for stopping by.</p>
+    <span class="footer-signature">— Victor</span>
+  </div>
+  <div class="footer-contact">
+    <div class="footer-links">
+      <a href="mailto:{{ site.email }}">Email</a>
+      <a href="https://github.com/{{ site.author.github }}">GitHub</a>
+      <a href="{{ site.author.url }}">LinkedIn</a>
+      <a href="{{ site.feed.path | default: '/feed.xml' | relative_url }}">RSS</a>
+    </div>
+    <p class="aside footer-aside">(strongly worded emails welcome.)</p>
+  </div>
+</footer>

@@ -3,6 +3,10 @@ layout: post
 title: "Building a Pokémon prerelease toolkit with LLMs"
 date: 2025-02-16 14:30:00 -0700
 categories: projects
+project_name: Pokémon TCG Event Day
+project_url: /pokemon/
+project_action: Explore the project
+project_summary: Rules, timers, and tools for the prerelease events I run with friends.
 tags:
     - pokemon
     - ai

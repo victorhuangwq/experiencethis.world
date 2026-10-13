@@ -3,6 +3,15 @@ layout: post
 title: "Building a manga machine in 48 hours"
 date: 2025-09-10 10:00:00 -0700
 categories: projects
+selected: true
+project_name: Story to Manga Machine
+project_url: https://app.storytomanga.com
+project_summary: A story-to-manga generator built during a 48-hour hackathon. Paste in a story and watch the panels appear.
+project_aside: with Kingston Kuan
+project_image: /assets/images/story-to-manga-homepage.png
+project_image_alt: The Story to Manga Machine interface, with story entry and generated manga panels
+project_image_width: 2670
+project_image_height: 1446
 tags:
     - hackathon
     - ai

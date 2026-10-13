@@ -1,0 +1,10 @@
+{% assign feature = include.post %}
+{% assign summary_words = 40 %}
+{% if include.compact %}{% assign summary_words = 24 %}{% endif %}
+{% assign feature_summary = feature.summary | default: feature.description | default: feature.excerpt %}
+<article class="home-feature{% if include.compact %} home-feature--compact{% endif %}">
+  <h2 class="feature-title"><a href="{{ feature.url | relative_url }}">{{ feature.title | escape }}</a></h2>
+  {% if feature_summary %}<p>{{ feature_summary | strip_html | normalize_whitespace | truncatewords: summary_words }}</p>{% endif %}
+  {% if feature.aside %}<p class="aside feature-aside">({{ feature.aside | escape }})</p>{% endif %}
+  <a class="text-link" href="{{ feature.url | relative_url }}">{{ feature.feature_action | default: 'Read the article' | escape }}</a>
+</article>

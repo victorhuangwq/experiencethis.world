@@ -3,6 +3,7 @@ layout: post
 title: "The back button that wasn't there"
 date: 2026-03-01 10:00:00 -0700
 categories: projects
+project_name: BackToOpener
 tags:
     - chromium
     - browser

@@ -1,10 +1,13 @@
-<div class="masthead-wrap">
-  <header class="masthead">
-    <a class="masthead-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
-    <nav class="masthead-nav">
-      <a class="{% if page.url == '/' %}active{% endif %}" href="{{ '/' | relative_url }}">Home</a>
-      {% include category-links.html %}
-      {% include page-links.html %}
-    </nav>
-  </header>
-</div>
+{% assign current_section = page.section %}
+{% if page.layout == 'post' %}
+  {% assign current_section = 'writing' %}
+  {% if page.categories contains 'travel' %}{% assign current_section = 'travel' %}{% endif %}
+{% endif %}
+<header class="masthead">
+  <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="Experience This home"{% if page.url == '/' %} aria-current="page"{% endif %}>{{ site.title }}<span class="wordmark-dot">.</span></a>
+  <nav class="masthead-nav" aria-label="Main navigation">
+    {% for item in site.data.navigation %}
+      <a href="{{ item.url | relative_url }}"{% if current_section == item.section %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>{{ item.title }}</a>
+    {% endfor %}
+  </nav>
+</header>
