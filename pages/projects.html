@@ -10,7 +10,8 @@ description: Things I’ve built or helped make. Some useful, some just for fun.
 ---
 <p class="lede">Things I’ve built or helped make. <span class="aside">(some useful, some just for fun.)</span></p>
 {% assign project_posts = site.posts | where_exp: 'post', "post.categories contains 'projects'" %}
-{% assign projects = project_posts | concat: site.projects | where_exp: 'project', 'project.hidden != true' | where_exp: 'project', 'project.published != false' | sort: 'date' | reverse %}
+{% assign project_pages = site.pages | where: 'project', true %}
+{% assign projects = project_posts | concat: project_pages | where_exp: 'project', 'project.hidden != true' | where_exp: 'project', 'project.published != false' | sort: 'date' | reverse %}
 {% assign selected = projects | where: 'selected', true %}
 {% if selected.size > 0 %}
   <section class="selected-projects" aria-label="Selected work">
@@ -21,8 +22,10 @@ description: Things I’ve built or helped make. Some useful, some just for fun.
         <p>{{ project.project_summary | default: project.description | default: project.excerpt | strip_html | normalize_whitespace | truncatewords: 45 }}</p>
         {% if project.project_aside %}<p class="aside project-aside">({{ project.project_aside | escape }})</p>{% endif %}
         <div class="project-links">
-          {% if project.project_url %}<a class="text-link" href="{% if project.project_url contains '://' %}{{ project.project_url }}{% else %}{{ project.project_url | relative_url }}{% endif %}">{{ project.project_action | default: 'Try the project' | escape }}</a>{% endif %}
-          {% unless project.link_only %}<a class="text-link" href="{{ project.url | relative_url }}">Read the story</a>{% endunless %}
+          {% assign project_link = project.project_url %}
+          {% if project.project %}{% assign project_link = project_link | default: project.url %}{% endif %}
+          {% if project_link %}<a class="text-link" href="{% if project_link contains '://' %}{{ project_link }}{% else %}{{ project_link | relative_url }}{% endif %}">{{ project.project_action | default: 'Open the project' | escape }}</a>{% endif %}
+          {% unless project.project %}<a class="text-link" href="{{ project.url | relative_url }}">Read the story</a>{% endunless %}
         </div>
       </article>
     {% endfor %}
