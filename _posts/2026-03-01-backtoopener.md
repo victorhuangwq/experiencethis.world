@@ -4,7 +4,6 @@ title: "The back button that wasn't there"
 date: 2026-03-01 10:00:00 -0700
 categories: projects
 selected: true
-project_name: BackToOpener
 project_url: https://issues.chromium.org/issues/448173940
 project_action: View the Chromium feature
 project_summary: A Chromium feature that lets the back button close a new tab and return to the tab that opened it. Running as an experiment in Edge and Chrome.
