@@ -19,10 +19,6 @@ author:
 home_post_limit: 3
 home_feature_limit: 3
 
-collections:
-  projects:
-    output: false
-
 plugins:
   - jekyll-feed
   - jekyll-gist
@@ -39,3 +35,4 @@ exclude:
   - Gemfile.lock
   - README.md
   - AGENTS.md
+  - projects/tcg-idle-game/README.md

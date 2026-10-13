@@ -3,7 +3,15 @@ layout: post
 title: "The back button that wasn't there"
 date: 2026-03-01 10:00:00 -0700
 categories: projects
+selected: true
 project_name: BackToOpener
+project_url: https://issues.chromium.org/issues/448173940
+project_action: View the Chromium feature
+project_summary: A Chromium feature that lets the back button close a new tab and return to the tab that opened it. Running as an experiment in Edge and Chrome.
+project_image: /assets/images/backtoopener-close-and-go-back-dropdown.png
+project_image_alt: Edge's back button menu showing Close and go back to ChatGPT on a recipe page
+project_image_width: 1600
+project_image_height: 1220
 tags:
     - chromium
     - browser
