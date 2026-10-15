@@ -27,6 +27,7 @@ Writing includes all published articles; `travel` and `projects` categories also
 
 - `featured: true` puts up to three newest flagged articles on the homepage, excluding them from recent writing. Limits live in `_config.yml`.
 - `selected: true` highlights a Projects entry; `project_name`, `project_summary`, and `project_url` customize its listing.
+- `projects_per_page` in `_config.yml` sets the number of other projects per page (default: six).
 - App pages use `project: true`, a title, an ISO date (e.g. `2026-01-01T10:00:00Z`), and `project_summary` in their front matter. Projects includes them automatically.
 - `published: false` hides a draft from the site and feed. Files in a public repository remain readable.
 

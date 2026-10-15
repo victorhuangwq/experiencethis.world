@@ -34,8 +34,15 @@ description: Things I’ve built or helped make. Some useful, some just for fun.
 {% assign other_projects = projects | where_exp: 'project', 'project.selected != true' %}
 {% if other_projects.size > 0 %}
   <section aria-labelledby="more-projects">
-    <div class="section-head"><h2 id="more-projects">{% if selected.size > 0 %}More things I’ve worked on{% else %}Things I’ve worked on{% endif %}</h2></div>
-    {% for project in other_projects %}{% include post-row.html post=project project=true %}{% endfor %}
+    <div class="section-head"><h2 id="more-projects" tabindex="-1">{% if selected.size > 0 %}More things I’ve worked on{% else %}Things I’ve worked on{% endif %}</h2></div>
+    <div id="project-list" data-page-size="{{ site.projects_per_page | default: 6 | escape }}">
+      {% for project in other_projects %}{% include post-row.html post=project project=true %}{% endfor %}
+    </div>
+    <nav class="project-pagination" aria-label="Project pages" hidden>
+      <p class="pagination-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="pagination-links"></div>
+    </nav>
   </section>
+  <script src="{{ '/assets/js/project-pagination.js' | relative_url }}" defer></script>
 {% endif %}
 {% if projects.size == 0 %}<p class="empty-note">Something to tinker with is on the way.</p>{% endif %}

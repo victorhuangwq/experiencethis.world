@@ -18,6 +18,7 @@ author:
 
 home_post_limit: 3
 home_feature_limit: 3
+projects_per_page: 6
 
 plugins:
   - jekyll-feed
