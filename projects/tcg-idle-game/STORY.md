@@ -341,6 +341,9 @@ the exception: those end the run.
 | **Bad end: Scalper / Counterfeiter** | Accept a dishonest business offer | The offer itself |
 | **Shame** | Third strike | Any strike source |
 
+The list of endings found is stored separately from the save, so it
+survives a shame game over or a bad ending and carries over to every new run.
+
 ### Champion deck
 
 The championship against xX_K3V1N_Xx needs a specific overpowered deck. Each
@@ -370,9 +373,9 @@ business ending.
 
 ## Open questions
 
-- Do endings already found carry over to the next run, including after a
-  shame game over (an "endings found" list kept outside the save)?
-- Is the current prestige system replaced by the endings, or kept?
+- Is the current prestige system (reset at 500 cards or $10k collection
+  value, keep 10% as starting money) removed in favour of the endings?
+  Recommended: yes.
 - Final balance for the rough numbers above, after Act 1 is playable.
 
 ## Brain dump
