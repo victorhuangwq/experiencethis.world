@@ -1564,9 +1564,13 @@ class BattleSystem {
      * @param {boolean} playerWon - Whether the player won the tournament
      */
     processTournamentResults(playerWon) {
+        const tournamentSystem = this.gameManager.tournamentSystem;
+        const tournamentName = tournamentSystem.tournamentLevels[this.tournamentLevel].name;
+
         if (!playerWon) {
             // Player lost, no rewards
             if (this.gameManager.ui) {
+                this.gameManager.ui.logMessage(tournamentSystem.generateTournamentResultArt({ isWin: false, tournamentName }));
                 this.gameManager.ui.logMessage(`You were defeated in the tournament.`);
             }
             return;
@@ -1600,12 +1604,13 @@ class BattleSystem {
         this.gameManager.gameState.packs += packReward;
         
         // Update highest tournament won if this is a new record
-        if (!this.gameManager.gameState.highestTournamentWon || this.tournamentLevel > this.gameManager.gameState.highestTournamentWon) {
+        if (this.tournamentLevel > (this.gameManager.gameState.highestTournamentWon ?? -1)) {
             this.gameManager.gameState.highestTournamentWon = this.tournamentLevel;
         }
-        
+
         // Notify player
         if (this.gameManager.ui) {
+            this.gameManager.ui.logMessage(tournamentSystem.generateTournamentResultArt({ isWin: true, tournamentName, reward: moneyReward }));
             this.gameManager.ui.logMessage(`You won the tournament! Earned ${Utils.formatCurrency(moneyReward)} and ${packReward} card packs.`);
             this.gameManager.ui.updateUI();
         }

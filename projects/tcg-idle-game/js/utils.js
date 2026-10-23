@@ -54,6 +54,8 @@ const Utils = {
             upgrades: gameState.upgrades,
             incomeRate: gameState.incomeRate,
             lastIncomeTime: gameState.lastIncomeTime,
+            highestTournamentWon: gameState.highestTournamentWon,
+            shop: gameState.shop,
             lastSaved: Date.now()
         };
         

@@ -21,6 +21,41 @@ class ShopSystem {
             displays: { level: 0, cost: 150, effect: 0.1, description: "Improve chance of sales" },
             location: { level: 0, cost: 500, effect: 0.2, description: "Better location, more premium customers" }
         };
+
+        // Restore saved shop progress
+        const saved = gameManager.gameState.shop;
+        this.wasOpen = false;
+        if (saved) {
+            this.reputation = saved.reputation || 0;
+            this.customers = saved.customers || 0;
+            this.salesHistory = saved.salesHistory || [];
+            this.wasOpen = !!saved.isOpen;
+            for (const key in this.upgrades) {
+                if (saved.upgrades && saved.upgrades[key]) {
+                    this.upgrades[key].level = saved.upgrades[key].level || 0;
+                }
+            }
+            this.customerRate = 1 + (this.upgrades.advertising.level * this.upgrades.advertising.effect);
+        }
+    }
+
+    /**
+     * Get the shop data to store in the save file
+     * @returns {Object} - Shop save data
+     */
+    getSaveData() {
+        const upgrades = {};
+        for (const key in this.upgrades) {
+            upgrades[key] = { level: this.upgrades[key].level };
+        }
+
+        return {
+            isOpen: this.isOpen,
+            reputation: this.reputation,
+            customers: this.customers,
+            salesHistory: this.salesHistory.slice(-50),
+            upgrades: upgrades
+        };
     }
     
     /**

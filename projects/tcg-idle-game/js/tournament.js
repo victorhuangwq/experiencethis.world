@@ -20,7 +20,7 @@ class TournamentSystem {
      */
     getAvailableTournaments() {
         const collectionSize = this.gameManager.gameState.collection.length;
-        const highestTournamentWon = this.gameManager.gameState.highestTournamentWon || -1;
+        const highestTournamentWon = this.gameManager.gameState.highestTournamentWon ?? -1;
         
         // Filter tournaments based on collection size and progression
         // Each tournament unlocks the next one after winning

@@ -10,7 +10,13 @@ class GameState {
         this.packs = 0;
         this.collection = [];
         this.phase = 'Collector';
-        
+
+        // Index of the highest tournament won (-1 = none yet)
+        this.highestTournamentWon = -1;
+
+        // Saved shop progress, filled in by ShopSystem before each save
+        this.shop = null;
+
         // Passive income rate (money per second)
         this.incomeRate = 0.1;
         this.lastIncomeTime = Date.now();
@@ -49,7 +55,9 @@ class GameState {
         this.packs = savedGame.packs;
         this.collection = savedGame.collection;
         this.phase = savedGame.phase;
-        
+        this.highestTournamentWon = savedGame.highestTournamentWon ?? -1;
+        this.shop = savedGame.shop || null;
+
         // Make sure to preserve the default structure with saved values
         if (savedGame.upgrades) {
             // For each default upgrade
@@ -63,8 +71,12 @@ class GameState {
                     };
                 }
             }
+
+            // Saved interval ids belong to the previous page session
+            this.upgrades.autoOpener.interval = null;
+            this.upgrades.autoBuyer.interval = null;
         }
-        
+
         // Make sure lastIncomeTime is properly set
         if (savedGame.lastIncomeTime) {
             this.lastIncomeTime = savedGame.lastIncomeTime;

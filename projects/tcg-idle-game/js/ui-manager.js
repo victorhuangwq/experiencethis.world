@@ -9,6 +9,11 @@ class UIManager {
         this.initElements();
         this.initEventListeners();
         this.updateUI();
+        
+        // Reopen the shop if it was open when the game was last saved
+        if (this.gameManager.shopSystem.wasOpen && !this.shopContainer.classList.contains('hidden')) {
+            this.toggleShopButton.click();
+        }
     }
     
     /**
@@ -242,7 +247,11 @@ class UIManager {
         
         this.packsDisplay.textContent = gameState.packs;
         
-        // Update phase display
+        // Update phase display and announce phase changes
+        if (this.lastPhase && this.lastPhase !== gameState.phase) {
+            this.logMessage(`New phase: ${gameState.phase}! ${gameState.phases[gameState.phase].description}.`);
+        }
+        this.lastPhase = gameState.phase;
         this.phaseDisplay.textContent = gameState.phase;
         
         // Update button states
@@ -255,8 +264,13 @@ class UIManager {
         
         // Show/hide tournaments based on phase
         if (gameState.phase === 'Competitor' || gameState.collection.length >= 20) {
-            if (this.tournamentsContainer.classList.contains('hidden')) {
-                this.tournamentsContainer.classList.remove('hidden');
+            this.tournamentsContainer.classList.remove('hidden');
+        }
+        
+        // Refresh the tournament list when tournaments unlock or lock
+        if (!this.tournamentsContainer.classList.contains('hidden')) {
+            const availableCount = this.gameManager.tournamentSystem.getAvailableTournaments().length;
+            if (availableCount !== this.tournamentCount) {
                 this.updateTournamentList();
             }
         }
@@ -398,6 +412,7 @@ class UIManager {
         
         // Get available tournaments
         const tournaments = this.gameManager.tournamentSystem.getAvailableTournaments();
+        this.tournamentCount = tournaments.length;
         
         if (tournaments.length === 0) {
             const message = document.createElement('p');
@@ -423,14 +438,10 @@ class UIManager {
             // Add enter tournament event listener
             tournamentElement.querySelector('.enter-tournament').addEventListener('click', () => {
                 const result = this.gameManager.enterTournament(index);
+                // The result art is logged when the tournament ends
+                this.logMessage(result.message);
                 if (result.success) {
-                    // Display tournament result
-                    const resultArt = this.gameManager.tournamentSystem.generateTournamentResultArt(result);
-                    this.logMessage(resultArt);
-                    this.logMessage(result.message);
                     this.updateUI();
-                } else {
-                    this.logMessage(result.message);
                 }
             });
             
@@ -456,7 +467,7 @@ class UIManager {
                 Common: ${stats.byRarity.common || 0} | 
                 Uncommon: ${stats.byRarity.uncommon || 0} | 
                 Rare: ${stats.byRarity.rare || 0} | 
-                Ultra-Rare: ${stats.byRarity.ultraRare || 0} | 
+                Ultra-Rare: ${stats.byRarity['ultra-rare'] || 0} | 
                 Legendary: ${stats.byRarity.legendary || 0}
             </p>
         `;
@@ -550,6 +561,12 @@ class UIManager {
         
         // Add to log and scroll to bottom
         this.gameLog.appendChild(logEntry);
+        
+        // Keep the log from growing without limit during long idle sessions
+        while (this.gameLog.children.length > 200) {
+            this.gameLog.firstChild.remove();
+        }
+        
         this.gameLog.scrollTop = this.gameLog.scrollHeight;
     }
 }

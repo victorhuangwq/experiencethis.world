@@ -16,8 +16,9 @@ class GameManager {
         // Initialize shop system
         this.shopSystem = new ShopSystem(this);
         
-        // Start auto-save
+        // Start auto-save, and save when the page is closed
         this.startAutoSave();
+        window.addEventListener('pagehide', () => this.saveGame());
         
         // Start passive income
         this.startPassiveIncome();
@@ -154,7 +155,10 @@ class GameManager {
         this.passiveIncomeInterval = setInterval(() => {
             // Update passive income
             const income = this.gameState.updatePassiveIncome();
-            
+
+            // Money-gated phases can be reached without opening a pack
+            this.gameState.checkPhaseProgression();
+
             // Update UI if needed
             if (this.ui) {
                 this.ui.updateUI();
@@ -176,8 +180,21 @@ class GameManager {
         }
         
         this.autoSaveInterval = setInterval(() => {
-            this.gameState.saveGame();
+            this.saveGame();
         }, 30000); // Save every 30 seconds
+    }
+
+    /**
+     * Save the game state, including shop progress
+     */
+    saveGame() {
+        // Skip saving while the save is being deleted or reset
+        if (this.saveDisabled) {
+            return;
+        }
+
+        this.gameState.shop = this.shopSystem.getSaveData();
+        this.gameState.saveGame();
     }
     
     /**
@@ -232,33 +249,20 @@ class GameManager {
      * @param {Object} bonuses - Bonuses to apply after reset
      */
     resetGame(bonuses = {}) {
-        // Save some stats for bonuses
-        const oldCollectionSize = this.gameState.collection.length;
-        
-        // Reset to a new game state
-        this.gameState = new GameState();
-        
-        // Apply bonuses based on previous progress
-        if (bonuses.startingMoney) {
-            this.gameState.money += bonuses.startingMoney;
-        } else {
-            // Default bonus is 10% of collection size as starting money
-            this.gameState.money += Math.floor(oldCollectionSize * 0.1);
-        }
-        
-        // Save the new state
-        this.gameState.saveGame();
-        
-        // Restart auto opener if applicable
-        if (this.gameState.upgrades.autoOpener.purchased) {
-            this.startAutoOpener();
-        }
-        
-        // Update UI
-        if (this.ui) {
-            this.ui.updateUI();
-            this.ui.logMessage('Game reset with bonuses applied.');
-        }
+        // Default bonus is 10% of collection size as starting money
+        const startingMoney = bonuses.startingMoney ?? Math.floor(this.gameState.collection.length * 0.1);
+
+        // Remove the old save first, otherwise GameState would load it again
+        this.saveDisabled = true;
+        localStorage.removeItem('tcgIdleGameSave');
+
+        // Save a fresh state with the bonus applied
+        const freshState = new GameState();
+        freshState.money += startingMoney;
+        freshState.saveGame();
+
+        // Reload so timers, shop, and UI all start from the fresh save
+        location.reload();
     }
 }
 

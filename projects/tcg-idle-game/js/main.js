@@ -65,10 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             prestigeBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to prestige? You will lose your collection but gain bonuses for your next run.')) {
+                    // Use the collection value at the time of prestige
+                    const currentStats = gameManager.gameState.getCollectionStats();
                     gameManager.resetGame({
-                        startingMoney: Math.floor(stats.totalValue * 0.1)
+                        startingMoney: Math.floor(currentStats.totalValue * 0.1)
                     });
-                    uiManager.logMessage(`Prestiged! Started new game with ${Utils.formatCurrency(gameManager.gameState.money)}`);
                 }
             });
             
