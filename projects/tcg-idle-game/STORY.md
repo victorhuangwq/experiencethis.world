@@ -16,18 +16,48 @@ that appear one at a time as the player earns them.
 - Each act changes what the player does, not just the size of the numbers.
   Earlier mechanics either get automated or gain a new purpose, so the early
   game never becomes redundant.
-- A full playthrough takes several hours, much of it idle.
+- A full playthrough to the first ending takes about 5 days of wall-clock
+  time and about 8 hours of active play (see Pacing).
 - Being kind in the hobby is a core rule. Being a scalper ends the game.
+
+## Cast and names
+
+| Name | Who | Notes |
+|---|---|---|
+| **Critter Clash** | The trading card game itself | The in-game TCG everyone collects |
+| **Pebbleton** | The town | |
+| **CARD-O-MATIC 3000** | The vending machine | Has a personality; occasionally eats a coin |
+| **Pip** | The kid in the vending machine line | Grows up over the game: friend, then rival, then a regular at your shop |
+| **Gus** | Owner of *Gus's Games & Grub*, the hobby store | Runs locals; holds new sets for regulars he trusts |
+| **Officer Dale** | Mall security | Delivers the shame ending |
+| **PackDrop.com** | The online store | Shipping arrives at clock times |
+| **Mint Condition Co.** | The card grading company | Grades cards 1-10 |
+| **Card-a-Palooza** | The card show at the community center | Scheduled events |
+| **Trust-Me Trevor** | Trader with suspiciously shiny cards | Sells fakes |
+| **Doug** | A dad with his kid's binder | Honesty test |
+| **Mildred** | Obsessive collector | Will trade anything for a *Wet Sock Goblin* |
+| **Riley** | Regionals rival | Mostly plays Water (a tell) |
+| **Flip Resellington** | The shady businessman | Makes the dishonest offers |
+| **xX_K3V1N_Xx** | The reigning world champion and final rival | Real name Kevin, 34. Has been world champion for 11 years. Wears a cape. Plays the netdeck everyone calls "The Meta". Says "skill issue" when he wins and "lag" when he loses, even though it's a card game. |
+
+Named cards so far:
+
+- **Wet Sock Goblin**: a fixed common Mildred is obsessed with.
+- **Absolutely Massive Dragon**: a legendary, found at a card show.
+- **Golden Paperclip Phoenix**: the legendary at the end of the trade-up chain.
+- **CARD-O-MATIC Prime**: a vending-machine promo, only in special packs.
+- **Champion's Crown**: the nationals prize card.
+- **Pip's Favourite**: a gift from Pip, only if the player was kind to Pip.
 
 ## Acts
 
 | Act | Location | New verbs | Unlocked by |
 |---|---|---|---|
 | 1 | Vending machine | Buy one pack, open it, sell duplicates to a classmate | Start |
-| 2 | Hobby store | Choose a set, binder, first trades, Friday locals | **Open** (e.g. 30 cards, or the kid mentions the store) |
-| 3 | Online store and deck building | Preorders, shipping, building real decks, regionals | **Open** |
-| 4 | Card shows | Rent a table, haggle, hunt specific cards, nationals | **Open** |
-| 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine | **Open** |
+| 2 | Hobby store | Choose a set, binder, first trades, locals | Pip mentions Gus's store after the first kindness event, or 30 cards |
+| 3 | Online store and deck building | Preorders, shipping, building real decks, regionals | Winning locals for the first time (Gus mentions PackDrop.com) |
+| 4 | Card shows and grading | Rent a table, haggle, hunt specific cards, grading, nationals | First booster box delivered |
+| 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine | Set 2 released, plus a money target |
 
 Act 5 closes the loop: the player ends up stocking the vending machine from
 Act 1, and the kid from the vending machine line comes back as a teenager
@@ -64,6 +94,78 @@ is there. A first sketch of the vending machine:
 - Other scenes to draw: hobby store counter, the player's doorstep (packages
   arriving), the tournament table, a card show floor, and the player's own shop.
 
+## Pacing
+
+Target: about **8 hours of active play spread over about 5 days**, reaching
+the first ending on day 5. The other endings can be chased afterwards.
+
+### Principles
+
+- **The first session hooks hard.** Act 1 is fully active and short
+  (about 30 minutes), with no waiting. The first session should reach the
+  hobby store and end with a reason to come back the next day.
+- **One new system per day.** Each day of play introduces something new, so
+  the game keeps changing.
+- **Every check-in follows the same loop: collect, decide, send off.** Collect
+  what arrived (packages, graded cards, shop income), make a few decisions
+  (trades, deck, a tournament), then send something off that will arrive
+  later (an order, a card to grade).
+- **Never make an active player wait with nothing to do.** While packages
+  and grading are pending, there is always a pack to open, a trade, or a
+  tournament to play.
+- **Never punish being away.** Offline income accrues while away, capped at
+  8 hours, so checking in matters but sleeping is never a loss. The cap is
+  shown in-world ("Your piggy bank is full!").
+- **Clock-time gates set the minimum length; money and cards set the
+  difficulty.** Set releases are the hard gates (see below), so a very active
+  player can't finish in one day. Everything else is a soft gate the player
+  can push through faster by playing well.
+- **Waits get longer as the game goes on.** Minutes on day 1, hours from
+  day 2.
+
+### Day by day
+
+| Day | Active time | Acts | Main beats | Reason to come back |
+|---|---|---|---|---|
+| 1 | about 2 h | 1 -> 2 | Vending machine (0:00), first Pip event (about 0:15), hobby store (about 0:30), first locals win (about 1:15), binder and first trades, PackDrop.com unlocks (about 2:00) | First online order arrives the next morning; the Set 2 release date is announced |
+| 2 | about 1.5 h | 3 -> 4 | First booster box, real deck building, regionals vs Riley, first Card-a-Palooza, trade-up chain step 1, grading unlocks | Cards come back from grading overnight; Set 2 preorder |
+| 3 | about 1.5 h | 4 | Set 2 releases (prices spike; Flip's first offer: buy out every store), nationals, first table at a card show, trade-up steps 2-4 | Preorder boxes, graded cards, the next card show |
+| 4 | about 1.5 h | 5 | Open your own shop, shop earns money idle, host your first locals, Flip's second offer (print counterfeits), Set 3 announced | The shop runs overnight; Set 3 release |
+| 5 | about 1.5 h | 5 | Set 3 releases, the last legendaries, the championship vs xX_K3V1N_Xx, first ending | Post-game: chase the other endings |
+
+Rough active time per act: Act 1 0.5 h, Act 2 1.5 h, Act 3 2 h, Act 4 2 h,
+Act 5 2 h.
+
+### Clock schedule
+
+All times come from the real clock and are saved as timestamps.
+
+| Event | Schedule | Notes |
+|---|---|---|
+| Vending machine restock | Every 15 minutes (:00, :15, :30, :45) | About 6 packs per restock; a special pack in about 1 of 10 restocks |
+| Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
+| Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
+| Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
+| Nationals | Once per calendar day | One entry per day |
+| Championship | Opens once Set 3 has released and you've won nationals | One-time event, can be retried daily |
+| Card-a-Palooza | Starts every 4 hours (00:00, 04:00, ...) and runs 3 hours | Covers 75% of the day, so a few check-ins a day will usually catch one. One trade-up step per show. |
+| PackDrop.com shipping | Standard: 4 hours. Express: 1 hour for a fee. Slow free shipping: 12 hours | Slow shipping is cheapest and arrives overnight |
+| Mint Condition Co. grading | Standard: 12 hours. Express: 3 hours, much more expensive | |
+| Set 2 release | 48 hours after the game started, rounded up to the hour | Shown as a date and time ("Releases Thu 6:00 PM") |
+| Set 3 release | 96 hours after the game started, rounded up to the hour | |
+
+### Rough numbers (to be tuned)
+
+| Thing | Starting value |
+|---|---|
+| Allowance | About $3 per minute at the start, so roughly one vending pack per minute |
+| Vending machine pack | $3 |
+| Hobby store pack | $4.50 (50% markup) |
+| PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
+| Selling a random common | $0.05 to $0.25 |
+| Business ending target | About $250,000 earned in total (to be tuned once shop income is known) |
+| Fixed cards | About 30 per set across 3 sets, plus about 12 promos, so roughly 100 to complete |
+
 ## Cards
 
 - **Common cards are randomly generated** (as they are now), so packs keep
@@ -75,7 +177,7 @@ is there. A first sketch of the vending machine:
   preorders matter.
 - The binder shows completion for the fixed cards in each set
   (e.g. "Set 1: 41/60").
-- **Open:** how many fixed cards per set, and how many sets in a full game.
+- About 30 fixed cards per set across 3 sets, plus promos (see Pacing).
 
 ## Where packs come from
 
@@ -104,13 +206,12 @@ while the page is open:
 
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
-- The vending machine restocks at fixed clock times (e.g. on the hour).
-- Card shows and Friday locals run on a schedule of real clock times.
+- The vending machine restocks at fixed clock times.
+- Card shows and tournaments run on a schedule of real clock times.
 - New set releases have a release time, and preorders arrive then.
 - Everything is stored as timestamps in the save, so closing the page never
   loses progress.
-- **Open:** how often scheduled events happen, so a player who visits a few
-  times a day still sees them.
+- The full schedule is in Pacing > Clock schedule.
 
 ## The kindness code: three strikes
 
@@ -193,9 +294,44 @@ Card shows are scheduled events (see clock time) where the player can:
 
 Pricing far above market means no sales. Knowingly selling a fake is a strike.
 
+## Card grading
+
+Unlocks in Act 4. The player mails a card to Mint Condition Co. and it comes
+back at a clock time (see Clock schedule) in a sealed plastic case with a
+grade from 1 to 10.
+
+```
+ .------------------------.
+ | MINT CONDITION CO.  10 |
+ | ABSOLUTELY MASSIVE     |
+ | DRAGON      GEM MINT   |
+ |------------------------|
+ |  .------------------.  |
+ |  |      /\_/\       |  |
+ |  |     ( o.o )      |  |
+ |  |      > ^ <       |  |
+ |  '------------------'  |
+ '------------------------'
+```
+
+- Every card has a hidden condition. Cards straight from a fresh pack are
+  in the best shape; cards that have been traded around a lot are worse.
+- The grade multiplies the card's value. For example: 10 Gem Mint ×10,
+  9 ×3, 8 ×1.5, 6 or lower ×0.8.
+- **The main trade-off: a graded card is sealed and can't be played.** Do you
+  grade your best legendary for money and collector prestige, or keep it in
+  your deck for the championship? The player can crack the case open to play
+  the card, but loses the grade.
+- Graded cards sell best at card shows, so grading feeds the business path.
+- The binder has a "Gem Mint shelf" for 10s, as a collector side goal.
+- Another dishonest offer for the business path: Flip offers to "reseal"
+  low-grade cards into 10 cases. Accepting it gives the bad ending.
+
 ## Endings
 
-The game has several endings. Reaching one shows its end screen.
+The game has several endings. Reaching one shows its end screen, then the
+player can keep playing to chase the others. The shame and bad endings are
+the exception: those end the run.
 
 | Ending | Condition | Required story beat |
 |---|---|---|
@@ -207,10 +343,20 @@ The game has several endings. Reaching one shows its end screen.
 
 ### Champion deck
 
-The championship needs a specific overpowered deck built from fixed
-legendaries. Each piece should come from a different source (a vending promo,
-the trade-up chain, a tournament prize, a card show find), so the champion
-path touches every system.
+The championship against xX_K3V1N_Xx needs a specific overpowered deck. Each
+piece comes from a different source, so the champion path touches every
+system:
+
+| Card | Source |
+|---|---|
+| CARD-O-MATIC Prime | A special pack from the vending machine |
+| Golden Paperclip Phoenix | The end of the trade-up chain |
+| Champion's Crown | Winning nationals |
+| Absolutely Massive Dragon | A card show find |
+| Pip's Favourite | A gift from Pip, only if the player was kind to Pip |
+
+So the kindness code matters for the champion ending too: being unkind to Pip
+makes the champion deck impossible.
 
 ### Business offers
 
@@ -224,14 +370,10 @@ business ending.
 
 ## Open questions
 
-- Is an ending final, or can the player keep playing afterwards to reach the
-  others?
 - Do endings already found carry over to the next run, including after a
   shame game over (an "endings found" list kept outside the save)?
-- Act unlock conditions and the money target for the business ending.
-- Fixed cards per set and number of sets.
 - Is the current prestige system replaced by the endings, or kept?
-- Character names and recurring cast.
+- Final balance for the rough numbers above, after Act 1 is playable.
 
 ## Brain dump
 
