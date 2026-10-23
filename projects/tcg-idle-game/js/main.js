@@ -51,32 +51,4 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('open-pack').click();
         }
     });
-    
-    // Add prestige button when player reaches certain milestones
-    const checkForPrestige = () => {
-        const stats = gameManager.gameState.getCollectionStats();
-        
-        // When the player has at least 500 cards or $10,000, show prestige option
-        if ((stats.total >= 500 || stats.totalValue >= 10000) && !document.getElementById('prestige-button')) {
-            const prestigeBtn = document.createElement('button');
-            prestigeBtn.id = 'prestige-button';
-            prestigeBtn.className = 'upgrade';
-            prestigeBtn.textContent = 'Prestige: Reset with Bonuses';
-            
-            prestigeBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to prestige? You will lose your collection but gain bonuses for your next run.')) {
-                    // Use the collection value at the time of prestige
-                    const currentStats = gameManager.gameState.getCollectionStats();
-                    gameManager.resetGame({
-                        startingMoney: Math.floor(currentStats.totalValue * 0.1)
-                    });
-                }
-            });
-            
-            document.getElementById('upgrades').appendChild(prestigeBtn);
-        }
-    };
-    
-    // Check for prestige eligibility every minute
-    setInterval(checkForPrestige, 60000);
 });

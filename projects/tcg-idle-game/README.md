@@ -22,7 +22,6 @@ In this simulator, you start as a casual TCG collector opening card packs. You'l
 - **Collection Management**: Build your collection and sell duplicates
 - **Tournaments**: Compete in turn-based battles with your cards to win prizes
 - **Shop Management**: Run your own card shop with customers and upgrades
-- **Prestige System**: Reset with bonuses for long-term progression
 
 ## Tournament & Battle System
 
@@ -70,7 +69,6 @@ The TCG Simulator includes a strategic battle system where your cards compete ag
    - Use strategy breaks between battles to heal and reorganize
 6. Win tournaments to unlock higher tournament tiers
 7. Open your shop when you reach the required collection size and money
-8. Prestige when you've accumulated enough wealth and cards
 
 ## Keyboard Shortcuts
 

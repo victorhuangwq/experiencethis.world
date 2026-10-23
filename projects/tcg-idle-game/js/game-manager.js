@@ -280,24 +280,6 @@ class GameManager {
     purchaseShopUpgrade(upgradeName) {
         return this.shopSystem.purchaseUpgrade(upgradeName);
     }
-    
-    /**
-     * Reset the game (prestige)
-     * @param {Object} bonuses - Bonuses to apply after reset
-     */
-    resetGame(bonuses = {}) {
-        // Default bonus is 10% of collection size as starting money
-        const startingMoney = bonuses.startingMoney ?? Math.floor(this.gameState.collection.length * 0.1);
-
-        // Replace the save with a fresh state that has the bonus applied
-        this.deleteSave();
-        const freshState = new GameState();
-        freshState.money += startingMoney;
-        SaveSystem.save({ game: freshState.toSaveData() });
-
-        // Reload so timers, shop, and UI all start from the fresh save
-        location.reload();
-    }
 }
 
 // Make GameManager available globally

@@ -344,6 +344,8 @@ the exception: those end the run.
 The list of endings found is stored separately from the save, so it
 survives a shame game over or a bad ending and carries over to every new run.
 
+There is no prestige system; the endings are the long-term goals.
+
 ### Champion deck
 
 The championship against xX_K3V1N_Xx needs a specific overpowered deck. Each
@@ -373,9 +375,6 @@ business ending.
 
 ## Open questions
 
-- Is the current prestige system (reset at 500 cards or $10k collection
-  value, keep 10% as starting money) removed in favour of the endings?
-  Recommended: yes.
 - Final balance for the rough numbers above, after Act 1 is playable.
 
 ## Brain dump
