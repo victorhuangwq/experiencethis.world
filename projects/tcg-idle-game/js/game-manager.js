@@ -5,7 +5,14 @@
 
 class GameManager {
     constructor() {
+        // Load the save before starting any timers
+        const saveData = SaveSystem.load();
+        
         this.gameState = new GameState();
+        if (saveData && saveData.game) {
+            this.gameState.applySaveData(saveData.game);
+        }
+        
         this.autoSaveInterval = null;
         this.passiveIncomeInterval = null;
         this.autoSellInterval = null;
@@ -15,10 +22,24 @@ class GameManager {
         
         // Initialize shop system
         this.shopSystem = new ShopSystem(this);
+        if (saveData && saveData.shop) {
+            this.shopSystem.applySaveData(saveData.shop);
+        }
         
         // Start auto-save, and save when the page is closed
         this.startAutoSave();
         window.addEventListener('pagehide', () => this.saveGame());
+        
+        // If another tab saves the game, stop saving here so the tabs
+        // don't overwrite each other's progress
+        window.addEventListener('storage', (event) => {
+            if (event.key === SaveSystem.key && !this.saveDisabled) {
+                this.saveDisabled = true;
+                if (this.ui) {
+                    this.ui.logMessage('The game was saved from another tab. Progress in this tab will no longer be saved; reload to continue here.');
+                }
+            }
+        });
         
         // Start passive income
         this.startPassiveIncome();
@@ -193,8 +214,24 @@ class GameManager {
             return;
         }
 
-        this.gameState.shop = this.shopSystem.getSaveData();
-        this.gameState.saveGame();
+        const saved = SaveSystem.save({
+            game: this.gameState.toSaveData(),
+            shop: this.shopSystem.toSaveData()
+        });
+        
+        // Warn once if the browser refuses to store the save
+        if (!saved && !this.saveWarningShown && this.ui) {
+            this.ui.logMessage('Warning: your progress could not be saved. Local storage may be full or disabled.');
+            this.saveWarningShown = true;
+        }
+    }
+    
+    /**
+     * Delete the save and stop saving until the page reloads
+     */
+    deleteSave() {
+        this.saveDisabled = true;
+        SaveSystem.clear();
     }
     
     /**
@@ -252,14 +289,11 @@ class GameManager {
         // Default bonus is 10% of collection size as starting money
         const startingMoney = bonuses.startingMoney ?? Math.floor(this.gameState.collection.length * 0.1);
 
-        // Remove the old save first, otherwise GameState would load it again
-        this.saveDisabled = true;
-        localStorage.removeItem('tcgIdleGameSave');
-
-        // Save a fresh state with the bonus applied
+        // Replace the save with a fresh state that has the bonus applied
+        this.deleteSave();
         const freshState = new GameState();
         freshState.money += startingMoney;
-        freshState.saveGame();
+        SaveSystem.save({ game: freshState.toSaveData() });
 
         // Reload so timers, shop, and UI all start from the fresh save
         location.reload();

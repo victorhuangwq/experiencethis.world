@@ -140,6 +140,45 @@ const CardData = {
     },
     
     /**
+     * Card fields stored in the save, in order. The special ability is
+     * stored by name after these fields.
+     */
+    saveFields: ['id', 'name', 'type', 'rarity', 'value', 'hp', 'attack'],
+
+    /**
+     * Pack a card into a compact array for the save
+     * @param {Object} card - Card object
+     * @returns {Array} - Packed card
+     */
+    packCard: function(card) {
+        const packed = this.saveFields.map(field => card[field]);
+        packed.push(card.specialAbility ? card.specialAbility.name : null);
+        return packed;
+    },
+
+    /**
+     * Rebuild a card from its packed save form
+     * @param {Array} packed - Packed card
+     * @returns {Object|null} - Card object, or null if the entry is invalid
+     */
+    unpackCard: function(packed) {
+        if (!Array.isArray(packed)) {
+            return null;
+        }
+
+        const card = {};
+        this.saveFields.forEach((field, index) => {
+            card[field] = packed[index];
+        });
+        card.maxHp = card.hp;
+
+        const abilityName = packed[this.saveFields.length];
+        card.specialAbility = this.specialAbilities.find(ability => ability.name === abilityName) || null;
+
+        return card;
+    },
+
+    /**
      * Generate a pack of cards
      * @param {number} packSize - Number of cards in the pack
      * @param {boolean} improvedOdds - Whether to improve odds for better rarities

@@ -22,28 +22,33 @@ class ShopSystem {
             location: { level: 0, cost: 500, effect: 0.2, description: "Better location, more premium customers" }
         };
 
-        // Restore saved shop progress
-        const saved = gameManager.gameState.shop;
+        // Whether the shop was open when the game was saved
         this.wasOpen = false;
-        if (saved) {
-            this.reputation = saved.reputation || 0;
-            this.customers = saved.customers || 0;
-            this.salesHistory = saved.salesHistory || [];
-            this.wasOpen = !!saved.isOpen;
-            for (const key in this.upgrades) {
-                if (saved.upgrades && saved.upgrades[key]) {
-                    this.upgrades[key].level = saved.upgrades[key].level || 0;
-                }
-            }
-            this.customerRate = 1 + (this.upgrades.advertising.level * this.upgrades.advertising.effect);
-        }
     }
 
     /**
-     * Get the shop data to store in the save file
+     * Restore shop progress from the save
+     * @param {Object} data - Shop save data
+     */
+    applySaveData(data) {
+        this.reputation = data.reputation || 0;
+        this.customers = data.customers || 0;
+        this.salesHistory = Array.isArray(data.salesHistory) ? data.salesHistory : [];
+        this.wasOpen = !!data.isOpen;
+
+        for (const key in this.upgrades) {
+            if (data.upgrades && data.upgrades[key]) {
+                this.upgrades[key].level = data.upgrades[key].level || 0;
+            }
+        }
+        this.customerRate = 1 + (this.upgrades.advertising.level * this.upgrades.advertising.effect);
+    }
+
+    /**
+     * Get the shop data to store in the save
      * @returns {Object} - Shop save data
      */
-    getSaveData() {
+    toSaveData() {
         const upgrades = {};
         for (const key in this.upgrades) {
             upgrades[key] = { level: this.upgrades[key].level };

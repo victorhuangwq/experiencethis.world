@@ -14,9 +14,6 @@ class GameState {
         // Index of the highest tournament won (-1 = none yet)
         this.highestTournamentWon = -1;
 
-        // Saved shop progress, filled in by ShopSystem before each save
-        this.shop = null;
-
         // Passive income rate (money per second)
         this.incomeRate = 0.1;
         this.lastIncomeTime = Date.now();
@@ -38,51 +35,60 @@ class GameState {
             autoSeller: { purchased: false },
             incomeBoost: { purchased: false, level: 0, multiplier: 1 }
         };
-        
-        // Load saved game if exists
-        const savedGame = Utils.loadGame();
-        if (savedGame) {
-            this.loadSavedGame(savedGame);
-        }
     }
     
     /**
-     * Load a saved game state
-     * @param {Object} savedGame - Saved game data
+     * Get the game data to store in the save
+     * @returns {Object} - Game save data
      */
-    loadSavedGame(savedGame) {
-        this.money = savedGame.money;
-        this.packs = savedGame.packs;
-        this.collection = savedGame.collection;
-        this.phase = savedGame.phase;
-        this.highestTournamentWon = savedGame.highestTournamentWon ?? -1;
-        this.shop = savedGame.shop || null;
-
-        // Make sure to preserve the default structure with saved values
-        if (savedGame.upgrades) {
-            // For each default upgrade
-            for (const key in this.upgrades) {
-                // If the saved game has this upgrade
-                if (savedGame.upgrades[key]) {
-                    // Preserve the base structure but update with saved values
-                    this.upgrades[key] = {
-                        ...this.upgrades[key],
-                        ...savedGame.upgrades[key]
-                    };
-                }
+    toSaveData() {
+        return {
+            money: this.money,
+            packs: this.packs,
+            phase: this.phase,
+            highestTournamentWon: this.highestTournamentWon,
+            lastIncomeTime: this.lastIncomeTime,
+            collection: this.collection.map(card => CardData.packCard(card)),
+            upgrades: {
+                autoOpener: this.upgrades.autoOpener.purchased,
+                autoBuyer: this.upgrades.autoBuyer.purchased,
+                autoSeller: this.upgrades.autoSeller.purchased,
+                betterPacks: this.upgrades.betterPacks.purchased,
+                incomeBoost: this.upgrades.incomeBoost.level
             }
-
-            // Saved interval ids belong to the previous page session
-            this.upgrades.autoOpener.interval = null;
-            this.upgrades.autoBuyer.interval = null;
+        };
+    }
+    
+    /**
+     * Restore game data from the save, keeping defaults for missing or invalid values
+     * @param {Object} data - Game save data
+     */
+    applySaveData(data) {
+        const number = (value, fallback) => Number.isFinite(value) ? value : fallback;
+        
+        this.money = number(data.money, this.money);
+        this.packs = number(data.packs, this.packs);
+        this.phase = this.phases[data.phase] ? data.phase : this.phase;
+        this.highestTournamentWon = number(data.highestTournamentWon, this.highestTournamentWon);
+        
+        // Offline income is earned from this time, so never let it be in the future
+        this.lastIncomeTime = Math.min(number(data.lastIncomeTime, Date.now()), Date.now());
+        
+        if (Array.isArray(data.collection)) {
+            this.collection = data.collection
+                .map(packed => CardData.unpackCard(packed))
+                .filter(card => card !== null);
         }
-
-        // Make sure lastIncomeTime is properly set
-        if (savedGame.lastIncomeTime) {
-            this.lastIncomeTime = savedGame.lastIncomeTime;
-        } else {
-            this.lastIncomeTime = Date.now();
+        
+        const upgrades = data.upgrades || {};
+        for (const key of ['autoOpener', 'autoBuyer', 'autoSeller', 'betterPacks']) {
+            this.upgrades[key].purchased = !!upgrades[key];
         }
+        
+        const incomeBoostLevel = number(upgrades.incomeBoost, 0);
+        this.upgrades.incomeBoost.level = incomeBoostLevel;
+        this.upgrades.incomeBoost.purchased = incomeBoostLevel > 0;
+        this.upgrades.incomeBoost.multiplier = 1 + (incomeBoostLevel * 0.25);
     }
     
     /**
@@ -329,13 +335,6 @@ class GameState {
         }
         
         return stats;
-    }
-    
-    /**
-     * Save the current game state
-     */
-    saveGame() {
-        Utils.saveGame(this);
     }
 }
 

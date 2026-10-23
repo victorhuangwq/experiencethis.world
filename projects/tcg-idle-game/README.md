@@ -109,6 +109,6 @@ Press Shift+D+E+V or click in the invisible area at the bottom-right corner to a
 
 ## Technical Details
 
-The game is built with pure HTML, CSS, and JavaScript. It uses local storage to save your progress automatically. The battle system includes comprehensive validation and error handling to ensure a smooth experience even if card data becomes corrupted.
+The game is built with pure HTML, CSS, and JavaScript. It saves your progress automatically to local storage every 30 seconds and when the page closes. Saves are versioned (`js/save-system.js`): older saves are upgraded on load, cards are stored in a compact form, and an unreadable save is kept under a backup key instead of being overwritten. The battle system includes comprehensive validation and error handling to ensure a smooth experience even if card data becomes corrupted.
 
 Enjoy the game and happy collecting!

@@ -42,36 +42,6 @@ const Utils = {
     },
     
     /**
-     * Save game data to local storage
-     * @param {Object} gameState - Game state object to save
-     */
-    saveGame: function(gameState) {
-        const saveData = {
-            money: gameState.money,
-            packs: gameState.packs,
-            collection: gameState.collection,
-            phase: gameState.phase,
-            upgrades: gameState.upgrades,
-            incomeRate: gameState.incomeRate,
-            lastIncomeTime: gameState.lastIncomeTime,
-            highestTournamentWon: gameState.highestTournamentWon,
-            shop: gameState.shop,
-            lastSaved: Date.now()
-        };
-        
-        localStorage.setItem('tcgIdleGameSave', JSON.stringify(saveData));
-    },
-    
-    /**
-     * Load game data from local storage
-     * @returns {Object|null} - Loaded game state or null if no save exists
-     */
-    loadGame: function() {
-        const saveData = localStorage.getItem('tcgIdleGameSave');
-        return saveData ? JSON.parse(saveData) : null;
-    },
-    
-    /**
      * Create ASCII art for a card
      * @param {Object} card - Card object
      * @returns {string} - ASCII art representation

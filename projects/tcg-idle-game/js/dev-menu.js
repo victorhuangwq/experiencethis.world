@@ -191,9 +191,7 @@ class DevMenu {
      */
     deleteSaveData() {
         if (confirm('Are you sure you want to delete your save data? This cannot be undone.')) {
-            // Keep the page-close save from writing the data back
-            this.gameManager.saveDisabled = true;
-            localStorage.removeItem('tcgIdleGameSave');
+            this.gameManager.deleteSave();
             alert('Save data deleted. The page will now reload.');
             location.reload();
         }
