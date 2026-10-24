@@ -7,7 +7,7 @@ selected: true
 project_url: https://issues.chromium.org/issues/448173940
 project_action: View the Chromium feature
 project_summary: A Chromium feature that lets the back button close a new tab and return to the tab that opened it. Running as an experiment in Edge and Chrome.
-project_image: /assets/images/backtoopener-close-and-go-back-dropdown.png
+project_image: /assets/images/backtoopener-close-and-go-back-dropdown.webp
 project_image_alt: Edge's back button menu showing Close and go back to ChatGPT on a recipe page
 project_image_width: 1600
 project_image_height: 1220
@@ -22,7 +22,10 @@ description: "The story of BackToOpener, a Chromium feature that gives the back 
 
 Sometime last year I noticed something I'd been doing multiple times a day without thinking about it. I'd be deep in a conversation with an AI chat, it would link me somewhere, and after reading the page I'd instinctively click the back button to get back to the chat, except the button was greyed out and there was nothing to click. Then comes the little realization that back isn't available because this is a new tab, so I'd go find the X button instead. If the chat was the adjacent tab (which happens when the link is the newest thing I opened), closing the tab drops me right back into the conversation. Other times, when I had forty tabs open and the chat wasn't next door because I had opened a pile of links or shuffled my tabs around, I'd have to go hunt for it, or just give up and open a fresh chat.
 
-![Animation of the stranded state in Chrome: a recipe page opened from a Claude chat has a greyed-out back button, so the tab has to be closed by hand before hunting for the conversation in the tab bar](/assets/images/backtoopener-before-stranded.gif)
+<video controls autoplay muted loop playsinline preload="none" width="1000" height="740" poster="/assets/images/backtoopener-before-stranded-poster.webp" aria-label="Animation of the stranded state in Chrome: a recipe page opened from a Claude chat has a greyed-out back button, so the tab has to be closed by hand before hunting for the conversation in the tab bar">
+  <source src="/assets/images/backtoopener-before-stranded.mp4" type="video/mp4">
+  <a href="/assets/images/backtoopener-before-stranded.mp4">Watch the demonstration</a>.
+</video>
 *This is the status quo: a page opened from a Claude chat and a dead back button, so I instead had to shift over and find the X button to get back to the conversation.*
 
 For a long time I assumed this was simply how browsers work, and it turns out that this is only how browsers work *so far*.
@@ -71,7 +74,7 @@ What helped was pulling in evidence: Safari already does this on macOS and iOS, 
 
 The core behavior fits in one sentence: press back on a new tab → close the tab → return focus to the tab that opened it. But there was a design question underneath it that opened up a lot of complexity. What happens if the opener tab is already closed by the time you click back?
 
-![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png)
+<img src="/assets/images/backtoopener-back-button-enabled.webp" alt="A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out" width="1600" height="1220" loading="lazy" decoding="async">
 *This is the core behavior in Edge: a recipe opened from ChatGPT in a new tab, and the back button that would historically be greyed out is now live.*
 
 My first instinct was to just navigate the destination tab to the opener's URL, so that even if the original tab is gone, the user lands somewhere familiar. Doing that would require prepending an entry to the navigation history stack.
@@ -82,12 +85,12 @@ So we made the simpler call, which is that if the opener tab is gone, the back b
 
 One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry with the action it performs: in current Safari, the entry reads "Close and Return to [opener title]."
 
-![Safari's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and Return to ChatGPT"](/assets/images/backtoopener-safari-close-and-return.png)
+<img src="/assets/images/backtoopener-safari-close-and-return.webp" alt="Safari&#x27;s long-press back button menu on a recipe page opened from ChatGPT, showing &quot;Close and Return to ChatGPT&quot;" width="1600" height="1183" loading="lazy" decoding="async">
 *This is Safari today, where the long-press menu spells out the action.*
 
 We followed that pattern in Edge, where the entry reads "Close and go back to [opener title]." It's one small label, but it communicates a lot.
 
-![Edge's long-press back button menu on the same recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
+<img src="/assets/images/backtoopener-close-and-go-back-dropdown.webp" alt="Edge&#x27;s long-press back button menu on the same recipe page opened from ChatGPT, showing &quot;Close and go back to ChatGPT&quot; as the top entry" width="1600" height="1220" loading="lazy" decoding="async">
 *Here's the same page and the same menu in Edge, with BackToOpener.*
 
 ---
@@ -110,7 +113,10 @@ All of it goes away with BackToOpener: one native browser behavior, and years of
 
 BackToOpener is currently running as an A/B experiment in both Edge and Chrome ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
-![Animation of BackToOpener in Chrome: a recipe page opened from a Gemini conversation is closed with the back button, returning focus to the chat](/assets/images/backtoopener-in-action.gif)
+<video controls autoplay muted loop playsinline preload="none" width="1000" height="740" poster="/assets/images/backtoopener-in-action-poster.webp" aria-label="Animation of BackToOpener in Chrome: a recipe page opened from a Gemini conversation is closed with the back button, returning focus to the chat">
+  <source src="/assets/images/backtoopener-in-action.mp4" type="video/mp4">
+  <a href="/assets/images/backtoopener-in-action.mp4">Watch the demonstration</a>.
+</video>
 *Here's the whole loop in Chrome: a page opened from a Gemini chat, one press of back, and you're back in the conversation at the right place. It's the same feature in a different browser, which is the point of building it into Chromium.*
 
 ---
