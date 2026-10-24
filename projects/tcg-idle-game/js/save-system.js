@@ -1,33 +1,27 @@
 /**
- * Save system for the TCG Idle Game
- * Stores one versioned save in local storage and upgrades older saves on load
+ * Save system for Critter Clash
+ * Stores one versioned save in local storage, plus the list of endings found.
+ * The endings list is kept under its own key so it survives a game over.
  *
- * Save format (version 2):
+ * Save format (version 1):
  * {
- *     version: 2,
+ *     version: 1,
  *     savedAt: <timestamp>,
- *     game: <GameState.toSaveData()>,
- *     shop: <ShopSystem.toSaveData()> or null
+ *     game: <Game.toSaveData()>
  * }
  */
 
 const SaveSystem = {
-    key: 'tcgIdleGameSave',
-    version: 2,
+    key: 'critterClashSave',
+    endingsKey: 'critterClashEndings',
+    version: 1,
 
     /**
      * Load the save, upgrading it to the current version
      * @returns {Object|null} - Save data, or null if there is no usable save
      */
     load: function() {
-        let raw;
-        try {
-            raw = localStorage.getItem(this.key);
-        } catch (error) {
-            console.error('Could not access local storage:', error);
-            return null;
-        }
-
+        const raw = this.read(this.key);
         if (!raw) {
             return null;
         }
@@ -44,28 +38,64 @@ const SaveSystem = {
 
     /**
      * Write the save
-     * @param {Object} data - Save sections ({ game, shop })
+     * @param {Object} game - Game save data
      * @returns {boolean} - Whether the save was written
      */
-    save: function(data) {
-        const saveData = {
+    save: function(game) {
+        return this.write(this.key, JSON.stringify({
             version: this.version,
             savedAt: Date.now(),
-            game: data.game,
-            shop: data.shop || null
-        };
-
-        return this.write(this.key, JSON.stringify(saveData));
+            game: game
+        }));
     },
 
     /**
-     * Delete the save
+     * Delete the save. The endings list is kept.
      */
     clear: function() {
         try {
             localStorage.removeItem(this.key);
         } catch (error) {
             console.error('Could not delete save data:', error);
+        }
+    },
+
+    /**
+     * Get the ids of every ending found so far, across all runs
+     * @returns {Array} - Ending ids
+     */
+    loadEndings: function() {
+        try {
+            const endings = JSON.parse(this.read(this.endingsKey));
+            return Array.isArray(endings) ? endings : [];
+        } catch (error) {
+            return [];
+        }
+    },
+
+    /**
+     * Add an ending to the list of endings found
+     * @param {string} id - Ending id
+     */
+    recordEnding: function(id) {
+        const endings = this.loadEndings();
+        if (!endings.includes(id)) {
+            endings.push(id);
+            this.write(this.endingsKey, JSON.stringify(endings));
+        }
+    },
+
+    /**
+     * Read a value from local storage
+     * @param {string} key - Storage key
+     * @returns {string|null} - Stored value, or null if missing or unavailable
+     */
+    read: function(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (error) {
+            console.error('Could not access local storage:', error);
+            return null;
         }
     },
 
@@ -87,38 +117,14 @@ const SaveSystem = {
     },
 
     /**
-     * Upgrade save data from older versions to the current version
+     * Upgrade save data from older versions to the current version.
+     * Add a step here whenever the save format changes.
      * @param {Object} data - Parsed save data
      * @returns {Object} - Save data in the current format
      */
     migrate: function(data) {
-        if (!data || typeof data !== 'object') {
-            throw new Error('Save data is not an object');
-        }
-
-        // Version 1: flat game fields, full card objects, and upgrade objects
-        if (!data.version) {
-            const upgrades = data.upgrades || {};
-            data = {
-                version: 2,
-                savedAt: data.lastSaved,
-                game: {
-                    money: data.money,
-                    packs: data.packs,
-                    phase: data.phase,
-                    highestTournamentWon: data.highestTournamentWon,
-                    lastIncomeTime: data.lastIncomeTime,
-                    collection: (data.collection || []).map(card => CardData.packCard(card)),
-                    upgrades: {
-                        autoOpener: !!(upgrades.autoOpener && upgrades.autoOpener.purchased),
-                        autoBuyer: !!(upgrades.autoBuyer && upgrades.autoBuyer.purchased),
-                        autoSeller: !!(upgrades.autoSeller && upgrades.autoSeller.purchased),
-                        betterPacks: !!(upgrades.betterPacks && upgrades.betterPacks.purchased),
-                        incomeBoost: (upgrades.incomeBoost && upgrades.incomeBoost.level) || 0
-                    }
-                },
-                shop: data.shop || null
-            };
+        if (!data || typeof data !== 'object' || !data.version) {
+            throw new Error('Save data is not in a known format');
         }
 
         if (data.version > this.version) {

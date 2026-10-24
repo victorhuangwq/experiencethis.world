@@ -1,7 +1,13 @@
 # TCG Idle Game: Story and Design Notes
 
-Working design document for the story expansion. Nothing here is built yet.
-Sections marked **Open** still need a decision.
+Working design document for the story expansion. Sections marked **Open**
+still need a decision.
+
+## Status
+
+- **Built:** Act 1 (vending machine, allowance and chores, Pip, strikes and
+  the Shame ending, Benny, the binder, and the hand-off to Gus's store).
+- **Next:** Act 2 at Gus's Games & Grub.
 
 ## Vision
 
@@ -158,8 +164,9 @@ All times come from the real clock and are saved as timestamps.
 
 | Thing | Starting value |
 |---|---|
-| Allowance | About $3 per minute at the start, so roughly one vending pack per minute |
-| Vending machine pack | $3 |
+| Allowance | $1.20 per minute (built) |
+| Chores | $0.50, then a 20 second rest (built) |
+| Vending machine pack | $3; special pack $6; 8 slots per restock (built) |
 | Hobby store pack | $4.50 (50% markup) |
 | PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
 | Selling a random common | $0.05 to $0.25 |

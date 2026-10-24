@@ -37,3 +37,4 @@ exclude:
   - README.md
   - AGENTS.md
   - projects/tcg-idle-game/README.md
+  - projects/tcg-idle-game/STORY.md
