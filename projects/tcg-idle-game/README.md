@@ -1,8 +1,9 @@
-# Critter Clash: TCG Idle Game
+# TCG Idle Collector
 
 A text and ASCII idle game in the spirit of Candy Box: the journey of a
 trading card collector, from buying single packs at a mall vending machine to
-the top of the hobby. The story and design are in [STORY.md](STORY.md).
+the top of the hobby. Inside the story, the card game everyone collects is
+called Critter Clash. The story and design are in [STORY.md](STORY.md).
 
 ## Current state
 

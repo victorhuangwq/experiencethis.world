@@ -1,5 +1,5 @@
 /**
- * Critter Clash game logic
+ * TCG Idle Collector game logic
  * Holds the game state and every action the player can take.
  * Timed events follow the real clock and are stored as timestamps,
  * so progress continues while the page is closed.

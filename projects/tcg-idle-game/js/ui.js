@@ -1,5 +1,5 @@
 /**
- * Critter Clash user interface
+ * TCG Idle Collector user interface
  * Renders the game as text and ASCII scenes. Each part is only redrawn when
  * its content changes, so buttons stay clickable between ticks.
  */

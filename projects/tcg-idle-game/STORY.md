@@ -1,4 +1,4 @@
-# TCG Idle Game: Story and Design Notes
+# TCG Idle Collector: Story and Design Notes
 
 Working design document for the story expansion. Sections marked **Open**
 still need a decision.

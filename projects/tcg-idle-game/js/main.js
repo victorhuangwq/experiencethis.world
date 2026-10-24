@@ -1,5 +1,5 @@
 /**
- * Main entry point for Critter Clash
+ * Main entry point for TCG Idle Collector
  * Starts the game, ticks it every second, and handles saving.
  */
 

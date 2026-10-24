@@ -1,5 +1,5 @@
 /**
- * Save system for Critter Clash
+ * Save system for TCG Idle Collector
  * Stores one versioned save in local storage, plus the list of endings found.
  * The endings list is kept under its own key so it survives a game over.
  *
