@@ -3,7 +3,7 @@
  * Money is in cents.
  */
 
-import { SECOND, MINUTE, HOUR } from './core/util.js';
+import { SECOND, MINUTE, HOUR } from './core/time.js';
 
 export const Rules = {
     // Money

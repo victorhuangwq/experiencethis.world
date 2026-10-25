@@ -17,14 +17,15 @@
  * Content (unlocks, encounters, endings) is plain data; see js/content/.
  */
 
-import { mergeDefaults, nextRandom } from './util.js';
+import { mergeDefaults } from './merge.js';
+import { nextRandom } from './random.js';
 
 export class Game {
     /**
      * @param {Object} options
      * @param {Array} options.systems - Systems
      * @param {Array} options.unlocks - Unlocks: { id, when(game), run(game) }
-     * @param {Array} options.encounters - Encounters (see content/encounters.js)
+     * @param {Array} options.encounters - Encounters (see js/content/encounters/index.js)
      * @param {Object} options.endings - Store of endings found: { found(), record(id) }
      */
     constructor({ systems, unlocks, encounters, endings }) {

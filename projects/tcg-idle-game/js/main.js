@@ -6,19 +6,16 @@
 
 import { Game } from './core/game.js';
 import { SaveSystem } from './core/save.js';
-import { Lines } from './content/lines.js';
+import { Lines } from './content/text/index.js';
 import { Unlocks } from './content/unlocks.js';
-import { Encounters } from './content/encounters.js';
+import { Encounters } from './content/encounters/index.js';
+import { Systems } from './systems/index.js';
 import { Wallet } from './systems/wallet.js';
-import { Collection } from './systems/collection.js';
 import { Vending } from './systems/vending.js';
-import { Kindness } from './systems/kindness.js';
-import { People } from './systems/people.js';
-import { Story } from './systems/story.js';
 import { UI } from './ui/ui.js';
 
 const game = new Game({
-    systems: [Story, Wallet, Collection, Vending, Kindness, People],
+    systems: Systems,
     unlocks: Unlocks,
     encounters: Encounters,
     endings: SaveSystem.endings
@@ -32,7 +29,7 @@ function save() {
         return;
     }
     if (!SaveSystem.save(game.toSaveData()) && !saveWarningShown) {
-        game.say(Lines.saveFailed, 'danger');
+        game.say(Lines.system.saveFailed, 'danger');
         saveWarningShown = true;
     }
 }
@@ -98,7 +95,7 @@ window.addEventListener('pagehide', save);
 window.addEventListener('storage', (event) => {
     if (event.key === SaveSystem.key && !saveDisabled) {
         saveDisabled = true;
-        game.say(Lines.otherTab, 'danger');
+        game.say(Lines.system.otherTab, 'danger');
         ui.render();
     }
 });

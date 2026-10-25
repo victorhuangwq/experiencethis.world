@@ -2,7 +2,7 @@
  * People: what each character knows about the player
  */
 
-import { Lines } from '../content/lines.js';
+import { Lines } from '../content/text/index.js';
 
 export const People = {
     id: 'people',

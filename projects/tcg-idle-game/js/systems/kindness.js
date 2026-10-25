@@ -5,7 +5,7 @@
  */
 
 import { Rules } from '../rules.js';
-import { Lines } from '../content/lines.js';
+import { Lines } from '../content/text/index.js';
 
 export const Kindness = {
     id: 'kindness',

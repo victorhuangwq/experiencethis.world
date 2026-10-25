@@ -3,9 +3,10 @@
  * and hides things in its coin return
  */
 
-import { every, Format } from '../core/util.js';
+import { every } from '../core/time.js';
+import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
-import { Lines } from '../content/lines.js';
+import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
 

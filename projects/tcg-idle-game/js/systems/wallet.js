@@ -2,9 +2,10 @@
  * Wallet: money (in whole cents), the self-given allowance, and work
  */
 
-import { MINUTE, Format } from '../core/util.js';
+import { MINUTE } from '../core/time.js';
+import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
-import { Lines } from '../content/lines.js';
+import { Lines } from '../content/text/index.js';
 
 export const Wallet = {
     id: 'wallet',
@@ -52,7 +53,7 @@ export const Wallet = {
         wallet.paidUntil = capped ? now : wallet.paidUntil + cents * msPerCent;
 
         if (elapsed > MINUTE) {
-            game.reportAway(Lines.allowanceAway(cents, capped));
+            game.reportAway(Lines.money.allowanceAway(cents, capped));
         }
     },
 
@@ -95,7 +96,7 @@ export const Wallet = {
             }
             Wallet.earn(game, Rules.workPay);
             game.state.wallet.workReadyAt = now + Rules.workRest;
-            game.say(game.pick(Lines.work.done) + ' +' + Format.money(Rules.workPay));
+            game.say(game.pick(Lines.money.work.done) + ' +' + Format.money(Rules.workPay));
         }
     }
 };

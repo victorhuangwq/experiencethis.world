@@ -8,7 +8,7 @@
  */
 
 import { Rules } from '../rules.js';
-import { Lines } from './lines.js';
+import { Lines } from './text/index.js';
 import { Wallet } from '../systems/wallet.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
@@ -24,13 +24,13 @@ export const Unlocks = [
         when: game => game.unlocked('shoebox'),
         run: game => {
             Wallet.startAllowance(game);
-            game.say(Lines.allowance);
+            game.say(Lines.money.allowance);
         }
     },
     {
         id: 'work',
         when: game => game.state.wallet.allowanceEarned >= 60,
-        run: game => game.say(Lines.work.unlocked)
+        run: game => game.say(Lines.money.work.unlocked)
     },
     {
         id: 'mall',
@@ -57,6 +57,6 @@ export const Unlocks = [
     ...Rules.storage.slice(1).map(stage => ({
         id: 'storage-' + stage.id,
         when: game => game.state.collection.mostCards >= stage.cards,
-        run: game => game.say(Lines.storage.upgraded[stage.id], 'good')
+        run: game => game.say(Lines.home.upgraded[stage.id], 'good')
     }))
 ];

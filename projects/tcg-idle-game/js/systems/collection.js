@@ -3,8 +3,8 @@
  */
 
 import { Rules } from '../rules.js';
-import { Cards } from '../content/cards.js';
-import { Lines } from '../content/lines.js';
+import { Cards } from './cards.js';
+import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 
 export const Collection = {
@@ -109,7 +109,7 @@ export const Collection = {
                 game.say(Lines.packs.faster, 'good');
             }
             if (collection.packsOpened === 100) {
-                game.say(Lines.developer.hundredPacks);
+                game.say(Lines.story.developer.hundredPacks);
             }
 
             game.emit('pack-opened', { cards, kind });

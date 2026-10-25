@@ -3,9 +3,9 @@
  * comments on idling and on the real clock
  */
 
-import { Format } from '../core/util.js';
+import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
-import { Lines } from '../content/lines.js';
+import { Lines } from '../content/text/index.js';
 
 // Idle comments made since the player last did something. Not saved.
 let idleComments = 0;
@@ -42,7 +42,7 @@ export const Story = {
         }
         const idleFor = now - game.lastActionAt;
         if (idleComments < Rules.idleJokesAt.length && idleFor >= Rules.idleJokesAt[idleComments]) {
-            game.say(Lines.idle[idleComments]);
+            game.say(Lines.story.idle[idleComments]);
             idleComments++;
         }
     },
@@ -56,9 +56,9 @@ export const Story = {
         }
         const hour = new Date(game.time).getHours();
         if (hour < 5) {
-            game.say(Lines.mall.night(Format.clock(game.time)));
+            game.say(Lines.story.night(Format.clock(game.time)));
         } else if (hour < 7) {
-            game.say(Lines.mall.earlyMorning(Format.clock(game.time)));
+            game.say(Lines.story.earlyMorning(Format.clock(game.time)));
         }
     },
 

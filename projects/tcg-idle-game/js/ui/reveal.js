@@ -4,10 +4,10 @@
  * timers, so the once-a-second redraw never interrupts it.
  */
 
-import { Art } from './art.js';
+import { card, cardBack, packTear } from './art/cards.js';
 import { escape, button, art } from './html.js';
-import { Lines } from '../content/lines.js';
-import { Cards } from '../content/cards.js';
+import { Lines } from '../content/text/index.js';
+import { Catalog } from '../content/catalog.js';
 
 const SHINY = ['rare', 'ultra-rare', 'legendary'];
 
@@ -85,19 +85,19 @@ export class PackReveal {
             return;
         }
 
-        const skip = this.playing ? `<p>${button('reveal.skip', Lines.reveal.skip)}</p>` : '';
+        const skip = this.playing ? `<p>${button('reveal.skip', Lines.packs.buttons.skip)}</p>` : '';
 
         if (this.frame !== null) {
-            this.element.innerHTML = art(Art.packTear[this.frame]) + skip;
+            this.element.innerHTML = art(packTear[this.frame]) + skip;
             return;
         }
 
-        const cards = this.cards.map((card, index) => {
+        const cards = this.cards.map((pulled, index) => {
             if (index >= this.shown) {
-                return art(Art.cardBack, 'card');
+                return art(cardBack, 'card');
             }
-            const shiny = SHINY.includes(card.rarity) ? ' shiny' : '';
-            return art(Art.card(card), `card ${card.rarity}${shiny}`);
+            const shiny = SHINY.includes(pulled.rarity) ? ' shiny' : '';
+            return art(card(pulled), `card ${pulled.rarity}${shiny}`);
         }).join('');
 
         this.element.innerHTML = `<div class="cards">${cards}</div>` + (this.playing ? skip : this.summary());
@@ -108,9 +108,9 @@ export class PackReveal {
      * text for screen readers
      */
     summary() {
-        const best = Math.max(...this.cards.map(card => Cards.rarities.indexOf(card.rarity)));
+        const best = Math.max(...this.cards.map(pulled => Catalog.rarities.indexOf(pulled.rarity)));
         const line = best >= 4 ? Lines.packs.legendary : best >= 2 ? Lines.packs.rare : '';
-        const list = this.cards.map(card => `${card.name} (${card.rarity})`).join(', ');
+        const list = this.cards.map(pulled => `${pulled.name} (${pulled.rarity})`).join(', ');
         return (line ? `<p class="good">${escape(line)}</p>` : '') +
             `<p class="visually-hidden">${escape(list)}</p>`;
     }

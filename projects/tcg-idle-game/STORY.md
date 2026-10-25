@@ -29,7 +29,8 @@ that appear one at a time as the player earns them.
 
 ## Voice and style guide
 
-Every line in the game follows this. Text lives in `js/content/lines.js`.
+Every line in the game follows this. Text lives in `js/content/text/`, one
+file per topic.
 
 - **Deadpan and absurd, like Candy Box.** Short, flat sentences. Silly
   things are stated as plain fact. Never sad, never sappy.
