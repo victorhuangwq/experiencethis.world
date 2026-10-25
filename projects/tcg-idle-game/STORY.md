@@ -5,9 +5,10 @@ still need a decision.
 
 ## Status
 
-- **Built:** Act 1 (vending machine, allowance and chores, Pip, strikes and
-  the Shame ending, Benny, the binder, and the hand-off to Gus's store).
-- **Next:** Act 2 at Gus's Games & Grub.
+- **Built:** Act 1, spring (the shoebox opening, allowance and work, the
+  vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
+  secrets, and Gus telling you to come back in summer).
+- **Next:** Act 2, summer, at Gus's Games & Grub.
 
 ## Vision
 
@@ -26,6 +27,46 @@ that appear one at a time as the player earns them.
   time and about 8 hours of active play (see Pacing).
 - Being kind in the hobby is a core rule. Being a scalper ends the game.
 
+## Voice and style guide
+
+Every line in the game follows this. Text lives in `js/content/lines.js`.
+
+- **Deadpan and absurd, like Candy Box.** Short, flat sentences. Silly
+  things are stated as plain fact. Never sad, never sappy.
+  ("Benny counts out three dollars in nickels and leaves without saying
+  goodbye.")
+- **Never explain a mechanic.** No tutorial lines. A new button just appears.
+  Characters may hint at things in their own words ("They have packs ALL THE
+  TIME").
+- **Meta humour is welcome, often:**
+  - jokes about idle games ("You have been watching the number go up for
+    3 minutes. It is going up. Well done.");
+  - reactions to the real clock ("It is 2:13 AM. The machine is always open.");
+  - the narrator talking to the player, especially about strikes;
+  - occasional notes from "the developer".
+- **The world shows the player's history.** Choices leave marks in the ASCII
+  art (Pip's sticker, the BE NICE note, dents from kicks), and storage grows
+  with the collection. Strikes have no counter on screen.
+- **The log is quiet.** A few lines, newest first, older ones fading out.
+  Feedback that the scene already shows (a slot emptying) doesn't need a line.
+- **Pack opening is a moment.** The pack tears, cards flip one at a time, and
+  the last card waits a beat.
+
+## Player and time
+
+- **The player is an adult returning to the hobby.** It starts when they find
+  their childhood shoebox of cards: it's worth $0.43, because they chewed the
+  corner off the one valuable card when they were seven. Benny offers $3 for
+  it. Selling buys the first pack sooner; keeping it holds on to a misprint
+  "Wet Sock Gobln" that later starts Mildred's trade-up chain.
+- **Money:** a self-given allowance ("You are a responsible adult"), plus
+  answering emails at the day job.
+- **Time passes in seasons.** Each act is a season: Act 1 spring, Act 2
+  summer, then autumn, winter, and spring again. Scenes can change a little
+  with the season. Characters don't age.
+- **Storage grows:** a shoebox, a binder, two binders, a bookshelf of
+  binders, and finally the card room (formerly the guest room).
+
 ## Cast and names
 
 | Name | Who | Notes |
@@ -33,9 +74,10 @@ that appear one at a time as the player earns them.
 | **Critter Clash** | The trading card game itself | The in-game TCG everyone collects |
 | **Pebbleton** | The town | |
 | **CARD-O-MATIC 3000** | The vending machine | Has a personality; occasionally eats a coin |
-| **Pip** | The kid in the vending machine line | Grows up over the game: friend, then rival, then a regular at your shop |
+| **Pip** | The kid in the vending machine line | The kindness test, then the player's loyal little sidekick: tips about where to find cards, cheering at tournaments, and the first customer at the player's shop in Act 5 |
+| **Benny** | The neighbour's kid, age 9 | A ruthless little businessman. Buys the shoebox and later the player's duplicates, with a 25% "finder's fee". Pays in nickels. |
 | **Gus** | Owner of *Gus's Games & Grub*, the hobby store | Runs locals; holds new sets for regulars he trusts |
-| **Officer Dale** | Mall security | Delivers the shame ending |
+| **Officer Dale** | Mall security | Eats pretzels. Writes down every kick at the vending machine and reads the count out in the Shame ending |
 | **PackDrop.com** | The online store | Shipping arrives at clock times |
 | **Mint Condition Co.** | The card grading company | Grades cards 1-10 |
 | **Card-a-Palooza** | The card show at the community center | Scheduled events |
@@ -59,20 +101,24 @@ Named cards so far:
 
 | Act | Location | New verbs | Unlocked by |
 |---|---|---|---|
-| 1 | Vending machine | Buy one pack, open it, sell duplicates to a classmate | Start |
-| 2 | Hobby store | Choose a set, binder, first trades, locals | Pip mentions Gus's store after the first kindness event, or 30 cards |
+| 1 (spring) | Vending machine | Buy one pack, open it, sell duplicates to Benny | Start |
+| 2 (summer) | Hobby store | Choose a set, first trades, locals | Pip mentions Gus's store after the first kindness, or 60 cards opened. Gus says to come back in summer. |
 | 3 | Online store and deck building | Preorders, shipping, building real decks, regionals | Winning locals for the first time (Gus mentions PackDrop.com) |
 | 4 | Card shows and grading | Rent a table, haggle, hunt specific cards, grading, nationals | First booster box delivered |
 | 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine | Set 2 released, plus a money target |
 
 Act 5 closes the loop: the player ends up stocking the vending machine from
-Act 1, and the kid from the vending machine line comes back as a teenager
-entering the player's tournaments.
+Act 1 (with the key from its coin return), and Pip is the first customer
+through the door of the player's shop.
 
-### Starting money
+### Act 1 secrets
 
-A weekly allowance that ticks up slowly, plus selling duplicates to a
-classmate for a few coins. The first packs should feel earned.
+- **Smell the pack:** pointless, with escalating lines. The 50th sniff makes
+  special packs restock more often.
+- **The coin return:** usually nothing, sometimes a quarter (at most once per
+  restock), and once, the machine's key. The key does nothing until Act 5.
+- **Kicking the machine:** never a strike, but Officer Dale writes it down,
+  the machine gets dents, and the Shame ending reads out the total.
 
 ## Locations and ASCII scenes
 
@@ -251,8 +297,13 @@ Escalation:
    shame.
 
 Kindness is rewarded but never removes strikes. For example, letting the kid
-go first earns a thank-you, and over time the kid becomes a friend who offers
-a card the player needs, and later a rival.
+go first earns a thank-you and a sticker on the machine, and over time Pip
+becomes a sidekick who offers cards the player needs.
+
+As built in Act 1: there is no strike counter. The first strike gets a
+reaction from Dale; the second tapes a BE NICE note to the machine and the
+narrator addresses the player directly; the third is the Shame ending, where
+Dale counts the kids made sad and the times the machine was kicked.
 
 ## Tournaments
 
@@ -277,18 +328,19 @@ rock-paper-scissors decision.
 
 Trades are short encounters with recurring characters. Ideas so far:
 
-- **The kid from the vending machine:** grows up over the game; trades,
-  rivalry, and the Act 5 return.
+- **Pip:** the loyal sidekick. Tips, the occasional free card, cheering at
+  tournaments, and the first customer at the player's shop.
 - **The confident trader:** offers suspiciously shiny cards. Can the player
   spot the fakes?
 - **The dad with his kid's binder:** has no idea what's in it. An honesty
   test; fleecing him is a strike.
 - **The obsessive collector:** will trade almost anything for one specific
   common card.
-- **The trade-up chain** (required for the collector ending): start with a
-  worthless card and trade up, one card show at a time, until it becomes a
-  specific legendary. Each step is a different person who wants exactly what
-  the player has.
+- **The trade-up chain** (required for the collector ending): start with the
+  "Wet Sock Gobln" misprint from the childhood shoebox (or, if the shoebox
+  was sold, some other worthless card) and trade up, one card show at a time,
+  until it becomes a specific legendary. Each step is a different person who
+  wants exactly what the player has.
 
 ## Card shows
 

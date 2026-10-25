@@ -186,8 +186,57 @@ button.current {
     margin: 4px 0;
 }
 
-.message.info:not(:first-child) {
+/* Older messages fade out, like A Dark Room */
+.message.age-1 {
+    opacity: 0.8;
+}
+
+.message.age-2 {
+    opacity: 0.6;
+}
+
+.message.age-3 {
+    opacity: 0.45;
+}
+
+.message.age-4 {
+    opacity: 0.3;
+}
+
+.message.age-5 {
+    opacity: 0.2;
+}
+
+.season {
     color: var(--muted);
+    letter-spacing: 0.2em;
+}
+
+/* Buttons that fill back up while they rest */
+button.cooldown:disabled {
+    background: linear-gradient(to right, var(--button-hover) var(--progress, 0%), var(--button-background) var(--progress, 0%));
+}
+
+.new {
+    color: var(--good);
+    font-size: 0.85em;
+}
+
+.encounter {
+    margin: 8px 0;
+}
+
+.card.shiny {
+    text-shadow: 0 0 6px currentColor;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
 .dev {

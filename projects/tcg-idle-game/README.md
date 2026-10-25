@@ -1,45 +1,54 @@
 # TCG Idle Collector
 
-A text and ASCII idle game in the spirit of Candy Box: the journey of a
-trading card collector, from buying single packs at a mall vending machine to
-the top of the hobby. Inside the story, the card game everyone collects is
-called Critter Clash. The story and design are in [STORY.md](STORY.md).
+A text and ASCII idle game in the spirit of Candy Box and A Dark Room: an
+adult rediscovers their childhood card collection and gets back into the
+hobby, from single packs at a mall vending machine to the top of the scene.
+Inside the story, the card game everyone collects is called Critter Clash.
+The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (the vending machine) is playable. Gus's Games & Grub appears at the end
-of Act 1 as a teaser for Act 2.
-
-- **Money:** an allowance accrues every second, including while the page is
-  closed (up to 8 hours). Chores give a little extra on a short cooldown.
-- **CARD-O-MATIC 3000:** 8 slots that refill at every quarter hour of the
-  real clock. A restock sometimes includes a special pack with better odds.
-  The machine occasionally jams; kicking it works half the time.
-- **Packs:** 5 cards each. Most cards are randomly generated critters; the
-  hit slot can contain a card from the fixed Base Set list.
-- **Kindness code:** after a few purchases, a kid may wait in line. Stepping
-  aside is rewarded. Buying anyway is a strike. Strikes are permanent; the
-  second shows a warning and the third ends the run with the Shame ending,
-  which deletes the save.
-- **Binder:** set checklist for fixed cards and a list of other critters.
-  Benny buys duplicates once you have some.
-- **Endings:** endings found are kept across runs, including after a game over.
+Act 1 (spring) is playable: the shoebox opening, a self-given allowance and
+emails for extra money, the CARD-O-MATIC 3000 restocking every quarter hour of
+the real clock, Pip and the kindness code, Benny buying duplicates, storage
+that grows with the collection, three secrets, and Gus's store, which opens
+in summer (Act 2).
 
 ## Code
 
-Plain HTML, CSS, and JavaScript, loaded in this order:
+Plain HTML, CSS, and JavaScript modules, with no build step. `js/main.js`
+builds the game and is the only script the page loads.
 
-- `js/save-system.js`: versioned save in local storage, plus the endings list
-  under a separate key.
-- `js/cards.js`: card definitions, the fixed card list, pack generation, and
-  compact card packing for the save.
-- `js/game.js`: game state, tuning values (`Rules`), and every player action.
-  Timed events use real clock timestamps.
-- `js/ui.js`: ASCII art and rendering. Sections are only redrawn when their
-  content changes, and one delegated click handler serves every button.
-- `js/main.js`: starts the game, ticks it every second, and saves after each
-  action, every 30 seconds, and when the page closes. A tab stops saving if
-  another tab saves.
+- `js/core/`
+  - `game.js`: the `Game` core. Holds the state, runs systems, unlocks,
+    encounters, and endings, and provides events, seeded randomness, and the
+    "while you were away" summary. The header comment describes the system
+    shape.
+  - `save.js`: versioned save in local storage, plus the endings list under a
+    separate key so it survives a game over.
+  - `util.js`: time constants, money formatting (money is whole cents),
+    `mergeDefaults` (lays a save over the defaults, so new fields need no
+    migration), the seeded random generator, and `every()` for repeating
+    windows on the local clock.
+- `js/rules.js`: every tuning value.
+- `js/systems/`: one file per feature, each owning its slice of the state,
+  its clock behaviour, and its actions: `wallet`, `collection`, `vending`,
+  `kindness`, `people`, `story`.
+- `js/content/`: data. `lines.js` holds every line of text; `cards.js` the
+  card list and pack generation; `unlocks.js`, `encounters.js`, and
+  `endings.js` define one-time unlocks, choice moments, and endings.
+- `js/ui/`: `ui.js` draws the game and routes button clicks to
+  `game.perform("<system>.<action>")`; `locations.js` registers the places;
+  `art.js` holds the ASCII art; `reveal.js` animates pack opening.
+
+### Adding things
+
+- **A new feature:** add a system in `js/systems/` and list it in `main.js`.
+- **A new place:** add an entry to `Locations` in `js/ui/locations.js`.
+- **A side quest or choice:** add an encounter in `js/content/encounters.js`.
+- **Something that happens once a condition is met:** add an unlock in
+  `js/content/unlocks.js`.
+- **A timed event on the real clock:** use `every()` from `js/core/util.js`.
 
 ## Testing
 

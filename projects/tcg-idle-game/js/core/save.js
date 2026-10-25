@@ -1,33 +1,33 @@
 /**
- * Save system for TCG Idle Collector
+ * Save system
  * Stores one versioned save in local storage, plus the list of endings found.
  * The endings list is kept under its own key so it survives a game over.
  *
- * Save format (version 1):
+ * Save format (version 2):
  * {
- *     version: 1,
+ *     version: 2,
  *     savedAt: <timestamp>,
  *     game: <Game.toSaveData()>
  * }
  */
 
-const SaveSystem = {
+export const SaveSystem = {
     key: 'critterClashSave',
     endingsKey: 'critterClashEndings',
-    version: 1,
+    version: 2,
 
     /**
      * Load the save, upgrading it to the current version
-     * @returns {Object|null} - Save data, or null if there is no usable save
+     * @returns {Object|null} - Game save data, or null if there is no usable save
      */
-    load: function() {
+    load() {
         const raw = this.read(this.key);
         if (!raw) {
             return null;
         }
 
         try {
-            return this.migrate(JSON.parse(raw));
+            return this.migrate(JSON.parse(raw)).game;
         } catch (error) {
             // Keep the unreadable save so starting fresh does not destroy it
             console.error('Could not read save data, starting a new game:', error);
@@ -41,7 +41,7 @@ const SaveSystem = {
      * @param {Object} game - Game save data
      * @returns {boolean} - Whether the save was written
      */
-    save: function(game) {
+    save(game) {
         return this.write(this.key, JSON.stringify({
             version: this.version,
             savedAt: Date.now(),
@@ -52,7 +52,7 @@ const SaveSystem = {
     /**
      * Delete the save. The endings list is kept.
      */
-    clear: function() {
+    clear() {
         try {
             localStorage.removeItem(this.key);
         } catch (error) {
@@ -61,36 +61,36 @@ const SaveSystem = {
     },
 
     /**
-     * Get the ids of every ending found so far, across all runs
-     * @returns {Array} - Ending ids
+     * The endings list, shared by every run
      */
-    loadEndings: function() {
-        try {
-            const endings = JSON.parse(this.read(this.endingsKey));
-            return Array.isArray(endings) ? endings : [];
-        } catch (error) {
-            return [];
+    endings: {
+        found() {
+            try {
+                const endings = JSON.parse(SaveSystem.read(SaveSystem.endingsKey));
+                return Array.isArray(endings) ? endings : [];
+            } catch (error) {
+                return [];
+            }
+        },
+
+        record(id) {
+            const endings = this.found();
+            if (!endings.includes(id)) {
+                endings.push(id);
+                SaveSystem.write(SaveSystem.endingsKey, JSON.stringify(endings));
+            }
+        },
+
+        clear() {
+            try {
+                localStorage.removeItem(SaveSystem.endingsKey);
+            } catch (error) {
+                console.error('Could not delete endings:', error);
+            }
         }
     },
 
-    /**
-     * Add an ending to the list of endings found
-     * @param {string} id - Ending id
-     */
-    recordEnding: function(id) {
-        const endings = this.loadEndings();
-        if (!endings.includes(id)) {
-            endings.push(id);
-            this.write(this.endingsKey, JSON.stringify(endings));
-        }
-    },
-
-    /**
-     * Read a value from local storage
-     * @param {string} key - Storage key
-     * @returns {string|null} - Stored value, or null if missing or unavailable
-     */
-    read: function(key) {
+    read(key) {
         try {
             return localStorage.getItem(key);
         } catch (error) {
@@ -99,13 +99,7 @@ const SaveSystem = {
         }
     },
 
-    /**
-     * Write a value to local storage
-     * @param {string} key - Storage key
-     * @param {string} value - Value to store
-     * @returns {boolean} - Whether the value was written
-     */
-    write: function(key, value) {
+    write(key, value) {
         try {
             localStorage.setItem(key, value);
             return true;
@@ -118,13 +112,19 @@ const SaveSystem = {
 
     /**
      * Upgrade save data from older versions to the current version.
-     * Add a step here whenever the save format changes.
+     * Missing or new fields don't need a step here: the game fills them in
+     * from its defaults. Add a step only when existing data changes shape.
      * @param {Object} data - Parsed save data
      * @returns {Object} - Save data in the current format
      */
-    migrate: function(data) {
+    migrate(data) {
         if (!data || typeof data !== 'object' || !data.version) {
             throw new Error('Save data is not in a known format');
+        }
+
+        // Version 1 was an unreleased test build with a different story
+        if (data.version < 2) {
+            throw new Error('Save is from an earlier test version');
         }
 
         if (data.version > this.version) {
@@ -134,6 +134,3 @@ const SaveSystem = {
         return data;
     }
 };
-
-// Make the save system available globally
-window.SaveSystem = SaveSystem;
