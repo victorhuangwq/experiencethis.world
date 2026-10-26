@@ -117,7 +117,7 @@ browserTest('an old save loads, and a full shoebox can be traded up for a binder
     assert.match(await page.locator('.pages').textContent(), /Page 2 of \d+/);
 });
 
-browserTest('on a phone, the log shows one line until expanded, and nothing scrolls sideways', {
+browserTest('on a phone, the log shows one line until expanded, and every place fits the screen', {
     viewport: { width: 390, height: 844 }
 }, async (page) => {
     await finishOpening(page);
@@ -130,11 +130,14 @@ browserTest('on a phone, the log shows one line until expanded, and nothing scro
     assert.ok(await messages.nth(1).isVisible());
     assert.equal(await button(page, Lines.system.log.less).getAttribute('aria-expanded'), 'true');
 
-    for (const name of [Lines.mall.name, Lines.home.names.shoebox]) {
+    await page.clock.runFor(30 * 1000);
+    for (const name of [Lines.mall.name, Lines.job.name, Lines.home.names.shoebox]) {
         await place(page, name).click();
         const { scrollWidth, clientWidth } = await page.evaluate(() =>
             ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
         assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
+        const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
+        assert.equal(cutOff, 0, `${name}: art fits on the screen`);
     }
 });
 
@@ -164,4 +167,36 @@ browserTest('coming back later in a new tab catches up on the time away', {}, as
     assert.match(text, /^While you were away, your allowance paid you \$/);
     const money = Number((await later.locator('[data-money]').textContent()).replace(/[$,]/g, ''));
     assert.ok(money >= 5 * 60 * 60 * Rules.allowanceCentsPerSecond / 100, `paid for the time away: $${money}`);
+});
+
+browserTest('on an office day, work means going to the office', { time: Date.UTC(2026, 9, 27, 10) }, async (page) => {
+    await finishOpening(page);
+    await page.clock.runFor(30 * 1000);
+    await place(page, Lines.job.name).click();
+    await page.getByText(Lines.job.today.office('Tuesday')).waitFor();
+
+    const money = async () => (await page.locator('[data-money]').textContent());
+    const before = await money();
+    await button(page, Lines.job.answer).click();
+    assert.equal(await money(), Format.money(Math.round(Number(before.slice(1)) * 100) + Rules.workPay));
+    assert.ok(await button(page, Lines.job.resting).isDisabled(), 'resting between emails');
+
+    await place(page, Lines.mall.name).click();
+    await slot(page, 'A1').click();
+    await place(page, Lines.job.name).click();
+    await button(page, Lines.job.openAtDesk).click();
+    assert.equal(await page.locator('#reveal .card').count(), 5, 'opened under the desk');
+    assert.match(await page.locator('#scene pre').first().textContent(), /\[#\]/, 'a card under the monitor now');
+});
+
+browserTest('on a home day, work is at the kitchen table, and the office is empty', { time: Date.UTC(2026, 9, 26, 10) }, async (page) => {
+    await finishOpening(page);
+    await page.clock.runFor(30 * 1000);
+    await page.getByText(Lines.job.kitchenTable('Monday')).waitFor();
+    await button(page, Lines.job.answer).click();
+    await button(page, Lines.job.resting).waitFor();
+
+    await place(page, Lines.job.name).click();
+    await page.getByText(Lines.job.today.home('Monday')).waitFor();
+    assert.equal(await button(page, Lines.job.answer).count(), 0);
 });

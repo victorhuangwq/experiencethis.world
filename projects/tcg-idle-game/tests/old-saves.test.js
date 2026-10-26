@@ -12,6 +12,7 @@ import { SaveSystem } from '../js/core/save.js';
 import { Rules } from '../js/rules.js';
 import { Collection } from '../js/systems/collection.js';
 import { Vending } from '../js/systems/vending.js';
+import { Job } from '../js/systems/job.js';
 import { newGame, act, MemoryStorage } from './helpers.js';
 
 const HOUR = 60 * 60 * 1000;
@@ -84,7 +85,8 @@ for (const { file, raw } of saves) {
         act(game, 'vending.buy', { slot });
         act(game, 'collection.open', { kind: 'normal' });
         act(game, 'collection.sellDuplicates');
-        act(game, 'wallet.work');
+        act(game, 'job.work', { at: Job.workplace(game) });
+        act(game, 'job.openAtDesk');
         act(game, 'people.knock');
 
         assert.ok(game.state.collection.packsOpened > saved.collection.packsOpened);

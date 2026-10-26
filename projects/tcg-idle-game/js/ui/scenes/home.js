@@ -8,9 +8,11 @@ import { Lines } from '../../content/text/index.js';
 import { Catalog } from '../../content/catalog.js';
 import { Collection, bennyOffer } from '../../systems/collection.js';
 import { Wallet } from '../../systems/wallet.js';
+import { Job } from '../../systems/job.js';
 import { storage } from '../art/home.js';
 import { escape, button, art } from '../html.js';
 import { renderCritters } from './critters.js';
+import { workButton } from '../panels/work.js';
 
 export const HomeScene = {
     id: 'home',
@@ -22,7 +24,14 @@ export const HomeScene = {
 function renderHome(game, view) {
     const cards = game.state.collection.cards;
     const forSale = Collection.storageForSale(game);
-    const parts = [art(storage(Collection.storage(game), game.state.story.shoebox, !!forSale))];
+    const parts = [];
+
+    // On home days, work happens at the kitchen table
+    if (game.unlocked('work') && Job.workplace(game) === 'home') {
+        parts.push(`<p>${escape(Lines.job.kitchenTable(Job.today(game)))} ${workButton(game, 'home')}</p>`);
+    }
+
+    parts.push(art(storage(Collection.storage(game), game.state.story.shoebox, !!forSale)));
 
     const counts = new Map();
     for (const card of cards) {

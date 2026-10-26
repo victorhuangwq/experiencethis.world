@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import { newGame, act, START } from './helpers.js';
 import { nextRandom } from '../js/core/random.js';
 import { Rules } from '../js/rules.js';
+import { Job } from '../js/systems/job.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Locations } from '../js/ui/scenes/index.js';
 import { renderEncounter } from '../js/ui/panels/encounter.js';
@@ -33,7 +34,8 @@ const MOVES = [
     { weight: 2, run: game => act(game, 'collection.smell') },
     { weight: 2, run: game => act(game, 'collection.sellDuplicates') },
     { weight: 3, run: game => act(game, 'collection.buyStorage') },
-    { weight: 4, run: game => act(game, 'wallet.work') },
+    { weight: 4, run: (game, roll) => act(game, 'job.work', { at: roll() < 0.8 ? Job.workplace(game) : 'home' }) },
+    { weight: 2, run: game => act(game, 'job.openAtDesk') },
     { weight: 1, run: game => act(game, 'people.knock') },
     { weight: 2, run: (game, roll) => act(game, 'story.visit', { location: Locations[Math.floor(roll() * Locations.length)].id }) },
     // Time passes: a few seconds, a while, or a long time away
@@ -76,6 +78,7 @@ function checkInvariants(game, last) {
     assert.ok(isCount(state.collection.packs.normal) && isCount(state.collection.packs.special), 'pack counts');
     assert.ok(state.collection.packsOpened >= last.packsOpened, 'packs opened never goes down');
 
+    const collection = state.collection;
     const vending = state.vending;
     assert.ok(vending.slots.every(slot => slot === null || slot === 'normal' || slot === 'special'), 'slots');
     assert.ok(vending.jammedSlot === null || (vending.jammedSlot >= 0 && vending.jammedSlot < Rules.slotCount), 'jammed slot');
@@ -87,7 +90,11 @@ function checkInvariants(game, last) {
         assert.equal(due % MINUTE, 0, 'the driver comes on the minute');
     }
 
-    const collection = state.collection;
+    const job = state.job;
+    assert.ok(isCount(job.emailsAnswered) && job.emailsAnswered >= last.emailsAnswered, 'emails answered');
+    assert.ok([0, 1, 2].includes(job.coworker) && job.coworker >= last.coworker, 'Marcus only gets friendlier');
+    assert.ok(job.packsOpenedAtDesk <= collection.packsOpened, 'packs opened at the desk are packs opened');
+
     const ids = new Set();
     for (const card of collection.cards) {
         assert.ok(!ids.has(card.id), `card ${card.id} is there twice`);
@@ -152,6 +159,8 @@ function snapshot(game) {
         packsOpened: game.state.collection.packsOpened,
         storage: game.state.collection.storage,
         strikes: game.state.kindness.strikes.length,
+        emailsAnswered: game.state.job.emailsAnswered,
+        coworker: game.state.job.coworker,
         unlocked: [...game.state.progress.unlocked]
     };
 }
@@ -162,7 +171,8 @@ function snapshot(game) {
  */
 function playRandomly(seed, steps = STEPS) {
     const roll = player(seed);
-    const game = newGame({ seed, now: START + Math.floor(roll() * 24) * HOUR });
+    // Start at any hour of any day of the week
+    const game = newGame({ seed, now: START + Math.floor(roll() * 7 * 24) * HOUR });
     let last = snapshot(game);
 
     for (let step = 1; step <= steps && !game.state.meta.ended; step++) {
@@ -183,20 +193,22 @@ function playRandomly(seed, steps = STEPS) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, cards: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, cards: 0, lunch: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
         reached.endings += game.state.meta.ended ? 1 : 0;
         reached.gus += game.unlocked('gus') ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
+        reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games; ${reached.endings} ended; most cards ${reached.cards}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch`);
     // The random player has to get far enough for this test to mean something
-    assert.ok(reached.storage.size >= 2, 'some games bought storage');
+    assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
     assert.ok(reached.endings > 0, 'some games ended in shame');
+    assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
 });
 
 test('the same seed and the same moves give the same game', () => {

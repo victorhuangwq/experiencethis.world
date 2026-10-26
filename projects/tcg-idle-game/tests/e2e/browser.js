@@ -18,7 +18,7 @@ const SITE = process.env.SITE_DIR || fileURLToPath(new URL('../../../../_site/',
 const RESULTS = fileURLToPath(new URL('../../test-results/', import.meta.url));
 const GAME = '/tcg-idle-game/';
 
-// Saturday 25 October 2026, 2:07 PM, in the browser's time zone (UTC)
+// Sunday 25 October 2026, 2:07 PM, in the browser's time zone (UTC)
 export const START = Date.UTC(2026, 9, 25, 14, 7);
 
 const TYPES = {

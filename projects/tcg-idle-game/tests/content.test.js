@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { gameAtMall, newGame, act, finishOpening } from './helpers.js';
+import { gameAtMall, newGame, act, finishOpening, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Systems } from '../js/systems/index.js';
 import { Unlocks } from '../js/content/unlocks.js';
@@ -172,6 +172,18 @@ test('text covers every strike, season, and idle comment', () => {
     assert.ok(Lines.packs.sniffs[Rules.sniffsToAttune], 'a line for becoming attuned');
 });
 
+test('the job works in real places, with lines for every kind of day', () => {
+    const places = Locations.map(place => place.id);
+    assert.equal(Rules.workplaces.length, 7, 'one for each day of the week');
+    for (const workplace of Rules.workplaces) {
+        assert.ok(workplace === null || places.includes(workplace), `workplace ${workplace}`);
+        for (const topic of ['unlocked', 'today', 'wrongPlace']) {
+            assert.equal(typeof Lines.job[topic][workplace || 'off'], 'function', `Lines.job.${topic}.${workplace || 'off'}`);
+        }
+    }
+    assert.equal(Lines.job.days.length, 7);
+});
+
 test('no text is empty', () => {
     const check = (value, path) => {
         if (typeof value === 'string') {
@@ -221,8 +233,13 @@ test('every place renders at every stage of the game', () => {
     const big = gameAtMall();
     Collection.add(big, Array.from({ length: 500 }, (_, index) => Cards.randomCard(big, 'common', 5 + index % 5)));
     big.checkUnlocks();
+    // A Tuesday, at work, with packs to open at the desk
+    const tuesday = START + 2 * 24 * 60 * 60 * 1000;
+    const office = gameAtMall({ now: tuesday });
+    office.tick(tuesday + 60 * 1000);
+    office.state.collection.packs.normal = 2;
 
-    for (const [name, game] of Object.entries({ fresh, kept, busy, big })) {
+    for (const [name, game] of Object.entries({ fresh, kept, busy, big, office })) {
         for (const place of Locations) {
             for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }]) {
                 const html = place.render(game, view);

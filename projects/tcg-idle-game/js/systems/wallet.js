@@ -1,9 +1,9 @@
 /**
- * Wallet: money (in whole cents), the self-given allowance, and work
+ * Wallet: money (in whole cents) and the self-given allowance. The day job
+ * is in job.js.
  */
 
 import { MINUTE } from '../core/time.js';
-import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
 
@@ -15,13 +15,11 @@ export const Wallet = {
         // Allowance has been paid up to this time
         paidUntil: 0,
         // Total allowance ever paid
-        allowanceEarned: 0,
-        workReadyAt: 0
+        allowanceEarned: 0
     }),
 
     load(wallet, game, now) {
         wallet.paidUntil = Math.min(wallet.paidUntil, now);
-        wallet.workReadyAt = Math.min(wallet.workReadyAt, now + Rules.workRest);
     },
 
     /**
@@ -79,24 +77,5 @@ export const Wallet = {
 
     earn(game, cents) {
         game.state.wallet.cents += cents;
-    },
-
-    /**
-     * How rested the player is after work, from 0 (just worked) to 1 (ready)
-     */
-    workProgress(game, now) {
-        const remaining = game.state.wallet.workReadyAt - now;
-        return remaining <= 0 ? 1 : 1 - remaining / Rules.workRest;
-    },
-
-    actions: {
-        work(game, args, now) {
-            if (!game.unlocked('work') || Wallet.workProgress(game, now) < 1) {
-                return;
-            }
-            Wallet.earn(game, Rules.workPay);
-            game.state.wallet.workReadyAt = now + Rules.workRest;
-            game.say(game.pick(Lines.money.work.done) + ' +' + Format.money(Rules.workPay));
-        }
     }
 };

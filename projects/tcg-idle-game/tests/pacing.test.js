@@ -12,10 +12,12 @@ import { Rules } from '../js/rules.js';
 import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
 import { Collection } from '../js/systems/collection.js';
+import { Job } from '../js/systems/job.js';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
 
 const SEEDS = 20;
 
@@ -51,22 +53,24 @@ function playVisit(game) {
 }
 
 /**
- * Play until a milestone, or give up
- * @param {Object} options - seed, step (time between moves), visit (play each step?),
- *                           work (do chores whenever rested?), until(game), limit
+ * Play until a milestone, or give up. Each seed starts on a different day
+ * of the week, since the day job depends on the day.
+ * @param {Object} options - seed, step (time between moves), work (answer
+ *                           emails whenever rested?), until(game), limit
  * @returns {number|null} - Time taken, or null if never reached
  */
 function timeUntil({ seed, step, work, until, limit }) {
-    const game = newGame({ seed });
+    const start = START + (seed % 7) * DAY;
+    const game = newGame({ seed, now: start });
     finishOpening(game, 'sell');
-    for (let now = START; now <= START + limit; now += step) {
+    for (let now = start; now <= start + limit; now += step) {
         game.catchUp(now);
         if (work) {
-            act(game, 'wallet.work');
+            act(game, 'job.work', { at: Job.workplace(game) });
         }
         playVisit(game);
         if (until(game)) {
-            return now - START;
+            return now - start;
         }
     }
     return null;
@@ -76,9 +80,9 @@ const firstPip = game => game.state.people.pip.encounters > 0;
 const gus = game => game.unlocked('gus');
 const binder = game => Collection.storage(game) !== 'shoebox';
 
-// A player with the game open, doing chores whenever they can
+// A player with the game open, answering emails whenever they can
 const active = { step: 5 * SECOND, work: true, limit: 3 * HOUR };
-// A player who checks in every few hours and never does chores
+// A player who checks in every few hours and never answers emails
 const idle = { step: 4 * HOUR, work: false, limit: 7 * 24 * HOUR };
 
 /**

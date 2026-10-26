@@ -8,8 +8,9 @@ The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a self-given allowance and
-emails for extra money, the CARD-O-MATIC 3000 restocking every 25 to 35
+Act 1 (spring) is playable: the shoebox opening, a self-given allowance, a
+hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
+on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
 minutes of real time, Pip and the kindness code, Benny buying duplicates,
 storage to buy as the collection outgrows it (each one organising the cards
 better), three secrets, and Gus's store, which opens in summer (Act 2).
@@ -33,7 +34,8 @@ js/
     random.js      Seeded random numbers
   systems/         Game logic, one feature per file
     index.js       Every system, in tick order
-    wallet.js  collection.js  vending.js  kindness.js  people.js  story.js
+    wallet.js  job.js  collection.js  vending.js  kindness.js  people.js
+    story.js
     cards.js       Card logic (making cards, opening packs, save packing)
   content/         Data
     catalog.js     The card catalogue

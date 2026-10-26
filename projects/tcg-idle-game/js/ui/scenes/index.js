@@ -10,7 +10,8 @@
  */
 
 import { HomeScene } from './home.js';
+import { OfficeScene } from './office.js';
 import { MallScene } from './mall.js';
 import { GusScene } from './gus.js';
 
-export const Locations = [HomeScene, MallScene, GusScene];
+export const Locations = [HomeScene, OfficeScene, MallScene, GusScene];

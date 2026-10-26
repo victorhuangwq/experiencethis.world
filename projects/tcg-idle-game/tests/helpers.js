@@ -9,7 +9,7 @@ import { Unlocks } from '../js/content/unlocks.js';
 import { Encounters } from '../js/content/encounters/index.js';
 import { Rules } from '../js/rules.js';
 
-// Saturday 25 October 2026, 2:07 PM local time
+// Sunday 25 October 2026, 2:07 PM local time
 export const START = new Date(2026, 9, 25, 14, 7).getTime();
 
 export function memoryEndings() {
