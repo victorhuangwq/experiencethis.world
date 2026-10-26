@@ -56,7 +56,7 @@ export const packTear = [
 /**
  * Wrap text to a width, breaking at spaces
  */
-function wrap(text, width) {
+export function wrap(text, width) {
     const lines = [];
     let current = '';
     for (const word of text.split(' ')) {

@@ -31,6 +31,8 @@ export class UI {
         this.root = root;
         this.options = options;
         this.location = 'home';
+        // What each scene is showing, like a binder page. Not saved.
+        this.views = {};
 
         // The game on the left and the log on the right. On a phone the log
         // becomes a strip at the top showing the newest line (see style.css).
@@ -81,6 +83,11 @@ export class UI {
         }
         if (action === 'log.toggle') {
             this.toggleLog();
+            return;
+        }
+        if (action === 'view.set') {
+            Object.assign(this.view(this.location), args);
+            this.render();
             return;
         }
         if (action === 'restart') {
@@ -146,7 +153,7 @@ export class UI {
         this.setHTML(this.parts['dev-bar'], this.options.devMode ? renderDevBar() : '');
         this.setHTML(this.parts.status, renderStatus(game, now));
         this.setHTML(this.parts.locations, renderNavigation(game, location.id));
-        this.setHTML(this.parts.scene, encounter ? renderEncounter(game, encounter) : location.render(game));
+        this.setHTML(this.parts.scene, encounter ? renderEncounter(game, encounter) : location.render(game, this.view(location.id)));
         this.setHTML(this.parts.log, renderLog(game));
         this.setHTML(this.parts['endings-found'], renderEndingsFound(game));
         updateStatus(this.parts.status, game, now);
@@ -160,6 +167,15 @@ export class UI {
             this.location = location;
             this.reveal.clear();
         }
+    }
+
+    /**
+     * What a scene is showing, like which binder page is open
+     * @param {string} id - Scene id
+     */
+    view(id) {
+        this.views[id] = this.views[id] || {};
+        return this.views[id];
     }
 
     /**

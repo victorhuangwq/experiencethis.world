@@ -181,6 +181,12 @@ button.current {
         display: inline-block;
         flex-shrink: 0;
     }
+
+    /* Three pockets across still fit on a phone */
+    .pockets {
+        gap: 4px;
+        font-size: 12px;
+    }
 }
 
 /*
@@ -247,6 +253,22 @@ button.current {
 
 .card {
     margin: 0;
+}
+
+/* A binder page: nine pockets, three by three */
+.pockets {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 4px 8px;
+    margin: 8px 0;
+}
+
+.pocket {
+    margin: 0;
+}
+
+.pages {
+    margin-top: 4px;
 }
 
 .checklist {

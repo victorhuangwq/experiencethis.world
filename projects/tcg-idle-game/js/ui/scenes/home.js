@@ -1,5 +1,6 @@
 /**
- * Home: the player's collection, in whatever they keep it in
+ * Home: the player's collection, in whatever they keep it in. The other
+ * critters are shown by critters.js.
  */
 
 import { Lines } from '../../content/text/index.js';
@@ -7,6 +8,7 @@ import { Catalog } from '../../content/catalog.js';
 import { Collection, bennyOffer } from '../../systems/collection.js';
 import { storage } from '../art/home.js';
 import { escape, button, art } from '../html.js';
+import { renderCritters } from './critters.js';
 
 export const HomeScene = {
     id: 'home',
@@ -15,7 +17,7 @@ export const HomeScene = {
     render: renderHome
 };
 
-function renderHome(game) {
+function renderHome(game, view) {
     const cards = game.state.collection.cards;
     const parts = [art(storage(Collection.storage(game), game.state.story.shoebox))];
 
@@ -53,18 +55,7 @@ function renderHome(game) {
         }
     }
 
-    // Everything else, best first
-    const others = [...counts.keys()]
-        .map(name => cards.find(card => card.name === name))
-        .filter(card => !card.fixedId)
-        .sort((a, b) => Catalog.rarities.indexOf(b.rarity) - Catalog.rarities.indexOf(a.rarity) || a.name.localeCompare(b.name));
-    if (others.length > 0) {
-        const items = others.map(card => {
-            const count = counts.get(card.name);
-            return `<li class="${card.rarity}">${escape(card.name)}${count > 1 ? ' x' + count : ''} <span class="muted">${card.rarity}</span></li>`;
-        });
-        parts.push(`<h3>${escape(Lines.home.others)}</h3><ul class="checklist">${items.join('')}</ul>`);
-    }
+    parts.push(renderCritters(game, view));
 
     return parts.join('');
 }

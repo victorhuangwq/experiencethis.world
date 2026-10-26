@@ -23,5 +23,22 @@ export const Home = {
     count: (cards, different) => `${cards} cards. ${different} different.`,
     unknown: '???',
     unknownNote: 'The developer knows where the rest are. The developer is not telling.',
-    others: 'Other critters'
+    others: 'Other critters',
+
+    // In the shoebox, critters are a pile
+    pile: 'In the order you threw them in.',
+    pileMore: count => `...and ${count} more at the bottom of the box.`,
+
+    // In binders, critters go in pockets on pages
+    binders: {
+        all: 'The binder',
+        good: 'The good ones',
+        commons: 'Commons',
+        Fire: 'Fire',
+        Water: 'Water',
+        Nature: 'Nature'
+    },
+    page: (page, pages) => `Page ${page} of ${pages}`,
+    previousPage: 'Previous page',
+    nextPage: 'Next page'
 };

@@ -1,6 +1,9 @@
 /**
- * ASCII art for home: the shoebox and the storage that replaces it
+ * ASCII art for home: the shoebox, the storage that replaces it, and binder
+ * pockets
  */
+
+import { wrap } from './cards.js';
 
 export function shoebox(label) {
     return [
@@ -63,3 +66,32 @@ export function storage(kind, shoeboxFate) {
             return shoebox(shoeboxFate === 'sold' ? ['SHOES', ''] : ['CARDS - DO NOT', 'TOUCH']);
     }
 }
+
+// Width inside a binder pocket
+const POCKET = 12;
+
+/**
+ * A binder pocket holding a critter
+ * @param {Object} entry - name, rarity, count
+ */
+export function pocket(entry) {
+    const edge = { common: '-', uncommon: '=', rare: '*' }[entry.rarity] || '-';
+    const [first = '', second = ''] = wrap(entry.name, POCKET);
+    const count = entry.count > 1 ? 'x' + entry.count : '';
+    return [
+        '.' + edge.repeat(POCKET) + '.',
+        '|' + first.padEnd(POCKET) + '|',
+        '|' + second.padEnd(POCKET) + '|',
+        '|' + entry.rarity.padEnd(POCKET - count.length) + count + '|',
+        '\'' + edge.repeat(POCKET) + '\''
+    ].join('\n');
+}
+
+// An empty pocket, the same size as a full one
+export const emptyPocket = [
+    '.' + '.'.repeat(POCKET) + '.',
+    ':' + ' '.repeat(POCKET) + ':',
+    ':' + ' '.repeat(POCKET) + ':',
+    ':' + ' '.repeat(POCKET) + ':',
+    ':' + '.'.repeat(POCKET) + ':'
+].join('\n');
