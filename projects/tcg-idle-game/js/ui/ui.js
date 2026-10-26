@@ -23,7 +23,8 @@ export class UI {
     /**
      * @param {Game} game - Game
      * @param {HTMLElement} root - Element to draw into
-     * @param {Object} options - devMode, onAction (after each action), onDev(action)
+     * @param {Object} options - devMode, onAction (after each action), onDev(action),
+     *                           seasonTag (element beside the title for the season)
      */
     constructor(game, root, options = {}) {
         this.game = game;
@@ -139,6 +140,9 @@ export class UI {
         const location = this.currentLocation();
 
         const now = Date.now();
+        if (this.options.seasonTag) {
+            this.setHTML(this.options.seasonTag, Lines.story.seasons[game.state.story.season]);
+        }
         this.setHTML(this.parts['dev-bar'], this.options.devMode ? renderDevBar() : '');
         this.setHTML(this.parts.status, renderStatus(game, now));
         this.setHTML(this.parts.locations, renderNavigation(game, location.id));

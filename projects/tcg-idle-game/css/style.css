@@ -149,6 +149,7 @@ button.current {
     .layout {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         gap: 0;
     }
 
@@ -182,15 +183,23 @@ button.current {
     }
 }
 
-/* Parts of ASCII art that can be pressed, like the machine's slots */
+/*
+ * Parts of ASCII art that can be pressed, like the machine's slots. They look
+ * like keys: outlined, with a shadow underneath that goes away when pressed.
+ * Shadows don't take up space, so the art stays lined up.
+ */
 .art-button {
     padding: 0;
     margin: 0;
     border: none;
+    border-radius: 2px;
     font: inherit;
+    font-weight: bold;
     line-height: inherit;
-    background: var(--button-hover);
+    background: var(--button-background);
     color: var(--text);
+    box-shadow: 0 0 0 1px var(--border), 0 1px 0 1px var(--border);
+    cursor: pointer;
 }
 
 .art-button:hover:not(:disabled),
@@ -199,12 +208,28 @@ button.current {
     color: var(--background);
 }
 
+.art-button:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 0 0 1px var(--border);
+}
+
 .art-button.special {
     color: var(--legendary);
 }
 
+.art-button.special:hover:not(:disabled),
+.art-button.special:focus-visible {
+    background: var(--legendary);
+    color: var(--background);
+}
+
+/* A slot the player can't afford yet: still a key, just not a pressable one */
 .art-button:disabled {
+    font-weight: normal;
     background: none;
+    color: var(--muted);
+    box-shadow: 0 0 0 1px var(--muted);
+    cursor: not-allowed;
 }
 
 .art {
@@ -261,13 +286,26 @@ button.current {
     color: var(--legendary);
 }
 
+/* A clear gap between messages, so wrapped ones don't run together */
 .message {
-    margin: 4px 0;
+    margin: 0 0 12px;
 }
 
-.season {
+/* The season, as a tag beside the title */
+.season-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 0 8px;
+    border: 1px solid var(--muted);
     color: var(--muted);
+    font-size: 0.55em;
+    font-weight: normal;
     letter-spacing: 0.2em;
+    vertical-align: middle;
+}
+
+.season-tag:empty {
+    display: none;
 }
 
 /* Buttons that fill back up while they rest */

@@ -47,6 +47,7 @@ const devMode = new URLSearchParams(location.search).has('dev');
 
 const ui = new UI(game, document.getElementById('app'), {
     devMode,
+    seasonTag: document.getElementById('season-tag'),
     // Save after every action, so reloading can't undo a choice
     onAction: save,
     onDev: (action) => {

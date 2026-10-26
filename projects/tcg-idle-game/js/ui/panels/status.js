@@ -1,5 +1,5 @@
 /**
- * The status bar: the season, money, work, and unopened packs
+ * The status bar: money, work, and unopened packs
  */
 
 import { Format } from '../../core/format.js';
@@ -8,7 +8,7 @@ import { Wallet } from '../../systems/wallet.js';
 import { escape, button } from '../html.js';
 
 export function renderStatus(game, now) {
-    const parts = [`<p class="season">~ ${Lines.story.seasons[game.state.story.season]} ~</p>`];
+    const parts = [];
 
     if (game.unlocked('allowance')) {
         parts.push(`<p>${Lines.money.label} <b data-money></b></p>`);
