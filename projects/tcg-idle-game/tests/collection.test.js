@@ -74,16 +74,60 @@ test('Benny buys duplicates for 75% and leaves the best copy', () => {
     assert.deepEqual(game.state.collection.cards.map(c => c.value).sort((a, b) => a - b), [5, 30]);
 });
 
-test('storage grows with the most cards ever held, and never shrinks', () => {
+test('a binder goes on sale once the shoebox is outgrown, and must be bought', () => {
     const game = gameAtMall();
-    assert.equal(Collection.storage(game), 'shoebox');
-    const filler = () => Cards.randomCard(game, 'common', 8);
-    Collection.add(game, Array.from({ length: 40 }, filler));
+    const filler = count => Array.from({ length: count }, () => Cards.randomCard(game, 'common', 8));
+    Collection.add(game, filler(39));
+    game.checkUnlocks();
+    assert.equal(Collection.storageForSale(game), null);
+
+    Collection.add(game, filler(1));
+    game.checkUnlocks();
+    assert.equal(Collection.storageForSale(game).id, 'binder');
+    assert.equal(Collection.storage(game), 'shoebox', 'it does not upgrade by itself');
+    assert.match(game.messages[0].text, /lid no longer closes/);
+
+    game.state.wallet.cents = 999;
+    act(game, 'collection.buyStorage');
+    assert.equal(Collection.storage(game), 'shoebox', 'a binder costs $10');
+
+    game.state.wallet.cents = 1000;
+    act(game, 'collection.buyStorage');
     assert.equal(Collection.storage(game), 'binder');
+    assert.equal(game.state.wallet.cents, 0);
+    assert.equal(Collection.storageForSale(game), null);
+});
+
+test('storage is bought in order, and anything already outgrown goes on sale next', () => {
+    const game = gameAtMall();
+    Collection.add(game, Array.from({ length: 150 }, () => Cards.randomCard(game, 'common', 8)));
+    game.checkUnlocks();
+    assert.equal(Collection.storageForSale(game).id, 'binder', 'the binder comes first');
+
+    game.state.wallet.cents = 10000;
+    act(game, 'collection.buyStorage');
+    assert.equal(Collection.storageForSale(game).id, 'two-binders');
+    assert.match(game.messages[0].text, /second binder would help/);
+    act(game, 'collection.buyStorage');
+    assert.equal(Collection.storage(game), 'two-binders');
+});
+
+test('selling cards never takes storage away', () => {
+    const game = gameAtMall();
+    Collection.add(game, Array.from({ length: 40 }, () => Cards.randomCard(game, 'common', 8)));
+    game.checkUnlocks();
+    game.state.wallet.cents = 1000;
+    act(game, 'collection.buyStorage');
     game.state.collection.cards = [];
     assert.equal(Collection.storage(game), 'binder');
-    game.checkUnlocks();
-    assert.ok(game.unlocked('storage-binder'));
+});
+
+test('players whose storage upgraded by itself in an older version keep it', () => {
+    const game = gameAtMall();
+    const data = JSON.parse(JSON.stringify(game.toSaveData()));
+    delete data.collection.storage;
+    data.progress.unlocked.push('storage-binder', 'storage-two-binders');
+    assert.equal(Collection.storage(newGame({ save: data, now: game.time })), 'two-binders');
 });
 
 test("Gus's store appears after 40 cards opened with Pip's tip, or 60 without", () => {

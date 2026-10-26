@@ -45,13 +45,14 @@ export const Rules = {
     gusWithTip: 40,
     gusWithoutTip: 60,
 
-    // Collection storage, by the most cards ever held at once
+    // Collection storage, in order. Each one goes on sale once the player
+    // has this many cards, and costs this much (in cents).
     storage: [
-        { id: 'shoebox', cards: 0 },
-        { id: 'binder', cards: 40 },
-        { id: 'two-binders', cards: 150 },
-        { id: 'bookshelf', cards: 400 },
-        { id: 'card-room', cards: 1000 }
+        { id: 'shoebox', cards: 0, price: 0 },
+        { id: 'binder', cards: 40, price: 1000 },
+        { id: 'two-binders', cards: 150, price: 2500 },
+        { id: 'bookshelf', cards: 400, price: 6000 },
+        { id: 'card-room', cards: 1000, price: 20000 }
     ],
 
     // When the narrator comments on the player not doing anything

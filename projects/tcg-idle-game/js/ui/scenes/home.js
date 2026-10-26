@@ -3,9 +3,11 @@
  * critters are shown by critters.js.
  */
 
+import { Format } from '../../core/format.js';
 import { Lines } from '../../content/text/index.js';
 import { Catalog } from '../../content/catalog.js';
 import { Collection, bennyOffer } from '../../systems/collection.js';
+import { Wallet } from '../../systems/wallet.js';
 import { storage } from '../art/home.js';
 import { escape, button, art } from '../html.js';
 import { renderCritters } from './critters.js';
@@ -19,13 +21,19 @@ export const HomeScene = {
 
 function renderHome(game, view) {
     const cards = game.state.collection.cards;
-    const parts = [art(storage(Collection.storage(game), game.state.story.shoebox))];
+    const forSale = Collection.storageForSale(game);
+    const parts = [art(storage(Collection.storage(game), game.state.story.shoebox, !!forSale))];
 
     const counts = new Map();
     for (const card of cards) {
         counts.set(card.name, (counts.get(card.name) || 0) + 1);
     }
     parts.push(`<p>${escape(Lines.home.count(cards.length, counts.size))}</p>`);
+
+    if (forSale) {
+        const label = `${Lines.home.buy[forSale.id]} (${Format.money(forSale.price)})`;
+        parts.push(`<p>${button('collection.buyStorage', label, { disabled: !Wallet.canAfford(game, forSale.price) })}</p>`);
+    }
 
     if (game.unlocked('benny-buys')) {
         const offer = bennyOffer(game);

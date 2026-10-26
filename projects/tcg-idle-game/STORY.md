@@ -70,7 +70,9 @@ file per topic.
   summer, then autumn, winter, and spring again. Scenes can change a little
   with the season. Characters don't age.
 - **Storage grows:** a shoebox, a binder, two binders, a bookshelf of
-  binders, and finally the card room (formerly the guest room). Each step
+  binders, and finally the card room (formerly the guest room). Each one
+  goes on sale when the collection outgrows the one before ("The shoebox lid
+  no longer closes"), and costs money: $10, $25, $60, and $200. Each step
   organises the collection better: the shoebox is a pile in the order cards
   were thrown in; a binder has nine-pocket pages, best cards first; two
   binders split the good ones from the commons; the bookshelf has a binder

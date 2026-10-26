@@ -28,8 +28,7 @@ test('cards on a checklist are not counted as other critters', () => {
 test('the shoebox is a pile, newest first, that trails off', () => {
     const names = Array.from({ length: 45 }, (_, index) => `Critter ${String(index).padStart(2, '0')}`);
     const game = gameWith(names.map(name => card(name)));
-    assert.equal(Collection.storage(game), 'binder', '45 cards is a binder');
-    game.state.collection.mostCards = 0;
+    assert.equal(Collection.storage(game), 'shoebox', 'until a binder is bought');
     assert.equal(bindersFor(Collection.storage(game)), null);
 
     const html = renderCritters(game, {});
@@ -73,7 +72,7 @@ test('the two binders split the good cards from the commons', () => {
 
 test('an unknown binder or page falls back to the first', () => {
     const game = gameWith(Array.from({ length: 150 }, (_, index) => card(`Critter ${index}`, index % 2 ? 'common' : 'uncommon')));
-    assert.equal(Collection.storage(game), 'two-binders');
+    game.state.collection.storage = 'two-binders';
     const html = renderCritters(game, { binder: 'all', page: 'x' });
     assert.match(html, /class="current"[^>]*>The good ones \(75\)/);
     assert.match(html, /Page 1 of 9/);

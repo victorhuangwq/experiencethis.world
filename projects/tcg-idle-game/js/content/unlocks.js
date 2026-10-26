@@ -53,10 +53,14 @@ export const Unlocks = [
         },
         run: game => game.say(game.state.people.pip.mentionedGus ? Lines.gus.unlockedWithTip : Lines.gus.unlockedWithoutTip, 'good')
     },
-    // Bigger storage as the collection grows
+    // When the collection outgrows its storage, the next kind goes on sale
     ...Rules.storage.slice(1).map(stage => ({
-        id: 'storage-' + stage.id,
-        when: game => game.state.collection.mostCards >= stage.cards,
-        run: game => game.say(Lines.home.upgraded[stage.id], 'good')
+        id: 'outgrew-' + stage.id,
+        when: game => game.state.collection.cards.length >= stage.cards,
+        run: game => {
+            if (Collection.storageForSale(game) === stage) {
+                game.say(Lines.home.outgrown[stage.id], 'warning');
+            }
+        }
     }))
 ];

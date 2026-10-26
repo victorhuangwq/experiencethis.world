@@ -13,6 +13,19 @@ export const Home = {
         'bookshelf': 'A bookshelf of binders',
         'card-room': 'The card room'
     },
+    // The collection has outgrown its storage, and the next one is for sale
+    outgrown: {
+        'binder': 'The shoebox lid no longer closes. Binders exist. Binders are for serious people.',
+        'two-binders': 'The binder will not close. It makes a noise when you try. A second binder would help.',
+        'bookshelf': 'The binders are on the floor now. They deserve a bookshelf.',
+        'card-room': 'The bookshelf is full. The guest room is right there.'
+    },
+    buy: {
+        'binder': 'Buy a binder',
+        'two-binders': 'Buy a second binder',
+        'bookshelf': 'Buy a bookshelf',
+        'card-room': 'Turn the guest room into a card room'
+    },
     upgraded: {
         'binder': 'Your cards no longer fit in the shoebox. You buy a binder. You are a binder person now.',
         'two-binders': 'One binder was not enough. You have two binders. They are friends.',

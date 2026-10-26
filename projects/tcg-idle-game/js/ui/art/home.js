@@ -5,9 +5,17 @@
 
 import { wrap } from './cards.js';
 
-export function shoebox(label) {
+/**
+ * A shoebox. When it's overflowing, cards stick out of the top.
+ * @param {Array} label - Two lines written on the side
+ * @param {boolean} overflowing - Whether cards are spilling out
+ */
+export function shoebox(label, overflowing = false) {
+    const top = overflowing
+        ? ['      .--.  .--.   .--.', '    __|##|__|##|___|##|_']
+        : ['    ____________________'];
     return [
-        '    ____________________',
+        ...top,
         '   /                   /|',
         '  /___________________/ |',
         '  |                   | |',
@@ -21,8 +29,9 @@ export function shoebox(label) {
  * Where the player keeps their cards
  * @param {string} kind - Storage id from Rules.storage
  * @param {string} shoeboxFate - What happened to the childhood shoebox: 'sold' or 'kept'
+ * @param {boolean} overflowing - Whether cards are spilling out of it
  */
-export function storage(kind, shoeboxFate) {
+export function storage(kind, shoeboxFate, overflowing = false) {
     switch (kind) {
         case 'binder':
             return [
@@ -63,7 +72,7 @@ export function storage(kind, shoeboxFate) {
                 ' |_______________________________|'
             ].join('\n');
         default:
-            return shoebox(shoeboxFate === 'sold' ? ['SHOES', ''] : ['CARDS - DO NOT', 'TOUCH']);
+            return shoebox(shoeboxFate === 'sold' ? ['SHOES', ''] : ['CARDS - DO NOT', 'TOUCH'], overflowing);
     }
 }
 
