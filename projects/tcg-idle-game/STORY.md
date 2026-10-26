@@ -48,8 +48,12 @@ file per topic.
 - **The world shows the player's history.** Choices leave marks in the ASCII
   art (Pip's sticker, the BE NICE note, dents from kicks), and storage grows
   with the collection. Strikes have no counter on screen.
-- **The log is quiet.** A few lines, newest first, older ones fading out.
+- **The log is quiet.** It sits to the right of the game, newest first, with
+  older lines fading out; on phones it shrinks to the newest line at the top.
   Feedback that the scene already shows (a slot emptying) doesn't need a line.
+- **Things in the art can be pressed.** The vending machine's slots and coin
+  return are buttons on the machine itself, not a row of buttons under it.
+  Opened cards stay with the place they were opened in.
 - **Pack opening is a moment.** The pack tears, cards flip one at a time, and
   the last card waits a beat.
 
@@ -66,7 +70,13 @@ file per topic.
   summer, then autumn, winter, and spring again. Scenes can change a little
   with the season. Characters don't age.
 - **Storage grows:** a shoebox, a binder, two binders, a bookshelf of
-  binders, and finally the card room (formerly the guest room).
+  binders, and finally the card room (formerly the guest room). Each one
+  goes on sale when the collection outgrows the one before ("The shoebox lid
+  no longer closes"), and costs money: $10, $25, $60, and $200. Each step
+  organises the collection better: the shoebox is a pile in the order cards
+  were thrown in; a binder has nine-pocket pages, best cards first; two
+  binders split the good ones from the commons; the bookshelf has a binder
+  per type.
 
 ## Cast and names
 
@@ -195,7 +205,7 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 15 minutes (:00, :15, :30, :45) | About 6 packs per restock; a special pack in about 1 of 10 restocks |
+| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots; a special pack in about 1 of 10 restocks (1 of 5 after smelling 50 packs) |
 | Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
 | Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
@@ -260,7 +270,8 @@ while the page is open:
 
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
-- The vending machine restocks at fixed clock times.
+- The vending machine restocks every half hour or so, and shows the time of
+  the next restock.
 - Card shows and tournaments run on a schedule of real clock times.
 - New set releases have a release time, and preorders arrive then.
 - Everything is stored as timestamps in the save, so closing the page never

@@ -9,6 +9,7 @@
  */
 
 import { Rules } from '../rules.js';
+import { Lines } from '../content/text/index.js';
 import { Locations } from './scenes/index.js';
 import { renderStatus, updateStatus } from './panels/status.js';
 import { renderNavigation } from './panels/navigation.js';
@@ -22,22 +23,34 @@ export class UI {
     /**
      * @param {Game} game - Game
      * @param {HTMLElement} root - Element to draw into
-     * @param {Object} options - devMode, onAction (after each action), onDev(action)
+     * @param {Object} options - devMode, onAction (after each action), onDev(action),
+     *                           seasonTag (element beside the title for the season)
      */
     constructor(game, root, options = {}) {
         this.game = game;
         this.root = root;
         this.options = options;
         this.location = 'home';
+        // What each scene is showing, like a binder page. Not saved.
+        this.views = {};
 
+        // The game on the left and the log on the right. On a phone the log
+        // becomes a strip at the top showing the newest line (see style.css).
         root.innerHTML = `
             <div id="dev-bar"></div>
-            <div id="status"></div>
-            <nav id="locations" aria-label="Places"></nav>
-            <section id="scene"></section>
-            <section id="reveal"></section>
-            <section id="log" aria-live="polite"></section>
-            <footer id="endings-found"></footer>
+            <div class="layout">
+                <div class="game-column">
+                    <div id="status"></div>
+                    <nav id="locations" aria-label="Places"></nav>
+                    <section id="scene"></section>
+                    <section id="reveal"></section>
+                    <footer id="endings-found"></footer>
+                </div>
+                <aside id="log-column" aria-label="Messages">
+                    <section id="log" aria-live="polite"></section>
+                    <button id="log-toggle" data-action="log.toggle" aria-expanded="false" aria-controls="log">${Lines.system.log.more}</button>
+                </aside>
+            </div>
         `;
         this.parts = {};
         for (const element of root.querySelectorAll('[id]')) {
@@ -68,13 +81,22 @@ export class UI {
             this.reveal.finish();
             return;
         }
+        if (action === 'log.toggle') {
+            this.toggleLog();
+            return;
+        }
+        if (action === 'view.set') {
+            Object.assign(this.view(this.location), args);
+            this.render();
+            return;
+        }
         if (action === 'restart') {
             location.reload();
             return;
         }
 
         if (action === 'go') {
-            this.location = args.location;
+            this.goTo(args.location);
             this.game.perform('story.visit', args, now);
         } else if (action.startsWith('dev.')) {
             this.options.onDev?.(action);
@@ -84,6 +106,16 @@ export class UI {
 
         this.options.onAction?.();
         this.render();
+    }
+
+    /**
+     * Show the whole log, or only the newest line (on phones)
+     */
+    toggleLog() {
+        const expanded = this.parts['log-column'].classList.toggle('expanded');
+        const toggle = this.parts['log-toggle'];
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.textContent = expanded ? Lines.system.log.less : Lines.system.log.more;
     }
 
     /**
@@ -110,18 +142,40 @@ export class UI {
         // An encounter pulls the player to where it happens
         const encounter = game.encounter();
         if (encounter) {
-            this.location = encounter.location;
+            this.goTo(encounter.location);
         }
         const location = this.currentLocation();
 
         const now = Date.now();
+        if (this.options.seasonTag) {
+            this.setHTML(this.options.seasonTag, Lines.story.seasons[game.state.story.season]);
+        }
         this.setHTML(this.parts['dev-bar'], this.options.devMode ? renderDevBar() : '');
         this.setHTML(this.parts.status, renderStatus(game, now));
         this.setHTML(this.parts.locations, renderNavigation(game, location.id));
-        this.setHTML(this.parts.scene, encounter ? renderEncounter(game, encounter) : location.render(game));
+        this.setHTML(this.parts.scene, encounter ? renderEncounter(game, encounter) : location.render(game, this.view(location.id)));
         this.setHTML(this.parts.log, renderLog(game));
         this.setHTML(this.parts['endings-found'], renderEndingsFound(game));
         updateStatus(this.parts.status, game, now);
+    }
+
+    /**
+     * Show another place. Opened cards stay with the place they were opened in.
+     */
+    goTo(location) {
+        if (location !== this.location) {
+            this.location = location;
+            this.reveal.clear();
+        }
+    }
+
+    /**
+     * What a scene is showing, like which binder page is open
+     * @param {string} id - Scene id
+     */
+    view(id) {
+        this.views[id] = this.views[id] || {};
+        return this.views[id];
     }
 
     /**

@@ -10,12 +10,14 @@ export function escape(text) {
  * A button that runs a game action when clicked
  * @param {string} action - Action name, e.g. "vending.buy"
  * @param {string} label - Button text
- * @param {Object} options - args (sent with the action), disabled, className
+ * @param {Object} options - args (sent with the action), disabled, className,
+ *                           title (a description, for buttons whose text is art)
  */
-export function button(action, label, { args = {}, disabled = false, className = '' } = {}) {
+export function button(action, label, { args = {}, disabled = false, className = '', title = '' } = {}) {
     const data = Object.entries(args).map(([key, value]) => ` data-${key}="${escape(value)}"`).join('');
     const classes = className ? ` class="${className}"` : '';
-    return `<button data-action="${action}"${data}${classes}${disabled ? ' disabled' : ''}>${escape(label)}</button>`;
+    const described = title ? ` title="${escape(title)}" aria-label="${escape(title)}"` : '';
+    return `<button data-action="${action}"${data}${classes}${described}${disabled ? ' disabled' : ''}>${escape(label)}</button>`;
 }
 
 /**

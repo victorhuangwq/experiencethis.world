@@ -16,15 +16,27 @@ export const Collection = {
         packs: { normal: 0, special: 0 },
         packsOpened: 0,
         cardsOpened: 0,
-        // Most cards ever held at once; decides the storage
+        // Most cards ever held at once
         mostCards: 0,
+        // What the cards are kept in: an id from Rules.storage
+        storage: 'shoebox',
         sniffs: 0
     }),
 
-    load(collection) {
+    load(collection, game) {
         collection.cards = collection.cards.map(card => Cards.unpack(card)).filter(card => card !== null);
         const highestId = collection.cards.reduce((highest, card) => Math.max(highest, card.id), 0);
         collection.nextId = Math.max(collection.nextId, highestId + 1);
+
+        if (!Rules.storage.some(stage => stage.id === collection.storage)) {
+            collection.storage = 'shoebox';
+        }
+        // Storage used to upgrade by itself; players keep what they already got
+        for (const stage of Rules.storage) {
+            if (game.unlocked('storage-' + stage.id) && storageIndex(stage.id) > storageIndex(collection.storage)) {
+                collection.storage = stage.id;
+            }
+        }
     },
 
     save(collection) {
@@ -75,8 +87,17 @@ export const Collection = {
      * @returns {string} - Storage id from Rules.storage
      */
     storage(game) {
-        const mostCards = game.state.collection.mostCards;
-        return Rules.storage.filter(stage => mostCards >= stage.cards).pop().id;
+        return game.state.collection.storage;
+    },
+
+    /**
+     * The storage after the current one, if the player has outgrown the
+     * current one (it is for sale then)
+     * @returns {Object|null} - Entry from Rules.storage
+     */
+    storageForSale(game) {
+        const next = Rules.storage[storageIndex(Collection.storage(game)) + 1];
+        return next && game.unlocked('outgrew-' + next.id) ? next : null;
     },
 
     attuned(game) {
@@ -130,6 +151,24 @@ export const Collection = {
             }
         },
 
+        /**
+         * Buy the next storage, once the collection has outgrown this one
+         */
+        buyStorage(game) {
+            const next = Collection.storageForSale(game);
+            if (!next || !Wallet.spend(game, next.price)) {
+                return;
+            }
+            game.state.collection.storage = next.id;
+            game.say(Lines.home.upgraded[next.id], 'good');
+
+            // The collection may already have outgrown this one too
+            const after = Collection.storageForSale(game);
+            if (after) {
+                game.say(Lines.home.outgrown[after.id], 'warning');
+            }
+        },
+
         sellDuplicates(game) {
             if (!game.unlocked('benny-buys')) {
                 return;
@@ -149,6 +188,10 @@ export const Collection = {
         }
     }
 };
+
+function storageIndex(id) {
+    return Rules.storage.findIndex(stage => stage.id === id);
+}
 
 /**
  * What Benny would pay for the current duplicates

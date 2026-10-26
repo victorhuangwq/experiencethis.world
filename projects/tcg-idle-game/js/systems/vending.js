@@ -1,22 +1,22 @@
 /**
- * The CARD-O-MATIC 3000: restocks on the real clock, sometimes jams,
- * and hides things in its coin return
+ * The CARD-O-MATIC 3000: restocks on the real clock every half hour or so,
+ * sometimes jams, and hides things in its coin return
  */
 
-import { every } from '../core/time.js';
+import { MINUTE } from '../core/time.js';
 import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
 
-const restockSchedule = every(Rules.restockEvery);
-
 export const Vending = {
     id: 'vending',
 
     defaults: () => ({
         restockedAt: 0,
+        // When the delivery driver comes next
+        nextRestockAt: 0,
         // One entry per slot: 'normal', 'special', or null when empty
         slots: [],
         // Packs bought since the last restock, and ever
@@ -43,7 +43,8 @@ export const Vending = {
     },
 
     /**
-     * Restock at every quarter hour of the real clock
+     * Restock when the delivery driver is due, every half hour or so.
+     * The time of each visit is decided (and saved) after the one before.
      */
     tick(game, now) {
         if (!game.unlocked('mall')) {
@@ -51,20 +52,29 @@ export const Vending = {
         }
 
         const vending = game.state.vending;
-        const restockTime = restockSchedule.lastStart(now);
-        if (restockTime <= vending.restockedAt) {
+
+        // The first time the machine is seen, it is full
+        if (vending.restockedAt === 0) {
+            vending.restockedAt = now;
+            vending.nextRestockAt = Vending.driverDue(game, now);
+            Vending.fill(game);
             return;
         }
 
-        const firstStock = vending.restockedAt === 0;
-        vending.restockedAt = restockTime;
-        vending.slots = new Array(Rules.slotCount).fill('normal');
-        vending.bought = 0;
-        vending.pipChecked = false;
-
-        if (firstStock) {
+        // If the clock went backwards, don't make the player wait for the old time
+        if (vending.nextRestockAt === 0 || vending.nextRestockAt - now > Rules.restockEvery + Rules.restockVariation) {
+            vending.nextRestockAt = Vending.driverDue(game, Math.min(vending.restockedAt, now));
+        }
+        if (now < vending.nextRestockAt) {
             return;
         }
+
+        // After time away, only the latest visit matters
+        while (vending.nextRestockAt <= now) {
+            vending.restockedAt = vending.nextRestockAt;
+            vending.nextRestockAt = Vending.driverDue(game, vending.restockedAt);
+        }
+        Vending.fill(game);
 
         const specialChance = Collection.attuned(game) ? Rules.attunedSpecialRestockChance : Rules.specialRestockChance;
         if (game.chance(specialChance)) {
@@ -77,8 +87,28 @@ export const Vending = {
         game.reportAway(Lines.mall.restockAway);
     },
 
+    /**
+     * When the driver comes after a visit: half an hour or so, on the minute
+     * @param {Game} game - Game, for randomness
+     * @param {number} after - Time of the visit before
+     */
+    driverDue(game, after) {
+        const minutes = Math.round((Rules.restockEvery + game.randomInt(-Rules.restockVariation, Rules.restockVariation)) / MINUTE);
+        return Math.floor(after / MINUTE) * MINUTE + minutes * MINUTE;
+    },
+
+    /**
+     * Fill every slot with a normal pack
+     */
+    fill(game) {
+        const vending = game.state.vending;
+        vending.slots = new Array(Rules.slotCount).fill('normal');
+        vending.bought = 0;
+        vending.pipChecked = false;
+    },
+
     nextRestockAt(game) {
-        return game.state.vending.restockedAt + Rules.restockEvery;
+        return game.state.vending.nextRestockAt;
     },
 
     slotLabel(index) {

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gameAtMall, act, buyFirst, overrideRules, newestMessage } from './helpers.js';
+import { gameAtMall, act, buyFirst, overrideRules, restock, newestMessage } from './helpers.js';
 import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
 import { Endings } from '../js/content/endings.js';
@@ -70,7 +70,7 @@ test('the kid has only one chance per restock, and later visits are not guarante
     buyFirst(game);
     assert.equal(game.encounter(), null, 'no second visit in the same restock');
 
-    game.tick(at(14, 15));
+    restock(game);
     buyFirst(game);
     buyFirst(game);
     buyFirst(game);
