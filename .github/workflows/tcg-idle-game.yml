@@ -1,0 +1,78 @@
+# Tests for TCG Idle Collector (projects/tcg-idle-game). The game logic tests
+# need only Node. The browser tests run the built site in Chromium.
+name: TCG Idle Collector
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'projects/tcg-idle-game/**'
+      - '.github/workflows/tcg-idle-game.yml'
+      - '_config.yml'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+  pull_request:
+    paths:
+      - 'projects/tcg-idle-game/**'
+      - '.github/workflows/tcg-idle-game.yml'
+      - '_config.yml'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tcg-idle-game-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Game logic tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/tcg-idle-game
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+
+  browser:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    env:
+      # Jekyll reads the site's files in the system's encoding
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Build the site
+        run: bundle exec jekyll build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: projects/tcg-idle-game/package-lock.json
+      - name: Install Chromium
+        working-directory: projects/tcg-idle-game
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Run browser tests
+        working-directory: projects/tcg-idle-game
+        run: npm run test:e2e
+      - name: Keep screenshots of failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-screenshots
+          path: projects/tcg-idle-game/test-results
+          if-no-files-found: ignore

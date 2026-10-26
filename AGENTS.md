@@ -9,3 +9,5 @@
   Avoid speculative helpers, custom checkers, and generated design artifacts.
 - Keep unrelated local changes out of commits. For source/configuration changes,
   run `bundle exec jekyll build` once; expand validation only for a concrete concern.
+- For changes under `projects/tcg-idle-game`, also run `npm test` there and
+  add tests for new behavior; its README describes the tests and CI.

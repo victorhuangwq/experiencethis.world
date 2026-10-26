@@ -1,9 +1,13 @@
 {
   "name": "tcg-idle-collector",
   "private": true,
-  "description": "Tests for the TCG Idle Collector game logic. The game itself needs no build step.",
+  "description": "Tests for the TCG Idle Collector game. The game itself needs no build step.",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:e2e": "node --test tests/e2e/*.e2e.js"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
   }
 }

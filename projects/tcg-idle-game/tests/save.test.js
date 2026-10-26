@@ -1,23 +1,7 @@
 import { test, beforeEach, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import { SaveSystem } from '../js/core/save.js';
-import { newGame, gameAtMall, act, START } from './helpers.js';
-
-// A stand-in for the browser's local storage
-class MemoryStorage {
-    constructor() {
-        this.items = new Map();
-    }
-    getItem(key) {
-        return this.items.has(key) ? this.items.get(key) : null;
-    }
-    setItem(key, value) {
-        this.items.set(key, String(value));
-    }
-    removeItem(key) {
-        this.items.delete(key);
-    }
-}
+import { newGame, gameAtMall, act, START, MemoryStorage } from './helpers.js';
 
 beforeEach(() => {
     globalThis.localStorage = new MemoryStorage();

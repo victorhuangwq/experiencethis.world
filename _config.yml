@@ -40,3 +40,6 @@ exclude:
   - projects/tcg-idle-game/STORY.md
   - projects/tcg-idle-game/package.json
   - projects/tcg-idle-game/tests
+  - projects/tcg-idle-game/package-lock.json
+  - projects/tcg-idle-game/node_modules
+  - projects/tcg-idle-game/test-results

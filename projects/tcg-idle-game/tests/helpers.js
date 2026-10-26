@@ -93,3 +93,21 @@ export function restock(game) {
 export function newestMessage(game) {
     return game.messages[0]?.text;
 }
+
+/**
+ * A stand-in for the browser's local storage
+ */
+export class MemoryStorage {
+    constructor() {
+        this.items = new Map();
+    }
+    getItem(key) {
+        return this.items.has(key) ? this.items.get(key) : null;
+    }
+    setItem(key, value) {
+        this.items.set(key, String(value));
+    }
+    removeItem(key) {
+        this.items.delete(key);
+    }
+}
