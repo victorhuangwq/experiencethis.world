@@ -71,7 +71,7 @@ What helped was pulling in evidence: Safari already does this on macOS and iOS, 
 
 The core behavior fits in one sentence: press back on a new tab → close the tab → return focus to the tab that opened it. But there was a design question underneath it that opened up a lot of complexity. What happens if the opener tab is already closed by the time you click back?
 
-![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png)
+![A recipe page opened in a new tab from ChatGPT in Edge, with the back button enabled instead of greyed out](/assets/images/backtoopener-back-button-enabled.png){: loading="lazy" decoding="async" width="1600" height="1220"}
 *This is the core behavior in Edge: a recipe opened from ChatGPT in a new tab, and the back button that would historically be greyed out is now live.*
 
 My first instinct was to just navigate the destination tab to the opener's URL, so that even if the original tab is gone, the user lands somewhere familiar. Doing that would require prepending an entry to the navigation history stack.
@@ -82,12 +82,12 @@ So we made the simpler call, which is that if the opener tab is gone, the back b
 
 One more detail worth mentioning: when you long-press the back button, it shows your history. The problem is that this new BackToOpener action is different from a regular history item, because it closes the current tab *and* moves you somewhere else. If it looks like a normal entry, users might click it expecting a regular navigation and be surprised when their tab disappears. Safari solves this by labeling the entry with the action it performs: in current Safari, the entry reads "Close and Return to [opener title]."
 
-![Safari's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and Return to ChatGPT"](/assets/images/backtoopener-safari-close-and-return.png)
+![Safari's long-press back button menu on a recipe page opened from ChatGPT, showing "Close and Return to ChatGPT"](/assets/images/backtoopener-safari-close-and-return.png){: loading="lazy" decoding="async" width="1600" height="1183"}
 *This is Safari today, where the long-press menu spells out the action.*
 
 We followed that pattern in Edge, where the entry reads "Close and go back to [opener title]." It's one small label, but it communicates a lot.
 
-![Edge's long-press back button menu on the same recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png)
+![Edge's long-press back button menu on the same recipe page opened from ChatGPT, showing "Close and go back to ChatGPT" as the top entry](/assets/images/backtoopener-close-and-go-back-dropdown.png){: loading="lazy" decoding="async" width="1600" height="1220"}
 *Here's the same page and the same menu in Edge, with BackToOpener.*
 
 ---
