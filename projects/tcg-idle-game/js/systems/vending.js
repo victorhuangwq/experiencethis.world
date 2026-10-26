@@ -18,7 +18,7 @@ export const Vending = {
         // When the delivery driver comes next
         nextRestockAt: 0,
         // One entry per slot: 'normal', 'special', or null when empty
-        slots: [],
+        slots: new Array(Rules.slotCount).fill(null),
         // Packs bought since the last restock, and ever
         bought: 0,
         packsBought: 0,
