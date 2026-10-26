@@ -1,0 +1,37 @@
+/**
+ * Every line of text in the game, one file per topic.
+ *
+ * Voice: deadpan and absurd, like Candy Box. Short sentences. Never explain
+ * a mechanic; let new buttons speak for themselves, and let characters hint
+ * at things in their own words. The narrator may talk to the player, joke
+ * about idle games, react to the real clock, and the developer may leave
+ * the occasional note. See STORY.md for the full style guide.
+ */
+
+import { Story } from './story.js';
+import { Opening } from './opening.js';
+import { Money } from './money.js';
+import { Mall } from './mall.js';
+import { Packs } from './packs.js';
+import { Home } from './home.js';
+import { Benny } from './benny.js';
+import { Pip } from './pip.js';
+import { Strikes } from './strikes.js';
+import { Gus } from './gus.js';
+import { Endings } from './endings.js';
+import { System } from './system.js';
+
+export const Lines = {
+    story: Story,
+    opening: Opening,
+    money: Money,
+    mall: Mall,
+    packs: Packs,
+    home: Home,
+    benny: Benny,
+    pip: Pip,
+    strikes: Strikes,
+    gus: Gus,
+    endings: Endings,
+    system: System
+};

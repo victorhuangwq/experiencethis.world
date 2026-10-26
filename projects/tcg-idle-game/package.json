@@ -1,0 +1,9 @@
+{
+  "name": "tcg-idle-collector",
+  "private": true,
+  "description": "Tests for the TCG Idle Collector game logic. The game itself needs no build step.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,81 +1,101 @@
 /**
- * Main entry point for the TCG Idle Game
+ * Main entry point for TCG Idle Collector
+ * Builds the game from its systems and content, ticks it every second,
+ * and handles saving.
  */
 
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Display an ASCII art title
-    const titleArt = `
-    ████████╗ ██████╗ ███████╗    ██╗██████╗ ██╗     ███████╗
-    ╚══██╔══╝██╔════╝ ██╔════╝    ██║██╔══██╗██║     ██╔════╝
-       ██║   ██║      ██████╗     ██║██║  ██║██║     █████╗  
-       ██║   ██║      ██╔═══╝     ██║██║  ██║██║     ██╔══╝  
-       ██║   ╚██████╗ ██║         ██║██████╔╝███████╗███████╗
-       ╚═╝    ╚═════╝ ╚═╝         ╚═╝╚═════╝ ╚══════╝╚══════╝
-                                                              
-      ██████╗  █████╗ ███╗   ███╗███████╗                    
-     ██╔════╝ ██╔══██╗████╗ ████║██╔════╝                    
-     ██║  ███╗███████║██╔████╔██║█████╗                      
-     ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝                      
-     ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗                    
-      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝                    
-    `;
-    
-    console.log(titleArt);
-    
-    // Initialize game manager
-    const gameManager = new GameManager();
-    
-    // Initialize UI manager with reference to game manager
-    const uiManager = new UIManager(gameManager);
-    
-    // Give game manager reference to UI manager
-    gameManager.setUI(uiManager);
-    
-    // Initialize developer menu
-    const devMenu = new DevMenu(gameManager);
-    
-    // Display welcome message
-    uiManager.logMessage('Welcome to Trading Card Collector Simulator!');
-    uiManager.logMessage('Start by buying and opening card packs.');
-    
-    // Set up keyboard shortcuts
-    document.addEventListener('keydown', function(event) {
-        // Press 'b' to buy a pack
-        if (event.key === 'b') {
-            document.getElementById('buy-pack').click();
+import { Game } from './core/game.js';
+import { SaveSystem } from './core/save.js';
+import { Lines } from './content/text/index.js';
+import { Unlocks } from './content/unlocks.js';
+import { Encounters } from './content/encounters/index.js';
+import { Systems } from './systems/index.js';
+import { Wallet } from './systems/wallet.js';
+import { Vending } from './systems/vending.js';
+import { UI } from './ui/ui.js';
+
+const game = new Game({
+    systems: Systems,
+    unlocks: Unlocks,
+    encounters: Encounters,
+    endings: SaveSystem.endings
+});
+
+let saveDisabled = false;
+let saveWarningShown = false;
+
+function save() {
+    if (saveDisabled || game.state.meta.ended) {
+        return;
+    }
+    if (!SaveSystem.save(game.toSaveData()) && !saveWarningShown) {
+        game.say(Lines.system.saveFailed, 'danger');
+        saveWarningShown = true;
+    }
+}
+
+// An ending wipes the save; the endings list remembers it
+game.on('end', () => {
+    saveDisabled = true;
+    SaveSystem.clear();
+});
+
+game.start(SaveSystem.load(), Date.now());
+
+// Add ?dev to the page URL for testing shortcuts
+const devMode = new URLSearchParams(location.search).has('dev');
+
+const ui = new UI(game, document.getElementById('app'), {
+    devMode,
+    // Save after every action, so reloading can't undo a choice
+    onAction: save,
+    onDev: (action) => {
+        if (!devMode) {
+            return;
         }
-        
-        // Press 'o' to open a pack
-        if (event.key === 'o') {
-            document.getElementById('open-pack').click();
+        if (action === 'dev.money') {
+            Wallet.earn(game, 5000);
+        } else if (action === 'dev.restock') {
+            game.state.vending.restockedAt = 1;
+            Vending.tick(game, Date.now());
+        } else if (action === 'dev.pip' && game.unlocked('mall') && !game.state.encounter) {
+            game.startEncounter('pip');
+        } else if (action === 'dev.delete' && confirm('Delete the save and the endings found?')) {
+            saveDisabled = true;
+            SaveSystem.clear();
+            SaveSystem.endings.clear();
+            location.reload();
         }
-    });
-    
-    // Add prestige button when player reaches certain milestones
-    const checkForPrestige = () => {
-        const stats = gameManager.gameState.getCollectionStats();
-        
-        // When the player has at least 500 cards or $10,000, show prestige option
-        if ((stats.total >= 500 || stats.totalValue >= 10000) && !document.getElementById('prestige-button')) {
-            const prestigeBtn = document.createElement('button');
-            prestigeBtn.id = 'prestige-button';
-            prestigeBtn.className = 'upgrade';
-            prestigeBtn.textContent = 'Prestige: Reset with Bonuses';
-            
-            prestigeBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to prestige? You will lose your collection but gain bonuses for your next run.')) {
-                    gameManager.resetGame({
-                        startingMoney: Math.floor(stats.totalValue * 0.1)
-                    });
-                    uiManager.logMessage(`Prestiged! Started new game with ${Utils.formatCurrency(gameManager.gameState.money)}`);
-                }
-            });
-            
-            document.getElementById('upgrades').appendChild(prestigeBtn);
-        }
-    };
-    
-    // Check for prestige eligibility every minute
-    setInterval(checkForPrestige, 60000);
+    }
+});
+ui.render();
+
+setInterval(() => {
+    // While the tab is hidden, time builds up for one catch-up on return
+    if (!document.hidden) {
+        game.tick(Date.now());
+        ui.render();
+    }
+}, 1000);
+setInterval(save, 30000);
+
+// Time spent in a background tab is summarised once, on return
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        save();
+    } else {
+        game.catchUp(Date.now());
+        ui.render();
+    }
+});
+window.addEventListener('pagehide', save);
+
+// If another tab saves the game, stop saving here so the tabs
+// don't overwrite each other's progress
+window.addEventListener('storage', (event) => {
+    if (event.key === SaveSystem.key && !saveDisabled) {
+        saveDisabled = true;
+        game.say(Lines.system.otherTab, 'danger');
+        ui.render();
+    }
 });
