@@ -9,6 +9,7 @@
  */
 
 import { Rules } from '../rules.js';
+import { Lines } from '../content/text/index.js';
 import { Locations } from './scenes/index.js';
 import { renderStatus, updateStatus } from './panels/status.js';
 import { renderNavigation } from './panels/navigation.js';
@@ -30,14 +31,23 @@ export class UI {
         this.options = options;
         this.location = 'home';
 
+        // The game on the left and the log on the right. On a phone the log
+        // becomes a strip at the top showing the newest line (see style.css).
         root.innerHTML = `
             <div id="dev-bar"></div>
-            <div id="status"></div>
-            <nav id="locations" aria-label="Places"></nav>
-            <section id="scene"></section>
-            <section id="reveal"></section>
-            <section id="log" aria-live="polite"></section>
-            <footer id="endings-found"></footer>
+            <div class="layout">
+                <div class="game-column">
+                    <div id="status"></div>
+                    <nav id="locations" aria-label="Places"></nav>
+                    <section id="scene"></section>
+                    <section id="reveal"></section>
+                    <footer id="endings-found"></footer>
+                </div>
+                <aside id="log-column" aria-label="Messages">
+                    <section id="log" aria-live="polite"></section>
+                    <button id="log-toggle" data-action="log.toggle" aria-expanded="false" aria-controls="log">${Lines.system.log.more}</button>
+                </aside>
+            </div>
         `;
         this.parts = {};
         for (const element of root.querySelectorAll('[id]')) {
@@ -68,13 +78,17 @@ export class UI {
             this.reveal.finish();
             return;
         }
+        if (action === 'log.toggle') {
+            this.toggleLog();
+            return;
+        }
         if (action === 'restart') {
             location.reload();
             return;
         }
 
         if (action === 'go') {
-            this.location = args.location;
+            this.goTo(args.location);
             this.game.perform('story.visit', args, now);
         } else if (action.startsWith('dev.')) {
             this.options.onDev?.(action);
@@ -84,6 +98,16 @@ export class UI {
 
         this.options.onAction?.();
         this.render();
+    }
+
+    /**
+     * Show the whole log, or only the newest line (on phones)
+     */
+    toggleLog() {
+        const expanded = this.parts['log-column'].classList.toggle('expanded');
+        const toggle = this.parts['log-toggle'];
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.textContent = expanded ? Lines.system.log.less : Lines.system.log.more;
     }
 
     /**
@@ -110,7 +134,7 @@ export class UI {
         // An encounter pulls the player to where it happens
         const encounter = game.encounter();
         if (encounter) {
-            this.location = encounter.location;
+            this.goTo(encounter.location);
         }
         const location = this.currentLocation();
 
@@ -122,6 +146,16 @@ export class UI {
         this.setHTML(this.parts.log, renderLog(game));
         this.setHTML(this.parts['endings-found'], renderEndingsFound(game));
         updateStatus(this.parts.status, game, now);
+    }
+
+    /**
+     * Show another place. Opened cards stay with the place they were opened in.
+     */
+    goTo(location) {
+        if (location !== this.location) {
+            this.location = location;
+            this.reveal.clear();
+        }
     }
 
     /**

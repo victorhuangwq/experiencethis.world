@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { gameAtMall, act } from './helpers.js';
-import { machine } from '../js/ui/art/mall.js';
+import { machine, machineHtml } from '../js/ui/art/mall.js';
 import { card, cardBack, packTear } from '../js/ui/art/cards.js';
 import { storage } from '../js/ui/art/home.js';
 import { store } from '../js/ui/art/gus.js';
@@ -46,4 +46,23 @@ test('boxes have a straight right edge below their top edge', () => {
 
 test('both pack-tearing frames are the same height', () => {
     assert.equal(packTear[0].split('\n').length, packTear[1].split('\n').length);
+});
+
+test('the machine as buttons draws the same art as the plain machine', () => {
+    const game = gameAtMall();
+    game.state.vending.slots[3] = 'special';
+    game.state.vending.slots[5] = null;
+    const pressed = [];
+    const html = machineHtml(game.state, {
+        slot: (index, text) => {
+            pressed.push(index);
+            return text;
+        },
+        coinReturn: text => {
+            pressed.push('coin return');
+            return text;
+        }
+    });
+    assert.equal(html, machine(game.state, false));
+    assert.deepEqual(pressed, [0, 1, 2, 3, 4, 5, 6, 7, 'coin return']);
 });

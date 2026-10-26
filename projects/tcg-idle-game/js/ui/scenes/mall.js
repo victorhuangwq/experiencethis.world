@@ -1,5 +1,6 @@
 /**
- * The back of the mall: the CARD-O-MATIC 3000
+ * The back of the mall: the CARD-O-MATIC 3000. Its slots and coin return
+ * are buttons on the machine itself.
  */
 
 import { Format } from '../../core/format.js';
@@ -7,8 +8,8 @@ import { Rules } from '../../rules.js';
 import { Lines } from '../../content/text/index.js';
 import { Vending } from '../../systems/vending.js';
 import { Wallet } from '../../systems/wallet.js';
-import { machine } from '../art/mall.js';
-import { escape, button, art } from '../html.js';
+import { machineHtml } from '../art/mall.js';
+import { escape, button } from '../html.js';
 
 export const MallScene = {
     id: 'mall',
@@ -19,8 +20,30 @@ export const MallScene = {
 
 function renderMall(game) {
     const vending = game.state.vending;
+    const usable = Vending.usable(game);
+
+    const controls = {
+        slot: (index, text) => {
+            const kind = vending.slots[index];
+            if (!kind || !usable) {
+                return escape(text);
+            }
+            const price = Rules.prices[kind];
+            return button('vending.buy', text, {
+                args: { slot: index },
+                disabled: !Wallet.canAfford(game, price),
+                className: `art-button ${kind}`,
+                title: Lines.mall.buttons.slot(Vending.slotLabel(index), Format.money(price))
+            });
+        },
+        coinReturn: text => button('vending.coinReturn', text, {
+            className: 'art-button',
+            title: Lines.mall.buttons.coinReturn
+        })
+    };
+
     const parts = [
-        art(machine(game.state, false)),
+        `<pre class="art machine">${machineHtml(game.state, controls)}</pre>`,
         `<p class="muted">${escape(Lines.mall.nextRestock(Format.clock(Vending.nextRestockAt(game))))}</p>`
     ];
 
@@ -31,18 +54,7 @@ function renderMall(game) {
 
     if (Vending.stockLeft(game) === 0) {
         parts.push(`<p>${escape(Lines.mall.empty)}</p>`);
-    } else {
-        const slots = vending.slots.map((kind, index) => {
-            if (!kind) {
-                return '';
-            }
-            const price = Rules.prices[kind];
-            const label = `${Vending.slotLabel(index)}${kind === 'special' ? ' [**]' : ''} ${Format.money(price)}`;
-            return button('vending.buy', label, { args: { slot: index }, disabled: !Wallet.canAfford(game, price) });
-        });
-        parts.push(`<p>${escape(Lines.mall.buttons.buy)} ${slots.filter(Boolean).join(' ')}</p>`);
     }
-
-    parts.push(`<p>${button('vending.coinReturn', Lines.mall.buttons.coinReturn)} ${button('vending.kick', Lines.mall.buttons.kick)}</p>`);
+    parts.push(`<p>${button('vending.kick', Lines.mall.buttons.kick)}</p>`);
     return parts.join('');
 }

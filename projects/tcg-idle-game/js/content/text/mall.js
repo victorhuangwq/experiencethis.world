@@ -40,7 +40,7 @@ export const Mall = {
     coinKey: 'There is a small key in the coin return. It says CARD-O-MATIC. You keep it. It does nothing. For now.',
 
     buttons: {
-        buy: 'Buy from',
+        slot: (slot, price) => `Buy ${slot} (${price})`,
         kick: 'Kick the machine',
         kickJammed: 'Kick it',
         walkAway: 'Walk away',

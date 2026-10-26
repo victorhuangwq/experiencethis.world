@@ -48,8 +48,12 @@ file per topic.
 - **The world shows the player's history.** Choices leave marks in the ASCII
   art (Pip's sticker, the BE NICE note, dents from kicks), and storage grows
   with the collection. Strikes have no counter on screen.
-- **The log is quiet.** A few lines, newest first, older ones fading out.
+- **The log is quiet.** It sits to the right of the game, newest first, with
+  older lines fading out; on phones it shrinks to the newest line at the top.
   Feedback that the scene already shows (a slot emptying) doesn't need a line.
+- **Things in the art can be pressed.** The vending machine's slots and coin
+  return are buttons on the machine itself, not a row of buttons under it.
+  Opened cards stay with the place they were opened in.
 - **Pack opening is a moment.** The pack tears, cards flip one at a time, and
   the last card waits a beat.
 

@@ -54,6 +54,16 @@ export class PackReveal {
         });
     }
 
+    /**
+     * Put the cards away, for when the player leaves the place they opened them
+     */
+    clear() {
+        this.stop();
+        this.cards = [];
+        this.frame = null;
+        this.render();
+    }
+
     finish() {
         this.stop();
         this.frame = null;

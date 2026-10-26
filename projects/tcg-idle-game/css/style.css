@@ -64,7 +64,7 @@ body {
 }
 
 main {
-    max-width: 760px;
+    max-width: 1040px;
     margin: 0 auto;
     padding: 16px;
 }
@@ -122,10 +122,89 @@ button.current {
     margin: 12px 0;
 }
 
-#log {
-    margin-top: 16px;
-    border-top: 1px dashed var(--muted);
-    padding-top: 8px;
+/* The game on the left, the log on the right */
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 32px;
+    align-items: start;
+}
+
+/* The log stays in view while the game column scrolls */
+#log-column {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow: hidden;
+    border-left: 1px dashed var(--muted);
+    padding-left: 16px;
+}
+
+#log-toggle {
+    display: none;
+}
+
+/* On phones the log is a strip at the top showing the newest line */
+@media (max-width: 760px) {
+    .layout {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    #log-column {
+        order: -1;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        max-height: 60vh;
+        overflow-y: auto;
+        margin: 0 -16px;
+        padding: 8px 16px;
+        border-left: none;
+        border-bottom: 1px dashed var(--muted);
+        background: var(--background);
+    }
+
+    #log {
+        flex: 1;
+    }
+
+    #log-column:not(.expanded) .message:not(:first-child) {
+        display: none;
+    }
+
+    #log-toggle {
+        display: inline-block;
+        flex-shrink: 0;
+    }
+}
+
+/* Parts of ASCII art that can be pressed, like the machine's slots */
+.art-button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    line-height: inherit;
+    background: var(--button-hover);
+    color: var(--text);
+}
+
+.art-button:hover:not(:disabled),
+.art-button:focus-visible {
+    background: var(--text);
+    color: var(--background);
+}
+
+.art-button.special {
+    color: var(--legendary);
+}
+
+.art-button:disabled {
+    background: none;
 }
 
 .art {
@@ -184,27 +263,6 @@ button.current {
 
 .message {
     margin: 4px 0;
-}
-
-/* Older messages fade out, like A Dark Room */
-.message.age-1 {
-    opacity: 0.8;
-}
-
-.message.age-2 {
-    opacity: 0.6;
-}
-
-.message.age-3 {
-    opacity: 0.45;
-}
-
-.message.age-4 {
-    opacity: 0.3;
-}
-
-.message.age-5 {
-    opacity: 0.2;
 }
 
 .season {
