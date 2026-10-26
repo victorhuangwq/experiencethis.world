@@ -57,7 +57,7 @@ const ui = new UI(game, document.getElementById('app'), {
         if (action === 'dev.money') {
             Wallet.earn(game, 5000);
         } else if (action === 'dev.restock') {
-            game.state.vending.restockedAt = 1;
+            game.state.vending.nextRestockAt = Date.now();
             Vending.tick(game, Date.now());
         } else if (action === 'dev.pip' && game.unlocked('mall') && !game.state.encounter) {
             game.startEncounter('pip');

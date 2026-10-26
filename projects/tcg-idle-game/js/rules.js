@@ -15,7 +15,9 @@ export const Rules = {
     bennyShare: 0.75,
 
     // CARD-O-MATIC 3000
-    restockEvery: 15 * MINUTE,
+    // The delivery driver comes every 25 to 35 minutes
+    restockEvery: 30 * MINUTE,
+    restockVariation: 5 * MINUTE,
     slotCount: 8,
     prices: { normal: 300, special: 600 },
     specialRestockChance: 0.1,

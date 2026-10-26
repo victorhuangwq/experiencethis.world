@@ -9,7 +9,7 @@ export const Mall = {
     restock: 'A delivery driver restocks the machine. The driver does not make eye contact.',
     restockSpecial: slot => `A delivery driver restocks the machine. Something in slot ${slot} is sparkling.`,
     restockAway: 'the machine was restocked',
-    nextRestock: time => `Restocks every 15 minutes. Next: ${time}.`,
+    nextRestock: time => `The delivery driver comes every half hour or so. Next: ${time}.`,
     empty: 'The machine is empty. It looks smug about it.',
 
     cantAfford: price => `You need ${price}. You check your pockets again. Same pockets.`,

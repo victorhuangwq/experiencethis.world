@@ -83,6 +83,13 @@ export function buyFirst(game) {
     act(game, 'vending.buy', { slot });
 }
 
+/**
+ * Move time forward to the vending machine's next restock
+ */
+export function restock(game) {
+    game.tick(game.state.vending.nextRestockAt);
+}
+
 export function newestMessage(game) {
     return game.messages[0]?.text;
 }

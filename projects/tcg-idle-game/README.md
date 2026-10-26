@@ -9,10 +9,10 @@ The story, voice, and design are in [STORY.md](STORY.md).
 ## Current state
 
 Act 1 (spring) is playable: the shoebox opening, a self-given allowance and
-emails for extra money, the CARD-O-MATIC 3000 restocking every quarter hour of
-the real clock, Pip and the kindness code, Benny buying duplicates, storage
-that grows with the collection, three secrets, and Gus's store, which opens
-in summer (Act 2).
+emails for extra money, the CARD-O-MATIC 3000 restocking every 25 to 35
+minutes of real time, Pip and the kindness code, Benny buying duplicates,
+storage that grows with the collection, three secrets, and Gus's store, which
+opens in summer (Act 2).
 
 ## Code
 

@@ -199,7 +199,7 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 15 minutes (:00, :15, :30, :45) | About 6 packs per restock; a special pack in about 1 of 10 restocks |
+| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots; a special pack in about 1 of 10 restocks (1 of 5 after smelling 50 packs) |
 | Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
 | Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
@@ -264,7 +264,8 @@ while the page is open:
 
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
-- The vending machine restocks at fixed clock times.
+- The vending machine restocks every half hour or so, and shows the time of
+  the next restock.
 - Card shows and tournaments run on a schedule of real clock times.
 - New set releases have a release time, and preorders arrive then.
 - Everything is stored as timestamps in the save, so closing the page never
