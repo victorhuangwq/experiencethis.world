@@ -13,6 +13,7 @@ import { Wallet } from '../systems/wallet.js';
 import { Job } from '../systems/job.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
+import { Store } from '../systems/store.js';
 
 export const Unlocks = [
     {
@@ -59,7 +60,10 @@ export const Unlocks = [
         // The grand opening, on a later day than the first
         id: 'gus-open',
         when: game => game.unlocked('gus') && game.state.story.days >= Rules.gusOpensOnDay,
-        run: game => game.say(Lines.gus.opened, 'good')
+        run: game => {
+            game.say(Lines.gus.opened, 'good');
+            Store.tick(game, game.time);
+        }
     },
     // When the collection outgrows its storage, the next kind goes on sale
     ...Rules.storage.slice(1).map(stage => ({

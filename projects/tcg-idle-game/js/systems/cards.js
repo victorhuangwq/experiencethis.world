@@ -40,8 +40,7 @@ export const Cards = {
      * @returns {Array} - Cards
      */
     openPack(game, kind, set = 'base') {
-        // Cards straight from a pack are in good shape
-        const condition = () => game.randomInt(6, 10);
+        const condition = () => this.packCondition(game);
         return Rules.packSlots[kind].map(slot => {
             if (!Rules.hitOdds[slot]) {
                 return this.pull(game, slot, condition(), set);
@@ -51,6 +50,24 @@ export const Cards = {
             }
             return this.pull(game, this.hitRarity(game, slot), condition(), set);
         });
+    },
+
+    /**
+     * The condition of a card straight from a pack: good, and now and then
+     * perfect (Rules.packCondition)
+     * @param {Game} game - Game, for randomness
+     * @returns {number} - Condition from 1 to 10
+     */
+    packCondition(game) {
+        const odds = Object.entries(Rules.packCondition);
+        let roll = game.random();
+        for (const [condition, chance] of odds) {
+            roll -= chance;
+            if (roll < 0) {
+                return Number(condition);
+            }
+        }
+        return Number(odds[odds.length - 1][0]);
     },
 
     /**

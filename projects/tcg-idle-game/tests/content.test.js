@@ -259,8 +259,20 @@ test('every place renders at every stage of the game', () => {
     const office = gameAtMall({ now: tuesday });
     office.tick(tuesday + 60 * 1000);
     office.state.collection.packs.base.normal = 2;
+    // The day after Gus opened: a single bought, one card away being
+    // graded, and one back
+    const gus = gameAtMall();
+    gus.state.collection.cardsOpened = Rules.gusWithoutTip;
+    gus.checkUnlocks();
+    gus.tick(START + 24 * 60 * 60 * 1000);
+    gus.state.wallet.cents = 10000;
+    act(gus, 'store.buySingle', { spot: 5 });
+    Collection.add(gus, [Cards.card('lawnmower-lion', 9), Cards.card('chewed-dragon', 1)]);
+    act(gus, 'store.grade', { id: gus.state.collection.cards[1].id });
+    gus.tick(gus.time + Rules.gradingTime);
+    act(gus, 'store.grade', { id: gus.state.collection.cards[0].id });
 
-    for (const [name, game] of Object.entries({ fresh, kept, busy, big, office })) {
+    for (const [name, game] of Object.entries({ fresh, kept, busy, big, office, gus })) {
         for (const place of Locations) {
             for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }]) {
                 const html = place.render(game, view);

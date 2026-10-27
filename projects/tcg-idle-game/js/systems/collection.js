@@ -25,13 +25,17 @@ export const Collection = {
         sniffs: 0,
         // Parts of a set's checklist the player has completed, like
         // 'base:common' or 'base'
-        completed: []
+        completed: [],
+        // Ids of cards that came back from grading, sealed in a case
+        graded: []
     }),
 
     load(collection) {
         collection.cards = collection.cards.map(card => Cards.unpack(card)).filter(card => card !== null);
         const highestId = collection.cards.reduce((highest, card) => Math.max(highest, card.id), 0);
         collection.nextId = Math.max(collection.nextId, highestId + 1);
+        const ids = new Set(collection.cards.map(card => card.id));
+        collection.graded = [...new Set(collection.graded)].filter(id => ids.has(id));
 
         if (!Rules.storage.some(stage => stage.id === collection.storage)) {
             collection.storage = 'shoebox';
@@ -79,14 +83,40 @@ export const Collection = {
         return game.state.collection.packsOpened > 0;
     },
 
+    isGraded(game, card) {
+        return game.state.collection.graded.includes(card.id);
+    },
+
     /**
-     * Find duplicate cards, keeping the copy of each card in the best condition
+     * The cards in hand: not sealed in a grading case, and not away being
+     * graded. Only these can be sold, traded, or played.
+     */
+    loose(game) {
+        const locked = new Set([...game.state.collection.graded, ...game.state.store.grading.map(entry => entry.id)]);
+        return game.state.collection.cards.filter(card => !locked.has(card.id));
+    },
+
+    /**
+     * Take cards out of the collection
+     * @param {Game} game - Game
+     * @param {Array} cards - Cards to remove
+     */
+    remove(game, cards) {
+        const removed = new Set(cards.map(card => card.id));
+        const collection = game.state.collection;
+        collection.cards = collection.cards.filter(card => !removed.has(card.id));
+        collection.graded = collection.graded.filter(id => !removed.has(id));
+    },
+
+    /**
+     * Find duplicate cards in hand, keeping the copy of each card in the
+     * best condition
      * @returns {Array} - Duplicate cards
      */
     duplicates(game) {
         const kept = new Map();
         const duplicates = [];
-        for (const card of game.state.collection.cards) {
+        for (const card of Collection.loose(game)) {
             const current = kept.get(card.cardId);
             if (!current) {
                 kept.set(card.cardId, card);
@@ -264,7 +294,7 @@ export const Collection = {
 
             const value = [...duplicates].reduce((sum, card) => sum + card.value, 0);
             const paid = Math.floor(value * Rules.bennyShare);
-            game.state.collection.cards = game.state.collection.cards.filter(card => !duplicates.has(card));
+            Collection.remove(game, [...duplicates]);
             Wallet.earn(game, paid);
             game.say(game.pick(Lines.benny.sold)(paid));
         }

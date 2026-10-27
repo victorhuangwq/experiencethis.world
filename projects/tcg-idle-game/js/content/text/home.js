@@ -56,6 +56,7 @@ export const Home = {
     },
 
     others: 'Your critters',
+    graded: 'In hard plastic',
 
     // In the shoebox, critters are a pile
     pile: 'In the order you threw them in.',

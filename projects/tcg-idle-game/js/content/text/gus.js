@@ -28,5 +28,44 @@ export const Gus = {
         'Gus hands you a pack and goes back to his sandwich.',
         '"Good choice," says Gus. He says it to everyone. He means it every time.'
     ],
-    cantAfford: price => `"${price}," says Gus. Gus does not do layaway.`
+    cantAfford: price => `"${price}," says Gus. Gus does not do layaway.`,
+
+    // The glass case of singles
+    caseTitle: 'The glass case',
+    caseNote: 'Gus restocks the case every four hours. He polishes the glass every four minutes.',
+    single: (name, rarity, read, price) => `${name} (${rarity}). ${read} ${price}.`,
+    buySingle: 'Buy',
+    emptySpot: 'An empty spot. A fingerprint. Gus is already polishing it.',
+    boughtSingle: name => `Gus takes ${name} out of the case with two fingers, like a jeweller. "Don't bend it," says Gus.`,
+
+    // How a card looks by eye. A 9 and a 10 look the same.
+    read: condition => condition >= 9 ? 'Looks perfect.'
+        : { 8: 'A little off-centre.', 7: 'A soft corner.', 6: 'A scuff on the back.', 5: 'Has seen better days.' }[condition]
+        || 'Has been through something.',
+
+    // Grading, at Mint Condition Co.
+    gradingTitle: 'Grading',
+    gradingNote: fee => `Gus sends cards to Mint Condition Co. ${fee} a card. Back tomorrow. "They grade by hand," says Gus. "Very clean hands."`,
+    candidate: (name, rarity, read) => `${name} (${rarity}). ${read}`,
+    send: fee => `Send it (${fee})`,
+    sent: (name, read) => `Gus holds ${name} up to the light. "${read}" He puts it in an envelope and licks it shut. Back tomorrow.`,
+    away: (name, when) => `${name}: at Mint Condition Co. Back ${when}.`,
+    backAt: (time, tomorrow) => tomorrow ? `tomorrow at ${time}` : `at ${time}`,
+    grades: {
+        10: 'GEM MINT',
+        9: 'MINT',
+        8: 'NEAR MINT',
+        7: 'EXCELLENT',
+        6: 'VERY GOOD',
+        5: 'GOOD',
+        4: 'FAIR',
+        3: 'WORN',
+        2: 'VERY WORN',
+        1: 'CHEWED'
+    },
+    graded: (name, grade, label) => `${name} is back from Mint Condition Co., sealed in hard plastic. ${grade}: ${label}.`,
+    gradedAway: (name, grade, label) => `${name} came back from grading (${grade}: ${label})`,
+    gradedCard: (name, grade, label) => `${name}: ${grade} ${label}`,
+    sellGraded: price => `Sell it to Gus (${price})`,
+    soldGraded: (name, price) => `Gus buys ${name} for ${price}. He puts it in the case with a price tag of twice that. "Rent," says Gus.`
 };

@@ -16,6 +16,7 @@ const foundGus = readFileSync(new URL('../fixtures/save-save-upgrades.json', imp
 const savedAt = JSON.parse(foundGus).savedAt;
 
 const money = async page => page.locator('[data-money]').textContent();
+const literally = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 browserTest('Gus opens the day after the store is found, and sells packs at a markup', {
     save: foundGus,
@@ -37,4 +38,25 @@ browserTest('Gus opens the day after the store is found, and sells packs at a ma
 
     await page.setViewportSize({ width: 360, height: 740 });
     await assertFits(page, 'Gus\'s store on a phone');
+});
+
+browserTest('a card sent to grading comes back the next day, and Gus will buy it', {
+    save: foundGus,
+    time: savedAt + 24 * HOUR
+}, async (page) => {
+    await place(page, Lines.gus.name).click();
+    await page.getByText(Lines.gus.caseTitle).waitFor();
+    assert.equal(await page.locator('#scene li', { has: button(page, Lines.gus.buySingle) }).count(), Rules.caseSlots.length, 'a full case');
+
+    const send = button(page, Lines.gus.send(Format.money(Rules.gradingFee)));
+    const candidate = page.locator('#scene li', { has: send }).first();
+    const name = literally((await candidate.textContent()).split(' (')[0]);
+    await send.first().click();
+    await page.getByText(new RegExp(`^${name}: at Mint Condition Co\\. Back tomorrow at`)).waitFor();
+
+    await page.clock.fastForward(24 * HOUR);
+    await page.locator('#log').getByText(new RegExp(`^${name} is back from Mint Condition Co\\.`)).waitFor();
+    await button(page, new RegExp('^Sell it to Gus')).waitFor();
+    await place(page, Lines.home.name).click();
+    await page.getByRole('heading', { name: Lines.home.graded }).waitFor();
 });

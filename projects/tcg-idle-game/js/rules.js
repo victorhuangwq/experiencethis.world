@@ -57,6 +57,9 @@ export const Rules = {
     },
     // Chance each hit in a special pack is the vending machine's own promo
     primeChance: 0.05,
+    // A copy's condition, from 1 to 10, is decided when it comes out of a
+    // pack, with these odds
+    packCondition: { 10: 0.1, 9: 0.3, 8: 0.3, 7: 0.2, 6: 0.1 },
     sniffsToAttune: 50,
     fastOpeningAfter: 20,
 
@@ -89,6 +92,20 @@ export const Rules = {
     gusOpensOnDay: 2,
     // Gus's price for a pack of each set: a markup on the machine's
     gusPrices: { base: 450 },
+    // Gus's glass case of singles: what each spot holds (a rarity, or a hit
+    // from hitOdds), restocked every few hours, at a multiple of each
+    // card's value
+    caseSlots: ['common', 'common', 'uncommon', 'uncommon', 'rare', 'rareHit'],
+    caseRestockEvery: 4 * HOUR,
+    singlesMarkup: 2,
+    singlesMinPrice: 25,
+    // Gus sends cards off to be graded. A grade multiplies a card's value
+    // (grades below 6 count as 6), and Gus buys graded cards for a share
+    // of it.
+    gradingFee: 500,
+    gradingTime: 24 * HOUR,
+    gradeValue: { 10: 10, 9: 3, 8: 1.5, 7: 1, 6: 0.8 },
+    gusBuysGraded: 0.5,
 
     // Collection storage, in order. Each one goes on sale once the player
     // has this many cards, and costs this much (in cents).
