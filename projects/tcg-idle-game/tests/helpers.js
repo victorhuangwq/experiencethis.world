@@ -9,7 +9,7 @@ import { Unlocks } from '../js/content/unlocks.js';
 import { Encounters } from '../js/content/encounters/index.js';
 import { Rules } from '../js/rules.js';
 
-// Saturday 25 October 2026, 2:07 PM local time
+// Sunday 25 October 2026, 2:07 PM local time
 export const START = new Date(2026, 9, 25, 14, 7).getTime();
 
 export function memoryEndings() {
@@ -92,4 +92,22 @@ export function restock(game) {
 
 export function newestMessage(game) {
     return game.messages[0]?.text;
+}
+
+/**
+ * A stand-in for the browser's local storage
+ */
+export class MemoryStorage {
+    constructor() {
+        this.items = new Map();
+    }
+    getItem(key) {
+        return this.items.has(key) ? this.items.get(key) : null;
+    }
+    setItem(key, value) {
+        this.items.set(key, String(value));
+    }
+    removeItem(key) {
+        this.items.delete(key);
+    }
 }

@@ -10,6 +10,7 @@
 import { Rules } from '../rules.js';
 import { Lines } from './text/index.js';
 import { Wallet } from '../systems/wallet.js';
+import { Job } from '../systems/job.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
 
@@ -28,9 +29,10 @@ export const Unlocks = [
         }
     },
     {
+        // The day job; where it happens depends on the day
         id: 'work',
         when: game => game.state.wallet.allowanceEarned >= 60,
-        run: game => game.say(Lines.money.work.unlocked)
+        run: game => game.say(Lines.job.unlocked[Job.workplace(game) || 'off'](Job.today(game)))
     },
     {
         id: 'mall',

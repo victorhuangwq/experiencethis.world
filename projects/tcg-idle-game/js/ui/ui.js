@@ -17,6 +17,7 @@ import { renderEncounter } from './panels/encounter.js';
 import { renderLog } from './panels/log.js';
 import { renderEnding, renderEndingsFound } from './panels/ending.js';
 import { renderDevBar } from './panels/dev.js';
+import { updateWork } from './panels/work.js';
 import { PackReveal } from './reveal.js';
 
 export class UI {
@@ -151,12 +152,13 @@ export class UI {
             this.setHTML(this.options.seasonTag, Lines.story.seasons[game.state.story.season]);
         }
         this.setHTML(this.parts['dev-bar'], this.options.devMode ? renderDevBar() : '');
-        this.setHTML(this.parts.status, renderStatus(game, now));
+        this.setHTML(this.parts.status, renderStatus(game));
         this.setHTML(this.parts.locations, renderNavigation(game, location.id));
         this.setHTML(this.parts.scene, encounter ? renderEncounter(game, encounter) : location.render(game, this.view(location.id)));
         this.setHTML(this.parts.log, renderLog(game));
         this.setHTML(this.parts['endings-found'], renderEndingsFound(game));
-        updateStatus(this.parts.status, game, now);
+        updateStatus(this.parts.status, game);
+        updateWork(this.parts.scene, game, now);
     }
 
     /**

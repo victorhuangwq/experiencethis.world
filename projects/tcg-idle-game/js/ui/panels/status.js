@@ -1,23 +1,17 @@
 /**
- * The status bar: money, work, and unopened packs
+ * The status bar: money and unopened packs. Work is in the office or at
+ * home (panels/work.js).
  */
 
 import { Format } from '../../core/format.js';
 import { Lines } from '../../content/text/index.js';
-import { Wallet } from '../../systems/wallet.js';
 import { escape, button } from '../html.js';
 
-export function renderStatus(game, now) {
+export function renderStatus(game) {
     const parts = [];
 
     if (game.unlocked('allowance')) {
         parts.push(`<p>${Lines.money.label} <b data-money></b></p>`);
-    }
-
-    if (game.unlocked('work')) {
-        const resting = Wallet.workProgress(game, now) < 1;
-        const label = resting ? Lines.money.work.resting : Lines.money.work.button;
-        parts.push(`<p>${button('wallet.work', label, { disabled: resting, className: 'cooldown' })}</p>`);
     }
 
     const packs = game.state.collection.packs;
@@ -39,13 +33,9 @@ export function renderStatus(game, now) {
  * so its buttons stay clickable
  * @param {HTMLElement} element - The status bar
  */
-export function updateStatus(element, game, now) {
+export function updateStatus(element, game) {
     const money = element.querySelector('[data-money]');
     if (money) {
         money.textContent = Format.money(game.state.wallet.cents);
-    }
-    const work = element.querySelector('[data-action="wallet.work"]');
-    if (work) {
-        work.style.setProperty('--progress', Math.round(Wallet.workProgress(game, now) * 100) + '%');
     }
 }

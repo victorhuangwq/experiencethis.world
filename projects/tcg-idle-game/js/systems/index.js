@@ -6,9 +6,10 @@
 
 import { Story } from './story.js';
 import { Wallet } from './wallet.js';
+import { Job } from './job.js';
 import { Collection } from './collection.js';
 import { Vending } from './vending.js';
 import { Kindness } from './kindness.js';
 import { People } from './people.js';
 
-export const Systems = [Story, Wallet, Collection, Vending, Kindness, People];
+export const Systems = [Story, Wallet, Job, Collection, Vending, Kindness, People];

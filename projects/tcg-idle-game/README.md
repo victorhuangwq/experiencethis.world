@@ -8,8 +8,9 @@ The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a self-given allowance and
-emails for extra money, the CARD-O-MATIC 3000 restocking every 25 to 35
+Act 1 (spring) is playable: the shoebox opening, a self-given allowance, a
+hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
+on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
 minutes of real time, Pip and the kindness code, Benny buying duplicates,
 storage to buy as the collection outgrows it (each one organising the cards
 better), three secrets, and Gus's store, which opens in summer (Act 2).
@@ -33,7 +34,8 @@ js/
     random.js      Seeded random numbers
   systems/         Game logic, one feature per file
     index.js       Every system, in tick order
-    wallet.js  collection.js  vending.js  kindness.js  people.js  story.js
+    wallet.js  job.js  collection.js  vending.js  kindness.js  people.js
+    story.js
     cards.js       Card logic (making cards, opening packs, save packing)
   content/         Data
     catalog.js     The card catalogue
@@ -71,15 +73,44 @@ headers of `js/content/unlocks.js`, `js/content/encounters/index.js`, and
 
 ## Testing
 
-The game logic has automated tests, using Node's built-in test runner (Node
-20 or later, no dependencies). From this folder:
+GitHub Actions runs every test on pull requests and pushes to `master` that
+touch the game (`.github/workflows/tcg-idle-game.yml`). To run them locally,
+from this folder:
 
 ```
-npm test
+npm test                  # Game logic: Node 20 or later, no install needed
+npm install               # Once, for the browser tests
+npx playwright install chromium
+npm run test:e2e          # Browser tests: build the site first (bundle exec jekyll build)
 ```
 
-The tests are in `tests/`; `tests/helpers.js` sets up a game the way
-`js/main.js` does. They and `package.json` are not published with the site.
+The tests are in `tests/`, and are not published with the site:
+
+- `tests/helpers.js` sets up a game the way `js/main.js` does.
+- One `<topic>.test.js` per system or topic, for its rules.
+- `content.test.js` checks that content fits together: encounters, endings,
+  cards, storage, text, and every button's action.
+- `invariants.test.js` plays thousands of random moves over many seeds and
+  checks that money, cards, strikes, the machine, and saves always make
+  sense. A failure names the seed and step to replay.
+- `pacing.test.js` has bots play like an active player and an idle one, and
+  checks milestones against the targets in STORY.md. Add
+  `--test-reporter=spec` to see the measured times.
+- `old-saves.test.js` loads every save in `tests/fixtures/`, each made by a
+  released version, and checks the game carries on from it.
+- `e2e/` has browser tests: whole journeys through the built page in
+  Chromium, with a paused clock that tests move forward themselves.
+  Screenshots of failures go to `test-results/`.
+
+When adding things:
+
+- **A new feature or rule:** add tests for it next to its topic, and a move
+  for it in `invariants.test.js`, with any new invariant it brings.
+- **A change to what the game saves:** before releasing it, add a save from
+  the current release to `tests/fixtures/` (play to an interesting point
+  with the released code and store `localStorage.critterClashSave`).
+- **A new place or a new milestone:** add a browser journey through it, and
+  a pacing check if STORY.md sets a target for it.
 
 To try things in the browser, add `?dev` to the page URL for shortcuts to add
 money, restock, call the kid into line, and delete the save and endings.

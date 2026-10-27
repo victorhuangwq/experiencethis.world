@@ -134,7 +134,7 @@ test('nothing can be done after the run ends', (t) => {
         keepBuying(game);
     }
     const cents = game.state.wallet.cents;
-    act(game, 'wallet.work');
+    act(game, 'job.work', { at: 'home' });
     buyFirst(game);
     game.tick(at(15, 0));
     assert.equal(game.state.wallet.cents, cents);

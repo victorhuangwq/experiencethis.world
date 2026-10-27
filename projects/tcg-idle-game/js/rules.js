@@ -9,10 +9,16 @@ export const Rules = {
     // Money
     allowanceCentsPerSecond: 2,
     offlineCap: 8 * HOUR,
-    workPay: 50,
-    workRest: 20 * SECOND,
     shoeboxOffer: 300,
     bennyShare: 0.75,
+
+    // The day job. Where the player works on each day of the week by their
+    // own clock, from Sunday: the office, home, or null for a day off.
+    workplaces: [null, 'home', 'office', 'office', 'office', 'home', null],
+    workPay: 50,
+    workRest: 20 * SECOND,
+    // Chance the boss walks past while a pack is opened at the desk
+    bossWalkByChance: 0.25,
 
     // CARD-O-MATIC 3000
     // The delivery driver comes every 25 to 35 minutes

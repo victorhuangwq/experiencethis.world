@@ -53,22 +53,13 @@ test('the allowance pays $1.20 a minute, and the mall opens at $3', () => {
     assert.ok(game.unlocked('mall'));
 });
 
-test('work appears after 30 seconds of allowance, then needs a rest', () => {
+test('work appears after 30 seconds of allowance', () => {
     const game = newGame();
     finishOpening(game, 'keep');
     game.tick(START + 29 * 1000);
     assert.equal(game.unlocked('work'), false);
     game.tick(START + 30 * 1000);
     assert.ok(game.unlocked('work'));
-
-    const before = game.state.wallet.cents;
-    act(game, 'wallet.work');
-    act(game, 'wallet.work');
-    assert.equal(game.state.wallet.cents, before + 50, 'the second click is ignored while resting');
-
-    game.tick(START + 50 * 1000);
-    act(game, 'wallet.work');
-    assert.equal(game.state.wallet.cents, before + 40 + 100);
 });
 
 test('time away is summarised once, and the piggy bank holds 8 hours', () => {

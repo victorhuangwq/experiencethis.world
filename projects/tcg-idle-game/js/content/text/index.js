@@ -11,6 +11,7 @@
 import { Story } from './story.js';
 import { Opening } from './opening.js';
 import { Money } from './money.js';
+import { Job } from './job.js';
 import { Mall } from './mall.js';
 import { Packs } from './packs.js';
 import { Home } from './home.js';
@@ -25,6 +26,7 @@ export const Lines = {
     story: Story,
     opening: Opening,
     money: Money,
+    job: Job,
     mall: Mall,
     packs: Packs,
     home: Home,

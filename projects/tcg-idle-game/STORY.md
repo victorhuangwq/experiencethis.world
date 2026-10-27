@@ -5,8 +5,8 @@ still need a decision.
 
 ## Status
 
-- **Built:** Act 1, spring (the shoebox opening, allowance and work, the
-  vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
+- **Built:** Act 1, spring (the shoebox opening, the allowance, the hybrid
+  day job and the office, the vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
   secrets, and Gus telling you to come back in summer).
 - **Next:** Act 2, summer, at Gus's Games & Grub.
 
@@ -66,6 +66,15 @@ file per topic.
   "Wet Sock Gobln" that later starts Mildred's trade-up chain.
 - **Money:** a self-given allowance ("You are a responsible adult"), plus
   answering emails at the day job.
+- **The day job is hybrid,** by the player's real weekday: Tuesday to
+  Thursday they have to go to the office (a place of its own), Monday and
+  Friday they work from the kitchen table at home, and weekends are off.
+  At the office, the desk fills up as the hobby takes over (a card under the
+  monitor, then a binder, then a playmat for a mousepad), packs can be
+  opened under the desk, and the inbox count only goes up.
+- **Quitting the job comes later.** When the player opens their own shop
+  (Act 5), the shop's income replaces the salary, and quitting is the moment
+  that starts the act.
 - **Time passes in seasons.** Each act is a season: Act 1 spring, Act 2
   summer, then autumn, winter, and spring again. Scenes can change a little
   with the season. Characters don't age.
@@ -88,6 +97,8 @@ file per topic.
 | **Pip** | The kid in the vending machine line | The kindness test, then the player's loyal little sidekick: tips about where to find cards, cheering at tournaments, and the first customer at the player's shop in Act 5 |
 | **Benny** | The neighbour's kid, age 9 | A ruthless little businessman. Buys the shoebox and later the player's duplicates, with a 25% "finder's fee". Pays in nickels. |
 | **Gus** | Owner of *Gus's Games & Grub*, the hobby store | Runs locals; holds new sets for regulars he trusts |
+| **Linda** | The player's boss | Only ever speaks in email subject lines ("Quick question", "No rush"). Walks past when packs are opened at the desk; never a strike, always a reply-all. May collect in secret. |
+| **Marcus from IT** | A coworker | Collects in secret. Notices the card under the player's monitor, then asks them to lunch ("Bring the binder"): the first trading partner in Act 2 |
 | **Officer Dale** | Mall security | Eats pretzels. Writes down every kick at the vending machine and reads the count out in the Shame ending |
 | **PackDrop.com** | The online store | Shipping arrives at clock times |
 | **Mint Condition Co.** | The card grading company | Grades cards 1-10 |
@@ -112,11 +123,11 @@ Named cards so far:
 
 | Act | Location | New verbs | Unlocked by |
 |---|---|---|---|
-| 1 (spring) | Vending machine | Buy one pack, open it, sell duplicates to Benny | Start |
+| 1 (spring) | Vending machine, the office | Buy one pack, open it, sell duplicates to Benny, answer emails | Start |
 | 2 (summer) | Hobby store | Choose a set, first trades, locals | Pip mentions Gus's store after the first kindness, or 60 cards opened. Gus says to come back in summer. |
 | 3 | Online store and deck building | Preorders, shipping, building real decks, regionals | Winning locals for the first time (Gus mentions PackDrop.com) |
 | 4 | Card shows and grading | Rent a table, haggle, hunt specific cards, grading, nationals | First booster box delivered |
-| 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine | Set 2 released, plus a money target |
+| 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine; quit the day job | Set 2 released, plus a money target |
 
 Act 5 closes the loop: the player ends up stocking the vending machine from
 Act 1 (with the key from its coin return), and Pip is the first customer
@@ -222,7 +233,7 @@ All times come from the real clock and are saved as timestamps.
 | Thing | Starting value |
 |---|---|
 | Allowance | $1.20 per minute (built) |
-| Chores | $0.50, then a 20 second rest (built) |
+| Answering an email | $0.50, then a 20 second rest, on work days (built) |
 | Vending machine pack | $3; special pack $6; 8 slots per restock (built) |
 | Hobby store pack | $4.50 (50% markup) |
 | PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
@@ -342,6 +353,8 @@ Trades are short encounters with recurring characters. Ideas so far:
 
 - **Pip:** the loyal sidekick. Tips, the occasional free card, cheering at
   tournaments, and the first customer at the player's shop.
+- **Marcus from IT:** the coworker who collects in secret. Lunch with the
+  binder is the first trade, in Act 2.
 - **The confident trader:** offers suspiciously shiny cards. Can the player
   spot the fakes?
 - **The dad with his kid's binder:** has no idea what's in it. An honesty
