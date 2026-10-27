@@ -19,6 +19,7 @@ function scalperGame(t, { kid = false, money = 5000 } = {}) {
     const game = gameAtMall();
     Wallet.earn(game, money - game.state.wallet.cents);
     game.state.vending.packsBought = Rules.scalperAfterPacks;
+    game.state.people.pip.encounters = 1;
     act(game, 'vending.buy', { slot: 0 });
     assert.equal(game.state.encounter?.id, 'scalper');
     return game;
@@ -29,6 +30,14 @@ const choose = (game, label) => {
     assert.notEqual(index, -1, `no choice "${label}"`);
     act(game, 'encounter.choose', { index });
 };
+
+test('the scalper only comes once the player has met Pip', () => {
+    const game = gameAtMall();
+    Wallet.earn(game, 5000);
+    game.state.vending.packsBought = Rules.scalperAfterPacks;
+    act(game, 'vending.buy', { slot: 0 });
+    assert.equal(game.state.encounter, null);
+});
 
 test('the scalper lines up behind a player who buys a lot of packs', (t) => {
     const game = scalperGame(t);

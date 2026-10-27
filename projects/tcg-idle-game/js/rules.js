@@ -60,13 +60,16 @@ export const Rules = {
     sniffsToAttune: 50,
     fastOpeningAfter: 20,
 
-    // Pip
+    // Pip turns up once the player has been playing for a while (so not
+    // before the first restock), and has bought a few packs since it
+    pipNotBefore: 20 * MINUTE,
     pipAfterPacks: 3,
     pipChance: 0.35,
     pipGiftChance: 0.3,
 
-    // The scalper lines up behind the player once they've bought this many
-    // packs ever, then sometimes. Sometimes a kid is waiting behind him.
+    // The scalper lines up behind the player once they've met Pip and bought
+    // this many packs ever, then sometimes. Sometimes a kid is waiting
+    // behind him.
     scalperAfterPacks: 8,
     scalperChance: 0.25,
     scalperKidChance: 0.4,

@@ -5,14 +5,16 @@ import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
 import { Endings } from '../js/content/endings.js';
 import { Lines } from '../js/content/text/index.js';
+import { Rules } from '../js/rules.js';
 
 const at = (hour, minute) => new Date(2026, 9, 25, hour, minute).getTime();
 
 /**
- * A game at the mall with money to spare and no jams
+ * A game at the mall with money to spare and no jams. Pip can turn up at
+ * once: these tests are about what Pip does, not when Pip first comes.
  */
 function richGame(t) {
-    overrideRules(t, { jamChance: 0 });
+    overrideRules(t, { jamChance: 0, pipNotBefore: 0 });
     const game = gameAtMall();
     Wallet.earn(game, 10000);
     return game;
@@ -25,6 +27,23 @@ function keepBuying(game) {
 function stepAside(game) {
     act(game, 'encounter.choose', { index: 0 });
 }
+
+test('the kid does not come for the first stock of the machine', (t) => {
+    overrideRules(t, { jamChance: 0 });
+    const game = gameAtMall();
+    Wallet.earn(game, 10000);
+    for (let pack = 0; pack < 6; pack++) {
+        buyFirst(game);
+    }
+    assert.equal(game.encounter(), null, 'too soon');
+
+    restock(game);
+    assert.ok(game.time - game.state.meta.startedAt >= Rules.pipNotBefore);
+    buyFirst(game);
+    buyFirst(game);
+    buyFirst(game);
+    assert.equal(game.encounter().id, 'pip');
+});
 
 test('the kid always appears the first time, after the third pack', (t) => {
     const game = richGame(t);

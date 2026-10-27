@@ -17,7 +17,9 @@ export const ScalperEncounter = {
     on: 'pack-bought',
     check: game => {
         const vending = game.state.vending;
-        if (vending.scalperChecked || vending.packsBought < Rules.scalperAfterPacks || Vending.stockLeft(game) === 0) {
+        // Pip comes first: kindness, then the scalper
+        const metPip = game.state.people.pip.encounters > 0;
+        if (!metPip || vending.scalperChecked || vending.packsBought < Rules.scalperAfterPacks || Vending.stockLeft(game) === 0) {
             return false;
         }
         // One chance per restock. The first time always happens.

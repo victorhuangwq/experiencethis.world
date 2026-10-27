@@ -17,7 +17,8 @@ export const PipEncounter = {
     on: 'pack-bought',
     check: game => {
         const vending = game.state.vending;
-        if (vending.pipChecked || vending.bought < Rules.pipAfterPacks || Vending.stockLeft(game) === 0) {
+        const tooSoon = game.time - game.state.meta.startedAt < Rules.pipNotBefore;
+        if (tooSoon || vending.pipChecked || vending.bought < Rules.pipAfterPacks || Vending.stockLeft(game) === 0) {
             return false;
         }
         // One chance per restock. The first time always happens.

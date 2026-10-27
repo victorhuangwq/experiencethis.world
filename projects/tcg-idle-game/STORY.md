@@ -149,8 +149,8 @@ through the door of the player's shop.
   the time someone else will buy it, so the machine at any moment is whatever
   hasn't gone yet. Every restock the player missed is played out when they
   return, so the machine is the same whether they watched or not.
-- **The scalper.** Once the player has bought 8 packs, Flip Resellington
-  lines up behind them (always the first time, then about 1 restock in 4),
+- **The scalper.** Once the player has met Pip and bought 8 packs, Flip
+  Resellington lines up behind them (always the first time, then about 1 restock in 4),
   sometimes with a kid behind him. The player can buy everything they can
   afford (fair, and Flip gets more annoyed each time; a strike if a kid was
   waiting), buy everything but leave one pack for the kid, or let him have
@@ -230,7 +230,7 @@ the first ending on day 5. The other endings can be chased afterwards.
 
 | Day | Active time | Acts | Main beats | Reason to come back |
 |---|---|---|---|---|
-| 1 | about 2 h | 1 -> 2 | Vending machine (0:00), first Pip event (about 0:15), hobby store (about 0:30), first locals win (about 1:15), binder and first trades, PackDrop.com unlocks (about 2:00) | First online order arrives the next morning; the Set 2 release date is announced |
+| 1 | about 2 h | 1 -> 2 | Vending machine (0:00), first Pip event (about 0:30, at the first restock), hobby store (about 0:30), first locals win (about 1:15), binder and first trades, PackDrop.com unlocks (about 2:00) | First online order arrives the next morning; the Set 2 release date is announced |
 | 2 | about 1.5 h | 3 -> 4 | First booster box, real deck building, regionals vs Riley, first Card-a-Palooza, trade-up chain step 1, grading unlocks | Cards come back from grading overnight; Set 2 preorder |
 | 3 | about 1.5 h | 4 | Set 2 releases (prices spike; Flip's first offer: buy out every store), nationals, first table at a card show, trade-up steps 2-4 | Preorder boxes, graded cards, the next card show |
 | 4 | about 1.5 h | 5 | Open your own shop, shop earns money idle, host your first locals, Flip's second offer (print counterfeits), Set 3 announced | The shop runs overnight; Set 3 release |
@@ -246,7 +246,7 @@ All times come from the real clock and are saved as timestamps.
 | Event | Schedule | Notes |
 |---|---|---|
 | Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine) |
-| Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
+| Pip in line | Not before the first restock, then about 1 in 3 restocks, once you've bought 3 since it | Not after you've already let Pip go first that restock |
 | Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
 | Nationals | Once per calendar day | One entry per day |
