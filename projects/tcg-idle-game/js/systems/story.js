@@ -13,6 +13,9 @@ import { Releases, currentRelease } from '../content/releases.js';
 // Idle comments made since the player last did something. Not saved.
 let idleComments = 0;
 
+// The seasons, in order
+const SEASONS = ['spring', 'summer'];
+
 export const Story = {
     id: 'story',
 
@@ -32,6 +35,12 @@ export const Story = {
         // The release that last saved the game (an id from releases.js)
         release: currentRelease.id
     }),
+
+    load(story) {
+        if (!SEASONS.includes(story.season)) {
+            story.season = 'spring';
+        }
+    },
 
     save({ here, ...story }) {
         return story;
@@ -69,6 +78,15 @@ export const Story = {
             game.say(Lines.story.idle[idleComments]);
             idleComments++;
         }
+    },
+
+    /**
+     * Whether a set has come out yet: some come out in a later season
+     * @param {Game} game - Game
+     * @param {Object} set - A set from the catalogue
+     */
+    isOut(game, set) {
+        return !set.out || SEASONS.indexOf(game.state.story.season) >= SEASONS.indexOf(set.out);
     },
 
     /**

@@ -21,11 +21,13 @@ export const Catalog = {
      * Sets, in the order their checklists are shown
      *   short     Its name on a pack
      *   inPacks   Sold in packs, which hold cards from this set only
+     *   out       The season it comes out in, if not from the start
      *   hidden    The checklist only shows once a card from it is found
      *   secret    Not a real set: no numbers, and no count of what is missing
      */
     sets: [
         { id: 'base', name: 'Critter Clash Base Set', short: 'Base Set', inPacks: true },
+        { id: 'backyard', name: 'Critter Clash: Backyard Brawl', short: 'Backyard Brawl', inPacks: true, hidden: true, out: 'summer' },
         { id: 'promo', name: 'Promos', hidden: true },
         { id: 'secret', name: 'Not on any checklist', secret: true }
     ],
@@ -34,7 +36,8 @@ export const Catalog = {
      * Every card. A card's number is its place among its set's cards in
      * this list, so a set's checklist reads in this order. Ids are saved;
      * never change one. Source is where a card can be found: pack,
-     * vending-special, card-show, trade-up, tournament, gift, or shoebox.
+     * vending-special, card-show, trade-up, tournament, prerelease, gift,
+     * or shoebox.
      */
     cards: [
         // Base Set commons
@@ -165,12 +168,123 @@ export const Catalog = {
         { id: 'mr-whiskers', set: 'base', name: "Grandma's Cat, Mr. Whiskers", type: 'Nature', rarity: 'ultra-rare', power: 8, value: 3000, source: 'pack', flavor: 'Has knocked over more decks than any player alive.' },
         { id: 'sir-reginald-emperor', set: 'base', name: 'Sir Reginald, Emperor of Pigeons', type: 'Nature', rarity: 'ultra-rare', power: 9, value: 3500, source: 'pack', flavor: 'Still has never paid for a sandwich. Now owns every sandwich.' },
 
+        // Backyard Brawl commons
+        { id: 'charcoal-chipmunk', set: 'backyard', name: 'Charcoal Chipmunk', type: 'Fire', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Has been nearly ready for forty minutes.' },
+        { id: 'sunscreen-skink', set: 'backyard', name: 'Sunscreen Skink', type: 'Fire', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Missed a spot. The spot is the whole skink.' },
+        { id: 'tiki-torch-moth', set: 'backyard', name: 'Tiki Torch Moth', type: 'Fire', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Flies toward the light. The light is on fire. It knows.' },
+        { id: 'sizzling-sausage-dog', set: 'backyard', name: 'Sizzling Sausage Dog', type: 'Fire', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Not a sausage. Not a dog. Sizzles anyway.' },
+        { id: 'hot-pavement-pug', set: 'backyard', name: 'Hot Pavement Pug', type: 'Fire', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Walks on tiptoe until September.' },
+        { id: 'lighter-fluid-lizard', set: 'backyard', name: 'Lighter Fluid Lizard', type: 'Fire', rarity: 'common', power: 3, value: 12, source: 'pack', flavor: 'Uses too much. Always too much.' },
+        { id: 'heat-lamp-hamster', set: 'backyard', name: 'Heat Lamp Hamster', type: 'Fire', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Has not left the heat lamp since June.' },
+        { id: 'marshmallow-mole', set: 'backyard', name: 'Marshmallow Mole', type: 'Fire', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Golden brown on one side. On fire on the other.' },
+        { id: 'mosquito-coil-gecko', set: 'backyard', name: 'Mosquito Coil Gecko', type: 'Fire', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Smells like summer and burnt spirals.' },
+        { id: 'patio-heater-pigeon', set: 'backyard', name: 'Patio Heater Pigeon', type: 'Fire', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Is outside. Is warm. Has never once been cold.' },
+        { id: 'flip-flop-fire-ant', set: 'backyard', name: 'Flip-Flop Fire Ant', type: 'Fire', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Only bites when the flip-flops come off.' },
+        { id: 'smoked-brisket-badger', set: 'backyard', name: 'Smoked Brisket Badger', type: 'Fire', rarity: 'common', power: 3, value: 13, source: 'pack', flavor: 'Fourteen hours in the smoker. Feels great.' },
+        { id: 'car-seat-salamander', set: 'backyard', name: 'Car Seat Salamander', type: 'Fire', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Sat in a parked car at noon. Now it is a Fire type.' },
+        { id: 'popcorn-possum', set: 'backyard', name: 'Popcorn Possum', type: 'Fire', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Pops at random. Mostly during the quiet part of the film.' },
+        { id: 'burger-flip-frog', set: 'backyard', name: 'Burger Flip Frog', type: 'Fire', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Flips the burgers. Flips itself. Sticks the landing.' },
+        { id: 'heatstroke-heron', set: 'backyard', name: 'Heatstroke Heron', type: 'Fire', rarity: 'common', power: 3, value: 11, source: 'pack', flavor: 'Should sit in the shade. Will not.' },
+        { id: 'ember-ladybug', set: 'backyard', name: 'Ember Ladybug', type: 'Fire', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Five spots. All of them glowing.' },
+        { id: 'pool-noodle-eel', set: 'backyard', name: 'Pool Noodle Eel', type: 'Water', rarity: 'common', power: 2, value: 15, source: 'pack', flavor: 'Floats. Bends. Refuses to be a real eel.' },
+        { id: 'cannonball-toad', set: 'backyard', name: 'Cannonball Toad', type: 'Water', rarity: 'common', power: 3, value: 12, source: 'pack', flavor: 'Splashes everyone within nine metres. On purpose.' },
+        { id: 'water-balloon-blowfish', set: 'backyard', name: 'Water Balloon Blowfish', type: 'Water', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Holds its breath until someone throws it.' },
+        { id: 'slip-n-slide-seal', set: 'backyard', name: 'Slip \'n\' Slide Seal', type: 'Water', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Goes the whole length. Keeps going. Into the hedge.' },
+        { id: 'lemonade-stand-leech', set: 'backyard', name: 'Lemonade Stand Leech', type: 'Water', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Twenty-five cents a cup. Mostly ice.' },
+        { id: 'inflatable-flamingo', set: 'backyard', name: 'Inflatable Flamingo', type: 'Water', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'It is a pool float. Nobody has told it.' },
+        { id: 'rain-barrel-frog', set: 'backyard', name: 'Rain Barrel Frog', type: 'Water', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Lives in the rain barrel. Pays no rent.' },
+        { id: 'melted-popsicle-newt', set: 'backyard', name: 'Melted Popsicle Newt', type: 'Water', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Was a popsicle. Now it is a puddle with a stick.' },
+        { id: 'paddling-pool-platypus', set: 'backyard', name: 'Paddling Pool Platypus', type: 'Water', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Ankle-deep and loving it.' },
+        { id: 'garden-pond-koi', set: 'backyard', name: 'Garden Pond Koi', type: 'Water', rarity: 'common', power: 3, value: 11, source: 'pack', flavor: 'Has been in the pond longer than the house.' },
+        { id: 'swim-nappy-duckling', set: 'backyard', name: 'Swim Nappy Duckling', type: 'Water', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Brave. Damp. Brave.' },
+        { id: 'hose-nozzle-narwhal', set: 'backyard', name: 'Hose Nozzle Narwhal', type: 'Water', rarity: 'common', power: 3, value: 12, source: 'pack', flavor: 'Set to JET. It is always set to JET.' },
+        { id: 'goggle-eyed-guppy', set: 'backyard', name: 'Goggle-Eyed Guppy', type: 'Water', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'The goggles are too tight. Its eyes are fine.' },
+        { id: 'morning-dew-moth', set: 'backyard', name: 'Morning Dew Moth', type: 'Water', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Gets everything wet by seven in the morning.' },
+        { id: 'shallow-end-shrimp', set: 'backyard', name: 'Shallow End Shrimp', type: 'Water', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Never goes past the rope.' },
+        { id: 'splash-pad-otter', set: 'backyard', name: 'Splash Pad Otter', type: 'Water', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Waits for the fountain. Screams. Repeats.' },
+        { id: 'summer-storm-stork', set: 'backyard', name: 'Summer Storm Stork', type: 'Water', rarity: 'common', power: 3, value: 10, source: 'pack', flavor: 'Turns up at four o\'clock every day. Ruins the barbecue.' },
+        { id: 'picnic-blanket-beetle', set: 'backyard', name: 'Picnic Blanket Beetle', type: 'Nature', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Was there first. The blanket went on top of it.' },
+        { id: 'hammock-sloth', set: 'backyard', name: 'Hammock Sloth', type: 'Nature', rarity: 'common', power: 1, value: 14, source: 'pack', flavor: 'Swaying. Forever swaying.' },
+        { id: 'jar-of-fireflies', set: 'backyard', name: 'Jar of Fireflies', type: 'Nature', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Caught. Let go. Caught again. Everyone is fine.' },
+        { id: 'weed-whacker-weasel', set: 'backyard', name: 'Weed Whacker Weasel', type: 'Nature', rarity: 'common', power: 3, value: 12, source: 'pack', flavor: 'Gets the edges. Gets the flowers. Gets the hose.' },
+        { id: 'lawn-chair-lemur', set: 'backyard', name: 'Lawn Chair Lemur', type: 'Nature', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Folds up when sat on. Every time.' },
+        { id: 'corn-on-the-cob-crow', set: 'backyard', name: 'Corn on the Cob Crow', type: 'Nature', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Eats in rows, like a typewriter.' },
+        { id: 'watermelon-seed-weevil', set: 'backyard', name: 'Watermelon Seed Weevil', type: 'Nature', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Was swallowed. Did not grow. Very disappointed.' },
+        { id: 'citronella-caterpillar', set: 'backyard', name: 'Citronella Caterpillar', type: 'Nature', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Keeps the mosquitoes away. And everyone else.' },
+        { id: 'sandbox-scorpion', set: 'backyard', name: 'Sandbox Scorpion', type: 'Nature', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Rules the sandbox. Has a tiny plastic spade.' },
+        { id: 'trampoline-kangaroo', set: 'backyard', name: 'Trampoline Kangaroo', type: 'Nature', rarity: 'common', power: 3, value: 11, source: 'pack', flavor: 'Bounces higher than the fence. Has seen everything.' },
+        { id: 'tree-swing-squirrel', set: 'backyard', name: 'Tree Swing Squirrel', type: 'Nature', rarity: 'common', power: 2, value: 9, source: 'pack', flavor: 'Pushes itself. Very proud.' },
+        { id: 'bird-feeder-raccoon', set: 'backyard', name: 'Bird Feeder Raccoon', type: 'Nature', rarity: 'common', power: 3, value: 13, source: 'pack', flavor: 'The bird feeder is for birds. The raccoon has read the sign.' },
+        { id: 'overgrown-hedgehog', set: 'backyard', name: 'Overgrown Hedgehog', type: 'Nature', rarity: 'common', power: 1, value: 5, source: 'pack', flavor: 'Is the hedge now. Is happy.' },
+        { id: 'grass-clipping-goat', set: 'backyard', name: 'Grass Clipping Goat', type: 'Nature', rarity: 'common', power: 2, value: 7, source: 'pack', flavor: 'Eats the clippings. Then the lawn. Then the mower.' },
+        { id: 'wasp-nest-wombat', set: 'backyard', name: 'Wasp Nest Wombat', type: 'Nature', rarity: 'common', power: 3, value: 10, source: 'pack', flavor: 'Nobody touches the wasp nest. The wombat lives in it.' },
+        { id: 'ice-cream-van-ant', set: 'backyard', name: 'Ice Cream Van Ant', type: 'Nature', rarity: 'common', power: 1, value: 6, source: 'pack', flavor: 'Can hear the music from four streets away.' },
+        { id: 'daisy-chain-duckling', set: 'backyard', name: 'Daisy Chain Duckling', type: 'Nature', rarity: 'common', power: 2, value: 8, source: 'pack', flavor: 'Made the chain. Wears the chain. Is the chain.' },
+
+        // Backyard Brawl uncommons
+        { id: 'grill-master-gorilla', set: 'backyard', name: 'Grill Master Gorilla', type: 'Fire', rarity: 'uncommon', power: 5, value: 55, source: 'pack', flavor: 'Wears the apron. Holds the tongs. Nobody else may hold the tongs.' },
+        { id: 'backyard-fireworks-falcon', set: 'backyard', name: 'Backyard Fireworks Falcon', type: 'Fire', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Goes up. Goes bang. Goes up again, somehow.' },
+        { id: 'pitmaster-pig', set: 'backyard', name: 'Pitmaster Pig', type: 'Fire', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Low and slow. Low and slow. Low and slow.' },
+        { id: 'solar-panel-peacock', set: 'backyard', name: 'Solar Panel Peacock', type: 'Fire', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Spreads its tail at noon. Powers the house.' },
+        { id: 'heat-wave-walrus', set: 'backyard', name: 'Heat Wave Walrus', type: 'Fire', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'Lies very still. Says nothing. Is very hot.' },
+        { id: 'campfire-story-stoat', set: 'backyard', name: 'Campfire Story Stoat', type: 'Fire', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Every story ends with a hook on a car door.' },
+        { id: 'hot-coal-hopper', set: 'backyard', name: 'Hot Coal Hopper', type: 'Fire', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'Walks across the coals. Does not mention it.' },
+        { id: 'sunburn-snapper', set: 'backyard', name: 'Sunburn Snapper', type: 'Fire', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Lobster-coloured. Not a lobster. Very sore.' },
+        { id: 'chimenea-chameleon', set: 'backyard', name: 'Chimenea Chameleon', type: 'Fire', rarity: 'uncommon', power: 5, value: 50, source: 'pack', flavor: 'Blends in with the chimenea. Nobody lights it now.' },
+        { id: 'tongs-toucan', set: 'backyard', name: 'Tongs Toucan', type: 'Fire', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Click click. Click click. It is not cooking anything.' },
+        { id: 'lifeguard-labrador', set: 'backyard', name: 'Lifeguard Labrador', type: 'Water', rarity: 'uncommon', power: 5, value: 55, source: 'pack', flavor: 'On duty. Whistle ready. Has never blown it.' },
+        { id: 'pool-party-pelican', set: 'backyard', name: 'Pool Party Pelican', type: 'Water', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Brought the snacks. Ate the snacks.' },
+        { id: 'deep-end-dolphin', set: 'backyard', name: 'Deep End Dolphin', type: 'Water', rarity: 'uncommon', power: 5, value: 50, source: 'pack', flavor: 'Lives in the deep end. Says it is not that deep.' },
+        { id: 'squirt-gun-squid', set: 'backyard', name: 'Squirt Gun Squid', type: 'Water', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Eight arms. Eight squirt guns. No mercy.' },
+        { id: 'hot-tub-hippo', set: 'backyard', name: 'Hot Tub Hippo', type: 'Water', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Is not getting out. You cannot make it.' },
+        { id: 'lemonade-pitcher-pike', set: 'backyard', name: 'Lemonade Pitcher Pike', type: 'Water', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Too much sugar. Not enough lemon. Perfect.' },
+        { id: 'rain-delay-raven', set: 'backyard', name: 'Rain Delay Raven', type: 'Water', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'Arrives when the game starts. Leaves when it is called off.' },
+        { id: 'armband-frog', set: 'backyard', name: 'Armband Frog', type: 'Water', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'Cannot swim. Can float. That is enough.' },
+        { id: 'paddle-boat-beaver', set: 'backyard', name: 'Paddle Boat Beaver', type: 'Water', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Pedals in circles. Very happy about it.' },
+        { id: 'dunk-tank-duck', set: 'backyard', name: 'Dunk Tank Duck', type: 'Water', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Sits on the seat. Waits. Knows what is coming.' },
+        { id: 'lawn-flamingo-flock', set: 'backyard', name: 'Lawn Flamingo Flock', type: 'Nature', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Plastic. Pink. A little closer to the house every night.' },
+        { id: 'prize-pumpkin-pig', set: 'backyard', name: 'Prize Pumpkin Pig', type: 'Nature', rarity: 'uncommon', power: 5, value: 55, source: 'pack', flavor: 'Won the county fair. Will not let anyone forget.' },
+        { id: 'picnic-basket-bear', set: 'backyard', name: 'Picnic Basket Bear', type: 'Nature', rarity: 'uncommon', power: 5, value: 50, source: 'pack', flavor: 'Smarter than the average. Not by much.' },
+        { id: 'tomato-plant-tortoise', set: 'backyard', name: 'Tomato Plant Tortoise', type: 'Nature', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Grows tomatoes on its shell. Nobody asks.' },
+        { id: 'treehouse-tarsier', set: 'backyard', name: 'Treehouse Tarsier', type: 'Nature', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'No grown-ups allowed. It is the grown-up.' },
+        { id: 'bee-hotel-bumblebee', set: 'backyard', name: 'Bee Hotel Bumblebee', type: 'Nature', rarity: 'uncommon', power: 4, value: 40, source: 'pack', flavor: 'Checked in. Will not check out.' },
+        { id: 'rain-gauge-robin', set: 'backyard', name: 'Rain Gauge Robin', type: 'Nature', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Measures the rain. Has opinions about it.' },
+        { id: 'leaf-blower-lynx', set: 'backyard', name: 'Leaf Blower Lynx', type: 'Nature', rarity: 'uncommon', power: 4, value: 45, source: 'pack', flavor: 'Blows the leaves into the next garden. Moves on.' },
+        { id: 'vegetable-patch-vole', set: 'backyard', name: 'Vegetable Patch Vole', type: 'Nature', rarity: 'uncommon', power: 3, value: 30, source: 'pack', flavor: 'Has eaten every carrot. Denies it.' },
+        { id: 'butterfly-garden-badger', set: 'backyard', name: 'Butterfly Garden Badger', type: 'Nature', rarity: 'uncommon', power: 3, value: 35, source: 'pack', flavor: 'Planted it for the butterflies. Eats the plants.' },
+
+        // Backyard Brawl rares
+        { id: 'the-barbecue-baron', set: 'backyard', name: 'The Barbecue Baron', type: 'Fire', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'Rules the grill. Has three aprons, one for each mood.' },
+        { id: 'midsummer-salamander', set: 'backyard', name: 'Midsummer Salamander', type: 'Fire', rarity: 'rare', power: 6, value: 350, source: 'pack', flavor: 'Comes out on the longest day. Refuses to set.' },
+        { id: 'firepit-fox', set: 'backyard', name: 'Firepit Fox', type: 'Fire', rarity: 'rare', power: 6, value: 300, source: 'pack', flavor: 'Sits closest to the fire. Has no eyebrows.' },
+        { id: 'sparkler-wyvern', set: 'backyard', name: 'Sparkler Wyvern', type: 'Fire', rarity: 'rare', power: 5, value: 250, source: 'pack', flavor: 'Writes its name in the air. Spells it wrong.' },
+        { id: 'heatwave-hydra', set: 'backyard', name: 'Heatwave Hydra', type: 'Fire', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'Three heads. All of them sweating.' },
+        { id: 'the-pool-shark', set: 'backyard', name: 'The Pool Shark', type: 'Water', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'An actual shark. In the pool. Nobody is swimming.' },
+        { id: 'sprinkler-serpent', set: 'backyard', name: 'Sprinkler Serpent', type: 'Water', rarity: 'rare', power: 6, value: 300, source: 'pack', flavor: 'Tick-tick-tick-tick. Then it bites.' },
+        { id: 'thunderhead-toad', set: 'backyard', name: 'Thunderhead Toad', type: 'Water', rarity: 'rare', power: 6, value: 350, source: 'pack', flavor: 'Swallowed a storm cloud. Burps thunder.' },
+        { id: 'waterslide-wyrm', set: 'backyard', name: 'Waterslide Wyrm', type: 'Water', rarity: 'rare', power: 5, value: 250, source: 'pack', flavor: 'Went down the waterslide. Is the waterslide now.' },
+        { id: 'monsoon-moose', set: 'backyard', name: 'Monsoon Moose', type: 'Water', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'Brings the rain. Brings all of the rain.' },
+        { id: 'the-lawn-king', set: 'backyard', name: 'The Lawn King', type: 'Nature', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'Its grass is greener. It will tell you.' },
+        { id: 'potato-salad-bandit', set: 'backyard', name: 'Potato Salad Bandit', type: 'Nature', rarity: 'rare', power: 6, value: 300, source: 'pack', flavor: 'Took the potato salad. Left a thank-you note.' },
+        { id: 'giant-zucchini-golem', set: 'backyard', name: 'Giant Zucchini Golem', type: 'Nature', rarity: 'rare', power: 6, value: 350, source: 'pack', flavor: 'Nobody picked the zucchini in time. Now it walks.' },
+        { id: 'firefly-queen', set: 'backyard', name: 'Firefly Queen', type: 'Nature', rarity: 'rare', power: 5, value: 250, source: 'pack', flavor: 'Lights up the whole garden. Asks only for the jam jar.' },
+        { id: 'overgrown-garden-giant', set: 'backyard', name: 'Overgrown Garden Giant', type: 'Nature', rarity: 'rare', power: 7, value: 400, source: 'pack', flavor: 'Nobody has weeded since May. This is the result.' },
+
+        // Backyard Brawl ultra-rares
+        { id: 'charcoal-chipmunk-finally-ready', set: 'backyard', name: 'Charcoal Chipmunk, Finally Ready', type: 'Fire', rarity: 'ultra-rare', power: 8, value: 3000, source: 'pack', flavor: 'The Charcoal Chipmunk\'s final form. It is finally ready. Nobody is hungry anymore.' },
+        { id: 'the-eternal-barbecue', set: 'backyard', name: 'The Eternal Barbecue', type: 'Fire', rarity: 'ultra-rare', power: 9, value: 3500, source: 'pack', flavor: 'Lit in 1974. Still going. Still nearly ready.' },
+        { id: 'the-cannonball-kraken', set: 'backyard', name: 'The Cannonball Kraken', type: 'Water', rarity: 'ultra-rare', power: 8, value: 3000, source: 'pack', flavor: 'Jumped in. The pool is empty now. Everything else is wet.' },
+        { id: 'supreme-pool-noodle-serpent', set: 'backyard', name: 'Supreme Pool Noodle Serpent', type: 'Water', rarity: 'ultra-rare', power: 9, value: 3500, source: 'pack', flavor: 'The Pool Noodle Eel\'s final form. Floats above everything.' },
+        { id: 'hammock-sloth-ascended', set: 'backyard', name: 'Hammock Sloth Ascended', type: 'Nature', rarity: 'ultra-rare', power: 8, value: 3000, source: 'pack', flavor: 'The Hammock Sloth\'s final form. Has not moved in eleven years. Has achieved everything.' },
+        { id: 'lord-of-the-lawn-flamingos', set: 'backyard', name: 'Lord of the Lawn Flamingos', type: 'Nature', rarity: 'ultra-rare', power: 9, value: 3500, source: 'pack', flavor: 'Plastic. Pink. In charge.' },
+
         // Promos: never in packs; each comes from one place
         { id: 'card-o-matic-prime', set: 'promo', name: 'CARD-O-MATIC Prime', type: 'Wild', rarity: 'legendary', power: 10, value: 15000, source: 'vending-special', flavor: 'It finally dispensed itself.' },
         { id: 'absolutely-massive-dragon', set: 'promo', name: 'Absolutely Massive Dragon', type: 'Fire', rarity: 'legendary', power: 10, value: 40000, source: 'card-show', flavor: 'The card is normal-sized. The dragon is not.' },
         { id: 'golden-paperclip-phoenix', set: 'promo', name: 'Golden Paperclip Phoenix', type: 'Wild', rarity: 'legendary', power: 10, value: 50000, source: 'trade-up', flavor: 'It started as a paperclip. It always does.' },
         { id: 'champions-crown', set: 'promo', name: "Champion's Crown", type: 'Wild', rarity: 'legendary', power: 10, value: 30000, source: 'tournament', flavor: 'Heavy is the head. Heavier is the binder.' },
         { id: 'pips-favourite', set: 'promo', name: "Pip's Favourite", type: 'Nature', rarity: 'legendary', power: 10, value: 100, source: 'gift', flavor: 'Worth one dollar. Worth everything.' },
+        { id: 'early-bird', set: 'promo', name: 'The Early Bird', type: 'Wild', rarity: 'legendary', power: 8, value: 2000, source: 'prerelease', flavor: 'Showed up before the set did. Got the worm.' },
 
         // From the childhood shoebox
         { id: 'wet-sock-gobln', set: 'secret', name: 'Wet Sock Gobln', type: 'Water', rarity: 'common', power: 2, value: 5, source: 'shoebox', flavor: 'A misprint. The i is missing. Nobody knows where it went.' },

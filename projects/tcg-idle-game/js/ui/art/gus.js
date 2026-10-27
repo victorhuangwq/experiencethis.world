@@ -22,12 +22,13 @@ const INSIDE = 31;
 
 /**
  * The inside of the store
- * @param {Object} options - marcus: whether Marcus is at the table by the window
+ * @param {Object} options - marcus: whether Marcus is at the table by the
+ *                           window; newSet: whether a new set is on the shelves
  */
-export function inside({ marcus = false } = {}) {
+export function inside({ marcus = false, newSet = false } = {}) {
     const rows = [
-        ' [##][##][##]   .-----------.',
-        ' [##][##][##]   |  FRIDAY   |',
+        newSet ? ' [BB][BB][BB]   .-----------.' : ' [##][##][##]   .-----------.',
+        newSet ? ' [BB][BB][BB]   |  FRIDAY   |' : ' [##][##][##]   |  FRIDAY   |',
         ' [##][##][##]   |   NIGHT   |',
         ' [##][##][##]   |  LOCALS!  |',
         '                \'-----------\'',
@@ -55,7 +56,11 @@ export function inside({ marcus = false } = {}) {
  */
 export function table(face, name, last = null) {
     const card = played => played ? `|${played.type[0]}${String(played.power).padStart(3)}|` : '|    |';
-    const half = text => text.slice(0, 13).padStart(Math.ceil((13 + text.length) / 2)).padEnd(13);
+    // Centred under each card, cut short to fit
+    const half = text => {
+        const fitted = text.slice(0, 13);
+        return fitted.padStart(Math.ceil((13 + fitted.length) / 2)).padEnd(13);
+    };
     return [
         '            ' + face,
         '            /|=|\\',

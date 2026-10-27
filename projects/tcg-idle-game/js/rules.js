@@ -90,8 +90,19 @@ export const Rules = {
     gusWithoutTip: 60,
     // Gus's store opens on this day of play (counting separate days)
     gusOpensOnDay: 2,
-    // Gus's price for a pack of each set: a markup on the machine's
-    gusPrices: { base: 450 },
+    // Gus's price for a pack of each set, once it's out: a markup on the
+    // machine's, and a big one on the new set
+    gusPrices: { base: 450, backyard: 750 },
+    // Summer, and Set 2, come on this day of play at the earliest, once the
+    // player has played the pre-release
+    summerOnDay: 3,
+    // In summer, about this share of the machine's slots hold the new set
+    // (special packs stay Base Set packs). It is cheap for how many people
+    // want it, so other people buy it this many times sooner, and the
+    // scalper comes more often.
+    newSetShare: 0.5,
+    newSetSellsSooner: 0.4,
+    summerScalperChance: 0.4,
     // Gus's glass case of singles: what each spot holds (a rarity, or a hit
     // from hitOdds), restocked every few hours, at a multiple of each
     // card's value
@@ -124,12 +135,18 @@ export const Rules = {
     tellChance: 0.8,
     // How strong the regulars' cards are, by tournament
     opponentRarity: {
-        locals: { uncommon: 0.3, rare: 0.5, 'ultra-rare': 0.2 }
+        locals: { uncommon: 0.3, rare: 0.5, 'ultra-rare': 0.2 },
+        // Sealed: everyone plays with what they opened
+        prerelease: { common: 0.35, uncommon: 0.4, rare: 0.2, 'ultra-rare': 0.05 }
     },
     // Locals: once an hour. Entry is buying this many packs from Gus, and
     // the prize is packs, by matches won.
     localsEntryPacks: 2,
     localsPrizes: { 3: 3, 2: 1 },
+    // The pre-release: a kit of new-set packs, opened at the table, for
+    // this much. Everyone gets the promo; each match won earns a pack.
+    prereleaseKitPacks: 4,
+    prereleaseKitPrice: 3000,
 
     // Collection storage, in order. Each one goes on sale once the player
     // has this many cards, and costs this much (in cents).

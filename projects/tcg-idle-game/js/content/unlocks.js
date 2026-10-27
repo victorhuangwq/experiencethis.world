@@ -15,6 +15,7 @@ import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
 import { Store } from '../systems/store.js';
 import { Trades } from '../systems/trades.js';
+import { Tournaments } from '../systems/tournaments.js';
 
 export const Unlocks = [
     {
@@ -66,6 +67,22 @@ export const Unlocks = [
             // Stock the case, and Marcus may be in already
             Store.tick(game, game.time);
             Trades.tick(game, game.time);
+        }
+    },
+    {
+        // Winning locals makes the player a regular
+        id: 'prerelease-invite',
+        when: game => game.state.tournaments.localsWon > 0 && Tournaments.upcomingSet(game) !== null,
+        run: game => game.say(Lines.tournaments.invited, 'good')
+    },
+    {
+        // Set 2 comes out with the summer, on a later day than the
+        // pre-release at the earliest
+        id: 'summer',
+        when: game => game.state.tournaments.prerelease && !game.state.tournaments.current && game.state.story.days >= Rules.summerOnDay,
+        run: game => {
+            game.state.story.season = 'summer';
+            game.say(Lines.story.summer, 'good');
         }
     },
     // When the collection outgrows its storage, the next kind goes on sale

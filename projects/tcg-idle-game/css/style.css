@@ -229,6 +229,17 @@ button.current {
     color: var(--background);
 }
 
+/* A newer set's packs, in summer */
+.art-button.new-set {
+    color: var(--good);
+}
+
+.art-button.new-set:hover:not(:disabled),
+.art-button.new-set:focus-visible {
+    background: var(--good);
+    color: var(--background);
+}
+
 /* A slot the player can't afford yet: still a key, just not a pressable one */
 .art-button:disabled {
     font-weight: normal;

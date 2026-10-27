@@ -8,6 +8,7 @@ import { Rules } from '../../rules.js';
 import { Lines } from '../../content/text/index.js';
 import { Vending } from '../../systems/vending.js';
 import { Wallet } from '../../systems/wallet.js';
+import { Catalog } from '../../content/catalog.js';
 import { machineHtml } from '../art/mall.js';
 import { escape, button } from '../html.js';
 
@@ -29,11 +30,13 @@ function renderMall(game) {
                 return escape(text);
             }
             const price = Rules.prices[kind];
+            const set = vending.sets[index];
+            const name = set === 'base' ? Lines.mall.names[kind] : Lines.mall.setNames[kind](Catalog.findSet(set).short);
             return button('vending.buy', text, {
                 args: { slot: index },
                 disabled: !Wallet.canAfford(game, price),
-                className: `art-button ${kind}`,
-                title: Lines.mall.buttons.slot(Vending.slotLabel(index), Lines.mall.names[kind], Format.money(price))
+                className: `art-button ${kind}${set === 'base' ? '' : ' new-set'}`,
+                title: Lines.mall.buttons.slot(Vending.slotLabel(index), name, Format.money(price))
             });
         },
         coinReturn: text => button('vending.coinReturn', text, {

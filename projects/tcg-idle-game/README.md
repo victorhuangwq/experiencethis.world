@@ -15,7 +15,14 @@ on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
 minutes of real time with a mix of packs that other people buy up, Pip, the
 scalper, Terry waiting for the drop, the kindness code, Benny buying duplicates,
 storage to buy as the collection outgrows it (each one organising the cards
-better), three secrets, and Gus's store, which opens in summer (Act 2).
+better), and three secrets.
+
+Act 2 is playable too: Gus's store opens on the second day of play, with
+packs at a markup, a glass case of singles, grading (back a day later),
+Friday Night Locals every hour against regulars the player learns to read,
+and Marcus trading on Thursday and Friday evenings and weekends. Winning
+locals gets an invitation to the pre-release, and summer brings Set 2,
+Backyard Brawl (102 cards), on the third day of play at the earliest.
 
 ## Code
 
@@ -155,4 +162,5 @@ When adding things:
   a pacing check if STORY.md sets a target for it.
 
 To try things in the browser, add `?dev` to the page URL for shortcuts to add
-money, restock, call the kid into line, and delete the save and endings.
+money, restock, call the kid into line, count another day of play (and bring
+back cards from grading), and delete the save and endings.

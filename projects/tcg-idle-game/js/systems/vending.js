@@ -17,6 +17,8 @@ import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
+import { Story } from './story.js';
+import { Catalog } from '../content/catalog.js';
 
 // Kinds of pack, from the least to the most special
 const KINDS = ['normal', 'bundle', 'special', 'mega'];
@@ -32,6 +34,8 @@ export const Vending = {
         nextRestockAt: 0,
         // One entry per slot: a kind of pack, or null when empty
         slots: new Array(Rules.slotCount).fill(null),
+        // The set of the pack in each slot
+        sets: new Array(Rules.slotCount).fill('base'),
         // When someone else buys each slot's pack
         goneAt: new Array(Rules.slotCount).fill(0),
         // Packs bought since the last restock, and ever
@@ -61,6 +65,7 @@ export const Vending = {
             return KINDS.includes(slot) ? slot : null;
         });
         vending.goneAt = vending.slots.map((slot, index) => Number.isFinite(vending.goneAt[index]) ? vending.goneAt[index] : 0);
+        vending.sets = vending.slots.map((slot, index) => Catalog.findSet(vending.sets[index])?.inPacks ? vending.sets[index] : 'base');
         if (!Number.isInteger(vending.jammedSlot)) {
             vending.jammedSlot = null;
         }
@@ -86,6 +91,7 @@ export const Vending = {
             vending.restockedAt = now;
             vending.nextRestockAt = Vending.driverDue(game, now);
             vending.slots = new Array(Rules.slotCount).fill('normal');
+            vending.sets = new Array(Rules.slotCount).fill('base');
             vending.goneAt = new Array(Rules.slotCount).fill(vending.nextRestockAt);
             return;
         }
@@ -122,20 +128,27 @@ export const Vending = {
 
     /**
      * The driver fills every slot. Most are normal packs; some are bundles,
-     * special packs, or mega packs. Each one gets the time someone else
-     * will buy it. A deal made with Terry happens now.
+     * special packs, or mega packs. Once a new set is out, about half are
+     * the new set's, which sells sooner. Each one gets the time someone
+     * else will buy it. A deal made with Terry happens now.
      */
     restock(game) {
         const vending = game.state.vending;
         const odds = Collection.attuned(game) ? Rules.attunedRestockOdds : Rules.restockOdds;
+        const newSet = Vending.newSet(game);
         vending.slots = [];
+        vending.sets = [];
         vending.goneAt = [];
         for (let index = 0; index < Rules.slotCount; index++) {
             let roll = game.random();
             const kind = Object.keys(odds).find(each => (roll -= odds[each]) < 0) || 'normal';
-            const [soonest, latest] = Rules.soldAfter[kind];
+            // Special packs, with the machine's own promo, stay Base Set packs
+            const set = newSet && kind !== 'special' && game.chance(Rules.newSetShare) ? newSet : 'base';
+            const sooner = set === 'base' ? 1 : Rules.newSetSellsSooner;
+            const [soonest, latest] = Rules.soldAfter[kind].map(minutes => Math.round(minutes * 60 * sooner));
             vending.slots.push(kind);
-            vending.goneAt.push(vending.restockedAt + game.randomInt(soonest * 60, latest * 60) * 1000);
+            vending.sets.push(set);
+            vending.goneAt.push(vending.restockedAt + game.randomInt(soonest, latest) * 1000);
         }
 
         vending.bought = 0;
@@ -157,7 +170,7 @@ export const Vending = {
             game.say(Lines.terry.shared);
         } else if (deal === 'first') {
             const best = Vending.bestSlot(game);
-            game.say(Lines.terry.wentFirst(Lines.mall.kinds[vending.slots[best]]));
+            game.say(Lines.terry.wentFirst(Vending.packName(game, best)));
             vending.slots[best] = null;
         }
     },
@@ -172,9 +185,10 @@ export const Vending = {
         vending.slots.forEach((kind, index) => {
             // A pack stuck in a jam can't be bought by anyone
             if (kind && vending.goneAt[index] <= now && index !== vending.jammedSlot) {
+                const name = Vending.packName(game, index);
                 vending.slots[index] = null;
-                if (watching && kind !== 'normal') {
-                    game.say(Lines.mall.someoneBought(Lines.mall.kinds[kind], Vending.slotLabel(index)));
+                if (watching && (kind !== 'normal' || vending.sets[index] !== 'base')) {
+                    game.say(Lines.mall.someoneBought(name, Vending.slotLabel(index)));
                 }
             }
         });
@@ -191,8 +205,8 @@ export const Vending = {
         }
         const best = Vending.bestSlot(game);
         const kind = best === -1 ? null : game.state.vending.slots[best];
-        if (kind && kind !== 'normal') {
-            game.say(Lines.mall.restockWith(Lines.mall.kinds[kind], Vending.slotLabel(best)), 'good');
+        if (kind && (kind !== 'normal' || game.state.vending.sets[best] !== 'base')) {
+            game.say(Lines.mall.restockWith(Vending.packName(game, best), Vending.slotLabel(best)), 'good');
         } else {
             game.say(Lines.mall.restock);
         }
@@ -219,17 +233,36 @@ export const Vending = {
     },
 
     /**
-     * The slot with the most special pack in it, or -1 if the machine is empty
+     * The slot with the most special pack in it, or -1 if the machine is
+     * empty. Of two packs of a kind, the new set's is better.
      */
     bestSlot(game) {
-        const slots = game.state.vending.slots;
+        const { slots, sets } = game.state.vending;
+        const rank = index => KINDS.indexOf(slots[index]) * 2 + (sets[index] === 'base' ? 0 : 1);
         let best = -1;
         slots.forEach((kind, index) => {
-            if (kind && (best === -1 || KINDS.indexOf(kind) > KINDS.indexOf(slots[best]))) {
+            if (kind && (best === -1 || rank(index) > rank(best))) {
                 best = index;
             }
         });
         return best;
+    },
+
+    /**
+     * The newest set, once it's out, or null before any is
+     */
+    newSet(game) {
+        const out = Catalog.packSets().filter(set => set.out && Story.isOut(game, set));
+        return out.at(-1)?.id ?? null;
+    },
+
+    /**
+     * What the pack in a slot is called, like "a pack" or "a Backyard
+     * Brawl pack"
+     */
+    packName(game, index) {
+        const { slots, sets } = game.state.vending;
+        return sets[index] === 'base' ? Lines.mall.kinds[slots[index]] : Lines.mall.setKinds[slots[index]](Catalog.findSet(sets[index]).short);
     },
 
     nextRestockAt(game) {
@@ -259,16 +292,17 @@ export const Vending = {
     dispense(game, index) {
         const vending = game.state.vending;
         const kind = vending.slots[index];
+        const name = Vending.packName(game, index);
         vending.slots[index] = null;
         vending.bought++;
         vending.packsBought++;
         // A bundle is three normal packs
         if (kind === 'bundle') {
-            Collection.addPacks(game, 'base', 'normal', 3);
+            Collection.addPacks(game, vending.sets[index], 'normal', 3);
         } else {
-            Collection.addPacks(game, 'base', kind);
+            Collection.addPacks(game, vending.sets[index], kind);
         }
-        game.say(Lines.mall.bought(Vending.slotLabel(index), Lines.mall.kinds[kind]));
+        game.say(Lines.mall.bought(Vending.slotLabel(index), name));
         game.emit('pack-bought', { index, kind });
     },
 

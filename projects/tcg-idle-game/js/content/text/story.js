@@ -4,8 +4,11 @@
 
 export const Story = {
     seasons: {
-        spring: 'SPRING'
+        spring: 'SPRING',
+        summer: 'SUMMER'
     },
+    // Summer comes, and Set 2 with it
+    summer: 'It is summer. Backyard Brawl is out. Everyone plays Critter Clash now. Officer Dale has a deck. Linda has two. Gus has put his prices up, and the machine at the mall has never been so popular.',
 
     // Said after 3, 10, and 30 minutes without doing anything
     idle: [

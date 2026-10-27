@@ -7,9 +7,9 @@ still need a decision.
 
 - **Built:** Act 1, spring (the shoebox opening, the allowance, the hybrid
   day job and the office, the vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
-  secrets, and Gus telling you to come back in summer).
-- **Next:** Act 2, at Gus's Games & Grub (see Act 2 below): the store
-  opens in spring, and summer brings Set 2.
+  secrets), and Act 2 (Gus's Games & Grub, locals, grading, Marcus's
+  trades, the pre-release, and summer with Set 2).
+- **Next:** Act 3, the online store and deck building.
 
 ## Vision
 

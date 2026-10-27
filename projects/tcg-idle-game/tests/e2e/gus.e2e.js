@@ -8,12 +8,21 @@ import { browserTest, button, place, assertFits } from './browser.js';
 import { Lines } from '../../js/content/text/index.js';
 import { Format } from '../../js/core/format.js';
 import { Rules } from '../../js/rules.js';
+import { SaveSystem } from '../../js/core/save.js';
 
 const HOUR = 60 * 60 * 1000;
 
 // A save from before Act 2 that has found Gus's store, saved on a Thursday evening
 const foundGus = readFileSync(new URL('../fixtures/save-save-upgrades.json', import.meta.url), 'utf8');
 const savedAt = JSON.parse(foundGus).savedAt;
+
+// The same save, upgraded, after the player has won locals: a regular
+const regular = (() => {
+    const { game } = SaveSystem.migrate(JSON.parse(foundGus));
+    game.tournaments = { localsWon: 1, localsPlayed: 1 };
+    game.wallet.cents = 10000;
+    return JSON.stringify({ version: SaveSystem.version, savedAt, game });
+})();
 
 const money = async page => page.locator('[data-money]').textContent();
 const literally = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -87,4 +96,31 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     await page.locator('#log').getByText(/^(You win every match|Two wins|One win|No wins)/).waitFor();
     await page.getByText(/^You played this hour's locals\. Next one: /).waitFor();
     await assertFits(page, 'Gus\'s store after locals');
+});
+
+browserTest('a regular plays the pre-release, and summer brings Set 2 the next day', {
+    save: regular,
+    time: savedAt + 24 * HOUR
+}, async (page) => {
+    await place(page, Lines.gus.name).click();
+    await page.getByRole('heading', { name: Lines.tournaments.prereleaseTitle }).waitFor();
+    await button(page, Lines.tournaments.enterPrerelease(Rules.prereleaseKitPacks, Format.money(Rules.prereleaseKitPrice))).click();
+    await page.locator('#log').getByText(Lines.packs.newChecklist('Backyard Brawl', 102)).waitFor();
+
+    const choice = page.locator('[data-action="encounter.choose"]:not([disabled])');
+    for (let round = 0; round < 9 && await choice.count() > 0; round++) {
+        await choice.first().click();
+    }
+    await page.locator('#log').getByText(/^The pre-release is over\./).waitFor();
+    await page.getByText(Lines.tournaments.waitingForSummer).waitFor();
+    assert.equal(await page.locator('#season-tag').textContent(), Lines.story.seasons.spring);
+
+    await page.clock.fastForward(24 * HOUR);
+    await page.locator('#log').getByText(Lines.story.summer).waitFor();
+    assert.equal(await page.locator('#season-tag').textContent(), Lines.story.seasons.summer);
+    await button(page, Lines.gus.buyPack('Backyard Brawl', Format.money(Rules.gusPrices.backyard))).click();
+    await page.locator('#status').getByText(/^Backyard Brawl packs: \d+/).waitFor();
+
+    await place(page, Lines.home.name).click();
+    await page.getByText(/^Critter Clash: Backyard Brawl: \d+\/102$/).waitFor();
 });

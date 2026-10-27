@@ -4,7 +4,7 @@ import { gameAtMall, act } from './helpers.js';
 import { machine, machineHtml } from '../js/ui/art/mall.js';
 import { card, cardBack, packTear } from '../js/ui/art/cards.js';
 import { storage } from '../js/ui/art/home.js';
-import { store } from '../js/ui/art/gus.js';
+import { store, inside, table } from '../js/ui/art/gus.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Cards } from '../js/systems/cards.js';
 
@@ -39,10 +39,19 @@ test('every card is drawn the same size as the back of a card', () => {
 });
 
 test('boxes have a straight right edge below their top edge', () => {
-    const boxes = { store, binder: storage('binder'), 'two-binders': storage('two-binders'), bookshelf: storage('bookshelf'), 'card-room': storage('card-room') };
+    const boxes = { store, inside: inside(), insideBusy: inside({ marcus: true, newSet: true }), binder: storage('binder'), 'two-binders': storage('two-binders'), bookshelf: storage('bookshelf'), 'card-room': storage('card-room') };
     for (const [name, art] of Object.entries(boxes)) {
         assert.equal(widths(art.split('\n').slice(1).join('\n')).size, 1, name);
     }
+});
+
+test('the tournament table is one width, whoever is at it and whatever was played', () => {
+    const empty = table('(o_o)', 'Dev, age 11');
+    const played = table('(~_~)', 'A very long name indeed', { theirs: { type: 'Water', power: 10 }, mine: { type: 'Wild', power: 8 } });
+    for (const art of [empty, played]) {
+        assert.equal(widths(art.split('\n').slice(3).join('\n')).size, 1, art);
+    }
+    assert.ok(played.includes('W 10') && played.includes('W  8'));
 });
 
 test('both pack-tearing frames are the same height', () => {

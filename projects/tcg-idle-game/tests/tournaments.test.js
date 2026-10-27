@@ -126,7 +126,8 @@ test('a match is the best of three rounds, and locals is three matches with pack
     assert.equal(game.state.tournaments.localsWon, 1);
     assert.equal(game.state.tournaments.localsPlayed, 1);
     assert.equal(game.state.collection.packs.base.normal, 2 + Rules.localsPrizes[3], 'entry packs and prize packs');
-    assert.equal(newestMessage(game), Lines.tournaments.finished(3, Rules.localsPrizes[3]));
+    assert.equal(game.messages[1].text, Lines.tournaments.finished(3, Rules.localsPrizes[3]));
+    assert.equal(newestMessage(game), Lines.tournaments.invited, 'a regular now');
 });
 
 test('losing every match wins nothing but a sticker', (t) => {

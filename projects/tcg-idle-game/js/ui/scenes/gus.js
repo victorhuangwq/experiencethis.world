@@ -13,6 +13,7 @@ import { Wallet } from '../../systems/wallet.js';
 import { Collection } from '../../systems/collection.js';
 import { Trades } from '../../systems/trades.js';
 import { Tournaments } from '../../systems/tournaments.js';
+import { Vending } from '../../systems/vending.js';
 import { store, inside } from '../art/gus.js';
 import { escape, button, art } from '../html.js';
 
@@ -37,14 +38,34 @@ function renderGus(game) {
         }));
 
     return [
-        art(inside({ marcus: Trades.here(game) })),
+        art(inside({ marcus: Trades.here(game), newSet: !!Vending.newSet(game) })),
         `<p>${escape(Lines.gus.inside)}</p>`,
         `<p>${packs.join(' ')}</p>`,
+        renderPrerelease(game),
         renderLocals(game),
         renderCase(game),
         renderGrading(game),
         renderMarcus(game)
     ].join('');
+}
+
+/**
+ * The pre-release, for regulars, before a new set comes out
+ */
+function renderPrerelease(game) {
+    const tournaments = game.state.tournaments;
+    if (!game.unlocked('prerelease-invite') || !Tournaments.upcomingSet(game)) {
+        return '';
+    }
+    const parts = [`<h3>${escape(Lines.tournaments.prereleaseTitle)}</h3>`];
+    if (tournaments.prerelease) {
+        parts.push(`<p class="muted">${escape(Lines.tournaments.waitingForSummer)}</p>`);
+    } else {
+        parts.push(`<p>${escape(Lines.tournaments.prereleaseNote)}</p>`);
+        const label = Lines.tournaments.enterPrerelease(Rules.prereleaseKitPacks, Format.money(Rules.prereleaseKitPrice));
+        parts.push(`<p>${button('tournaments.enterPrerelease', label, { disabled: !Wallet.canAfford(game, Rules.prereleaseKitPrice) })}</p>`);
+    }
+    return parts.join('');
 }
 
 /**

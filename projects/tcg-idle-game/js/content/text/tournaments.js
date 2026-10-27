@@ -35,6 +35,15 @@ export const Tournaments = {
         0: 'No wins. Gus gives you a sticker that says I PLAYED. You did, technically.'
     })[wins],
 
+    // The pre-release, for regulars, before a new set comes out
+    invited: 'Gus writes your name on the corkboard, under REGULARS. "Pre-release," says Gus. "Backyard Brawl. Before anyone else. You open the packs here and play with what you get." He taps the side of his nose. Nobody knows why.',
+    prereleaseTitle: 'The pre-release',
+    prereleaseNote: 'Backyard Brawl is out in the summer. Regulars play it first, at the back table, with only what is in their kit.',
+    enterPrerelease: (packs, price) => `Play the pre-release (a kit of ${packs} Backyard Brawl packs: ${price})`,
+    prereleaseOpened: 'Gus hands you the kit and a pair of scissors. "No scissors," says Gus, and takes the scissors back. You open the packs at the back table.',
+    prereleaseFinished: wins => `The pre-release is over. Everyone gets a promo, still warm from the printer: The Early Bird. ${wins === 0 ? 'Gus pats you on the shoulder.' : `Gus hands you ${wins === 1 ? 'a Backyard Brawl pack' : `${wins} Backyard Brawl packs`} for your wins.`} "See you in summer," says Gus.`,
+    waitingForSummer: 'You have played the pre-release. Backyard Brawl is out in the summer. Gus will not say when summer is. "Soon," says Gus.',
+
     regulars: {
         brenda: {
             name: 'Brenda',

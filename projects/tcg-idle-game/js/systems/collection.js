@@ -204,6 +204,55 @@ export const Collection = {
         return null;
     },
 
+    /**
+     * Open packs and add their cards, marking the ones the player has never
+     * had, then show them. Packs opened together are shown together.
+     * @param {Game} game - Game
+     * @param {string} set - The packs' set
+     * @param {string} kind - normal, special, or mega
+     * @param {number} count - How many packs
+     * @returns {Array} - The cards
+     */
+    openPacks(game, set, kind, count = 1) {
+        const collection = game.state.collection;
+        const pulled = Array.from({ length: count }, () => Cards.openPack(game, kind, set)).flat();
+        const before = collection.packsOpened;
+        const firstOfSet = !collection.cards.some(card => Catalog.find(card.cardId).set === set);
+
+        // Mark cards the player has never had before, once each
+        const owned = new Set(collection.cards.map(card => card.cardId));
+        const isNew = pulled.map(card => {
+            const fresh = !owned.has(card.cardId);
+            owned.add(card.cardId);
+            return fresh;
+        });
+        const cards = Collection.add(game, pulled).map((card, index) => ({ ...card, isNew: isNew[index] }));
+
+        collection.packsOpened += count;
+        collection.cardsOpened += cards.length;
+
+        if (before === 0) {
+            game.say(Lines.packs.first);
+            // The checklist is in the first pack
+            game.say(Lines.packs.checklist(Catalog.inSet('base').length), 'good');
+        } else if (firstOfSet) {
+            // So is a new set's
+            const newSet = Catalog.findSet(set);
+            game.say(Lines.packs.newChecklist(newSet.short, Catalog.inSet(set).length), 'good');
+        }
+        const reached = threshold => before < threshold && collection.packsOpened >= threshold;
+        if (reached(Rules.fastOpeningAfter)) {
+            game.say(Lines.packs.faster, 'good');
+        }
+        if (reached(100)) {
+            game.say(Lines.story.developer.hundredPacks);
+        }
+        Collection.checkCompleted(game);
+
+        game.emit('pack-opened', { cards, kind, set });
+        return cards;
+    },
+
     attuned(game) {
         return game.state.collection.sniffs >= Rules.sniffsToAttune;
     },
@@ -216,36 +265,10 @@ export const Collection = {
             }
 
             collection.packs[set][kind]--;
-            const pulled = Cards.openPack(game, kind, set);
-
-            // Mark cards the player has never had before, once each
-            const owned = new Set(collection.cards.map(card => card.cardId));
-            const isNew = pulled.map(card => {
-                const fresh = !owned.has(card.cardId);
-                owned.add(card.cardId);
-                return fresh;
-            });
-            const cards = Collection.add(game, pulled).map((card, index) => ({ ...card, isNew: isNew[index] }));
-
-            collection.packsOpened++;
-            collection.cardsOpened += cards.length;
-
-            if (collection.packsOpened === 1) {
-                game.say(Lines.packs.first);
-                // The checklist is in the first pack
-                game.say(Lines.packs.checklist(Catalog.inSet('base').length), 'good');
-            } else {
+            if (collection.packsOpened > 0) {
                 game.say({ special: Lines.packs.openSpecial, mega: Lines.packs.openMega }[kind] || Lines.packs.open);
             }
-            if (collection.packsOpened === Rules.fastOpeningAfter) {
-                game.say(Lines.packs.faster, 'good');
-            }
-            if (collection.packsOpened === 100) {
-                game.say(Lines.story.developer.hundredPacks);
-            }
-            Collection.checkCompleted(game);
-
-            game.emit('pack-opened', { cards, kind, set });
+            Collection.openPacks(game, set, kind);
         },
 
         smell(game) {

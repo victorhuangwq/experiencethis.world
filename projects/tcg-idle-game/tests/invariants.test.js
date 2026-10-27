@@ -6,7 +6,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, START } from './helpers.js';
+import { newGame, act, finishOpening, START } from './helpers.js';
 import { nextRandom } from '../js/core/random.js';
 import { Rules } from '../js/rules.js';
 import { Job } from '../js/systems/job.js';
@@ -34,6 +34,7 @@ const MOVES = [
     { weight: 2, run: (game, roll) => act(game, 'store.grade', { id: pickCard(game, roll) }) },
     { weight: 1, run: (game, roll) => act(game, 'store.sellGraded', { id: pickCard(game, roll) }) },
     { weight: 3, run: game => act(game, 'tournaments.enterLocals') },
+    { weight: 1, run: game => act(game, 'tournaments.enterPrerelease') },
     { weight: 2, run: (game, roll) => act(game, 'trades.trade', { index: Math.floor(roll() * Rules.marcusOffers) }) },
     { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
     { weight: 2, run: game => act(game, 'vending.kick') },
@@ -149,6 +150,15 @@ function checkInvariants(game, last) {
         assert.equal(new Set(played).size, played.length, 'each card is played once a match');
     }
     assert.ok(state.tournaments.localsWon <= state.tournaments.localsPlayed);
+    assert.ok(['spring', 'summer'].includes(state.story.season), 'season');
+    if (state.story.season === 'summer') {
+        assert.ok(state.tournaments.prerelease && state.story.days >= Rules.summerOnDay, 'summer after the pre-release, on the third day or later');
+    }
+    assert.ok(!state.tournaments.prerelease || game.unlocked('prerelease-invite'), 'the pre-release is for regulars');
+    assert.equal(vending.sets.length, Rules.slotCount);
+    vending.sets.forEach((set, index) => {
+        assert.ok(set === 'base' || (state.story.season === 'summer' && vending.slots[index] !== 'special'), `slot ${index}: ${set}`);
+    });
     assert.ok(state.trades.offers.every(offer => offer === null ||
         (Catalog.find(offer.give).rarity === Catalog.find(offer.want).rarity)), 'Marcus trades the same rarity');
     assert.ok(last.completed.every(part => collection.completed.includes(part)), 'completed checklists stay completed');
@@ -213,13 +223,44 @@ function snapshot(game) {
 }
 
 /**
+ * Bring a new game to summer: Gus's store found and open, locals won, and
+ * the pre-release played
+ */
+function toSummer(game) {
+    finishOpening(game);
+    game.state.collection.cardsOpened = Rules.gusWithoutTip;
+    game.tick(game.time + 24 * HOUR);
+    game.state.wallet.cents += 10000;
+    game.state.collection.packs.base.normal = 10;
+    for (let pack = 0; pack < 10; pack++) {
+        act(game, 'collection.open', { kind: 'normal' });
+    }
+    game.state.tournaments.localsWon = 1;
+    game.state.tournaments.localsPlayed = 1;
+    game.checkUnlocks();
+    act(game, 'tournaments.enterPrerelease');
+    while (game.state.tournaments.current) {
+        const choices = game.encounter().choices(game);
+        act(game, 'encounter.choose', { index: choices.findIndex(choice => !choice.disabled) });
+    }
+    game.tick(game.time + 24 * HOUR);
+    assert.equal(game.state.story.season, 'summer');
+}
+
+/**
  * Play one random game
+ * @param {number} seed - Seed
+ * @param {number} steps - Moves to make
+ * @param {Object} options - summer: start from a game in summer
  * @returns {Object} - The game and what happened in it
  */
-function playRandomly(seed, steps = STEPS) {
+function playRandomly(seed, steps = STEPS, { summer = false } = {}) {
     const roll = player(seed);
     // Start at any hour of any day of the week
     const game = newGame({ seed, now: START + Math.floor(roll() * 7 * 24) * HOUR });
+    if (summer) {
+        toSummer(game);
+    }
     let last = snapshot(game);
 
     for (let step = 1; step <= steps && !game.state.meta.ended; step++) {
@@ -240,7 +281,7 @@ function playRandomly(seed, steps = STEPS) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, summer: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
@@ -250,13 +291,14 @@ test('the game always makes sense, whatever the player does', (t) => {
         reached.graded += game.state.collection.graded.length > 0 ? 1 : 0;
         reached.locals += game.state.tournaments.localsPlayed > 0 ? 1 : 0;
         reached.trades += game.state.trades.made > 0 ? 1 : 0;
+        reached.summer += game.state.story.season === 'summer' ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
         reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
         reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}, summer in ${reached.summer}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
@@ -266,6 +308,16 @@ test('the game always makes sense, whatever the player does', (t) => {
     assert.ok(reached.endings > 0, 'some games ended in shame');
     assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
     assert.ok(reached.flip > 0 && reached.terry > 0, 'some games met the scalper and Terry');
+});
+
+test('the game still makes sense in summer, with Set 2 out', (t) => {
+    let newSetPacks = 0;
+    for (let seed = 1; seed <= SEEDS / 2; seed++) {
+        const game = playRandomly(seed, STEPS / 2, { summer: true });
+        newSetPacks += game.state.collection.packs.backyard.normal + game.state.collection.cards.filter(card => Catalog.find(card.cardId).set === 'backyard').length;
+    }
+    t.diagnostic(`Set 2 cards and packs held: ${newSetPacks}`);
+    assert.ok(newSetPacks > 0);
 });
 
 test('the same seed and the same moves give the same game', () => {

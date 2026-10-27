@@ -142,8 +142,12 @@ test('every rarity a pack can hold has cards, and the odds add up', () => {
     }
     for (const [kind, slots] of Object.entries(Rules.packSlots)) {
         const rarities = slots.flatMap(slot => Rules.hitOdds[slot] ? Object.keys(Rules.hitOdds[slot]) : [slot]);
-        for (const rarity of rarities) {
-            assert.ok(Catalog.inPacks(rarity).length > 0, `${kind}: no ${rarity} cards in packs`);
+        for (const set of Catalog.packSets()) {
+            for (const rarity of rarities) {
+                for (const type of Catalog.types) {
+                    assert.ok(Catalog.inSet(set.id, rarity).some(card => card.type === type), `${set.id} ${kind}: no ${type} ${rarity} cards`);
+                }
+            }
         }
     }
     assert.ok(Catalog.inPacks().every(card => card.source === 'pack'));

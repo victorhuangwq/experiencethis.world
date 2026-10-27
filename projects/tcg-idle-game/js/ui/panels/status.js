@@ -5,6 +5,7 @@
 
 import { Format } from '../../core/format.js';
 import { Lines } from '../../content/text/index.js';
+import { Catalog } from '../../content/catalog.js';
 import { escape, button } from '../html.js';
 
 export function renderStatus(game) {
@@ -27,6 +28,17 @@ export function renderStatus(game) {
     if (packs.mega > 0) {
         parts.push(`<p>${escape(Lines.packs.unopenedMega(packs.mega))} ` +
             `${button('collection.open', Lines.packs.buttons.open, { args: { set: 'base', kind: 'mega' } })}</p>`);
+    }
+
+    // Packs of later sets
+    for (const set of Catalog.packSets().slice(1)) {
+        const kinds = game.state.collection.packs[set.id];
+        for (const [kind, line] of [['normal', Lines.packs.unopenedOf], ['mega', Lines.packs.unopenedMegaOf]]) {
+            if (kinds[kind] > 0) {
+                parts.push(`<p>${escape(line(set.short, kinds[kind]))} ` +
+                    `${button('collection.open', Lines.packs.buttons.open, { args: { set: set.id, kind } })}</p>`);
+            }
+        }
     }
 
     return parts.join('');

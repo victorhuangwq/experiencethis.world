@@ -1,6 +1,9 @@
 /**
  * Tournaments at Gus's. Locals run once an hour: entry is buying packs from
- * Gus, and the prize is more packs.
+ * Gus, and the prize is more packs. The pre-release, once, for regulars
+ * before a new set comes out: the player opens a kit of the new set's packs
+ * at the table and plays with only those cards; everyone gets the promo,
+ * and each match won earns a pack.
  *
  * A tournament is a few matches against Gus's regulars (content/regulars.js),
  * each the best of three rounds. Each round the player picks a type and
@@ -20,9 +23,11 @@ import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
 import { Store } from './store.js';
+import { Story } from './story.js';
+import { Cards } from './cards.js';
 
 const hours = every(HOUR);
-const KINDS = ['locals'];
+const KINDS = ['locals', 'prerelease'];
 
 export const Tournaments = {
     id: 'tournaments',
@@ -33,8 +38,10 @@ export const Tournaments = {
         localsPlayed: 0,
         // Locals where the player won every match
         localsWon: 0,
+        // Whether the player has played the pre-release
+        prerelease: false,
         // The tournament being played, or null:
-        //   kind      'locals'
+        //   kind      'locals' or 'prerelease'
         //   set       The set its packs are from
         //   opponents Regular ids, one per match
         //   deck      Ids of the player's cards they play with
@@ -75,6 +82,26 @@ export const Tournaments = {
 
     nextLocals(game, now = game.time) {
         return hours.nextStart(now);
+    },
+
+    /**
+     * The next set to come out, if there is one
+     * @returns {string|null} - Set id
+     */
+    upcomingSet(game) {
+        return Catalog.packSets().find(set => !Story.isOut(game, set))?.id ?? null;
+    },
+
+    /**
+     * The set the pre-release is for, if the player is invited and hasn't
+     * played it yet
+     * @returns {string|null} - Set id
+     */
+    prereleaseSet(game) {
+        if (!game.unlocked('prerelease-invite') || game.state.tournaments.prerelease) {
+            return null;
+        }
+        return Tournaments.upcomingSet(game);
     },
 
     /**
@@ -185,6 +212,16 @@ export const Tournaments = {
         const wins = current.results.filter(result => result.won).length;
         tournaments.current = null;
 
+        if (current.kind === 'prerelease') {
+            // Everyone gets the promo; each match won earns a pack
+            tournaments.prerelease = true;
+            Collection.addPacks(game, current.set, 'normal', wins);
+            Collection.add(game, [Cards.card('early-bird', Cards.packCondition(game))]);
+            game.say(Lines.tournaments.prereleaseFinished(wins), 'good');
+            Collection.checkCompleted(game);
+            return;
+        }
+
         const prize = Rules.localsPrizes[wins] || 0;
         Collection.addPacks(game, current.set, 'normal', prize);
         tournaments.localsPlayed++;
@@ -214,6 +251,24 @@ export const Tournaments = {
             Collection.addPacks(game, set, 'normal', Rules.localsEntryPacks);
             game.say(Lines.tournaments.entered(Lines.job.days[new Date(now).getDay()]));
             Tournaments.start(game, 'locals', set, Collection.loose(game));
+        },
+
+        /**
+         * Play the pre-release: buy the kit, open it at the table, and play
+         * with only what was in it
+         */
+        enterPrerelease(game) {
+            const set = Tournaments.prereleaseSet(game);
+            if (!Store.isOpen(game) || !set || game.state.tournaments.current || game.state.encounter) {
+                return;
+            }
+            if (!Wallet.spend(game, Rules.prereleaseKitPrice)) {
+                game.say(Lines.gus.cantAfford(Format.money(Rules.prereleaseKitPrice)));
+                return;
+            }
+            game.say(Lines.tournaments.prereleaseOpened);
+            const kit = Collection.openPacks(game, set, 'normal', Rules.prereleaseKitPacks);
+            Tournaments.start(game, 'prerelease', set, kit);
         }
     }
 };

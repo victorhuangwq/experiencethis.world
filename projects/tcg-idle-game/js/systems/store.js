@@ -20,6 +20,7 @@ import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
 import { Cards } from './cards.js';
+import { Story } from './story.js';
 
 const caseRestocks = every(Rules.caseRestockEvery);
 
@@ -79,11 +80,14 @@ export const Store = {
     },
 
     /**
-     * The sets Gus has packs of, with their price
+     * The sets Gus has packs of, oldest first, with their price: every set
+     * that's out
      * @returns {Array} - { set, price }
      */
     packsForSale(game) {
-        return Object.entries(Rules.gusPrices).map(([set, price]) => ({ set, price }));
+        return Object.entries(Rules.gusPrices)
+            .filter(([set]) => Story.isOut(game, Catalog.findSet(set)))
+            .map(([set, price]) => ({ set, price }));
     },
 
     /**
