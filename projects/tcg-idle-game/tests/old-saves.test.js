@@ -14,13 +14,17 @@ import { Collection } from '../js/systems/collection.js';
 import { Vending } from '../js/systems/vending.js';
 import { Job } from '../js/systems/job.js';
 import { Catalog } from '../js/content/catalog.js';
+import { Releases, currentRelease } from '../js/content/releases.js';
 import { newGame, act, MemoryStorage } from './helpers.js';
 
 const HOUR = 60 * 60 * 1000;
 const FIXTURES = new URL('./fixtures/', import.meta.url);
 
+// Ids that a migration has retired, so old saves lose them on purpose
+const { retired } = JSON.parse(readFileSync(new URL('ids.json', FIXTURES), 'utf8'));
+
 const saves = readdirSync(FIXTURES)
-    .filter(file => file.endsWith('.json'))
+    .filter(file => file.startsWith('save-'))
     .map(file => ({ file, raw: readFileSync(new URL(file, FIXTURES), 'utf8') }));
 
 beforeEach(() => {
@@ -59,7 +63,7 @@ for (const { file, raw } of saves) {
         assert.equal(state.vending.kicks, saved.vending.kicks);
         assert.equal(state.story.shoebox, saved.story.shoebox);
         assert.deepEqual(state.encounter, saved.encounter, 'an encounter in progress is still there');
-        for (const id of saved.progress.unlocked) {
+        for (const id of saved.progress.unlocked.filter(id => !retired.unlocks[id])) {
             assert.ok(state.progress.unlocked.includes(id), `still unlocked: ${id}`);
         }
         assert.ok(state.wallet.cents > saved.wallet.cents, 'allowance was paid for the time away');
@@ -137,7 +141,8 @@ test('critters made up at random by the first release become Base Set cards', ()
         const cards = new Map(game.state.collection.cards.map(card => [card.id, card]));
         const named = new Map();
 
-        for (const [id, name, , rarity, , , fixedId] of old) {
+        // Only cards saved whole, as the first releases did
+        for (const [id, name, , rarity, , , fixedId] of old.filter(card => card.length === 8)) {
             const card = cards.get(id);
             assert.ok(card, `card ${id} is kept`);
             if (fixedId) {
@@ -154,4 +159,30 @@ test('critters made up at random by the first release become Base Set cards', ()
             named.set(key, card.cardId);
         }
     }
+});
+
+test('a save from before the checklists hears what changed, once', () => {
+    const { raw } = saves.find(each => each.file === 'save-pr31.json');
+    const game = loadSave(raw);
+    const notes = Releases.find(release => release.id === 'checklists').notes;
+    assert.equal(game.messages.filter(message => message.text === notes).length, 1);
+    assert.equal(game.state.story.release, currentRelease.id);
+
+    SaveSystem.save(game.toSaveData());
+    const again = newGame({ save: SaveSystem.load(), now: game.time });
+    assert.ok(!again.messages.some(message => message.text === notes), 'not twice');
+});
+
+test('a save from the checklists release has nothing new to hear', () => {
+    const { raw } = saves.find(each => each.file === 'save-pr33.json');
+    const game = loadSave(raw);
+    const notes = Releases.filter(release => release.notes).map(release => release.notes);
+    assert.ok(!game.messages.some(message => notes.includes(message.text)));
+    assert.equal(game.state.story.release, currentRelease.id);
+});
+
+test('a new game starts on this release, with no notes', () => {
+    const game = newGame();
+    assert.equal(game.state.story.release, currentRelease.id);
+    assert.ok(!game.messages.some(message => Releases.some(release => release.notes === message.text)));
 });

@@ -93,32 +93,13 @@ export const Cards = {
      * @returns {Object|null} - Card, or null if the entry is invalid
      */
     unpack(packed) {
-        if (!Array.isArray(packed) || !Number.isInteger(packed[0])) {
+        if (!Array.isArray(packed) || packed.length !== 3) {
             return null;
         }
-        const [id, cardId, condition] = packed.length === 3 ? packed : fromFirstRelease(packed);
-        if (!Catalog.find(cardId)) {
+        const [id, cardId, condition] = packed;
+        if (!Number.isInteger(id) || !Catalog.find(cardId)) {
             return null;
         }
         return { id, ...this.card(cardId, Number.isInteger(condition) ? condition : 5) };
     }
 };
-
-/**
- * Cards saved by the first release: [id, name, type, rarity, power, value,
- * fixed card id, condition]. Its critters were made up at random; each one
- * becomes a Base Set card of the same rarity, and the same name always
- * becomes the same card, so duplicates stay duplicates.
- * @returns {Array} - [id, catalogue id, condition]
- */
-function fromFirstRelease([id, name, , rarity, , , fixedId, condition]) {
-    if (Catalog.find(fixedId)) {
-        return [id, fixedId, condition];
-    }
-    const pool = Catalog.inPacks(rarity).length > 0 ? Catalog.inPacks(rarity) : Catalog.inPacks('common');
-    let hash = 0;
-    for (const char of String(name)) {
-        hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-    }
-    return [id, pool[hash % pool.length].id, condition];
-}

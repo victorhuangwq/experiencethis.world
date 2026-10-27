@@ -60,13 +60,7 @@ export const Vending = {
             const slot = vending.slots[index];
             return KINDS.includes(slot) ? slot : null;
         });
-        // Packs from before the machine sold out over time stay until the
-        // next restock
-        const untilRestock = Math.max(vending.nextRestockAt, vending.restockedAt + Rules.restockEvery + Rules.restockVariation);
-        vending.goneAt = vending.slots.map((slot, index) => {
-            const goneAt = vending.goneAt[index];
-            return slot && !(goneAt > 0) ? untilRestock : (Number.isFinite(goneAt) ? goneAt : 0);
-        });
+        vending.goneAt = vending.slots.map((slot, index) => Number.isFinite(vending.goneAt[index]) ? vending.goneAt[index] : 0);
         if (!Number.isInteger(vending.jammedSlot)) {
             vending.jammedSlot = null;
         }

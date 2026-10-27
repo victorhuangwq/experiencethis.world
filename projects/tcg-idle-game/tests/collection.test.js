@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { newGame, gameAtMall, act, finishOpening } from './helpers.js';
 import { Cards } from '../js/systems/cards.js';
 import { Collection } from '../js/systems/collection.js';
+import { SaveSystem } from '../js/core/save.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
@@ -211,7 +212,10 @@ test('players whose storage upgraded by itself in an older version keep it', () 
     const data = JSON.parse(JSON.stringify(game.toSaveData()));
     delete data.collection.storage;
     data.progress.unlocked.push('storage-binder', 'storage-two-binders');
-    assert.equal(Collection.storage(newGame({ save: data, now: game.time })), 'two-binders');
+    const upgraded = SaveSystem.migrate({ version: 2, game: data }).game;
+    const loaded = newGame({ save: upgraded, now: game.time });
+    assert.equal(Collection.storage(loaded), 'two-binders');
+    assert.ok(!loaded.state.progress.unlocked.some(id => id.startsWith('storage-')), 'the old unlocks are retired');
 });
 
 test("Gus's store appears after 40 cards opened with Pip's tip, or 60 without", () => {

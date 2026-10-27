@@ -1,11 +1,13 @@
 /**
- * Story: the season, the opening, places visited, and the narrator's
- * comments on idling and on the real clock
+ * Story: the season, the opening, places visited, the narrator's comments
+ * on idling and on the real clock, and what changed since the release that
+ * last saved the game
  */
 
 import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
+import { Releases, currentRelease } from '../content/releases.js';
 
 // Idle comments made since the player last did something. Not saved.
 let idleComments = 0;
@@ -21,7 +23,9 @@ export const Story = {
         visited: ['home'],
         // Where the player is looking now. Not saved: the page always
         // opens at home.
-        here: 'home'
+        here: 'home',
+        // The release that last saved the game (an id from releases.js)
+        release: currentRelease.id
     }),
 
     save({ here, ...story }) {
@@ -33,6 +37,7 @@ export const Story = {
             if (fresh) {
                 game.startEncounter('shoebox');
             } else {
+                Story.releaseNotes(game);
                 Story.clockComment(game);
             }
         });
@@ -52,6 +57,24 @@ export const Story = {
             game.say(Lines.story.idle[idleComments]);
             idleComments++;
         }
+    },
+
+    /**
+     * Say what changed in every release since the one that last saved the
+     * game, then mark the game as this release's
+     */
+    releaseNotes(game) {
+        const story = game.state.story;
+        const since = Releases.findIndex(release => release.id === story.release);
+        // An unknown release may be a newer one; say nothing about it
+        if (since !== -1) {
+            for (const release of Releases.slice(since + 1)) {
+                if (release.notes) {
+                    game.say(release.notes, 'good');
+                }
+            }
+        }
+        story.release = currentRelease.id;
     },
 
     /**

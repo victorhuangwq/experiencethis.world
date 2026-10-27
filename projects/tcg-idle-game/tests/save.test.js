@@ -1,5 +1,6 @@
 import { test, beforeEach, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { SaveSystem } from '../js/core/save.js';
 import { newGame, gameAtMall, act, START, MemoryStorage } from './helpers.js';
 
@@ -62,6 +63,50 @@ test('a save from the earlier test version is not loaded, and is backed up', () 
     localStorage.setItem(SaveSystem.key, JSON.stringify({ version: 1, game: {} }));
     assert.equal(SaveSystem.load(), null);
     assert.ok(localStorage.getItem(SaveSystem.key + '-backup'));
+});
+
+test('every version after the first has one upgrade step', () => {
+    assert.ok(SaveSystem.version >= 3);
+    for (let version = 3; version <= SaveSystem.version; version++) {
+        assert.equal(typeof SaveSystem.migrations[version], 'function', `no step to version ${version}`);
+    }
+});
+
+test('an older save is upgraded, and kept as it was first', () => {
+    const raw = readFileSync(new URL('./fixtures/save-pr31.json', import.meta.url), 'utf8');
+    localStorage.setItem(SaveSystem.key, raw);
+    assert.ok(SaveSystem.load());
+    assert.equal(localStorage.getItem(`${SaveSystem.key}-v2`), raw);
+});
+
+test('a save from this version is not backed up', () => {
+    SaveSystem.save(gameAtMall().toSaveData());
+    SaveSystem.load();
+    const keys = [...localStorage.items.keys()];
+    assert.deepEqual(keys, [SaveSystem.key]);
+});
+
+test('upgrading the same save twice gives the same result', () => {
+    const data = JSON.parse(readFileSync(new URL('./fixtures/save-pr30.json', import.meta.url), 'utf8'));
+    const once = SaveSystem.migrate(structuredClone(data));
+    const twice = SaveSystem.migrate(structuredClone(data));
+    assert.deepEqual(once, twice);
+    assert.equal(once.version, SaveSystem.version);
+});
+
+test('if an upgrade step fails, the save is kept and a new game starts', (t) => {
+    const raw = readFileSync(new URL('./fixtures/save-pr31.json', import.meta.url), 'utf8');
+    const step = SaveSystem.migrations[3];
+    SaveSystem.migrations[3] = () => {
+        throw new Error('A bad release');
+    };
+    t.after(() => {
+        SaveSystem.migrations[3] = step;
+    });
+    localStorage.setItem(SaveSystem.key, raw);
+    assert.equal(SaveSystem.load(), null);
+    assert.equal(localStorage.getItem(`${SaveSystem.key}-v2`), raw);
+    assert.equal(localStorage.getItem(`${SaveSystem.key}-backup`), raw);
 });
 
 test('a save from a newer version is not loaded', () => {

@@ -27,19 +27,13 @@ export const Collection = {
         completed: []
     }),
 
-    load(collection, game) {
+    load(collection) {
         collection.cards = collection.cards.map(card => Cards.unpack(card)).filter(card => card !== null);
         const highestId = collection.cards.reduce((highest, card) => Math.max(highest, card.id), 0);
         collection.nextId = Math.max(collection.nextId, highestId + 1);
 
         if (!Rules.storage.some(stage => stage.id === collection.storage)) {
             collection.storage = 'shoebox';
-        }
-        // Storage used to upgrade by itself; players keep what they already got
-        for (const stage of Rules.storage) {
-            if (game.unlocked('storage-' + stage.id) && storageIndex(stage.id) > storageIndex(collection.storage)) {
-                collection.storage = stage.id;
-            }
         }
     },
 
