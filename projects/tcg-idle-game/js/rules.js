@@ -85,6 +85,10 @@ export const Rules = {
     // Cards opened before Gus's store appears, with and without Pip's tip
     gusWithTip: 40,
     gusWithoutTip: 60,
+    // Gus's store opens on this day of play (counting separate days)
+    gusOpensOnDay: 2,
+    // Gus's price for a pack of each set: a markup on the machine's
+    gusPrices: { base: 450 },
 
     // Collection storage, in order. Each one goes on sale once the player
     // has this many cards, and costs this much (in cents).

@@ -12,7 +12,7 @@ test('buying a pack costs $3 and empties the slot', () => {
     const game = gameAtMall();
     act(game, 'vending.buy', { slot: 2 });
     assert.equal(game.state.wallet.cents, 0);
-    assert.equal(game.state.collection.packs.normal, 1);
+    assert.equal(game.state.collection.packs.base.normal, 1);
     assert.equal(game.state.vending.slots[2], null);
 });
 
@@ -20,7 +20,7 @@ test('without enough money, nothing is bought', () => {
     const game = gameAtMall();
     act(game, 'vending.buy', { slot: 0 });
     act(game, 'vending.buy', { slot: 1 });
-    assert.equal(game.state.collection.packs.normal, 1);
+    assert.equal(game.state.collection.packs.base.normal, 1);
     assert.equal(game.state.vending.slots[1], 'normal');
     assert.match(newestMessage(game), /You need \$3\.00/);
 });
@@ -144,7 +144,7 @@ test('a pack someone else has bought cannot be bought', () => {
     const game = gameAtMall();
     game.state.vending.goneAt[0] = game.time;
     act(game, 'vending.buy', { slot: 0 });
-    assert.equal(game.state.collection.packs.normal, 0);
+    assert.equal(game.state.collection.packs.base.normal, 0);
     assert.equal(game.state.wallet.cents, 300);
     assert.equal(game.state.vending.slots[0], null);
 });
@@ -156,8 +156,8 @@ test('a bundle is three packs, and a mega pack is one big one', () => {
     game.state.vending.slots[1] = 'mega';
     act(game, 'vending.buy', { slot: 0 });
     act(game, 'vending.buy', { slot: 1 });
-    assert.equal(game.state.collection.packs.normal, 3);
-    assert.equal(game.state.collection.packs.mega, 1);
+    assert.equal(game.state.collection.packs.base.normal, 3);
+    assert.equal(game.state.collection.packs.base.mega, 1);
     assert.equal(game.state.wallet.cents, 2300 - Rules.prices.bundle - Rules.prices.mega);
 });
 
@@ -199,12 +199,12 @@ test('the machine can jam, and kicking it settles it either way', (t) => {
 
     buyFirst(game);
     assert.notEqual(game.state.vending.jammedSlot, null);
-    assert.equal(game.state.collection.packs.normal, 2);
+    assert.equal(game.state.collection.packs.base.normal, 2);
     assert.equal(game.state.wallet.cents, 300);
 
     act(game, 'vending.kick');
     assert.equal(game.state.vending.jammedSlot, null);
-    assert.ok([2, 3].includes(game.state.collection.packs.normal));
+    assert.ok([2, 3].includes(game.state.collection.packs.base.normal));
     assert.equal(game.state.vending.kicks, 1);
 });
 

@@ -53,8 +53,8 @@ for (const { file, raw } of saves) {
         const state = game.state;
 
         assert.equal(state.collection.cards.length, saved.collection.cards.length, 'every card');
-        assert.equal(state.collection.packs.normal, saved.collection.packs.normal);
-        assert.equal(state.collection.packs.special, saved.collection.packs.special);
+        // Every pack saved before Set 2 was a Base Set pack
+        assert.deepEqual(state.collection.packs.base, { normal: 0, special: 0, mega: 0, ...saved.collection.packs }, 'every unopened pack');
         assert.equal(state.collection.cardsOpened, saved.collection.cardsOpened);
         assert.equal(state.kindness.strikes.length, saved.kindness.strikes.length, 'strikes stick');
         for (const [person, known] of Object.entries(saved.people)) {
@@ -173,12 +173,22 @@ test('a save from before the checklists hears what changed, once', () => {
     assert.ok(!again.messages.some(message => message.text === notes), 'not twice');
 });
 
-test('a save from the checklists release has nothing new to hear', () => {
+test('a save hears only what changed in the releases after its own', () => {
     const { raw } = saves.find(each => each.file === 'save-pr33.json');
     const game = loadSave(raw);
-    const notes = Releases.filter(release => release.notes).map(release => release.notes);
-    assert.ok(!game.messages.some(message => notes.includes(message.text)));
+    const heard = Releases.filter(release => release.notes && game.messages.some(message => message.text === release.notes));
+    const since = Releases.slice(Releases.findIndex(release => release.id === 'checklists') + 1);
+    assert.deepEqual(heard.map(release => release.id), since.filter(release => release.notes).map(release => release.id));
     assert.equal(game.state.story.release, currentRelease.id);
+});
+
+test('a player who found Gus before Act 2 finds the store open on their next day', () => {
+    const { raw } = saves.find(each => each.file === 'save-save-upgrades.json');
+    const sameDay = loadSave(raw, 60 * 1000);
+    assert.ok(sameDay.unlocked('gus'));
+    assert.equal(sameDay.unlocked('gus-open'), false, 'it was saved on its first day');
+    const nextDay = loadSave(raw, 24 * HOUR);
+    assert.ok(nextDay.unlocked('gus-open'));
 });
 
 test('a new game starts on this release, with no notes', () => {

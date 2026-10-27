@@ -1,7 +1,7 @@
 /**
  * The Critter Clash card catalogue. Every card in the game is on this list,
- * in a set, like a real card game. Packs hold cards from the set that is in
- * packs, by rarity (the odds are in js/rules.js). Values are in cents.
+ * in a set, like a real card game. Each pack is from one set and holds
+ * cards from it by rarity (the odds are in js/rules.js). Values are in cents.
  * Card logic is in js/systems/cards.js.
  */
 
@@ -15,12 +15,13 @@ export const Catalog = {
 
     /**
      * Sets, in the order their checklists are shown
-     *   inPacks   Packs hold cards from this set
+     *   short     Its name on a pack
+     *   inPacks   Sold in packs, which hold cards from this set only
      *   hidden    The checklist only shows once a card from it is found
      *   secret    Not a real set: no numbers, and no count of what is missing
      */
     sets: [
-        { id: 'base', name: 'Critter Clash Base Set', inPacks: true },
+        { id: 'base', name: 'Critter Clash Base Set', short: 'Base Set', inPacks: true },
         { id: 'promo', name: 'Promos', hidden: true },
         { id: 'secret', name: 'Not on any checklist', secret: true }
     ],
@@ -182,18 +183,26 @@ export const Catalog = {
 
     /**
      * A set's cards, in checklist order
+     * @param {string} setId - Set id
+     * @param {string} rarity - Only cards of this rarity, if given
      */
-    inSet(setId) {
-        return this.cards.filter(card => card.set === setId);
+    inSet(setId, rarity) {
+        return this.cards.filter(card => card.set === setId && (!rarity || card.rarity === rarity));
     },
 
     /**
-     * The cards packs can hold
-     * @param {string} rarity - Only cards of this rarity, if given
+     * The sets sold in packs
      */
-    inPacks(rarity) {
-        const sets = this.sets.filter(set => set.inPacks).map(set => set.id);
-        return this.cards.filter(card => sets.includes(card.set) && (!rarity || card.rarity === rarity));
+    packSets() {
+        return this.sets.filter(set => set.inPacks);
+    },
+
+    /**
+     * Every card that packs can hold, from every set sold in packs
+     */
+    inPacks() {
+        const sets = this.packSets().map(set => set.id);
+        return this.cards.filter(card => sets.includes(card.set));
     },
 
     /**

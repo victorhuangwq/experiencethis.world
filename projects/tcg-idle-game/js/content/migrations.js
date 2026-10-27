@@ -59,8 +59,35 @@ export const Migrations = {
         }
 
         return game;
+    },
+
+    /**
+     * Version 4: Act 2. Packs belong to a set, and days played are counted.
+     */
+    4: game => {
+        // Unopened packs were all Base Set packs, counted by kind
+        const collection = game.collection ||= {};
+        if (collection.packs && typeof collection.packs === 'object') {
+            collection.packs = { base: collection.packs };
+        }
+
+        // Days played weren't counted. A save last played on a later day
+        // than it started on has been played on two days at least.
+        const meta = game.meta;
+        if (Number.isFinite(meta?.startedAt) && Number.isFinite(meta?.lastTick)) {
+            const story = game.story ||= {};
+            story.lastDay = calendarDay(meta.lastTick);
+            story.days = story.lastDay > calendarDay(meta.startedAt) ? 2 : 1;
+        }
+
+        return game;
     }
 };
+
+// The local calendar day a time falls on, as version 4 counted days
+function calendarDay(time) {
+    return Math.floor((time - new Date(time).getTimezoneOffset() * MINUTE) / (24 * 60 * MINUTE));
+}
 
 // Storage stages as they were when version 3 was made
 const STORAGE_THEN = ['shoebox', 'binder', 'two-binders', 'bookshelf', 'card-room'];

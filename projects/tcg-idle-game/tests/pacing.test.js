@@ -42,9 +42,11 @@ function playVisit(game) {
         }
         act(game, 'vending.buy', { slot });
     }
-    for (const kind of ['normal', 'special', 'mega']) {
-        while (game.state.collection.packs[kind] > 0) {
-            act(game, 'collection.open', { kind });
+    for (const [set, kinds] of Object.entries(game.state.collection.packs)) {
+        for (const kind of Object.keys(kinds)) {
+            while (kinds[kind] > 0) {
+                act(game, 'collection.open', { set, kind });
+            }
         }
     }
     act(game, 'collection.sellDuplicates');
@@ -134,4 +136,23 @@ test('a player who only checks in now and then still finds Gus within a day', (t
     const times = measure(idle, gus);
     t.diagnostic(`Gus, checking in every 4 hours: ${range(times)}`);
     assert.ok(times[times.length - 1] <= 24 * HOUR);
+});
+
+test('Gus\'s store opens on the second day of play, not in the first session', (t) => {
+    const daysWhenOpened = [];
+    const times = measure(idle, game => {
+        const open = game.unlocked('gus-open');
+        if (open) {
+            daysWhenOpened.push(game.state.story.days);
+        }
+        return open;
+    });
+    t.diagnostic(`Gus's store open, checking in every 4 hours: ${range(times)}`);
+    assert.ok(daysWhenOpened.every(days => days >= 2), 'never on the first day');
+    assert.ok(times[times.length - 1] <= 2 * DAY, 'by the second day');
+
+    // An active first session finds the store, but not open
+    for (let seed = 1; seed <= SEEDS; seed++) {
+        assert.equal(timeUntil({ ...active, seed, until: game => game.unlocked('gus-open') }), null, `seed ${seed}`);
+    }
 });

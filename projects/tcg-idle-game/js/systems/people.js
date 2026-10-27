@@ -21,7 +21,8 @@ export const People = {
 
     actions: {
         knock(game) {
-            if (!game.unlocked('gus')) {
+            // Once the store is open, the door is too
+            if (!game.unlocked('gus') || game.unlocked('gus-open')) {
                 return;
             }
             const gus = game.state.people.gus;

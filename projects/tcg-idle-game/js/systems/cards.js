@@ -21,10 +21,14 @@ export const Cards = {
     },
 
     /**
-     * A random card of a rarity, from the set in packs
+     * A random card of a rarity from a set
+     * @param {Game} game - Game, for randomness
+     * @param {string} rarity - Rarity
+     * @param {number} condition - Condition
+     * @param {string} set - Set id
      */
-    pull(game, rarity, condition) {
-        return this.card(game.pick(Catalog.inPacks(rarity)).id, condition);
+    pull(game, rarity, condition, set = 'base') {
+        return this.card(game.pick(Catalog.inSet(set, rarity)).id, condition);
     },
 
     /**
@@ -32,19 +36,20 @@ export const Cards = {
      * rolling their rarity (Rules.hitOdds)
      * @param {Game} game - Game, for randomness
      * @param {string} kind - normal, special, or mega
+     * @param {string} set - The pack's set
      * @returns {Array} - Cards
      */
-    openPack(game, kind) {
+    openPack(game, kind, set = 'base') {
         // Cards straight from a pack are in good shape
         const condition = () => game.randomInt(6, 10);
         return Rules.packSlots[kind].map(slot => {
             if (!Rules.hitOdds[slot]) {
-                return this.pull(game, slot, condition());
+                return this.pull(game, slot, condition(), set);
             }
             if (kind === 'special' && game.chance(Rules.primeChance)) {
                 return this.card('card-o-matic-prime', condition());
             }
-            return this.pull(game, this.hitRarity(game, slot), condition());
+            return this.pull(game, this.hitRarity(game, slot), condition(), set);
         });
     },
 

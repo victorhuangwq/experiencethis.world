@@ -55,6 +55,12 @@ export const Unlocks = [
         },
         run: game => game.say(game.state.people.pip.mentionedGus ? Lines.gus.unlockedWithTip : Lines.gus.unlockedWithoutTip, 'good')
     },
+    {
+        // The grand opening, on a later day than the first
+        id: 'gus-open',
+        when: game => game.unlocked('gus') && game.state.story.days >= Rules.gusOpensOnDay,
+        run: game => game.say(Lines.gus.opened, 'good')
+    },
     // When the collection outgrows its storage, the next kind goes on sale
     ...Rules.storage.slice(1).map(stage => ({
         id: 'outgrew-' + stage.id,

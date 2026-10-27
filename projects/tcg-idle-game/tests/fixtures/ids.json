@@ -145,7 +145,8 @@
         "outgrew-binder",
         "outgrew-two-binders",
         "outgrew-bookshelf",
-        "outgrew-card-room"
+        "outgrew-card-room",
+        "gus-open"
     ],
     "endings": [
         "collector",
@@ -181,7 +182,13 @@
     "releases": [
         "act-1",
         "checklists",
-        "save-upgrades"
+        "save-upgrades",
+        "act-2"
+    ],
+    "sets": [
+        "base",
+        "promo",
+        "secret"
     ],
     "retired": {
         "unlocks": {

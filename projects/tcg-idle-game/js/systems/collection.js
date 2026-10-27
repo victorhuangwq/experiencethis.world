@@ -14,7 +14,8 @@ export const Collection = {
     defaults: () => ({
         cards: [],
         nextId: 1,
-        packs: { normal: 0, special: 0, mega: 0 },
+        // Unopened packs, by set, then by kind
+        packs: Object.fromEntries(Catalog.packSets().map(set => [set.id, { normal: 0, special: 0, mega: 0 }])),
         packsOpened: 0,
         cardsOpened: 0,
         // Most cards ever held at once
@@ -141,10 +142,36 @@ export const Collection = {
     },
 
     /**
-     * How many unopened packs the player has, of every kind
+     * How many unopened packs the player has, of every set and kind
      */
     unopened(game) {
-        return Object.values(game.state.collection.packs).reduce((sum, count) => sum + count, 0);
+        return Object.values(game.state.collection.packs)
+            .reduce((sum, kinds) => sum + Object.values(kinds).reduce((total, count) => total + count, 0), 0);
+    },
+
+    /**
+     * Give the player unopened packs
+     * @param {Game} game - Game
+     * @param {string} set - Set id
+     * @param {string} kind - normal, special, or mega
+     * @param {number} count - How many
+     */
+    addPacks(game, set, kind, count = 1) {
+        game.state.collection.packs[set][kind] += count;
+    },
+
+    /**
+     * The first set and kind of pack the player has unopened, if any
+     * @returns {Object|null} - { set, kind }
+     */
+    firstUnopened(game) {
+        for (const [set, kinds] of Object.entries(game.state.collection.packs)) {
+            const kind = ['normal', 'special', 'mega'].find(each => kinds[each] > 0);
+            if (kind) {
+                return { set, kind };
+            }
+        }
+        return null;
     },
 
     attuned(game) {
@@ -152,14 +179,14 @@ export const Collection = {
     },
 
     actions: {
-        open(game, { kind }) {
+        open(game, { set = 'base', kind }) {
             const collection = game.state.collection;
-            if (!(collection.packs[kind] > 0)) {
+            if (!(collection.packs[set]?.[kind] > 0)) {
                 return;
             }
 
-            collection.packs[kind]--;
-            const pulled = Cards.openPack(game, kind);
+            collection.packs[set][kind]--;
+            const pulled = Cards.openPack(game, kind, set);
 
             // Mark cards the player has never had before, once each
             const owned = new Set(collection.cards.map(card => card.cardId));
@@ -176,7 +203,7 @@ export const Collection = {
             if (collection.packsOpened === 1) {
                 game.say(Lines.packs.first);
                 // The checklist is in the first pack
-                game.say(Lines.packs.checklist(Catalog.inPacks().length), 'good');
+                game.say(Lines.packs.checklist(Catalog.inSet('base').length), 'good');
             } else {
                 game.say({ special: Lines.packs.openSpecial, mega: Lines.packs.openMega }[kind] || Lines.packs.open);
             }
@@ -188,7 +215,7 @@ export const Collection = {
             }
             Collection.checkCompleted(game);
 
-            game.emit('pack-opened', { cards, kind });
+            game.emit('pack-opened', { cards, kind, set });
         },
 
         smell(game) {

@@ -19,7 +19,12 @@ export const Releases = [
         notes: 'A note from the developer: the game was updated while you were away. Every card is on a checklist now, and your old critters have been reprinted as real ones. The vending machine has more going on. Pip comes a little later. Please be nice to Terry.'
     },
     // Saves upgrade step by step, and remember their release
-    { id: 'save-upgrades', notes: null }
+    { id: 'save-upgrades', notes: null },
+    {
+        // Gus's store, Set 2, and summer
+        id: 'act-2',
+        notes: 'A note from the developer: Gus has finished counting his inventory. It took all spring. He counted the dice twice.'
+    }
 ];
 
 export const currentRelease = Releases[Releases.length - 1];

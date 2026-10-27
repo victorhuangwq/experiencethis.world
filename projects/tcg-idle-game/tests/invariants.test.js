@@ -28,6 +28,8 @@ const MOVES = [
     { weight: 12, run: (game, roll) => act(game, 'vending.buy', { slot: Math.floor(roll() * Rules.slotCount) }) },
     { weight: 10, run: game => act(game, 'collection.open', { kind: 'normal' }) },
     { weight: 2, run: game => act(game, 'collection.open', { kind: 'special' }) },
+    { weight: 2, run: (game, roll) => act(game, 'collection.open', { set: pickSet(roll), kind: roll() < 0.8 ? 'normal' : 'mega' }) },
+    { weight: 3, run: (game, roll) => act(game, 'store.buyPack', { set: pickSet(roll) }) },
     { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
     { weight: 2, run: game => act(game, 'vending.kick') },
     { weight: 2, run: game => act(game, 'vending.walkAway') },
@@ -58,6 +60,11 @@ function player(seed) {
     };
 }
 
+// A set of packs, sometimes one that isn't sold in packs
+function pickSet(roll) {
+    return roll() < 0.9 ? Catalog.packSets()[Math.floor(roll() * Catalog.packSets().length)].id : 'promo';
+}
+
 function pickMove(roll) {
     let left = roll() * TOTAL_WEIGHT;
     return MOVES.find(move => (left -= move.weight) < 0) || MOVES[MOVES.length - 1];
@@ -76,7 +83,13 @@ function checkInvariants(game, last) {
 
     assert.ok(isCount(state.wallet.cents), `money is whole cents and never negative: ${state.wallet.cents}`);
     assert.ok(isCount(state.wallet.allowanceEarned));
-    assert.ok(isCount(state.collection.packs.normal) && isCount(state.collection.packs.special), 'pack counts');
+    assert.deepEqual(Object.keys(state.collection.packs), Catalog.packSets().map(set => set.id), 'packs of each set');
+    for (const kinds of Object.values(state.collection.packs)) {
+        assert.deepEqual(Object.keys(kinds), ['normal', 'special', 'mega'], 'packs of each kind');
+        assert.ok(Object.values(kinds).every(isCount), 'pack counts');
+    }
+    assert.ok(Number.isInteger(state.story.days) && state.story.days >= Math.max(1, last.days), 'days played only go up');
+    assert.ok(!game.unlocked('gus-open') || (game.unlocked('gus') && state.story.days >= Rules.gusOpensOnDay), 'Gus opens on a later day');
     assert.ok(state.collection.packsOpened >= last.packsOpened, 'packs opened never goes down');
 
     const collection = state.collection;
@@ -166,6 +179,7 @@ function snapshot(game) {
         emailsAnswered: game.state.job.emailsAnswered,
         completed: [...game.state.collection.completed],
         coworker: game.state.job.coworker,
+        days: game.state.story.days,
         unlocked: [...game.state.progress.unlocked]
     };
 }
@@ -198,22 +212,24 @@ function playRandomly(seed, steps = STEPS) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
         reached.endings += game.state.meta.ended ? 1 : 0;
         reached.gus += game.unlocked('gus') ? 1 : 0;
+        reached.gusOpen += game.unlocked('gus-open') ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
         reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
         reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
+    assert.ok(reached.gusOpen > 0, 'some games were there when Gus opened');
     assert.ok(reached.endings > 0, 'some games ended in shame');
     assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
     assert.ok(reached.flip > 0 && reached.terry > 0, 'some games met the scalper and Terry');

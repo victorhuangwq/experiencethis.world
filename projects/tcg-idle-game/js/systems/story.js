@@ -1,9 +1,10 @@
 /**
- * Story: the season, the opening, places visited, the narrator's comments
- * on idling and on the real clock, and what changed since the release that
- * last saved the game
+ * Story: the season, the days played, the opening, places visited, the
+ * narrator's comments on idling and on the real clock, and what changed
+ * since the release that last saved the game
  */
 
+import { localDay } from '../core/time.js';
 import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
@@ -15,8 +16,12 @@ let idleComments = 0;
 export const Story = {
     id: 'story',
 
-    defaults: () => ({
+    defaults: now => ({
         season: 'spring',
+        // Separate days (by the player's clock) the game has been played
+        // on, and the last of them, as a localDay() number
+        days: 1,
+        lastDay: localDay(now),
         // What the player did with the childhood shoebox: 'sold' or 'kept'
         shoebox: null,
         // Locations the player has opened at least once
@@ -48,6 +53,13 @@ export const Story = {
     },
 
     tick(game, now) {
+        const story = game.state.story;
+        const today = localDay(now);
+        if (today > story.lastDay) {
+            story.days++;
+            story.lastDay = today;
+        }
+
         // Only comment on idling while the player is actually watching
         if (game.awayReport || !game.unlocked('allowance')) {
             return;

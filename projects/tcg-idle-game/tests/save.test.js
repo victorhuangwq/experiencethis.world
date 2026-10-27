@@ -109,6 +109,24 @@ test('if an upgrade step fails, the save is kept and a new game starts', (t) => 
     assert.equal(localStorage.getItem(`${SaveSystem.key}-backup`), raw);
 });
 
+test('version 4 puts unopened packs in the Base Set, and counts the days a save was played', () => {
+    const monday = new Date(2026, 9, 26, 20).getTime();
+    const tuesday = new Date(2026, 9, 27, 9).getTime();
+    const game = {
+        meta: { startedAt: monday, lastTick: tuesday },
+        story: { season: 'spring' },
+        collection: { packs: { normal: 2, special: 1, mega: 0 } }
+    };
+    const upgraded = SaveSystem.migrate({ version: 3, game }).game;
+    assert.deepEqual(upgraded.collection.packs, { base: { normal: 2, special: 1, mega: 0 } });
+    assert.equal(upgraded.story.days, 2, 'played on Monday and Tuesday');
+    const loaded = newGame({ save: upgraded, now: new Date(2026, 9, 28, 9).getTime() });
+    assert.equal(loaded.state.story.days, 3, 'and now on Wednesday');
+
+    const oneDay = SaveSystem.migrate({ version: 3, game: { meta: { startedAt: monday, lastTick: monday + 60 * 60 * 1000 } } }).game;
+    assert.equal(oneDay.story.days, 1);
+});
+
 test('a save from a newer version is not loaded', () => {
     localStorage.setItem(SaveSystem.key, JSON.stringify({ version: SaveSystem.version + 1, game: {} }));
     assert.equal(SaveSystem.load(), null);

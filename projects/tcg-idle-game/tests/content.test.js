@@ -258,7 +258,7 @@ test('every place renders at every stage of the game', () => {
     const tuesday = START + 2 * 24 * 60 * 60 * 1000;
     const office = gameAtMall({ now: tuesday });
     office.tick(tuesday + 60 * 1000);
-    office.state.collection.packs.normal = 2;
+    office.state.collection.packs.base.normal = 2;
 
     for (const [name, game] of Object.entries({ fresh, kept, busy, big, office })) {
         for (const place of Locations) {

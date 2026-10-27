@@ -37,7 +37,7 @@ js/
   systems/         Game logic, one feature per file
     index.js       Every system, in tick order
     wallet.js  job.js  collection.js  vending.js  kindness.js  people.js
-    story.js
+    story.js  store.js
     cards.js       Card logic (making cards, opening packs, save packing)
   content/         Data
     catalog.js     The card catalogue
@@ -94,6 +94,8 @@ version upgrades it one step at a time with the steps in
 new game starts.
 
 - **New fields** need nothing: the game fills them in from its defaults.
+  If old saves need another value, worked out from what they hold, a step
+  can set it.
 - **Changing the shape of saved data** (renaming, moving, or restructuring
   it, or retiring an id) needs a new step at the next version. A released
   step never changes. List any id it retires under `retired` in

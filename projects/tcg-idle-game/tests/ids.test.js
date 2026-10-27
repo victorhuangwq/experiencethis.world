@@ -34,6 +34,7 @@ const current = {
     places: Locations.map(place => place.id),
     storage: Rules.storage.map(stage => stage.id),
     packs: Vending.kinds,
+    sets: Catalog.sets.map(set => set.id),
     strikes: Object.keys(Lines.strikes).filter(key => key !== 'warning'),
     releases: Releases.map(release => release.id)
 };
@@ -84,7 +85,8 @@ test('once loaded, every old save holds only ids the game knows', () => {
             endings: state.meta.ended ? [state.meta.ended] : [],
             places: state.story.visited,
             storage: [state.collection.storage],
-            packs: [...state.vending.slots.filter(Boolean), ...Object.keys(state.collection.packs)],
+            packs: [...state.vending.slots.filter(Boolean), ...Object.values(state.collection.packs).flatMap(Object.keys)],
+            sets: Object.keys(state.collection.packs),
             strikes: state.kindness.strikes.map(strike => strike.source),
             releases: [state.story.release]
         };

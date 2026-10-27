@@ -264,9 +264,9 @@ export const Vending = {
         vending.packsBought++;
         // A bundle is three normal packs
         if (kind === 'bundle') {
-            game.state.collection.packs.normal += 3;
+            Collection.addPacks(game, 'base', 'normal', 3);
         } else {
-            game.state.collection.packs[kind]++;
+            Collection.addPacks(game, 'base', kind);
         }
         game.say(Lines.mall.bought(Vending.slotLabel(index), Lines.mall.kinds[kind]));
         game.emit('pack-bought', { index, kind });

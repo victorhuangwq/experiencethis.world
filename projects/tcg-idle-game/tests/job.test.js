@@ -80,7 +80,7 @@ test('nobody works from the wrong place, or on a day off', () => {
 test('the desk fills up as the hobby takes over', () => {
     const game = gameOn('Tuesday');
     assert.equal(Job.desk(game), 0);
-    game.state.collection.packs.normal = 1;
+    game.state.collection.packs.base.normal = 1;
     act(game, 'collection.open', { kind: 'normal' });
     assert.equal(Job.desk(game), 1, 'a card under the monitor');
     game.state.collection.storage = 'binder';
@@ -100,7 +100,7 @@ test('the desk fills up as the hobby takes over', () => {
 
 test('Marcus from IT notices the desk, then asks the player to lunch', () => {
     const game = gameOn('Thursday');
-    game.state.collection.packs.normal = 2;
+    game.state.collection.packs.base.normal = 2;
     act(game, 'job.work', { at: 'office' });
     assert.equal(game.state.job.coworker, 0, 'nothing on the desk to notice');
 
@@ -119,7 +119,7 @@ test('Linda walks past when packs are opened at the desk, and it is never a stri
     overrideRules(t, { bossWalkByChance: 1 });
     const game = gameOn('Wednesday');
     game.state.job.coworker = 2;
-    game.state.collection.packs.normal = 6;
+    game.state.collection.packs.base.normal = 6;
 
     const said = [];
     for (let pack = 0; pack < 6; pack++) {
@@ -135,9 +135,9 @@ test('Linda walks past when packs are opened at the desk, and it is never a stri
 
 test('packs are only opened at the desk on office days', () => {
     const game = gameOn('Monday');
-    game.state.collection.packs.normal = 1;
+    game.state.collection.packs.base.normal = 1;
     act(game, 'job.openAtDesk');
-    assert.equal(game.state.collection.packs.normal, 1);
+    assert.equal(game.state.collection.packs.base.normal, 1);
 });
 
 test('a rest saved from a clock that ran ahead is cut short on load', () => {

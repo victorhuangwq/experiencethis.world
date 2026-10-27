@@ -99,14 +99,13 @@ export const Job = {
          * Open a pack under the office desk
          */
         openAtDesk(game, args, now) {
-            const packs = game.state.collection.packs;
-            const kind = ['normal', 'special', 'mega'].find(each => packs[each] > 0);
-            if (!game.unlocked('work') || Job.workplace(game, now) !== 'office' || !kind) {
+            const pack = Collection.firstUnopened(game);
+            if (!game.unlocked('work') || Job.workplace(game, now) !== 'office' || !pack) {
                 return;
             }
 
             const job = game.state.job;
-            Collection.actions.open(game, { kind });
+            Collection.actions.open(game, pack);
             job.packsOpenedAtDesk++;
 
             if (job.coworker === 1) {

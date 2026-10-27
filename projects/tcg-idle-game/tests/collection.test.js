@@ -21,7 +21,7 @@ test('opening a pack adds five numbered cards in good condition', () => {
     assert.equal(cards.length, 5);
     assert.deepEqual(cards.map(card => card.id), [1, 2, 3, 4, 5]);
     assert.ok(cards.every(card => card.condition >= 6 && card.condition <= 10));
-    assert.equal(game.state.collection.packs.normal, 0);
+    assert.equal(game.state.collection.packs.base.normal, 0);
     assert.equal(opened.cards.length, 5);
 });
 
@@ -114,7 +114,7 @@ test('the checklist comes in the first pack', () => {
 
 test('a card is new the first time only, even twice in one pack', () => {
     const game = gameAtMall();
-    game.state.collection.packs.normal = 3;
+    game.state.collection.packs.base.normal = 3;
     let opened = null;
     game.on('pack-opened', event => {
         opened = event.cards;
@@ -237,14 +237,10 @@ test("Gus's store appears after 40 cards opened with Pip's tip, or 60 without", 
     assert.ok(withoutTip.unlocked('gus'));
 });
 
-test('knocking at Gus\'s: come back in summer', () => {
+test('knocking at Gus\'s before it is on the map does nothing', () => {
     const game = gameAtMall();
     act(game, 'people.knock');
-    assert.equal(game.state.people.gus.knocks, 0, 'the store is not on the map yet');
-    game.state.collection.cardsOpened = 60;
-    game.checkUnlocks();
-    act(game, 'people.knock');
-    assert.match(game.messages[0].text, /Come back in summer/);
+    assert.equal(game.state.people.gus.knocks, 0);
 });
 
 test('a repeated message is counted instead of added again', () => {
