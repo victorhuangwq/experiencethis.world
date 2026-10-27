@@ -75,7 +75,7 @@ function stepAside(game) {
         pip.mentionedGus = true;
         game.say(Lines.pip.firstKindness, 'good');
     } else if (game.chance(Rules.pipGiftChance)) {
-        Collection.add(game, [Cards.fixedCard('wet-sock-goblin', game.randomInt(5, 9))]);
+        Collection.add(game, [Cards.card('wet-sock-goblin', game.randomInt(5, 9))]);
         game.say(Lines.pip.gift, 'good');
     } else {
         game.say(game.pick(Lines.pip.kindness), 'good');

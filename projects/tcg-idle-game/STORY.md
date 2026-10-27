@@ -110,9 +110,9 @@ file per topic.
 | **Flip Resellington** | The shady businessman | Makes the dishonest offers |
 | **xX_K3V1N_Xx** | The reigning world champion and final rival | Real name Kevin, 34. Has been world champion for 11 years. Wears a cape. Plays the netdeck everyone calls "The Meta". Says "skill issue" when he wins and "lag" when he loses, even though it's a card game. |
 
-Named cards so far:
+Named cards so far (the full list is in `js/content/catalog.js`):
 
-- **Wet Sock Goblin**: a fixed common Mildred is obsessed with.
+- **Wet Sock Goblin**: Base Set common #1, which Mildred is obsessed with.
 - **Absolutely Massive Dragon**: a legendary, found at a card show.
 - **Golden Paperclip Phoenix**: the legendary at the end of the trade-up chain.
 - **CARD-O-MATIC Prime**: a vending-machine promo, only in special packs.
@@ -237,22 +237,34 @@ All times come from the real clock and are saved as timestamps.
 | Vending machine pack | $3; special pack $6; 8 slots per restock (built) |
 | Hobby store pack | $4.50 (50% markup) |
 | PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
-| Selling a random common | $0.05 to $0.25 |
+| A common's value | $0.05 to $0.15 (Benny pays 75% for duplicates) |
 | Business ending target | About $250,000 earned in total (to be tuned once shop income is known) |
-| Fixed cards | About 30 per set across 3 sets, plus about 12 promos, so roughly 100 to complete |
+| Cards | 30 per set across 3 sets, plus about 12 promos, so roughly 100 to complete |
 
 ## Cards
 
-- **Common cards are randomly generated** (as they are now), so packs keep
-  their surprise and duplicates keep flowing.
-- **Powerful cards come from a fixed, named list.** Each one has a name, a
-  short flavour line, and a known source. These drive set completion, trades,
-  chase cards, and the endings.
+- **Every card is on a fixed, named list,** in a set, like a real card game.
+  Each one has a name, a number in its set, a short flavour line, and a known
+  source. Nothing is made up on the spot.
+- **Packs work like real packs.** A normal pack is 3 commons, 1 uncommon, and
+  a hit: an uncommon (65%), a rare (30%), or an ultra-rare (5%). A special
+  pack is 2 commons, 1 uncommon, and two hits at better odds (rare 55%,
+  ultra-rare 15%), each with a 5% chance of the CARD-O-MATIC Prime promo. The
+  odds are printed on the back of the checklist.
+- **The Base Set** (Set 1) has 30 cards: 15 commons, 8 uncommons, 4 rares,
+  and 3 ultra-rares, 10 of each type.
+- **Promos** are legendaries that never come in packs; each comes from one
+  place (the vending machine's special packs, the card show, the trade-up
+  chain, tournaments, Pip). Their checklist appears once the first is found.
+- **The shoebox cards** (the misprint and the chewed dragon) are on no
+  checklist at all.
+- **The checklist teaches the goal.** It falls out of the first pack, goes on
+  the fridge, and shows on Home: every card numbered, with the missing ones
+  as ???. Each pack says how many new cards it brought, with their flavour
+  lines, and completing each rarity and the whole set gets a line.
 - Sets release over time (Set 1, Set 2, ...). A new set is what makes
   preorders matter.
-- The binder shows completion for the fixed cards in each set
-  (e.g. "Set 1: 41/60").
-- About 30 fixed cards per set across 3 sets, plus promos (see Pacing).
+- About 30 cards per set across 3 sets, plus promos (see Pacing).
 
 ## Where packs come from
 
@@ -267,7 +279,7 @@ it offers.
 | Tournaments | Entry fee | After winning | Prize-only promo cards, prize money, prize packs | Must win |
 | Card shows | Market price | Instant | The exact card you want | Haggling, fakes, expensive |
 
-The main reason to use every source is that some fixed cards can only be
+The main reason to use every source is that some cards (the promos) can only be
 found in one of them.
 
 Automation follows the theme. Buying automatically at the vending machine
@@ -334,7 +346,7 @@ A short, easy minigame that rewards better cards, with a small
 rock-paper-scissors decision.
 
 - Three core types in a loop (e.g. Fire beats Nature beats Water beats Fire).
-  Some fixed cards are wildcard types.
+  Some promos are wildcard types.
 - A match is best of 3 rounds. Each round both players play one card; type
   advantage gives a large bonus, then card power decides.
 - The decision is reading the opponent: opponents have tells ("Riley mostly
@@ -343,7 +355,7 @@ rock-paper-scissors decision.
   locals a good read beats raw power; at the top tiers both matter, which
   pushes the player to collect and trade for stronger cards.
 - After beating a tier, the player can auto-play it.
-- Prizes: money, prize packs, and tournament-only fixed cards.
+- Prizes: money, prize packs, and tournament-only promos.
 - This replaces the current HP-and-turns battle system, which is slower and
   more complex than this design needs.
 
@@ -373,7 +385,7 @@ Card shows are scheduled events (see clock time) where the player can:
 
 - rent a table and set prices for their cards;
 - watch NPC buyers browse and haggle;
-- browse other tables for specific fixed cards;
+- browse other tables for specific cards;
 - risk buying fakes if they don't check carefully.
 
 Pricing far above market means no sales. Knowingly selling a fake is a strike.
@@ -419,7 +431,7 @@ the exception: those end the run.
 
 | Ending | Condition | Required story beat |
 |---|---|---|
-| **Greatest Collector** | Own every fixed card | Finish the trade-up chain for the last legendary |
+| **Greatest Collector** | Own every card in every set, and every promo | Finish the trade-up chain for the last legendary |
 | **TCG Champion** | Win every tournament tier, ending with the championship | Assemble the overpowered championship deck |
 | **TCG Businessperson** | Earn a target amount of money | Turn down the dishonest offers |
 | **Bad end: Scalper / Counterfeiter** | Accept a dishonest business offer | The offer itself |

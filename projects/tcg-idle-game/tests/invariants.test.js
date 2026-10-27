@@ -100,13 +100,15 @@ function checkInvariants(game, last) {
         assert.ok(!ids.has(card.id), `card ${card.id} is there twice`);
         ids.add(card.id);
         assert.ok(card.id > 0 && card.id < collection.nextId, `card id ${card.id}`);
-        assert.ok(Catalog.rarities.includes(card.rarity), card.rarity);
-        assert.ok(Catalog.types.includes(card.type) || card.type === Catalog.wildType, card.type);
+        const definition = Catalog.find(card.cardId);
+        assert.ok(definition, `card ${card.cardId} is in the catalogue`);
+        for (const field of ['name', 'type', 'rarity', 'power', 'value']) {
+            assert.equal(card[field], definition[field], `${card.cardId} ${field}`);
+        }
         assert.ok(Number.isInteger(card.condition) && card.condition >= 1 && card.condition <= 10, `condition ${card.condition}`);
-        assert.ok(isCount(card.value) && isCount(card.power), 'value and power');
-        assert.ok(card.fixedId === null || Catalog.findFixed(card.fixedId), `fixed card ${card.fixedId}`);
     }
     assert.ok(collection.mostCards >= collection.cards.length);
+    assert.ok(last.completed.every(part => collection.completed.includes(part)), 'completed checklists stay completed');
     assert.ok(storageIndex(collection.storage) >= 0, `storage ${collection.storage}`);
     assert.ok(storageIndex(collection.storage) >= storageIndex(last.storage), 'storage never goes back');
 
@@ -160,6 +162,7 @@ function snapshot(game) {
         storage: game.state.collection.storage,
         strikes: game.state.kindness.strikes.length,
         emailsAnswered: game.state.job.emailsAnswered,
+        completed: [...game.state.collection.completed],
         coworker: game.state.job.coworker,
         unlocked: [...game.state.progress.unlocked]
     };

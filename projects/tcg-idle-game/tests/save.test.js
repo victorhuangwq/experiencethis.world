@@ -31,12 +31,12 @@ test('cards are saved compactly and come back whole', () => {
     act(game, 'collection.open', { kind: 'normal' });
 
     const saved = game.toSaveData().collection.cards;
-    assert.ok(saved.every(Array.isArray));
+    assert.ok(saved.every(card => Array.isArray(card) && card.length === 3), 'only the id, the card, and its condition');
 
     const loaded = newGame({ save: JSON.parse(JSON.stringify(game.toSaveData())), now: game.time });
     assert.equal(loaded.state.collection.cards.length, 5);
     assert.deepEqual(Object.keys(loaded.state.collection.cards[0]).sort(),
-        ['condition', 'fixedId', 'id', 'name', 'power', 'rarity', 'type', 'value']);
+        ['cardId', 'condition', 'id', 'name', 'power', 'rarity', 'type', 'value']);
 });
 
 test('an active encounter survives saving and loading', () => {

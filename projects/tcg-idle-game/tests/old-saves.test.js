@@ -13,6 +13,7 @@ import { Rules } from '../js/rules.js';
 import { Collection } from '../js/systems/collection.js';
 import { Vending } from '../js/systems/vending.js';
 import { Job } from '../js/systems/job.js';
+import { Catalog } from '../js/content/catalog.js';
 import { newGame, act, MemoryStorage } from './helpers.js';
 
 const HOUR = 60 * 60 * 1000;
@@ -117,4 +118,30 @@ test('players who outgrew the shoebox can buy a binder', () => {
     assert.equal(Collection.storageForSale(game)?.id, 'binder');
     act(game, 'collection.buyStorage');
     assert.equal(Collection.storage(game), 'binder');
+});
+
+test('critters made up at random by the first release become Base Set cards', () => {
+    for (const { raw } of saves) {
+        const old = JSON.parse(raw).game.collection.cards;
+        const game = loadSave(raw);
+        const cards = new Map(game.state.collection.cards.map(card => [card.id, card]));
+        const named = new Map();
+
+        for (const [id, name, , rarity, , , fixedId] of old) {
+            const card = cards.get(id);
+            assert.ok(card, `card ${id} is kept`);
+            if (fixedId) {
+                assert.equal(card.cardId, fixedId, 'named cards stay the same card');
+                continue;
+            }
+            assert.equal(card.rarity, rarity, `${name} keeps its rarity`);
+            assert.ok(Catalog.inSet('base').some(each => each.id === card.cardId), `${name} is in the Base Set`);
+            // The first release could make the same name in different rarities
+            const key = `${name} (${rarity})`;
+            if (named.has(key)) {
+                assert.equal(card.cardId, named.get(key), `copies of ${key} stay copies of each other`);
+            }
+            named.set(key, card.cardId);
+        }
+    }
 });

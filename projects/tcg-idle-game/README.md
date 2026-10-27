@@ -8,7 +8,8 @@ The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a self-given allowance, a
+Act 1 (spring) is playable: the shoebox opening, a 30-card Base Set whose
+checklist comes in the first pack, a self-given allowance, a
 hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
 on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
 minutes of real time, Pip and the kindness code, Benny buying duplicates,
@@ -69,6 +70,9 @@ headers of `js/content/unlocks.js`, `js/content/encounters/index.js`, and
   `js/content/unlocks.js`.
 - **New text:** add it to the topic's file in `js/content/text/`, or add a
   topic file and list it in `js/content/text/index.js`.
+- **A new card:** add it to `js/content/catalog.js`, at the end of its set,
+  since a card's number is its place in its set. Never change a card's id;
+  saves store it.
 - **A timed event on the real clock:** use `every()` from `js/core/time.js`.
 
 ## Testing

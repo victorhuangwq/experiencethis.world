@@ -12,6 +12,8 @@ import { Rules } from '../../js/rules.js';
 
 const HOUR = 60 * 60 * 1000;
 
+const BASE_SET = /^Critter Clash Base Set/;
+
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 // Navigation buttons can say "new" after the name
 const place = (page, name) => page.locator('#locations').getByRole('button', { name });
@@ -21,6 +23,17 @@ const newestMessage = page => page.locator('#log .message').first();
 async function finishOpening(page, choice = 'sell') {
     await button(page, Lines.opening.lookUp).click();
     await button(page, choice === 'sell' ? `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})` : Lines.opening.keep).click();
+}
+
+/**
+ * Check that the page doesn't scroll sideways and no art is cut off
+ */
+async function assertFits(page, name) {
+    const { scrollWidth, clientWidth } = await page.evaluate(() =>
+        ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
+    assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
+    const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
+    assert.equal(cutOff, 0, `${name}: art fits on the screen`);
 }
 
 /**
@@ -39,6 +52,7 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
 
     await finishOpening(page);
     assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.shoeboxOffer));
+    assert.equal(await page.getByText(BASE_SET).count(), 0, 'no checklist before the first pack');
     await place(page, Lines.mall.name).click();
 
     await slot(page, 'A1').click();
@@ -48,10 +62,15 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
 
     await button(page, Lines.packs.buttons.open).click();
     assert.equal(await page.locator('#reveal .card').count(), 5);
+    assert.match(await page.locator('#reveal').textContent(), /\d new cards? for the checklist/);
+    await page.locator('#log').getByText(Lines.packs.checklist(30)).waitFor();
 
-    // Opened cards stay at the machine
+    // Opened cards stay at the machine; the checklist goes home
     await place(page, Lines.home.name).click();
     assert.equal(await page.locator('#reveal .card').count(), 0);
+    await page.getByText(/^Critter Clash Base Set: \d\/30$/).waitFor();
+    assert.equal(await page.locator('.checklist-grid li').count(), 30);
+    assert.ok(await page.locator('.checklist-grid li', { hasText: '???' }).count() >= 25, 'the rest are still to find');
     await page.getByText(Lines.home.others).waitFor();
 });
 
@@ -134,12 +153,20 @@ browserTest('on a phone, the log shows one line until expanded, and every place 
     await page.clock.runFor(30 * 1000);
     for (const name of [Lines.mall.name, Lines.job.name, Lines.home.name]) {
         await place(page, name).click();
-        const { scrollWidth, clientWidth } = await page.evaluate(() =>
-            ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
-        assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
-        const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
-        assert.equal(cutOff, 0, `${name}: art fits on the screen`);
+        await assertFits(page, name);
     }
+});
+
+browserTest('on a phone, a page of the binder fits the screen', {
+    viewport: { width: 390, height: 844 },
+    save: oldSave,
+    time: JSON.parse(oldSave).savedAt + HOUR
+}, async (page) => {
+    await button(page, Lines.pip.stepAside).click();
+    await place(page, Lines.home.name).click();
+    await button(page, `${Lines.home.buy.binder} (${Format.money(Rules.storage[1].price)})`).click();
+    assert.equal(await page.locator('.pockets .pocket').count(), 9);
+    await assertFits(page, 'the binder');
 });
 
 browserTest('time in a background tab is summed up once, on return', {}, async (page) => {

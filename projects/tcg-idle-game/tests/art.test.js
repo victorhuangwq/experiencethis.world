@@ -6,6 +6,7 @@ import { card, cardBack, packTear } from '../js/ui/art/cards.js';
 import { storage } from '../js/ui/art/home.js';
 import { store } from '../js/ui/art/gus.js';
 import { Catalog } from '../js/content/catalog.js';
+import { Cards } from '../js/systems/cards.js';
 
 const widths = text => new Set(text.split('\n').map(line => line.length));
 
@@ -30,8 +31,8 @@ test('every card is drawn the same size as the back of a card', () => {
     const backWidths = widths(cardBack);
     assert.equal(backWidths.size, 1);
     const height = cardBack.split('\n').length;
-    for (const definition of Catalog.fixed) {
-        const art = card({ ...definition, isNew: true });
+    for (const definition of Catalog.cards) {
+        const art = card({ ...Cards.card(definition.id, 5), isNew: true });
         assert.deepEqual(widths(art), backWidths, definition.name);
         assert.equal(art.split('\n').length, height, definition.name);
     }

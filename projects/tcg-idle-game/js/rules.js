@@ -35,7 +35,18 @@ export const Rules = {
     keyChance: 0.06,
     keyGuaranteedAt: 40,
 
-    // Packs
+    // Packs, like the odds printed on a real pack. Each slot holds a card of
+    // that rarity from the set in packs; a hit slot rolls its rarity.
+    packSlots: {
+        normal: ['common', 'common', 'common', 'uncommon', 'hit'],
+        special: ['common', 'common', 'uncommon', 'hit', 'hit']
+    },
+    hitOdds: {
+        normal: { 'ultra-rare': 0.05, rare: 0.3, uncommon: 0.65 },
+        special: { 'ultra-rare': 0.15, rare: 0.55, uncommon: 0.3 }
+    },
+    // Chance each hit in a special pack is the vending machine's own promo
+    primeChance: 0.05,
     sniffsToAttune: 50,
     fastOpeningAfter: 20,
 

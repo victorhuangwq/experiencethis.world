@@ -4,6 +4,9 @@
 
 export const Packs = {
     first: 'You open your first pack in years. Your hands remember how.',
+    // The checklist comes in the first pack
+    checklist: total => `A checklist falls out of the pack. Every card in the Base Set, numbered 1 to ${total}. You take it home and put it on the fridge. You have not put anything on the fridge since 1998.`,
+    newCards: count => count === 1 ? '1 new card for the checklist.' : `${count} new cards for the checklist.`,
     open: 'You open a pack.',
     openSpecial: 'You open the special pack. It smells like a new car.',
     faster: 'You have opened 20 packs. You are faster at it now. This is called progress.',

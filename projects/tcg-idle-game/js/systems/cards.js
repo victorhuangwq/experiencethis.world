@@ -1,98 +1,66 @@
 /**
- * Card logic: making random and fixed cards, opening packs, and packing
- * cards compactly for the save. Every card has a hidden condition from 1 to
- * 10, used for grading later. The card data is in js/content/catalog.js.
- * This is a helper used by systems, not a system itself.
+ * Card logic: copies of catalogue cards, opening packs, and packing cards
+ * compactly for the save. Every card is from js/content/catalog.js; each
+ * copy has its own id and a hidden condition from 1 to 10, used for grading
+ * later. This is a helper used by systems, not a system itself.
  */
 
+import { Rules } from '../rules.js';
 import { Catalog } from '../content/catalog.js';
 
 export const Cards = {
     /**
-     * Generate a random card
-     * @param {Game} game - Game, for randomness
-     * @param {string} rarity - common, uncommon, or rare
+     * A copy of a catalogue card
+     * @param {string} cardId - Catalogue id
      * @param {number} condition - Hidden condition from 1 to 10
-     * @returns {Object} - Card
+     * @returns {Object} - Card, without its own id yet
      */
-    randomCard(game, rarity, condition) {
-        const stats = Catalog.randomStats[rarity];
-        return {
-            name: game.pick(Catalog.adjectives) + ' ' + game.pick(Catalog.critters),
-            type: game.pick(Catalog.types),
-            rarity: rarity,
-            power: game.randomInt(stats.power[0], stats.power[1]),
-            value: game.randomInt(stats.value[0], stats.value[1]),
-            fixedId: null,
-            condition: condition
-        };
+    card(cardId, condition) {
+        const { id, name, type, rarity, power, value } = Catalog.find(cardId);
+        return { cardId: id, name, type, rarity, power, value, condition };
     },
 
     /**
-     * Create a copy of a fixed card
-     * @param {string} id - Fixed card id
-     * @param {number} condition - Hidden condition from 1 to 10
-     * @returns {Object} - Card
+     * A random card of a rarity, from the set in packs
      */
-    fixedCard(id, condition) {
-        const definition = Catalog.findFixed(id);
-        return {
-            name: definition.name,
-            type: definition.type,
-            rarity: definition.rarity,
-            power: definition.power,
-            value: definition.value,
-            fixedId: definition.id,
-            condition: condition
-        };
+    pull(game, rarity, condition) {
+        return this.card(game.pick(Catalog.inPacks(rarity)).id, condition);
     },
 
     /**
-     * Pick a random fixed card that can be found in packs, weighted by rarity
-     * @param {Game} game - Game, for randomness
-     * @param {number} condition - Hidden condition
-     * @returns {Object} - Card
-     */
-    randomFixedCard(game, condition) {
-        const pool = Catalog.fixed.filter(card => card.source === 'pack');
-        const totalWeight = pool.reduce((sum, card) => sum + Catalog.fixedWeights[card.rarity], 0);
-        let roll = game.random() * totalWeight;
-        for (const card of pool) {
-            roll -= Catalog.fixedWeights[card.rarity];
-            if (roll <= 0) {
-                return this.fixedCard(card.id, condition);
-            }
-        }
-        return this.fixedCard(pool[pool.length - 1].id, condition);
-    },
-
-    /**
-     * Open a pack of 5 cards. The last card is a hit slot; special packs
-     * have two hit slots and better odds.
+     * Open a pack: one card per slot (Rules.packSlots), with hit slots
+     * rolling their rarity (Rules.hitOdds)
      * @param {Game} game - Game, for randomness
      * @param {string} kind - normal or special
      * @returns {Array} - Cards
      */
     openPack(game, kind) {
-        const special = kind === 'special';
         // Cards straight from a pack are in good shape
         const condition = () => game.randomInt(6, 10);
-        const cards = [];
+        return Rules.packSlots[kind].map(slot => {
+            if (slot !== 'hit') {
+                return this.pull(game, slot, condition());
+            }
+            if (kind === 'special' && game.chance(Rules.primeChance)) {
+                return this.card('card-o-matic-prime', condition());
+            }
+            return this.pull(game, this.hitRarity(game, kind), condition());
+        });
+    },
 
-        while (cards.length < (special ? 3 : 4)) {
-            cards.push(this.randomCard(game, game.chance(0.8) ? 'common' : 'uncommon', condition()));
-        }
-        while (cards.length < 5) {
-            if (special && game.chance(0.05)) {
-                cards.push(this.fixedCard('card-o-matic-prime', condition()));
-            } else if (game.chance(special ? 0.6 : 0.25)) {
-                cards.push(this.randomFixedCard(game, condition()));
-            } else {
-                cards.push(this.randomCard(game, game.chance(0.3) ? 'rare' : 'uncommon', condition()));
+    /**
+     * Roll the rarity of a hit slot
+     */
+    hitRarity(game, kind) {
+        const odds = Object.entries(Rules.hitOdds[kind]);
+        let roll = game.random();
+        for (const [rarity, chance] of odds) {
+            roll -= chance;
+            if (roll < 0) {
+                return rarity;
             }
         }
-
-        return cards;
+        return odds[odds.length - 1][0];
     },
 
     /**
@@ -103,18 +71,19 @@ export const Cards = {
     shoeboxCards(game) {
         const cards = [];
         while (cards.length < 6) {
-            cards.push(this.randomCard(game, 'common', game.randomInt(1, 3)));
+            cards.push(this.pull(game, 'common', game.randomInt(1, 3)));
         }
-        cards.push(this.fixedCard('wet-sock-gobln', 4));
-        cards.push(this.fixedCard('chewed-dragon', 1));
+        cards.push(this.card('wet-sock-gobln', 4));
+        cards.push(this.card('chewed-dragon', 1));
         return cards;
     },
 
-    // Card fields stored in the save, in order
-    saveFields: ['id', 'name', 'type', 'rarity', 'power', 'value', 'fixedId', 'condition'],
-
+    /**
+     * A card as stored in the save: [id, catalogue id, condition]. The rest
+     * comes from the catalogue when it loads.
+     */
     pack(card) {
-        return this.saveFields.map(field => card[field]);
+        return [card.id, card.cardId, card.condition];
     },
 
     /**
@@ -123,24 +92,32 @@ export const Cards = {
      * @returns {Object|null} - Card, or null if the entry is invalid
      */
     unpack(packed) {
-        if (!Array.isArray(packed)) {
+        if (!Array.isArray(packed) || !Number.isInteger(packed[0])) {
             return null;
         }
-
-        const card = {};
-        this.saveFields.forEach((field, index) => {
-            card[field] = packed[index];
-        });
-
-        const knownType = Catalog.types.includes(card.type) || card.type === Catalog.wildType;
-        if (!Number.isInteger(card.id) || typeof card.name !== 'string' || !knownType || !Catalog.rarities.includes(card.rarity)) {
+        const [id, cardId, condition] = packed.length === 3 ? packed : fromFirstRelease(packed);
+        if (!Catalog.find(cardId)) {
             return null;
         }
-        card.power = Number.isFinite(card.power) ? card.power : 1;
-        card.value = Number.isInteger(card.value) ? card.value : 0;
-        card.fixedId = Catalog.findFixed(card.fixedId) ? card.fixedId : null;
-        card.condition = Number.isInteger(card.condition) ? card.condition : 5;
-
-        return card;
+        return { id, ...this.card(cardId, Number.isInteger(condition) ? condition : 5) };
     }
 };
+
+/**
+ * Cards saved by the first release: [id, name, type, rarity, power, value,
+ * fixed card id, condition]. Its critters were made up at random; each one
+ * becomes a Base Set card of the same rarity, and the same name always
+ * becomes the same card, so duplicates stay duplicates.
+ * @returns {Array} - [id, catalogue id, condition]
+ */
+function fromFirstRelease([id, name, , rarity, , , fixedId, condition]) {
+    if (Catalog.find(fixedId)) {
+        return [id, fixedId, condition];
+    }
+    const pool = Catalog.inPacks(rarity).length > 0 ? Catalog.inPacks(rarity) : Catalog.inPacks('common');
+    let hash = 0;
+    for (const char of String(name)) {
+        hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+    }
+    return [id, pool[hash % pool.length].id, condition];
+}
