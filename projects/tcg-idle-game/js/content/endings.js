@@ -15,7 +15,8 @@ export const Endings = [
         id: 'shame',
         art: 'guard',
         lines: game => Lines.endings.shame.lines({
-            sadKids: game.state.kindness.strikes.filter(strike => strike.source === 'pip').length,
+            sadKids: game.state.kindness.strikes.filter(strike => ['pip', 'buyout'].includes(strike.source)).length,
+            shoves: game.state.kindness.strikes.filter(strike => strike.source === 'camper').length,
             kicks: game.state.vending.kicks
         }),
         note: Lines.endings.shame.note

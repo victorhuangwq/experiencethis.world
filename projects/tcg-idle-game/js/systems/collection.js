@@ -3,6 +3,7 @@
  */
 
 import { Rules } from '../rules.js';
+import { Catalog } from '../content/catalog.js';
 import { Cards } from './cards.js';
 import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
@@ -13,14 +14,17 @@ export const Collection = {
     defaults: () => ({
         cards: [],
         nextId: 1,
-        packs: { normal: 0, special: 0 },
+        packs: { normal: 0, special: 0, mega: 0 },
         packsOpened: 0,
         cardsOpened: 0,
         // Most cards ever held at once
         mostCards: 0,
         // What the cards are kept in: an id from Rules.storage
         storage: 'shoebox',
-        sniffs: 0
+        sniffs: 0,
+        // Parts of a set's checklist the player has completed, like
+        // 'base:common' or 'base'
+        completed: []
     }),
 
     load(collection, game) {
@@ -57,29 +61,71 @@ export const Collection = {
         return added;
     },
 
-    owns(game, fixedId) {
-        return game.state.collection.cards.some(card => card.fixedId === fixedId);
+    owns(game, cardId) {
+        return game.state.collection.cards.some(card => card.cardId === cardId);
     },
 
     /**
-     * Find duplicate cards, keeping the most valuable copy of each name
+     * How many copies of each card the player has
+     * @returns {Map} - Catalogue id to count
+     */
+    counts(game) {
+        const counts = new Map();
+        for (const card of game.state.collection.cards) {
+            counts.set(card.cardId, (counts.get(card.cardId) || 0) + 1);
+        }
+        return counts;
+    },
+
+    /**
+     * Whether the player has the checklist yet. It comes in the first pack.
+     */
+    hasChecklist(game) {
+        return game.state.collection.packsOpened > 0;
+    },
+
+    /**
+     * Find duplicate cards, keeping the copy of each card in the best condition
      * @returns {Array} - Duplicate cards
      */
     duplicates(game) {
         const kept = new Map();
         const duplicates = [];
         for (const card of game.state.collection.cards) {
-            const current = kept.get(card.name);
+            const current = kept.get(card.cardId);
             if (!current) {
-                kept.set(card.name, card);
-            } else if (card.value > current.value) {
+                kept.set(card.cardId, card);
+            } else if (card.condition > current.condition) {
                 duplicates.push(current);
-                kept.set(card.name, card);
+                kept.set(card.cardId, card);
             } else {
                 duplicates.push(card);
             }
         }
         return duplicates;
+    },
+
+    /**
+     * Say so when the player completes a rarity on a checklist, or a whole
+     * set, the first time
+     */
+    checkCompleted(game) {
+        const collection = game.state.collection;
+        const counts = Collection.counts(game);
+        for (const set of Catalog.sets.filter(each => each.inPacks)) {
+            const cards = Catalog.inSet(set.id);
+            const parts = Catalog.rarities
+                .filter(rarity => cards.some(card => card.rarity === rarity))
+                .map(rarity => ({ key: `${set.id}:${rarity}`, line: Lines.home.completed[rarity], cards: cards.filter(card => card.rarity === rarity) }));
+            parts.push({ key: set.id, line: Lines.home.completed.set(set.name, cards.length), cards });
+
+            for (const part of parts) {
+                if (!collection.completed.includes(part.key) && part.cards.every(card => counts.has(card.id))) {
+                    collection.completed.push(part.key);
+                    game.say(part.line, 'good');
+                }
+            }
+        }
     },
 
     /**
@@ -100,6 +146,13 @@ export const Collection = {
         return next && game.unlocked('outgrew-' + next.id) ? next : null;
     },
 
+    /**
+     * How many unopened packs the player has, of every kind
+     */
+    unopened(game) {
+        return Object.values(game.state.collection.packs).reduce((sum, count) => sum + count, 0);
+    },
+
     attuned(game) {
         return game.state.collection.sniffs >= Rules.sniffsToAttune;
     },
@@ -114,8 +167,13 @@ export const Collection = {
             collection.packs[kind]--;
             const pulled = Cards.openPack(game, kind);
 
-            // Mark fixed cards the player has never had before
-            const isNew = pulled.map(card => !!card.fixedId && !Collection.owns(game, card.fixedId));
+            // Mark cards the player has never had before, once each
+            const owned = new Set(collection.cards.map(card => card.cardId));
+            const isNew = pulled.map(card => {
+                const fresh = !owned.has(card.cardId);
+                owned.add(card.cardId);
+                return fresh;
+            });
             const cards = Collection.add(game, pulled).map((card, index) => ({ ...card, isNew: isNew[index] }));
 
             collection.packsOpened++;
@@ -123,8 +181,10 @@ export const Collection = {
 
             if (collection.packsOpened === 1) {
                 game.say(Lines.packs.first);
+                // The checklist is in the first pack
+                game.say(Lines.packs.checklist(Catalog.inPacks().length), 'good');
             } else {
-                game.say(kind === 'special' ? Lines.packs.openSpecial : Lines.packs.open);
+                game.say({ special: Lines.packs.openSpecial, mega: Lines.packs.openMega }[kind] || Lines.packs.open);
             }
             if (collection.packsOpened === Rules.fastOpeningAfter) {
                 game.say(Lines.packs.faster, 'good');
@@ -132,13 +192,14 @@ export const Collection = {
             if (collection.packsOpened === 100) {
                 game.say(Lines.story.developer.hundredPacks);
             }
+            Collection.checkCompleted(game);
 
             game.emit('pack-opened', { cards, kind });
         },
 
         smell(game) {
             const collection = game.state.collection;
-            if (collection.packs.normal + collection.packs.special === 0) {
+            if (Collection.unopened(game) === 0) {
                 return;
             }
 

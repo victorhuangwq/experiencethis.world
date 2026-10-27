@@ -73,20 +73,23 @@ after(async () => {
 /**
  * A browser test. It gets a page with the game open and the clock paused,
  * so time only moves when the test moves it (page.clock.runFor and
- * fastForward).
+ * fastForward). A new game gets the same seed every time the test runs, so
+ * it opens the same packs and a failure can be replayed.
  * @param {string} name - Test name
  * @param {Object} options - query (added to the URL, like '?dev'), time (the
  *                           clock's start), save (local storage save to load),
  *                           viewport, reducedMotion ('reduce' by default, so
- *                           packs open at once)
+ *                           packs open at once), seed (for Math.random;
+ *                           by default worked out from the test name)
  * @param {Function} body - async (page, context)
  */
 export function browserTest(name, options, body) {
     test(name, async () => {
-        const { query = '', time = START, save = null, viewport = { width: 1100, height: 900 }, reducedMotion = 'reduce' } = options;
+        const { query = '', time = START, save = null, viewport = { width: 1100, height: 900 }, reducedMotion = 'reduce', seed = seedFor(name) } = options;
         const context = await browser.newContext({ viewport, reducedMotion, timezoneId: 'UTC' });
         await context.clock.install({ time });
         await context.clock.pauseAt(time);
+        await context.addInitScript(seededRandom, seed);
 
         // Fail fast: nothing in the game takes long to appear
         context.setDefaultTimeout(5000);
@@ -113,6 +116,32 @@ export function browserTest(name, options, body) {
             await context.close();
         }
     });
+}
+
+/**
+ * A seed from a test's name
+ */
+function seedFor(name) {
+    let hash = 0;
+    for (const char of name) {
+        hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+    }
+    return hash;
+}
+
+/**
+ * Runs in the page: replace Math.random with a seeded generator (mulberry32,
+ * as in js/core/random.js)
+ */
+function seededRandom(seed) {
+    let state = seed;
+    Math.random = () => {
+        state = (state + 0x6D2B79F5) >>> 0;
+        let t = state;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
 }
 
 /**

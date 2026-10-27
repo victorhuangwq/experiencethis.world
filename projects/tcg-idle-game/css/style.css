@@ -276,6 +276,26 @@ button.current {
     padding-left: 20px;
 }
 
+/* A set's checklist: numbered, in as many columns as fit. Long names are
+   cut short; the full name is in the item's title. */
+.checklist-grid {
+    list-style: none;
+    padding-left: 0;
+    columns: 11em;
+    column-gap: 16px;
+}
+
+.checklist-grid li {
+    break-inside: avoid;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.new-card {
+    margin: 2px 0;
+}
+
 .muted {
     color: var(--muted);
 }

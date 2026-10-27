@@ -5,6 +5,7 @@
 
 import { Lines } from '../../content/text/index.js';
 import { Job } from '../../systems/job.js';
+import { Collection } from '../../systems/collection.js';
 import { desk } from '../art/office.js';
 import { escape, button, art } from '../html.js';
 import { workButton } from '../panels/work.js';
@@ -22,7 +23,6 @@ export const OfficeScene = {
 
 function renderOffice(game) {
     const workplace = Job.workplace(game);
-    const packs = game.state.collection.packs;
     const parts = [
         art(desk(Job.desk(game), INBOX + game.state.job.emailsAnswered)),
         `<p>${escape(Lines.job.today[workplace || 'off'](Job.today(game)))}</p>`
@@ -30,7 +30,7 @@ function renderOffice(game) {
 
     if (workplace === 'office') {
         parts.push(`<p>${workButton(game, 'office')}</p>`);
-        if (packs.normal + packs.special > 0) {
+        if (Collection.unopened(game) > 0) {
             parts.push(`<p>${button('job.openAtDesk', Lines.job.openAtDesk)}</p>`);
         }
     }

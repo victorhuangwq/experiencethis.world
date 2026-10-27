@@ -1,7 +1,7 @@
 /**
- * How the player's other critters (the cards not on a checklist) are shown.
- * Better storage means better organisation: a pile in the shoebox, then
- * nine-pocket binder pages, then separate binders.
+ * How the player's cards are shown. Better storage means better
+ * organisation: a pile in the shoebox, then nine-pocket binder pages, then
+ * separate binders.
  */
 
 import { Lines } from '../../content/text/index.js';
@@ -26,31 +26,31 @@ const Binders = {
         { id: 'good', holds: entry => entry.rarity !== 'common' },
         { id: 'commons', holds: entry => entry.rarity === 'common' }
     ],
-    'bookshelf': Catalog.types.map(type => ({ id: type, holds: entry => entry.type === type })),
-    'card-room': Catalog.types.map(type => ({ id: type, holds: entry => entry.type === type }))
+    'bookshelf': byType(),
+    'card-room': byType()
 };
 
+// A binder for each type, and one for wild cards
+function byType() {
+    return [...Catalog.types, Catalog.wildType].map(type => ({ id: type, holds: entry => entry.type === type }));
+}
+
 /**
- * One entry per critter name: how many the player has, the best rarity
- * among them, and when the newest one was added
- * @returns {Array} - { name, count, rarity, type, newest }
+ * One entry per card: how many copies the player has, and when the newest
+ * one was added
+ * @returns {Array} - { name, count, rarity, type, number, newest }
  */
 export function critterEntries(game) {
     const entries = new Map();
     for (const card of game.state.collection.cards) {
-        if (card.fixedId) {
-            continue;
-        }
-        const entry = entries.get(card.name);
-        if (!entry) {
-            entries.set(card.name, { name: card.name, count: 1, rarity: card.rarity, type: card.type, newest: card.id });
-            continue;
-        }
-        entry.count++;
-        entry.newest = Math.max(entry.newest, card.id);
-        if (Catalog.rarities.indexOf(card.rarity) > Catalog.rarities.indexOf(entry.rarity)) {
-            entry.rarity = card.rarity;
-            entry.type = card.type;
+        const entry = entries.get(card.cardId);
+        if (entry) {
+            entry.count++;
+            entry.newest = Math.max(entry.newest, card.id);
+        } else {
+            entries.set(card.cardId, {
+                name: card.name, count: 1, rarity: card.rarity, type: card.type, number: Catalog.number(card.cardId), newest: card.id
+            });
         }
     }
     return [...entries.values()];
@@ -88,7 +88,7 @@ export function binderPage(entries, page) {
 }
 
 /**
- * The other critters section of home
+ * The player's cards, on Home
  * @param {Game} game - Game
  * @param {Object} view - Which binder and page are open
  */

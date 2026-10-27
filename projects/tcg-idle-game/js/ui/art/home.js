@@ -3,7 +3,7 @@
  * pockets
  */
 
-import { wrap } from './cards.js';
+import { wrap, edges, bottomEdge } from './cards.js';
 
 /**
  * A shoebox. When it's overflowing, cards stick out of the top.
@@ -77,30 +77,31 @@ export function storage(kind, shoeboxFate, overflowing = false) {
 }
 
 // Width inside a binder pocket
-const POCKET = 12;
+const POCKET = 14;
 
 /**
- * A binder pocket holding a critter
- * @param {Object} entry - name, rarity, count
+ * A binder pocket holding a card
+ * @param {Object} entry - name, rarity, count, number
  */
 export function pocket(entry) {
-    const edge = { common: '-', uncommon: '=', rare: '*' }[entry.rarity] || '-';
-    const [first = '', second = ''] = wrap(entry.name, POCKET);
+    const edge = edges[entry.rarity];
+    const [first = '', second = '', third = ''] = wrap(entry.name, POCKET);
     const count = entry.count > 1 ? 'x' + entry.count : '';
+    // Long rarities lose their second half to fit a big count
+    const rarity = entry.rarity.length + count.length <= POCKET ? entry.rarity : entry.rarity.split('-')[0];
     return [
         '.' + edge.repeat(POCKET) + '.',
         '|' + first.padEnd(POCKET) + '|',
         '|' + second.padEnd(POCKET) + '|',
-        '|' + entry.rarity.padEnd(POCKET - count.length) + count + '|',
-        '\'' + edge.repeat(POCKET) + '\''
+        '|' + third.padEnd(POCKET) + '|',
+        '|' + rarity.padEnd(POCKET - count.length) + count + '|',
+        bottomEdge(edge, POCKET, entry.number)
     ].join('\n');
 }
 
 // An empty pocket, the same size as a full one
 export const emptyPocket = [
     '.' + '.'.repeat(POCKET) + '.',
-    ':' + ' '.repeat(POCKET) + ':',
-    ':' + ' '.repeat(POCKET) + ':',
-    ':' + ' '.repeat(POCKET) + ':',
+    ...Array.from({ length: 4 }, () => ':' + ' '.repeat(POCKET) + ':'),
     ':' + '.'.repeat(POCKET) + ':'
 ].join('\n');

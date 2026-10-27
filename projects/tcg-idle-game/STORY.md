@@ -107,12 +107,13 @@ file per topic.
 | **Doug** | A dad with his kid's binder | Honesty test |
 | **Mildred** | Obsessive collector | Will trade anything for a *Wet Sock Goblin* |
 | **Riley** | Regionals rival | Mostly plays Water (a tell) |
-| **Flip Resellington** | The shady businessman | Makes the dishonest offers |
+| **Flip Resellington** | The shady businessman | First seen in Act 1 as the scalper behind the player at the vending machine, with an empty duffel bag. Gets more annoyed each time he's bought out, and says they "should talk business some time". Later makes the dishonest offers |
+| **Terry** | Waits at the vending machine for the drop | Folding chair, thermos of soup. Splits the drop with a player who asks, then texts them when a mega pack turns up |
 | **xX_K3V1N_Xx** | The reigning world champion and final rival | Real name Kevin, 34. Has been world champion for 11 years. Wears a cape. Plays the netdeck everyone calls "The Meta". Says "skill issue" when he wins and "lag" when he loses, even though it's a card game. |
 
-Named cards so far:
+Named cards so far (the full list is in `js/content/catalog.js`):
 
-- **Wet Sock Goblin**: a fixed common Mildred is obsessed with.
+- **Wet Sock Goblin**: Base Set common #1, which Mildred is obsessed with.
 - **Absolutely Massive Dragon**: a legendary, found at a card show.
 - **Golden Paperclip Phoenix**: the legendary at the end of the trade-up chain.
 - **CARD-O-MATIC Prime**: a vending-machine promo, only in special packs.
@@ -132,6 +133,34 @@ Named cards so far:
 Act 5 closes the loop: the player ends up stocking the vending machine from
 Act 1 (with the key from its coin return), and Pip is the first customer
 through the door of the player's shop.
+
+### The vending machine
+
+- **The stock varies.** Each restock fills the 8 slots: mostly normal packs
+  ($3), and sometimes a bundle of three packs ($8, about 6% of slots), a
+  special pack ($6, 3%), or a mega pack ($10, 15 cards with a guaranteed rare
+  or better, 2%). Set 2 and Set 3 packs join the mix once those sets release.
+- **Other people buy it up.** The rarer the pack, the sooner it goes: mega
+  packs within 2 to 8 minutes of the drop, special packs 3 to 10, bundles 5
+  to 15, normal packs 10 to 60. About half the normal packs are left when the
+  driver comes back. Being there on the dot gets the good stuff; checking in
+  now and then still finds some packs.
+- **It runs on the wall clock.** When the driver restocks, each pack is given
+  the time someone else will buy it, so the machine at any moment is whatever
+  hasn't gone yet. Every restock the player missed is played out when they
+  return, so the machine is the same whether they watched or not.
+- **The scalper.** Once the player has met Pip and bought 8 packs, Flip
+  Resellington lines up behind them (always the first time, then about 1 restock in 4),
+  sometimes with a kid behind him. The player can buy everything they can
+  afford (fair, and Flip gets more annoyed each time; a strike if a kid was
+  waiting), buy everything but leave one pack for the kid, or let him have
+  the rest. Whatever they can't afford, Flip takes.
+- **Terry, waiting for the drop.** If the player is at the machine in the
+  minute before a drop, Terry is already there (always the first time, then
+  sometimes). Asking him to split it: he takes row B, they take row A, and he
+  becomes a friend who texts when a mega pack turns up while they're away.
+  Letting him go first: he takes the best pack. Shoving him aside: a strike,
+  and Dale counts it in the Shame ending.
 
 ### Act 1 secrets
 
@@ -201,7 +230,7 @@ the first ending on day 5. The other endings can be chased afterwards.
 
 | Day | Active time | Acts | Main beats | Reason to come back |
 |---|---|---|---|---|
-| 1 | about 2 h | 1 -> 2 | Vending machine (0:00), first Pip event (about 0:15), hobby store (about 0:30), first locals win (about 1:15), binder and first trades, PackDrop.com unlocks (about 2:00) | First online order arrives the next morning; the Set 2 release date is announced |
+| 1 | about 2 h | 1 -> 2 | Vending machine (0:00), first Pip event (about 0:30, at the first restock), hobby store (about 0:30), first locals win (about 1:15), binder and first trades, PackDrop.com unlocks (about 2:00) | First online order arrives the next morning; the Set 2 release date is announced |
 | 2 | about 1.5 h | 3 -> 4 | First booster box, real deck building, regionals vs Riley, first Card-a-Palooza, trade-up chain step 1, grading unlocks | Cards come back from grading overnight; Set 2 preorder |
 | 3 | about 1.5 h | 4 | Set 2 releases (prices spike; Flip's first offer: buy out every store), nationals, first table at a card show, trade-up steps 2-4 | Preorder boxes, graded cards, the next card show |
 | 4 | about 1.5 h | 5 | Open your own shop, shop earns money idle, host your first locals, Flip's second offer (print counterfeits), Set 3 announced | The shop runs overnight; Set 3 release |
@@ -216,8 +245,8 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots; a special pack in about 1 of 10 restocks (1 of 5 after smelling 50 packs) |
-| Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
+| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine) |
+| Pip in line | Not before the first restock, then about 1 in 3 restocks, once you've bought 3 since it | Not after you've already let Pip go first that restock |
 | Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
 | Nationals | Once per calendar day | One entry per day |
@@ -237,22 +266,38 @@ All times come from the real clock and are saved as timestamps.
 | Vending machine pack | $3; special pack $6; 8 slots per restock (built) |
 | Hobby store pack | $4.50 (50% markup) |
 | PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
-| Selling a random common | $0.05 to $0.25 |
+| A common's value | $0.05 to $0.15 (Benny pays 75% for duplicates) |
 | Business ending target | About $250,000 earned in total (to be tuned once shop income is known) |
-| Fixed cards | About 30 per set across 3 sets, plus about 12 promos, so roughly 100 to complete |
+| Cards | 100 to 150 per set across 3 sets (the Base Set has 120), plus about 12 promos |
 
 ## Cards
 
-- **Common cards are randomly generated** (as they are now), so packs keep
-  their surprise and duplicates keep flowing.
-- **Powerful cards come from a fixed, named list.** Each one has a name, a
-  short flavour line, and a known source. These drive set completion, trades,
-  chase cards, and the endings.
+- **Every card is on a fixed, named list,** in a set, like a real card game.
+  Each one has a name, a number in its set, a short flavour line, and a known
+  source. Nothing is made up on the spot.
+- **Packs work like real packs.** A normal pack is 3 commons, 1 uncommon, and
+  a hit: an uncommon (65%), a rare (30%), or an ultra-rare (5%). A special
+  pack is 2 commons, 1 uncommon, and two hits at better odds (rare 55%,
+  ultra-rare 15%), each with a 5% chance of the CARD-O-MATIC Prime promo. The
+  odds are printed on the back of the checklist.
+- **Sets are big, like real ones:** 100 to 150 cards each. The Base Set
+  (Set 1) has 120: 60 commons, 36 uncommons, 18 rares, and 6 ultra-rares,
+  40 of each type. A first session of about 16 packs finds about half of it;
+  completing it from packs alone takes about 300, so trading, booster boxes,
+  and later acts matter.
+- **Promos** are legendaries that never come in packs; each comes from one
+  place (the vending machine's special packs, the card show, the trade-up
+  chain, tournaments, Pip). Their checklist appears once the first is found.
+- **The shoebox cards** (the misprint and the chewed dragon) are on no
+  checklist at all.
+- **The checklist teaches the goal.** It falls out of the first pack, goes on
+  the fridge, and shows on Home: every card numbered, one rarity per tab,
+  with the missing ones as ???. Each pack says how many new cards it
+  brought, with their flavour lines, and completing each rarity and the
+  whole set gets a line.
 - Sets release over time (Set 1, Set 2, ...). A new set is what makes
   preorders matter.
-- The binder shows completion for the fixed cards in each set
-  (e.g. "Set 1: 41/60").
-- About 30 fixed cards per set across 3 sets, plus promos (see Pacing).
+- 100 to 150 cards per set across 3 sets, plus promos (see Pacing).
 
 ## Where packs come from
 
@@ -267,7 +312,7 @@ it offers.
 | Tournaments | Entry fee | After winning | Prize-only promo cards, prize money, prize packs | Must win |
 | Card shows | Market price | Instant | The exact card you want | Haggling, fakes, expensive |
 
-The main reason to use every source is that some fixed cards can only be
+The main reason to use every source is that some cards (the promos) can only be
 found in one of them.
 
 Automation follows the theme. Buying automatically at the vending machine
@@ -282,7 +327,8 @@ while the page is open:
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
 - The vending machine restocks every half hour or so, and shows the time of
-  the next restock.
+  the next restock. Other people buy its packs at times decided when it
+  restocks.
 - Card shows and tournaments run on a schedule of real clock times.
 - New set releases have a release time, and preorders arrive then.
 - Everything is stored as timestamps in the save, so closing the page never
@@ -298,6 +344,8 @@ Strike sources (each is always a clear, deliberate choice, never something
 automation or a misclick can trigger):
 
 - Keep buying at the vending machine while a kid waits behind you.
+- Buy the machine out from under the scalper while a kid waits behind him.
+- Shove Terry aside before a drop.
 - Fleece someone who doesn't know what their cards are worth.
 - Knowingly sell a fake card.
 - Price-gouge customers in your own shop.
@@ -326,7 +374,8 @@ becomes a sidekick who offers cards the player needs.
 As built in Act 1: there is no strike counter. The first strike gets a
 reaction from Dale; the second tapes a BE NICE note to the machine and the
 narrator addresses the player directly; the third is the Shame ending, where
-Dale counts the kids made sad and the times the machine was kicked.
+Dale counts the kids made sad, the times Terry was shoved, and the times the
+machine was kicked.
 
 ## Tournaments
 
@@ -334,7 +383,7 @@ A short, easy minigame that rewards better cards, with a small
 rock-paper-scissors decision.
 
 - Three core types in a loop (e.g. Fire beats Nature beats Water beats Fire).
-  Some fixed cards are wildcard types.
+  Some promos are wildcard types.
 - A match is best of 3 rounds. Each round both players play one card; type
   advantage gives a large bonus, then card power decides.
 - The decision is reading the opponent: opponents have tells ("Riley mostly
@@ -343,7 +392,7 @@ rock-paper-scissors decision.
   locals a good read beats raw power; at the top tiers both matter, which
   pushes the player to collect and trade for stronger cards.
 - After beating a tier, the player can auto-play it.
-- Prizes: money, prize packs, and tournament-only fixed cards.
+- Prizes: money, prize packs, and tournament-only promos.
 - This replaces the current HP-and-turns battle system, which is slower and
   more complex than this design needs.
 
@@ -373,7 +422,7 @@ Card shows are scheduled events (see clock time) where the player can:
 
 - rent a table and set prices for their cards;
 - watch NPC buyers browse and haggle;
-- browse other tables for specific fixed cards;
+- browse other tables for specific cards;
 - risk buying fakes if they don't check carefully.
 
 Pricing far above market means no sales. Knowingly selling a fake is a strike.
@@ -419,7 +468,7 @@ the exception: those end the run.
 
 | Ending | Condition | Required story beat |
 |---|---|---|
-| **Greatest Collector** | Own every fixed card | Finish the trade-up chain for the last legendary |
+| **Greatest Collector** | Own every card in every set, and every promo | Finish the trade-up chain for the last legendary |
 | **TCG Champion** | Win every tournament tier, ending with the championship | Assemble the overpowered championship deck |
 | **TCG Businessperson** | Earn a target amount of money | Turn down the dishonest offers |
 | **Bad end: Scalper / Counterfeiter** | Accept a dishonest business offer | The offer itself |

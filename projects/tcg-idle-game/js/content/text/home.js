@@ -1,11 +1,11 @@
 /**
- * Home: where the player keeps their cards
+ * Home: where the player keeps their cards, and works on home days
  */
 
 export const Home = {
-    closet: 'The closet',
+    name: 'Home',
 
-    // The location's name, by storage
+    // What the cards are kept in, by storage
     names: {
         'shoebox': 'A shoebox',
         'binder': 'A binder',
@@ -33,10 +33,29 @@ export const Home = {
         'card-room': 'The guest room is the card room now. Guests can sleep on the couch. There are no guests.'
     },
 
-    count: (cards, different) => `${cards} cards. ${different} different.`,
+    count: (storage, cards, different) => `${storage}. ${cards} cards. ${different} different.`,
+
+    // The checklists
     unknown: '???',
     unknownNote: 'The developer knows where the rest are. The developer is not telling.',
-    others: 'Other critters',
+    rarities: {
+        'common': 'commons',
+        'uncommon': 'uncommons',
+        'rare': 'rares',
+        'ultra-rare': 'ultra-rares',
+        'legendary': 'legendaries'
+    },
+    odds: (rare, ultraRare) => `On the back, in small print: a rare in about 1 pack in ${rare}, and an ultra-rare in about 1 pack in ${ultraRare}.`,
+    // Completing part of a checklist, the first time
+    completed: {
+        'common': 'Every common on the checklist. Nobody will ever know how proud you are. You will tell them anyway.',
+        'uncommon': 'Every uncommon on the checklist. You have started using a ruler for the ticks.',
+        'rare': 'Every rare on the checklist. You hold it up to the light. It is a piece of paper. It is beautiful.',
+        'ultra-rare': 'Every ultra-rare on the checklist. Somewhere, a seven-year-old is very jealous. It is you.',
+        set: (name, total) => `The ${name} is complete. All ${total}. You look at the checklist for a long time. Then you buy a frame for it.`
+    },
+
+    others: 'Your critters',
 
     // In the shoebox, critters are a pile
     pile: 'In the order you threw them in.',
@@ -49,7 +68,8 @@ export const Home = {
         commons: 'Commons',
         Fire: 'Fire',
         Water: 'Water',
-        Nature: 'Nature'
+        Nature: 'Nature',
+        Wild: 'Wild'
     },
     page: (page, pages) => `Page ${page} of ${pages}`,
     previousPage: 'Previous page',

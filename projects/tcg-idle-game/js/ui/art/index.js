@@ -8,6 +8,6 @@ import { machine, guard } from './mall.js';
 
 export const ArtByKey = {
     shoebox: () => shoebox(['CARDS - DO NOT', 'TOUCH']),
-    machine: (game, encounter) => machine(game.state, encounter.id === 'pip'),
+    machine: (game, encounter) => machine(game.state, { pip: 'kid', scalper: 'flip', camper: 'terry' }[encounter.id] || null),
     guard: () => guard
 };

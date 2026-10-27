@@ -9,18 +9,33 @@ import { browserTest, reopen, START } from './browser.js';
 import { Lines } from '../../js/content/text/index.js';
 import { Format } from '../../js/core/format.js';
 import { Rules } from '../../js/rules.js';
+import { Catalog } from '../../js/content/catalog.js';
 
 const HOUR = 60 * 60 * 1000;
+
+const BASE_SET = /^Critter Clash Base Set/;
+const BASE = Catalog.inSet('base');
 
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 // Navigation buttons can say "new" after the name
 const place = (page, name) => page.locator('#locations').getByRole('button', { name });
-const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Format.money(Rules.prices.normal)));
+const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Lines.mall.names.normal, Format.money(Rules.prices.normal)));
 const newestMessage = page => page.locator('#log .message').first();
 
 async function finishOpening(page, choice = 'sell') {
     await button(page, Lines.opening.lookUp).click();
     await button(page, choice === 'sell' ? `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})` : Lines.opening.keep).click();
+}
+
+/**
+ * Check that the page doesn't scroll sideways and no art is cut off
+ */
+async function assertFits(page, name) {
+    const { scrollWidth, clientWidth } = await page.evaluate(() =>
+        ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
+    assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
+    const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
+    assert.equal(cutOff, 0, `${name}: art fits on the screen`);
 }
 
 /**
@@ -39,6 +54,7 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
 
     await finishOpening(page);
     assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.shoeboxOffer));
+    assert.equal(await page.getByText(BASE_SET).count(), 0, 'no checklist before the first pack');
     await place(page, Lines.mall.name).click();
 
     await slot(page, 'A1').click();
@@ -48,10 +64,20 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
 
     await button(page, Lines.packs.buttons.open).click();
     assert.equal(await page.locator('#reveal .card').count(), 5);
+    assert.match(await page.locator('#reveal').textContent(), /\d new cards? for the checklist/);
+    await page.locator('#log').getByText(Lines.packs.checklist(BASE.length)).waitFor();
 
-    // Opened cards stay at the machine
-    await place(page, Lines.home.names.shoebox).click();
+    // Opened cards stay at the machine; the checklist goes home
+    await place(page, Lines.home.name).click();
     assert.equal(await page.locator('#reveal .card').count(), 0);
+    await page.getByText(new RegExp(`^Critter Clash Base Set: \\d/${BASE.length}$`)).waitFor();
+    const commons = BASE.filter(card => card.rarity === 'common').length;
+    assert.equal(await page.locator('.checklist-grid li').count(), commons, 'the commons tab is open');
+    assert.ok(await page.locator('.checklist-grid li', { hasText: '???' }).count() >= commons - 5, 'the rest are still to find');
+    // The first pack can hold an ultra-rare, so the tab's count may not be 0
+    const ultraRares = BASE.filter(card => card.rarity === 'ultra-rare').length;
+    await page.getByRole('button', { name: new RegExp(`^${Lines.home.rarities['ultra-rare']} \\d/${ultraRares}$`) }).click();
+    assert.equal(await page.locator('.checklist-grid li').count(), ultraRares);
     await page.getByText(Lines.home.others).waitFor();
 });
 
@@ -107,10 +133,11 @@ browserTest('an old save loads, and a full shoebox can be traded up for a binder
     // The save was made with Pip waiting in line
     await button(page, Lines.pip.stepAside).click();
 
-    await place(page, Lines.home.names.shoebox).click();
+    await place(page, Lines.home.name).click();
+    await page.getByText(/^A shoebox\. \d+ cards\./).waitFor();
     await button(page, `${Lines.home.buy.binder} (${Format.money(Rules.storage[1].price)})`).click();
     assert.equal(await newestMessage(page).textContent(), Lines.home.upgraded.binder);
-    await place(page, Lines.home.names.binder).waitFor();
+    await page.getByText(/^A binder\. \d+ cards\./).waitFor();
     assert.equal(await page.locator('.pockets .pocket').count(), 9);
 
     await button(page, Lines.home.nextPage).click();
@@ -131,14 +158,22 @@ browserTest('on a phone, the log shows one line until expanded, and every place 
     assert.equal(await button(page, Lines.system.log.less).getAttribute('aria-expanded'), 'true');
 
     await page.clock.runFor(30 * 1000);
-    for (const name of [Lines.mall.name, Lines.job.name, Lines.home.names.shoebox]) {
+    for (const name of [Lines.mall.name, Lines.job.name, Lines.home.name]) {
         await place(page, name).click();
-        const { scrollWidth, clientWidth } = await page.evaluate(() =>
-            ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
-        assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
-        const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
-        assert.equal(cutOff, 0, `${name}: art fits on the screen`);
+        await assertFits(page, name);
     }
+});
+
+browserTest('on a phone, a page of the binder fits the screen', {
+    viewport: { width: 390, height: 844 },
+    save: oldSave,
+    time: JSON.parse(oldSave).savedAt + HOUR
+}, async (page) => {
+    await button(page, Lines.pip.stepAside).click();
+    await place(page, Lines.home.name).click();
+    await button(page, `${Lines.home.buy.binder} (${Format.money(Rules.storage[1].price)})`).click();
+    assert.equal(await page.locator('.pockets .pocket').count(), 9);
+    await assertFits(page, 'the binder');
 });
 
 browserTest('time in a background tab is summed up once, on return', {}, async (page) => {
@@ -199,4 +234,19 @@ browserTest('on a home day, work is at the kitchen table, and the office is empt
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.home('Monday')).waitFor();
     assert.equal(await button(page, Lines.job.answer).count(), 0);
+});
+
+browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {
+    await finishOpening(page);
+    await place(page, Lines.mall.name).click();
+    await button(page, 'Driver in a minute').click();
+    await page.clock.runFor(2000);
+    await page.getByText(Lines.terry.arrive[0]).waitFor();
+
+    await button(page, Lines.terry.persuade).click();
+    await page.locator('#log').getByText(Lines.terry.agreed).waitFor();
+    await page.clock.runFor(60 * 1000);
+    await page.locator('#log').getByText(Lines.terry.shared).waitFor();
+    const keys = await page.locator('.machine [data-action="vending.buy"]').count();
+    assert.ok(keys <= Rules.slotCount / 2, `row B went to Terry: ${keys} packs left`);
 });

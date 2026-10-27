@@ -10,6 +10,7 @@ import { newGame, act, START } from './helpers.js';
 import { nextRandom } from '../js/core/random.js';
 import { Rules } from '../js/rules.js';
 import { Job } from '../js/systems/job.js';
+import { Vending } from '../js/systems/vending.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Locations } from '../js/ui/scenes/index.js';
 import { renderEncounter } from '../js/ui/panels/encounter.js';
@@ -27,7 +28,7 @@ const MOVES = [
     { weight: 12, run: (game, roll) => act(game, 'vending.buy', { slot: Math.floor(roll() * Rules.slotCount) }) },
     { weight: 10, run: game => act(game, 'collection.open', { kind: 'normal' }) },
     { weight: 2, run: game => act(game, 'collection.open', { kind: 'special' }) },
-    { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : 1 }) },
+    { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
     { weight: 2, run: game => act(game, 'vending.kick') },
     { weight: 2, run: game => act(game, 'vending.walkAway') },
     { weight: 3, run: game => act(game, 'vending.coinReturn') },
@@ -80,7 +81,8 @@ function checkInvariants(game, last) {
 
     const collection = state.collection;
     const vending = state.vending;
-    assert.ok(vending.slots.every(slot => slot === null || slot === 'normal' || slot === 'special'), 'slots');
+    assert.ok(vending.slots.every(slot => slot === null || Vending.kinds.includes(slot)), 'slots');
+    assert.equal(vending.goneAt.length, vending.slots.length, 'a time for each slot');
     assert.ok(vending.jammedSlot === null || (vending.jammedSlot >= 0 && vending.jammedSlot < Rules.slotCount), 'jammed slot');
     if (game.unlocked('mall') && !state.meta.ended) {
         assert.equal(vending.slots.length, Rules.slotCount);
@@ -100,13 +102,15 @@ function checkInvariants(game, last) {
         assert.ok(!ids.has(card.id), `card ${card.id} is there twice`);
         ids.add(card.id);
         assert.ok(card.id > 0 && card.id < collection.nextId, `card id ${card.id}`);
-        assert.ok(Catalog.rarities.includes(card.rarity), card.rarity);
-        assert.ok(Catalog.types.includes(card.type) || card.type === Catalog.wildType, card.type);
+        const definition = Catalog.find(card.cardId);
+        assert.ok(definition, `card ${card.cardId} is in the catalogue`);
+        for (const field of ['name', 'type', 'rarity', 'power', 'value']) {
+            assert.equal(card[field], definition[field], `${card.cardId} ${field}`);
+        }
         assert.ok(Number.isInteger(card.condition) && card.condition >= 1 && card.condition <= 10, `condition ${card.condition}`);
-        assert.ok(isCount(card.value) && isCount(card.power), 'value and power');
-        assert.ok(card.fixedId === null || Catalog.findFixed(card.fixedId), `fixed card ${card.fixedId}`);
     }
     assert.ok(collection.mostCards >= collection.cards.length);
+    assert.ok(last.completed.every(part => collection.completed.includes(part)), 'completed checklists stay completed');
     assert.ok(storageIndex(collection.storage) >= 0, `storage ${collection.storage}`);
     assert.ok(storageIndex(collection.storage) >= storageIndex(last.storage), 'storage never goes back');
 
@@ -160,6 +164,7 @@ function snapshot(game) {
         storage: game.state.collection.storage,
         strikes: game.state.kindness.strikes.length,
         emailsAnswered: game.state.job.emailsAnswered,
+        completed: [...game.state.collection.completed],
         coworker: game.state.job.coworker,
         unlocked: [...game.state.progress.unlocked]
     };
@@ -193,7 +198,7 @@ function playRandomly(seed, steps = STEPS) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, cards: 0, lunch: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
@@ -201,14 +206,17 @@ test('the game always makes sense, whatever the player does', (t) => {
         reached.gus += game.unlocked('gus') ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
+        reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
+        reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
     assert.ok(reached.endings > 0, 'some games ended in shame');
     assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
+    assert.ok(reached.flip > 0 && reached.terry > 0, 'some games met the scalper and Terry');
 });
 
 test('the same seed and the same moves give the same game', () => {

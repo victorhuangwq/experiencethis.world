@@ -25,9 +25,16 @@ export const Rules = {
     restockEvery: 30 * MINUTE,
     restockVariation: 5 * MINUTE,
     slotCount: 8,
-    prices: { normal: 300, special: 600 },
-    specialRestockChance: 0.1,
-    attunedSpecialRestockChance: 0.2,
+    // A bundle is 3 normal packs; a mega pack is one big pack
+    prices: { normal: 300, special: 600, bundle: 800, mega: 1000 },
+    // The chance the driver puts each kind in a slot; the rest are normal.
+    // Smelling 50 packs makes special packs turn up more.
+    restockOdds: { mega: 0.02, special: 0.03, bundle: 0.06 },
+    attunedRestockOdds: { mega: 0.02, special: 0.06, bundle: 0.06 },
+    // Other people buy what's in the machine: each pack goes this many
+    // minutes after the restock (between the two), the rarer ones first.
+    // About half the normal packs are left when the driver comes back.
+    soldAfter: { mega: [2, 8], special: [3, 10], bundle: [5, 15], normal: [10, 60] },
     jamChance: 0.04,
     coinReturnChance: 0.3,
     coinReturnCents: 25,
@@ -35,14 +42,42 @@ export const Rules = {
     keyChance: 0.06,
     keyGuaranteedAt: 40,
 
-    // Packs
+    // Packs, like the odds printed on a real pack. Each slot holds a card of
+    // that rarity from the set in packs, or is a hit, which rolls its rarity
+    // with the odds in hitOdds.
+    packSlots: {
+        normal: ['common', 'common', 'common', 'uncommon', 'hit'],
+        special: ['common', 'common', 'uncommon', 'bigHit', 'bigHit'],
+        mega: [...Array(9).fill('common'), 'uncommon', 'uncommon', 'uncommon', 'hit', 'hit', 'rareHit']
+    },
+    hitOdds: {
+        hit: { 'ultra-rare': 0.05, rare: 0.3, uncommon: 0.65 },
+        bigHit: { 'ultra-rare': 0.15, rare: 0.55, uncommon: 0.3 },
+        rareHit: { 'ultra-rare': 0.15, rare: 0.85 }
+    },
+    // Chance each hit in a special pack is the vending machine's own promo
+    primeChance: 0.05,
     sniffsToAttune: 50,
     fastOpeningAfter: 20,
 
-    // Pip
+    // Pip turns up once the player has been playing for a while (so not
+    // before the first restock), and has bought a few packs since it
+    pipNotBefore: 20 * MINUTE,
     pipAfterPacks: 3,
     pipChance: 0.35,
     pipGiftChance: 0.3,
+
+    // The scalper lines up behind the player once they've met Pip and bought
+    // this many packs ever, then sometimes. Sometimes a kid is waiting
+    // behind him.
+    scalperAfterPacks: 8,
+    scalperChance: 0.25,
+    scalperKidChance: 0.4,
+
+    // Terry waits for the drop in the minute before it, if the player is at
+    // the machine too: always the first time, then sometimes
+    camperWindow: MINUTE,
+    camperChance: 0.4,
 
     // Kindness code
     maxStrikes: 3,

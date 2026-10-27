@@ -27,8 +27,10 @@ const SEEDS = 20;
  */
 function playVisit(game) {
     for (let tries = 0; tries < 20; tries++) {
+        // Be kind: step aside for Pip, let the scalper have what's left
         if (game.state.encounter) {
-            act(game, 'encounter.choose', { index: 0 });
+            const choices = game.encounter().choices(game);
+            act(game, 'encounter.choose', { index: game.state.encounter.id === 'scalper' ? choices.length - 1 : 0 });
             continue;
         }
         if (game.state.vending.jammedSlot !== null) {
@@ -40,7 +42,7 @@ function playVisit(game) {
         }
         act(game, 'vending.buy', { slot });
     }
-    for (const kind of ['normal', 'special']) {
+    for (const kind of ['normal', 'special', 'mega']) {
         while (game.state.collection.packs[kind] > 0) {
             act(game, 'collection.open', { kind });
         }
@@ -108,10 +110,11 @@ test('an active player can buy packs within a couple of minutes', (t) => {
     assert.ok(times[times.length - 1] <= 3 * MINUTE);
 });
 
-test('an active player meets Pip in the first session', (t) => {
+test('an active player meets Pip at the first restock (target: about 30 minutes)', (t) => {
     const times = measure(active, firstPip);
     t.diagnostic(`first Pip: ${range(times)}`);
-    assert.ok(times[times.length - 1] <= 30 * MINUTE);
+    assert.ok(times[0] >= Rules.pipNotBefore, 'not for the first stock');
+    assert.ok(times[times.length - 1] <= 45 * MINUTE);
 });
 
 test('an active player finds Gus\'s store in the first session (target: about 30 minutes)', (t) => {

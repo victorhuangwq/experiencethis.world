@@ -59,6 +59,8 @@ const ui = new UI(game, document.getElementById('app'), {
         } else if (action === 'dev.restock') {
             game.state.vending.nextRestockAt = Date.now();
             Vending.tick(game, Date.now());
+        } else if (action === 'dev.soon') {
+            game.state.vending.nextRestockAt = Date.now() + 60 * 1000;
         } else if (action === 'dev.pip' && game.unlocked('mall') && !game.state.encounter) {
             game.startEncounter('pip');
         } else if (action === 'dev.delete' && confirm('Delete the save and the endings found?')) {

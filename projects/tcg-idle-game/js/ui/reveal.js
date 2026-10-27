@@ -114,14 +114,23 @@ export class PackReveal {
     }
 
     /**
-     * Text after the pack is open: a line for a good pull, and the cards as
+     * Text after the pack is open: a line for a good pull, what's new for
+     * the checklist (with each new card's flavour text), and the cards as
      * text for screen readers
      */
     summary() {
         const best = Math.max(...this.cards.map(pulled => Catalog.rarities.indexOf(pulled.rarity)));
         const line = best >= 4 ? Lines.packs.legendary : best >= 2 ? Lines.packs.rare : '';
+        const fresh = this.cards.filter(pulled => pulled.isNew);
         const list = this.cards.map(pulled => `${pulled.name} (${pulled.rarity})`).join(', ');
-        return (line ? `<p class="good">${escape(line)}</p>` : '') +
-            `<p class="visually-hidden">${escape(list)}</p>`;
+
+        const parts = [line ? `<p class="good">${escape(line)}</p>` : ''];
+        if (fresh.length > 0) {
+            parts.push(`<p class="good">${escape(Lines.packs.newCards(fresh.length))}</p>`);
+            parts.push(...fresh.map(pulled => `<p class="new-card"><b class="${pulled.rarity}">${escape(pulled.name)}</b> ` +
+                `<span class="muted">${escape(Catalog.number(pulled.cardId))} ${escape(Catalog.find(pulled.cardId).flavor)}</span></p>`));
+        }
+        parts.push(`<p class="visually-hidden">${escape(list)}</p>`);
+        return parts.join('');
     }
 }

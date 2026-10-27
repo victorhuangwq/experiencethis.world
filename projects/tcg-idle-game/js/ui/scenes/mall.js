@@ -33,7 +33,7 @@ function renderMall(game) {
                 args: { slot: index },
                 disabled: !Wallet.canAfford(game, price),
                 className: `art-button ${kind}`,
-                title: Lines.mall.buttons.slot(Vending.slotLabel(index), Format.money(price))
+                title: Lines.mall.buttons.slot(Vending.slotLabel(index), Lines.mall.names[kind], Format.money(price))
             });
         },
         coinReturn: text => button('vending.coinReturn', text, {

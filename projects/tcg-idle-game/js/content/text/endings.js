@@ -14,10 +14,11 @@ export const Endings = {
     },
 
     shame: {
-        lines: ({ sadKids, kicks }) => [
+        lines: ({ sadKids, shoves, kicks }) => [
             'Dale taps you on the shoulder.',
             '"Okay, pal. We\'ve had complaints."',
             sadKids > 0 ? `"You made a kid sad ${times(sadKids)}."` : null,
+            shoves > 0 ? `"You shoved Terry ${times(shoves)}. He had soup."` : null,
             kicks > 0 ? `"Also, you kicked the machine ${times(kicks)}. I counted."` : null,
             '"Please leave the mall."',
             'You leave the mall. You are an adult. You are banned from a mall.'

@@ -8,10 +8,12 @@ The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a self-given allowance, a
+Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
+checklist comes in the first pack, a self-given allowance, a
 hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
 on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
-minutes of real time, Pip and the kindness code, Benny buying duplicates,
+minutes of real time with a mix of packs that other people buy up, Pip, the
+scalper, Terry waiting for the drop, the kindness code, Benny buying duplicates,
 storage to buy as the collection outgrows it (each one organising the cards
 better), three secrets, and Gus's store, which opens in summer (Act 2).
 
@@ -69,7 +71,14 @@ headers of `js/content/unlocks.js`, `js/content/encounters/index.js`, and
   `js/content/unlocks.js`.
 - **New text:** add it to the topic's file in `js/content/text/`, or add a
   topic file and list it in `js/content/text/index.js`.
-- **A timed event on the real clock:** use `every()` from `js/core/time.js`.
+- **A new card:** add it to `js/content/catalog.js`, at the end of its set,
+  since a card's number is its place in its set. Never change a card's id;
+  saves store it.
+- **A timed event on the real clock:** use `every()` from `js/core/time.js`,
+  or decide the time when something starts and save it, as the vending
+  machine does for each pack. Never count down in the background: the game
+  only works out what has happened by now, on each tick and when the player
+  comes back.
 
 ## Testing
 

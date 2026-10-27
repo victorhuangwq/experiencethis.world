@@ -37,8 +37,8 @@ test('keeping the shoebox keeps the misprint and the chewed dragon', () => {
     const cards = game.state.collection.cards;
     assert.equal(game.state.story.shoebox, 'kept');
     assert.equal(cards.length, 8);
-    assert.ok(cards.some(card => card.fixedId === 'wet-sock-gobln'));
-    assert.ok(cards.some(card => card.fixedId === 'chewed-dragon'));
+    assert.ok(cards.some(card => card.cardId === 'wet-sock-gobln'));
+    assert.ok(cards.some(card => card.cardId === 'chewed-dragon'));
     assert.ok(cards.every(card => card.condition <= 4), 'old cards are in poor condition');
     assert.equal(game.unlocked('mall'), false, 'no money for the mall yet');
 });

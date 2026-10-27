@@ -47,7 +47,7 @@ test('ids are unique', () => {
     assert.ok(unique(Encounters.map(encounter => encounter.id)), 'encounters');
     assert.ok(unique(Endings.map(ending => ending.id)), 'endings');
     assert.ok(unique(Locations.map(place => place.id)), 'locations');
-    assert.ok(unique(Catalog.fixed.map(card => card.id)), 'fixed cards');
+    assert.ok(unique(Catalog.cards.map(card => card.id)), 'cards');
 });
 
 test('encounters happen in a real place, with art that exists', () => {
@@ -110,10 +110,10 @@ test('every encounter and ending screen renders', () => {
     }
 });
 
-test('every fixed card is complete and in a set', () => {
+test('every card is complete and in a set', () => {
     const types = [...Catalog.types, Catalog.wildType];
-    for (const card of Catalog.fixed) {
-        assert.ok(Catalog.sets[card.set], `${card.id}: set ${card.set}`);
+    for (const card of Catalog.cards) {
+        assert.ok(Catalog.findSet(card.set), `${card.id}: set ${card.set}`);
         assert.ok(types.includes(card.type), `${card.id}: type ${card.type}`);
         assert.ok(Catalog.rarities.includes(card.rarity), `${card.id}: rarity ${card.rarity}`);
         assert.ok(Number.isInteger(card.power) && card.power > 0, `${card.id}: power`);
@@ -122,21 +122,42 @@ test('every fixed card is complete and in a set', () => {
     }
 });
 
-test('every rarity that packs can roll has a weight', () => {
-    for (const card of Catalog.fixed.filter(each => each.source === 'pack')) {
-        assert.ok(Catalog.fixedWeights[card.rarity] > 0, `${card.id}: ${card.rarity}`);
+test('names are unique, and every set has a numbered checklist', () => {
+    assert.ok(unique(Catalog.cards.map(card => card.name)), 'card names');
+    assert.ok(unique(Catalog.sets.map(set => set.id)), 'sets');
+    for (const set of Catalog.sets.filter(each => !each.secret)) {
+        const numbers = Catalog.inSet(set.id).map(card => Catalog.number(card.id));
+        assert.ok(numbers.length > 0 && unique(numbers), set.id);
+    }
+    assert.equal(Catalog.number('wet-sock-goblin'), `1/${Catalog.inSet('base').length}`);
+});
+
+test('every rarity a pack can hold has cards, and the odds add up', () => {
+    for (const [hit, odds] of Object.entries(Rules.hitOdds)) {
+        assert.ok(Math.abs(Object.values(odds).reduce((sum, chance) => sum + chance, 0) - 1) < 1e-9, `${hit} odds add up to 1`);
+    }
+    for (const [kind, slots] of Object.entries(Rules.packSlots)) {
+        const rarities = slots.flatMap(slot => Rules.hitOdds[slot] ? Object.keys(Rules.hitOdds[slot]) : [slot]);
+        for (const rarity of rarities) {
+            assert.ok(Catalog.inPacks(rarity).length > 0, `${kind}: no ${rarity} cards in packs`);
+        }
+    }
+    assert.ok(Catalog.inPacks().every(card => card.source === 'pack'));
+});
+
+test('every card survives the save', () => {
+    for (const card of Catalog.cards) {
+        const copy = { id: 1, ...Cards.card(card.id, 5) };
+        assert.deepEqual(Cards.unpack(Cards.pack(copy)), copy, card.id);
     }
 });
 
-test('random cards come out whole', () => {
-    const game = newGame();
-    for (const rarity of Object.keys(Catalog.randomStats)) {
-        for (let i = 0; i < 50; i++) {
-            const card = Cards.randomCard(game, rarity, 5);
-            assert.ok(Catalog.types.includes(card.type));
-            assert.ok(Number.isInteger(card.value) && card.value > 0);
-            assert.deepEqual(Cards.unpack(Cards.pack({ ...card, id: 1 })), { ...card, id: 1 }, 'survives the save');
-        }
+test('the checklists have text for every rarity they hold', () => {
+    for (const card of Catalog.cards) {
+        assert.ok(Lines.home.rarities[card.rarity], card.rarity);
+    }
+    for (const card of Catalog.inPacks()) {
+        assert.ok(Lines.home.completed[card.rarity], `Lines.home.completed['${card.rarity}']`);
     }
 });
 
@@ -231,7 +252,7 @@ test('every place renders at every stage of the game', () => {
     act(busy, 'vending.buy', { slot: 0 });
     act(busy, 'collection.open', { kind: 'normal' });
     const big = gameAtMall();
-    Collection.add(big, Array.from({ length: 500 }, (_, index) => Cards.randomCard(big, 'common', 5 + index % 5)));
+    Collection.add(big, Array.from({ length: 500 }, (_, index) => Cards.pull(big, 'common', 5 + index % 5)));
     big.checkUnlocks();
     // A Tuesday, at work, with packs to open at the desk
     const tuesday = START + 2 * 24 * 60 * 60 * 1000;

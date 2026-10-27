@@ -4,9 +4,8 @@ import { gameAtMall } from './helpers.js';
 import { Collection } from '../js/systems/collection.js';
 import { critterEntries, bindersFor, sortForBinder, binderPage, renderCritters } from '../js/ui/scenes/critters.js';
 import { pocket, emptyPocket } from '../js/ui/art/home.js';
-
-const card = (name, rarity = 'common', type = 'Fire') =>
-    ({ name, type, rarity, power: 1, value: 10, fixedId: null, condition: 8 });
+import { Cards } from '../js/systems/cards.js';
+import { Catalog } from '../js/content/catalog.js';
 
 function gameWith(cards) {
     const game = gameAtMall();
@@ -14,20 +13,35 @@ function gameWith(cards) {
     return game;
 }
 
-test('critters are grouped by name, with their best rarity and newest copy', () => {
-    const game = gameWith([card('Soggy Toad'), card('Tiny Moth'), card('Soggy Toad', 'rare', 'Water')]);
+const copies = (cardId, count = 1) => Array.from({ length: count }, () => Cards.card(cardId, 8));
+
+/**
+ * Add made-up cards to the catalogue for one test, for checking how a
+ * collection bigger than the catalogue looks
+ */
+function extraCards(t, count) {
+    const extra = Array.from({ length: count }, (_, index) => ({
+        id: `test-${index}`, set: 'test', name: `Critter ${String(index).padStart(2, '0')}`, type: 'Fire',
+        rarity: index % 2 ? 'common' : 'uncommon', power: 1, value: 10, source: 'pack', flavor: 'A test.'
+    }));
+    Catalog.cards.push(...extra);
+    t.after(() => Catalog.cards.splice(Catalog.cards.length - count, count));
+    return extra.map(card => Cards.card(card.id, 8));
+}
+
+test('cards are grouped, with how many there are and the newest copy', () => {
+    const game = gameWith([...copies('soggy-toad'), ...copies('spicy-gecko'), ...copies('soggy-toad')]);
     const toad = critterEntries(game).find(entry => entry.name === 'Soggy Toad');
-    assert.deepEqual(toad, { name: 'Soggy Toad', count: 2, rarity: 'rare', type: 'Water', newest: 3 });
+    assert.deepEqual(toad, { name: 'Soggy Toad', count: 2, rarity: 'common', type: 'Water', number: Catalog.number('soggy-toad'), newest: 3 });
 });
 
-test('cards on a checklist are not counted as other critters', () => {
-    const game = gameWith([{ ...card('Wet Sock Goblin'), fixedId: 'wet-sock-goblin' }]);
-    assert.deepEqual(critterEntries(game), []);
+test('every card is shown, promos and shoebox cards too', () => {
+    const game = gameWith([...copies('wet-sock-goblin'), ...copies('pips-favourite'), ...copies('wet-sock-gobln')]);
+    assert.deepEqual(critterEntries(game).map(entry => entry.number), [Catalog.number('wet-sock-goblin'), 'PROMO 5', '']);
 });
 
-test('the shoebox is a pile, newest first, that trails off', () => {
-    const names = Array.from({ length: 45 }, (_, index) => `Critter ${String(index).padStart(2, '0')}`);
-    const game = gameWith(names.map(name => card(name)));
+test('the shoebox is a pile, newest first, that trails off', (t) => {
+    const game = gameWith(extraCards(t, 45));
     assert.equal(Collection.storage(game), 'shoebox', 'until a binder is bought');
     assert.equal(bindersFor(Collection.storage(game)), null);
 
@@ -60,7 +74,7 @@ test('more storage means more binders', () => {
     assert.equal(bindersFor('shoebox'), null);
     assert.deepEqual(bindersFor('binder').map(binder => binder.id), ['all']);
     assert.deepEqual(bindersFor('two-binders').map(binder => binder.id), ['good', 'commons']);
-    assert.deepEqual(bindersFor('bookshelf').map(binder => binder.id), ['Fire', 'Water', 'Nature']);
+    assert.deepEqual(bindersFor('bookshelf').map(binder => binder.id), ['Fire', 'Water', 'Nature', 'Wild']);
 });
 
 test('the two binders split the good cards from the commons', () => {
@@ -70,18 +84,29 @@ test('the two binders split the good cards from the commons', () => {
     assert.equal(commons.holds({ rarity: 'common' }), true);
 });
 
-test('an unknown binder or page falls back to the first', () => {
-    const game = gameWith(Array.from({ length: 150 }, (_, index) => card(`Critter ${index}`, index % 2 ? 'common' : 'uncommon')));
+test('an unknown binder or page falls back to the first', (t) => {
+    const game = gameWith(extraCards(t, 150));
     game.state.collection.storage = 'two-binders';
     const html = renderCritters(game, { binder: 'all', page: 'x' });
     assert.match(html, /class="current"[^>]*>The good ones \(75\)/);
     assert.match(html, /Page 1 of 9/);
 });
 
-test('pockets are all the same size, full or empty', () => {
+test('pockets are all the same size, full or empty, for every card', () => {
     const sizes = art => art.split('\n').map(line => line.length);
-    const full = pocket({ name: 'Suspicious Raccoon', rarity: 'uncommon', count: 12 });
-    assert.deepEqual(sizes(full), sizes(emptyPocket));
-    assert.equal(new Set(sizes(full)).size, 1);
-    assert.match(full, /uncommon x12/);
+    for (const card of Catalog.cards) {
+        for (const count of [1, 12, 99]) {
+            const full = pocket({ name: card.name, rarity: card.rarity, count, number: Catalog.number(card.id) });
+            assert.deepEqual(sizes(full), sizes(emptyPocket), `${card.name} x${count}`);
+        }
+    }
+    assert.equal(new Set(sizes(emptyPocket)).size, 1);
+    assert.match(pocket({ name: 'Gutter Otter', rarity: 'uncommon', count: 12, number: '21/30' }), /uncommon +x12/);
+});
+
+test('every name fits in a pocket without being cut off', () => {
+    for (const card of Catalog.cards) {
+        const shown = pocket({ name: card.name, rarity: card.rarity, count: 1, number: '' }).replace(/[|\s]+/g, ' ');
+        assert.ok(shown.includes(card.name), card.name);
+    }
 });
