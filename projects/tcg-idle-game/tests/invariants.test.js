@@ -193,7 +193,9 @@ function checkScreens(game) {
         drawn.push(renderEncounter(game, game.encounter()));
     }
     for (const place of Locations.filter(each => each.visible(game))) {
-        drawn.push(place.render(game, {}));
+        for (const panel of [undefined, 'gus', 'packs', 'grading', 'board', 'case', 'table']) {
+            drawn.push(place.render(game, { panel }));
+        }
     }
     for (const html of drawn) {
         assert.ok(!/undefined|NaN|\[object/.test(html), html);

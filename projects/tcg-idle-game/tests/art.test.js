@@ -4,7 +4,8 @@ import { gameAtMall, act } from './helpers.js';
 import { machine, machineHtml } from '../js/ui/art/mall.js';
 import { card, cardBack, packTear } from '../js/ui/art/cards.js';
 import { storage } from '../js/ui/art/home.js';
-import { store, inside, table } from '../js/ui/art/gus.js';
+import { store, inside, insideHtml, table } from '../js/ui/art/gus.js';
+import { escape } from '../js/ui/html.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Cards } from '../js/systems/cards.js';
 
@@ -42,6 +43,20 @@ test('boxes have a straight right edge below their top edge', () => {
     const boxes = { store, inside: inside(), insideBusy: inside({ marcus: true, newSet: true }), binder: storage('binder'), 'two-binders': storage('two-binders'), bookshelf: storage('bookshelf'), 'card-room': storage('card-room') };
     for (const [name, art] of Object.entries(boxes)) {
         assert.equal(widths(art.split('\n').slice(1).join('\n')).size, 1, name);
+    }
+});
+
+test('the store as buttons draws the same art as the plain store, one first piece per part', () => {
+    for (const options of [{}, { marcus: true, newSet: true }]) {
+        const firsts = [];
+        const html = insideHtml(options, (area, text, first) => {
+            if (first) {
+                firsts.push(area);
+            }
+            return escape(text);
+        });
+        assert.equal(html, escape(inside(options)));
+        assert.deepEqual(firsts.sort(), ['board', 'case', 'gus', 'shelves', 'table']);
     }
 });
 

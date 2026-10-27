@@ -5,9 +5,9 @@
 
 export const Tournaments = {
     localsTitle: 'Friday Night Locals',
-    localsNote: 'Gus runs a tournament every hour. He calls every one of them Friday Night Locals.',
-    enterLocals: price => `Play in this hour's locals (buy two packs: ${price})`,
-    nextLocals: time => `You played this hour's locals. Next one: ${time}.`,
+    localsNote: '"Friday Night Locals," says Gus, tapping the poster. "Every hour, on the hour. Buy two packs and you\'re in. Win, and you go home with more."',
+    enterLocals: price => `Sign me up (buy two packs: ${price})`,
+    nextLocals: time => `"You've had your go," says Gus. "Next one's at ${time}."`,
     entered: day => day === 'Friday'
         ? 'Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is actually Friday. Gus looks uneasy about it.'
         : `Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is ${day}.`,
@@ -38,11 +38,11 @@ export const Tournaments = {
     // The pre-release, for regulars, before a new set comes out
     invited: 'Gus writes your name on the corkboard, under REGULARS. "Pre-release," says Gus. "Backyard Brawl. Before anyone else. You open the packs here and play with what you get." He taps the side of his nose. Nobody knows why.',
     prereleaseTitle: 'The pre-release',
-    prereleaseNote: 'Backyard Brawl is out in the summer. Regulars play it first, at the back table, with only what is in their kit.',
-    enterPrerelease: (packs, price) => `Play the pre-release (a kit of ${packs} Backyard Brawl packs: ${price})`,
+    prereleaseNote: '"And for regulars," says Gus, quieter, "the pre-release. Backyard Brawl, before anyone else. Four packs, opened at the back table. You play with what you get."',
+    enterPrerelease: (packs, price) => `I'm in (a kit of ${packs} Backyard Brawl packs: ${price})`,
     prereleaseOpened: 'Gus hands you the kit and a pair of scissors. "No scissors," says Gus, and takes the scissors back. You open the packs at the back table.',
     prereleaseFinished: wins => `The pre-release is over. Everyone gets a promo, still warm from the printer: The Early Bird. ${wins === 0 ? 'Gus pats you on the shoulder.' : `Gus hands you ${wins === 1 ? 'a Backyard Brawl pack' : `${wins} Backyard Brawl packs`} for your wins.`} "See you in summer," says Gus.`,
-    waitingForSummer: 'You have played the pre-release. Backyard Brawl is out in the summer. Gus will not say when summer is. "Soon," says Gus.',
+    waitingForSummer: '"Backyard Brawl is out in the summer," says Gus. He will not say when summer is. "Soon."',
 
     regulars: {
         brenda: {

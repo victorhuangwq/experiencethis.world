@@ -19,8 +19,27 @@ export const Gus = {
 
     // The grand opening, on the second day of play
     opened: 'Gus\'s Games & Grub is open. There are balloons. Two of them. One has already popped.',
-    inside: 'Shelves of packs. A glass case. A table by the window. A corkboard. Gus, behind the counter, eating a sandwich over the cards. He has never dropped a crumb.',
+    inside: 'Shelves of packs. A glass case. A corkboard. A table by the window. Gus, behind the counter, eating a sandwich over the cards. He has never dropped a crumb.',
 
+    // The parts of the store the player can look at closer
+    areas: {
+        shelves: 'The shelves',
+        board: 'The corkboard',
+        gus: 'Gus, at the counter',
+        case: 'The glass case',
+        table: 'The table by the window'
+    },
+
+    // Talking to Gus
+    greet: '"What\'ll it be?" says Gus, through a mouthful of sandwich.',
+    ask: {
+        packs: 'Some packs, please',
+        grading: 'Can you grade a card for me?',
+        board: 'What\'s on the corkboard?'
+    },
+    somethingElse: 'Something else',
+
+    shelvesSay: '"Take your pick," says Gus. He points at the shelves with the sandwich.',
     buyPack: (set, price) => `Buy a ${set} pack (${price})`,
     bought: [
         'Gus hands you a pack. "No bag," says Gus. "Bags are for tourists."',
@@ -45,7 +64,7 @@ export const Gus = {
 
     // Grading, at Mint Condition Co.
     gradingTitle: 'Grading',
-    gradingNote: fee => `Gus sends cards to Mint Condition Co. ${fee} a card. Back tomorrow. "They grade by hand," says Gus. "Very clean hands."`,
+    gradingNote: fee => `"I send them to Mint Condition Co.," says Gus. "${fee} a card, back tomorrow. They grade by hand. Very clean hands."`,
     candidate: (name, rarity, read) => `${name} (${rarity}). ${read}`,
     send: fee => `Send it (${fee})`,
     sent: (name, read) => `Gus holds ${name} up to the light. "${read}" He puts it in an envelope and licks it shut. Back tomorrow.`,

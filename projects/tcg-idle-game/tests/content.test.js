@@ -252,6 +252,9 @@ test('every button runs an action that exists', () => {
     }
 });
 
+// What can be shown below Gus's store, and one that can't
+const PANELS = ['gus', 'packs', 'grading', 'board', 'case', 'table', 'nonsense'];
+
 test('every place renders at every stage of the game', () => {
     const fresh = newGame();
     const kept = newGame();
@@ -282,7 +285,7 @@ test('every place renders at every stage of the game', () => {
 
     for (const [name, game] of Object.entries({ fresh, kept, busy, big, office, gus })) {
         for (const place of Locations) {
-            for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }]) {
+            for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }, ...PANELS.map(panel => ({ panel }))]) {
                 const html = place.render(game, view);
                 assert.equal(typeof html, 'string', `${place.id} (${name})`);
                 assert.ok(!html.includes('undefined') && !html.includes('NaN'), `${place.id} (${name}): ${html}`);

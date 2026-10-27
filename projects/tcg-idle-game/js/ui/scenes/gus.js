@@ -1,6 +1,10 @@
 /**
  * Gus's Games & Grub: closed until the grand opening on the second day,
- * then the store: packs, the glass case of singles, and grading
+ * then the store. The player looks around by pressing parts of the store's
+ * art: the shelves (packs), the corkboard (Gus talks about his
+ * tournaments), Gus at the counter (he asks what it'll be), the glass case
+ * (singles), and the table by the window (Marcus). One part is shown at a
+ * time, and the scene's view remembers which.
  */
 
 import { localDay } from '../../core/time.js';
@@ -14,7 +18,7 @@ import { Collection } from '../../systems/collection.js';
 import { Trades } from '../../systems/trades.js';
 import { Tournaments } from '../../systems/tournaments.js';
 import { Vending } from '../../systems/vending.js';
-import { store, inside } from '../art/gus.js';
+import { store, insideHtml } from '../art/gus.js';
 import { escape, button, art } from '../html.js';
 
 export const GusScene = {
@@ -24,29 +28,79 @@ export const GusScene = {
     render: renderGus
 };
 
-function renderGus(game) {
+/**
+ * What can be shown below the store: each one's part of the art, and how
+ * it's drawn. Gus's menu leads to the packs, grading, and the corkboard.
+ */
+const PANELS = {
+    gus: { area: 'gus', render: renderGusMenu },
+    packs: { area: 'shelves', render: renderPacks },
+    grading: { area: 'gus', render: renderGrading },
+    board: { area: 'board', render: renderBoard },
+    case: { area: 'case', render: renderCase },
+    table: { area: 'table', render: renderMarcus }
+};
+
+// Which panel each part of the art opens
+const OPENS = { shelves: 'packs', board: 'board', gus: 'gus', case: 'case', table: 'table' };
+
+/**
+ * @param {Game} game - Game
+ * @param {Object} view - panel: what is shown below the store
+ */
+function renderGus(game, view = {}) {
     if (!Store.isOpen(game)) {
         return art(store) +
             `<p>${escape(Lines.gus.look)}</p>` +
             `<p>${button('people.knock', Lines.gus.knock)}</p>`;
     }
 
+    const panel = PANELS[view.panel] ? view.panel : null;
+    const looking = panel && PANELS[panel].area;
+    const area = (id, text, first) => button('view.set', text, {
+        args: { panel: OPENS[id] },
+        className: `art-area area-${id}${id === looking ? ' current' : ''}`,
+        title: Lines.gus.areas[id],
+        hidden: !first
+    });
+    const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game) };
+
+    return `<pre class="art store">${insideHtml(options, area)}</pre>` +
+        (panel ? PANELS[panel].render(game) : `<p>${escape(Lines.gus.inside)}</p>`);
+}
+
+/**
+ * Something Gus can take the player back to his menu from
+ */
+function backToGus() {
+    return `<p>${button('view.set', Lines.gus.somethingElse, { args: { panel: 'gus' }, className: 'quiet' })}</p>`;
+}
+
+/**
+ * Gus asks what it'll be
+ */
+function renderGusMenu() {
+    const choices = Object.entries(Lines.gus.ask).map(([panel, label]) => button('view.set', label, { args: { panel } }));
+    return `<p>${escape(Lines.gus.greet)}</p><p>${choices.join(' ')}</p>`;
+}
+
+/**
+ * The shelves: packs of every set that's out
+ */
+function renderPacks(game) {
     const packs = Store.packsForSale(game).map(({ set, price }) =>
         button('store.buyPack', Lines.gus.buyPack(Catalog.findSet(set).short, Format.money(price)), {
             args: { set },
             disabled: !Wallet.canAfford(game, price)
         }));
+    return `<p>${escape(Lines.gus.shelvesSay)}</p><p>${packs.join(' ')}</p>` + backToGus();
+}
 
-    return [
-        art(inside({ marcus: Trades.here(game), newSet: !!Vending.newSet(game) })),
-        `<p>${escape(Lines.gus.inside)}</p>`,
-        `<p>${packs.join(' ')}</p>`,
-        renderPrerelease(game),
-        renderLocals(game),
-        renderCase(game),
-        renderGrading(game),
-        renderMarcus(game)
-    ].join('');
+/**
+ * The corkboard: Gus talks about locals, and the pre-release for regulars
+ */
+function renderBoard(game) {
+    return renderLocals(game) + renderPrerelease(game) + backToGus();
 }
 
 /**
@@ -155,5 +209,6 @@ function renderGrading(game) {
     if (list.length > 0) {
         parts.push(`<ul class="checklist">${list.join('')}</ul>`);
     }
+    parts.push(backToGus());
     return parts.join('');
 }

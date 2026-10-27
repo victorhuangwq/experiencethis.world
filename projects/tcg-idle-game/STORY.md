@@ -54,7 +54,9 @@ file per topic.
   Feedback that the scene already shows (a slot emptying) doesn't need a line.
 - **Things in the art can be pressed.** The vending machine's slots and coin
   return are buttons on the machine itself, not a row of buttons under it.
-  Opened cards stay with the place they were opened in.
+  At Gus's, the player looks around by pressing parts of the store, like
+  an RPG: one part is shown at a time. Opened cards stay with the place
+  they were opened in.
 - **Pack opening is a moment.** The pack tears, cards flip one at a time, and
   the last card waits a beat.
 
@@ -175,6 +177,11 @@ through the door of the player's shop.
 
 ### Act 2: Gus's Games & Grub
 
+- **Looking around.** The store is explored by pressing parts of its art:
+  the shelves (packs), the glass case (singles), the corkboard (Gus talks
+  about locals and, for regulars, the pre-release), the table by the window
+  (Marcus), and Gus himself, who asks what it'll be: packs, grading, or
+  what's on the corkboard.
 - **The store opens on the second day.** The sign appears in Act 1 (after
   40 cards opened with Pip's tip, or 60 without). On the first day it says
   GRAND OPENING TOMORROW, and Gus says so through the door. From the second

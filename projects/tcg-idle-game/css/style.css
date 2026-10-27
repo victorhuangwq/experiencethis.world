@@ -229,6 +229,39 @@ button.current {
     color: var(--background);
 }
 
+/*
+ * Parts of a place's art that can be looked at closer, like the shelves at
+ * Gus's. A part drawn over several lines is several buttons; they light up
+ * together.
+ */
+.art-area {
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    line-height: inherit;
+    background: var(--button-background);
+    color: var(--text);
+    box-shadow: inset 0 -1px 0 var(--border);
+    cursor: pointer;
+}
+
+.art-area.current,
+.art-area:focus-visible,
+.store:has(.area-shelves:hover) .area-shelves,
+.store:has(.area-board:hover) .area-board,
+.store:has(.area-gus:hover) .area-gus,
+.store:has(.area-case:hover) .area-case,
+.store:has(.area-table:hover) .area-table {
+    background: var(--text);
+    color: var(--background);
+}
+
+/* A button that steps back, like "Something else" */
+.quiet {
+    color: var(--muted);
+}
+
 /* A newer set's packs, in summer */
 .art-button.new-set {
     color: var(--good);

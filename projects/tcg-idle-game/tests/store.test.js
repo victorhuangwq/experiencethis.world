@@ -5,6 +5,8 @@ import { Store } from '../js/systems/store.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
+import { GusScene } from '../js/ui/scenes/gus.js';
+import { escape } from '../js/ui/html.js';
 
 const HOUR = 60 * 60 * 1000;
 // START is 2:07 PM, so this is the same time on the next day
@@ -113,4 +115,32 @@ test('a pack from Gus holds Base Set cards', () => {
     const base = Catalog.inSet('base').map(card => card.id);
     assert.equal(game.state.collection.cards.length, 5);
     assert.ok(game.state.collection.cards.every(card => base.includes(card.cardId)));
+});
+
+test('the store shows one part at a time: whatever the player pressed in the art', () => {
+    const game = gameAtGus();
+    const render = panel => GusScene.render(game, { panel });
+    const pressable = html => [...html.matchAll(/data-action="view\.set" data-panel="([a-z]+)"[^>]*class="art-area[^"]*"(?![^>]*aria-hidden)/g)].map(match => match[1]);
+
+    const look = render();
+    assert.ok(look.includes(escape(Lines.gus.inside)));
+    assert.ok(!look.includes('store.buyPack'), 'nothing to buy until the shelves are pressed');
+    assert.deepEqual(pressable(look).sort(), ['board', 'case', 'gus', 'packs', 'table'], 'one button for screen readers per part');
+
+    assert.ok(render('packs').includes('data-action="store.buyPack"'));
+    assert.ok(render('case').includes('data-action="store.buySingle"'));
+    assert.ok(render('board').includes('data-action="tournaments.enterLocals"'));
+    assert.ok(render('table').includes(escape(Lines.marcus.away)));
+    assert.ok(render('nonsense').includes(escape(Lines.gus.inside)));
+});
+
+test('Gus asks what it will be, and leads to packs, grading, and his tournaments', () => {
+    const game = gameAtGus();
+    const menu = GusScene.render(game, { panel: 'gus' });
+    assert.ok(menu.includes(escape(Lines.gus.greet)));
+    for (const [panel, label] of Object.entries(Lines.gus.ask)) {
+        assert.ok(menu.includes(`data-panel="${panel}">${escape(label)}`), panel);
+    }
+    assert.ok(GusScene.render(game, { panel: 'grading' }).includes(escape(Lines.gus.gradingNote('$5.00'))));
+    assert.ok(GusScene.render(game, { panel: 'board' }).includes('data-panel="gus"'), 'and back');
 });

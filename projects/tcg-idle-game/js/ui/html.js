@@ -11,13 +11,16 @@ export function escape(text) {
  * @param {string} action - Action name, e.g. "vending.buy"
  * @param {string} label - Button text
  * @param {Object} options - args (sent with the action), disabled, className,
- *                           title (a description, for buttons whose text is art)
+ *                           title (a description, for buttons whose text is art),
+ *                           hidden (for a button that repeats another next to
+ *                           it: left out of the tab order and screen readers)
  */
-export function button(action, label, { args = {}, disabled = false, className = '', title = '' } = {}) {
+export function button(action, label, { args = {}, disabled = false, className = '', title = '', hidden = false } = {}) {
     const data = Object.entries(args).map(([key, value]) => ` data-${key}="${escape(value)}"`).join('');
     const classes = className ? ` class="${className}"` : '';
-    const described = title ? ` title="${escape(title)}" aria-label="${escape(title)}"` : '';
-    return `<button data-action="${action}"${data}${classes}${described}${disabled ? ' disabled' : ''}>${escape(label)}</button>`;
+    const described = title ? ` title="${escape(title)}"${hidden ? '' : ` aria-label="${escape(title)}"`}` : '';
+    const repeated = hidden ? ' tabindex="-1" aria-hidden="true"' : '';
+    return `<button data-action="${action}"${data}${classes}${described}${repeated}${disabled ? ' disabled' : ''}>${escape(label)}</button>`;
 }
 
 /**

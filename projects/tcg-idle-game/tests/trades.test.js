@@ -62,7 +62,7 @@ test('without spares, Marcus has nothing to offer', () => {
     Collection.add(game, [Cards.card('lawnmower-lion', 9)]);
     game.tick(at(days.saturday, 10));
     assert.deepEqual(game.state.trades.offers, []);
-    assert.ok(GusScene.render(game, {}).includes('Your binder is too good'));
+    assert.ok(GusScene.render(game, { panel: 'table' }).includes('Your binder is too good'));
     assert.ok(Lines.marcus.noOffers.includes('Your binder is too good'));
 });
 
@@ -115,7 +115,7 @@ test('Marcus sits at the table when he is in, and someone who met him at work is
     game.tick(at(days.thursday, 19));
     assert.ok(GusScene.render(game, {}).includes('(-_-)'));
     game.state.job.coworker = 2;
-    assert.ok(GusScene.render(game, {}).includes('pretends not to know you'));
+    assert.ok(GusScene.render(game, { panel: 'table' }).includes('pretends not to know you'));
 });
 
 test('Marcus\'s offers survive saving and loading', () => {

@@ -40,6 +40,11 @@ browserTest('Gus opens the day after the store is found, and sells packs at a ma
     await page.locator('#log').getByText(Lines.gus.opened).waitFor();
     assert.equal(await button(page, Lines.gus.knock).count(), 0, 'the door is open');
 
+    // Gus asks what it'll be; the packs are on the shelves
+    await button(page, Lines.gus.areas.gus).click();
+    await page.getByText(Lines.gus.greet).waitFor();
+    await button(page, Lines.gus.ask.packs).click();
+    await page.getByText(Lines.gus.shelvesSay).waitFor();
     const before = await money(page);
     await button(page, Lines.gus.buyPack('Base Set', Format.money(Rules.gusPrices.base))).click();
     const cents = text => Math.round(Number(text.replace(/[^0-9.]/g, '')) * 100);
@@ -54,9 +59,12 @@ browserTest('a card sent to grading comes back the next day, and Gus will buy it
     time: savedAt + 24 * HOUR
 }, async (page) => {
     await place(page, Lines.gus.name).click();
+    await button(page, Lines.gus.areas.case).click();
     await page.getByText(Lines.gus.caseTitle).waitFor();
     assert.equal(await page.locator('#scene li', { has: button(page, Lines.gus.buySingle) }).count(), Rules.caseSlots.length, 'a full case');
 
+    await button(page, Lines.gus.areas.gus).click();
+    await button(page, Lines.gus.ask.grading).click();
     const send = button(page, Lines.gus.send(Format.money(Rules.gradingFee)));
     const candidate = page.locator('#scene li', { has: send }).first();
     const name = literally((await candidate.textContent()).split(' (')[0]);
@@ -76,6 +84,7 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     time: savedAt + 24 * HOUR
 }, async (page) => {
     await place(page, Lines.gus.name).click();
+    await button(page, Lines.gus.areas.table).click();
     await page.getByRole('heading', { name: Lines.marcus.title }).waitFor();
     assert.match(await page.locator('#scene pre.art').first().textContent(), /\(-_-\)/, 'Marcus is at his table');
 
@@ -86,6 +95,8 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     await page.locator('#log').getByText(/^You trade your spare/).waitFor();
     assert.equal(await trade.count(), offers - 1);
 
+    await button(page, Lines.gus.areas.board).click();
+    await page.getByText(Lines.tournaments.localsNote).waitFor();
     await button(page, Lines.tournaments.enterLocals(Format.money(2 * Rules.gusPrices.base))).click();
     await page.getByText(/^Match 1 of 3: /).waitFor();
     const choice = page.locator('[data-action="encounter.choose"]:not([disabled])');
@@ -94,7 +105,7 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     }
     assert.equal(await choice.count(), 0, 'the tournament is over');
     await page.locator('#log').getByText(/^(You win every match|Two wins|One win|No wins)/).waitFor();
-    await page.getByText(/^You played this hour's locals\. Next one: /).waitFor();
+    await page.getByText(/^"You've had your go," says Gus\. "Next one's at /).waitFor();
     await assertFits(page, 'Gus\'s store after locals');
 });
 
@@ -103,6 +114,7 @@ browserTest('a regular plays the pre-release, and summer brings Set 2 the next d
     time: savedAt + 24 * HOUR
 }, async (page) => {
     await place(page, Lines.gus.name).click();
+    await button(page, Lines.gus.areas.board).click();
     await page.getByRole('heading', { name: Lines.tournaments.prereleaseTitle }).waitFor();
     await button(page, Lines.tournaments.enterPrerelease(Rules.prereleaseKitPacks, Format.money(Rules.prereleaseKitPrice))).click();
     await page.locator('#log').getByText(Lines.packs.newChecklist('Backyard Brawl', 102)).waitFor();
@@ -118,6 +130,7 @@ browserTest('a regular plays the pre-release, and summer brings Set 2 the next d
     await page.clock.fastForward(24 * HOUR);
     await page.locator('#log').getByText(Lines.story.summer).waitFor();
     assert.equal(await page.locator('#season-tag').textContent(), Lines.story.seasons.summer);
+    await button(page, Lines.gus.areas.shelves).click();
     await button(page, Lines.gus.buyPack('Backyard Brawl', Format.money(Rules.gusPrices.backyard))).click();
     await page.locator('#status').getByText(/^Backyard Brawl packs: \d+/).waitFor();
 
