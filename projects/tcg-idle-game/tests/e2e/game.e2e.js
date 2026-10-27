@@ -19,7 +19,7 @@ const BASE = Catalog.inSet('base');
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 // Navigation buttons can say "new" after the name
 const place = (page, name) => page.locator('#locations').getByRole('button', { name });
-const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Format.money(Rules.prices.normal)));
+const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Lines.mall.names.normal, Format.money(Rules.prices.normal)));
 const newestMessage = page => page.locator('#log .message').first();
 
 async function finishOpening(page, choice = 'sell') {
@@ -232,4 +232,19 @@ browserTest('on a home day, work is at the kitchen table, and the office is empt
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.home('Monday')).waitFor();
     assert.equal(await button(page, Lines.job.answer).count(), 0);
+});
+
+browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {
+    await finishOpening(page);
+    await place(page, Lines.mall.name).click();
+    await button(page, 'Driver in a minute').click();
+    await page.clock.runFor(2000);
+    await page.getByText(Lines.terry.arrive[0]).waitFor();
+
+    await button(page, Lines.terry.persuade).click();
+    await page.locator('#log').getByText(Lines.terry.agreed).waitFor();
+    await page.clock.runFor(60 * 1000);
+    await page.locator('#log').getByText(Lines.terry.shared).waitFor();
+    const keys = await page.locator('.machine [data-action="vending.buy"]').count();
+    assert.ok(keys <= Rules.slotCount / 2, `row B went to Terry: ${keys} packs left`);
 });

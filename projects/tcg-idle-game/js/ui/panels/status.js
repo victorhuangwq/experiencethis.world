@@ -24,6 +24,10 @@ export function renderStatus(game) {
         parts.push(`<p>${escape(Lines.packs.unopenedSpecial(packs.special))} ` +
             `${button('collection.open', Lines.packs.buttons.open, { args: { kind: 'special' } })}</p>`);
     }
+    if (packs.mega > 0) {
+        parts.push(`<p>${escape(Lines.packs.unopenedMega(packs.mega))} ` +
+            `${button('collection.open', Lines.packs.buttons.open, { args: { kind: 'mega' } })}</p>`);
+    }
 
     return parts.join('');
 }

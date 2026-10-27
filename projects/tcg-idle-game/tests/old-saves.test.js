@@ -49,10 +49,13 @@ for (const { file, raw } of saves) {
         const state = game.state;
 
         assert.equal(state.collection.cards.length, saved.collection.cards.length, 'every card');
-        assert.deepEqual(state.collection.packs, saved.collection.packs);
+        assert.equal(state.collection.packs.normal, saved.collection.packs.normal);
+        assert.equal(state.collection.packs.special, saved.collection.packs.special);
         assert.equal(state.collection.cardsOpened, saved.collection.cardsOpened);
         assert.equal(state.kindness.strikes.length, saved.kindness.strikes.length, 'strikes stick');
-        assert.deepEqual(state.people, saved.people);
+        for (const [person, known] of Object.entries(saved.people)) {
+            assert.deepEqual(state.people[person], known, person);
+        }
         assert.equal(state.vending.kicks, saved.vending.kicks);
         assert.equal(state.story.shoebox, saved.story.shoebox);
         assert.deepEqual(state.encounter, saved.encounter, 'an encounter in progress is still there');
@@ -65,11 +68,18 @@ for (const { file, raw } of saves) {
 
     test(`${file}: the machine restocks on time`, () => {
         const game = loadSave(raw);
-        assert.equal(Vending.stockLeft(game), Rules.slotCount, 'restocked while away');
+        const vending = game.state.vending;
+        assert.ok(vending.restockedAt > saved.vending.restockedAt, 'restocked while away');
+        assert.ok(game.time - vending.restockedAt <= Rules.restockEvery + Rules.restockVariation, 'at the latest visit');
+        assert.ok(vending.slots.every((kind, index) => !kind || vending.goneAt[index] > game.time), 'what is left is not sold yet');
         const due = Vending.nextRestockAt(game);
         assert.ok(due > game.time && due <= game.time + Rules.restockEvery + Rules.restockVariation, 'the driver is due soon');
 
+        // Packs from before the machine sold out over time stay until the restock
         const soon = loadSave(raw, 60 * 1000);
+        if (soon.state.vending.restockedAt === saved.vending.restockedAt) {
+            assert.deepEqual(soon.state.vending.slots, saved.vending.slots);
+        }
         const dueSoon = Vending.nextRestockAt(soon);
         assert.ok(dueSoon > soon.time && dueSoon <= soon.time + Rules.restockEvery + Rules.restockVariation);
     });

@@ -14,7 +14,7 @@ export const Collection = {
     defaults: () => ({
         cards: [],
         nextId: 1,
-        packs: { normal: 0, special: 0 },
+        packs: { normal: 0, special: 0, mega: 0 },
         packsOpened: 0,
         cardsOpened: 0,
         // Most cards ever held at once
@@ -146,6 +146,13 @@ export const Collection = {
         return next && game.unlocked('outgrew-' + next.id) ? next : null;
     },
 
+    /**
+     * How many unopened packs the player has, of every kind
+     */
+    unopened(game) {
+        return Object.values(game.state.collection.packs).reduce((sum, count) => sum + count, 0);
+    },
+
     attuned(game) {
         return game.state.collection.sniffs >= Rules.sniffsToAttune;
     },
@@ -177,7 +184,7 @@ export const Collection = {
                 // The checklist is in the first pack
                 game.say(Lines.packs.checklist(Catalog.inPacks().length), 'good');
             } else {
-                game.say(kind === 'special' ? Lines.packs.openSpecial : Lines.packs.open);
+                game.say({ special: Lines.packs.openSpecial, mega: Lines.packs.openMega }[kind] || Lines.packs.open);
             }
             if (collection.packsOpened === Rules.fastOpeningAfter) {
                 game.say(Lines.packs.faster, 'good');
@@ -192,7 +199,7 @@ export const Collection = {
 
         smell(game) {
             const collection = game.state.collection;
-            if (collection.packs.normal + collection.packs.special === 0) {
+            if (Collection.unopened(game) === 0) {
                 return;
             }
 

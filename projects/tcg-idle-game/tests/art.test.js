@@ -12,7 +12,7 @@ const widths = text => new Set(text.split('\n').map(line => line.length));
 
 test('the machine shows the marks of the player\'s choices', () => {
     const game = gameAtMall();
-    const plain = machine(game.state, false);
+    const plain = machine(game.state);
     assert.ok(!plain.includes('(^o^)'));
     assert.ok(!plain.includes('BE NICE'));
     assert.ok(!plain.includes(')\n'), 'no dents yet');
@@ -20,7 +20,7 @@ test('the machine shows the marks of the player\'s choices', () => {
     game.state.people.pip.kindness = 1;
     game.state.kindness.note = true;
     act(game, 'vending.kick');
-    const marked = machine(game.state, true);
+    const marked = machine(game.state, 'kid');
     assert.ok(marked.includes('(^o^)'), "Pip's sticker");
     assert.ok(marked.includes('BE NICE'), 'the note');
     assert.ok(marked.split('\n')[6].endsWith(')'), 'a dent');

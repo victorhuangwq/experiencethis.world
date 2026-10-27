@@ -27,8 +27,10 @@ const SEEDS = 20;
  */
 function playVisit(game) {
     for (let tries = 0; tries < 20; tries++) {
+        // Be kind: step aside for Pip, let the scalper have what's left
         if (game.state.encounter) {
-            act(game, 'encounter.choose', { index: 0 });
+            const choices = game.encounter().choices(game);
+            act(game, 'encounter.choose', { index: game.state.encounter.id === 'scalper' ? choices.length - 1 : 0 });
             continue;
         }
         if (game.state.vending.jammedSlot !== null) {
@@ -40,7 +42,7 @@ function playVisit(game) {
         }
         act(game, 'vending.buy', { slot });
     }
-    for (const kind of ['normal', 'special']) {
+    for (const kind of ['normal', 'special', 'mega']) {
         while (game.state.collection.packs[kind] > 0) {
             act(game, 'collection.open', { kind });
         }

@@ -100,8 +100,8 @@ export const Job = {
          */
         openAtDesk(game, args, now) {
             const packs = game.state.collection.packs;
-            const kind = packs.normal > 0 ? 'normal' : 'special';
-            if (!game.unlocked('work') || Job.workplace(game, now) !== 'office' || packs[kind] === 0) {
+            const kind = ['normal', 'special', 'mega'].find(each => packs[each] > 0);
+            if (!game.unlocked('work') || Job.workplace(game, now) !== 'office' || !kind) {
                 return;
             }
 

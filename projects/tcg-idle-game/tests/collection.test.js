@@ -47,31 +47,40 @@ test('packs hold three commons, an uncommon, and a hit, like a real pack', () =>
 
 test('hits come at the odds in the rules', () => {
     const game = newGame({ seed: 7 });
-    const packs = 20000;
-    const hits = { normal: {}, special: {} };
-    for (let i = 0; i < packs; i++) {
-        for (const kind of ['normal', 'special']) {
-            const slots = Rules.packSlots[kind];
-            Cards.openPack(game, kind).forEach((card, index) => {
-                if (slots[index] === 'hit') {
-                    const key = card.cardId === 'card-o-matic-prime' ? 'prime' : card.rarity;
-                    hits[kind][key] = (hits[kind][key] || 0) + 1;
-                }
-            });
+    const rolls = 20000;
+    for (const [hit, odds] of Object.entries(Rules.hitOdds)) {
+        const seen = {};
+        for (let i = 0; i < rolls; i++) {
+            const rarity = Cards.hitRarity(game, hit);
+            seen[rarity] = (seen[rarity] || 0) + 1;
+        }
+        for (const [rarity, chance] of Object.entries(odds)) {
+            assert.ok(Math.abs(seen[rarity] / rolls - chance) < 0.02, `${hit} ${rarity}: ${seen[rarity] / rolls}, expected ${chance}`);
         }
     }
-    for (const [rarity, odds] of Object.entries(Rules.hitOdds.normal)) {
-        const seen = hits.normal[rarity] / packs;
-        assert.ok(Math.abs(seen - odds) < 0.02, `normal ${rarity}: ${seen}, expected ${odds}`);
+});
+
+test('special packs sometimes hold the vending promo; other packs never do', () => {
+    const game = newGame({ seed: 8 });
+    const packs = 10000;
+    let prime = 0;
+    for (let i = 0; i < packs; i++) {
+        prime += Cards.openPack(game, 'special').filter(card => card.cardId === 'card-o-matic-prime').length;
+        for (const kind of ['normal', 'mega']) {
+            assert.ok(Cards.openPack(game, kind).every(card => card.cardId !== 'card-o-matic-prime'), kind);
+        }
     }
-    const specialHits = packs * 2;
-    for (const [rarity, odds] of Object.entries(Rules.hitOdds.special)) {
-        const seen = hits.special[rarity] / specialHits;
-        const expected = odds * (1 - Rules.primeChance);
-        assert.ok(Math.abs(seen - expected) < 0.02, `special ${rarity}: ${seen}, expected ${expected}`);
+    const hits = Rules.packSlots.special.filter(slot => Rules.hitOdds[slot]).length;
+    assert.ok(Math.abs(prime / (packs * hits) - Rules.primeChance) < 0.01, `${prime / (packs * hits)}`);
+});
+
+test('a mega pack holds fifteen cards, always with a rare or better', () => {
+    const game = newGame({ seed: 9 });
+    for (let i = 0; i < 500; i++) {
+        const cards = Cards.openPack(game, 'mega');
+        assert.equal(cards.length, 15);
+        assert.ok(cards.some(card => ['rare', 'ultra-rare'].includes(card.rarity)));
     }
-    assert.ok(Math.abs(hits.special.prime / specialHits - Rules.primeChance) < 0.01, 'the vending promo');
-    assert.equal(hits.normal.prime, undefined, 'never in normal packs');
 });
 
 test('packs only hold cards from the set in packs', () => {

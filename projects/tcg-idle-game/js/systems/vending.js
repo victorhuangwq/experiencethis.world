@@ -1,6 +1,14 @@
 /**
- * The CARD-O-MATIC 3000: restocks on the real clock every half hour or so,
- * sometimes jams, and hides things in its coin return
+ * The CARD-O-MATIC 3000: restocks on the real clock every half hour or so
+ * with a mix of packs, which other people buy up before the next restock,
+ * the rarer ones first. It sometimes jams, and hides things in its coin
+ * return.
+ *
+ * Everything runs on the wall clock: when the driver restocks, each pack is
+ * given the time someone else will buy it, and the machine at any moment is
+ * whatever hasn't been bought yet. Every restock the player missed is
+ * played out when they come back, so the machine is the same whether they
+ * watched or not.
  */
 
 import { MINUTE } from '../core/time.js';
@@ -10,20 +18,35 @@ import { Lines } from '../content/text/index.js';
 import { Wallet } from './wallet.js';
 import { Collection } from './collection.js';
 
+// Kinds of pack, from the least to the most special
+const KINDS = ['normal', 'bundle', 'special', 'mega'];
+
 export const Vending = {
     id: 'vending',
+
+    kinds: KINDS,
 
     defaults: () => ({
         restockedAt: 0,
         // When the delivery driver comes next
         nextRestockAt: 0,
-        // One entry per slot: 'normal', 'special', or null when empty
+        // One entry per slot: a kind of pack, or null when empty
         slots: new Array(Rules.slotCount).fill(null),
+        // When someone else buys each slot's pack
+        goneAt: new Array(Rules.slotCount).fill(0),
         // Packs bought since the last restock, and ever
         bought: 0,
         packsBought: 0,
-        // Whether the kid in line has had their chance this restock
+        // Whether the kid, the scalper, and Terry have had their chance
+        // this restock
         pipChecked: false,
+        scalperChecked: false,
+        camperChecked: false,
+        // Whether a kid is waiting behind the scalper
+        kidBehind: false,
+        // What the player agreed with Terry for the next drop: 'share',
+        // 'first' (he goes first), or null
+        dropDeal: null,
         jammedSlot: null,
         kicks: 0,
         coinChecks: 0,
@@ -35,16 +58,26 @@ export const Vending = {
     load(vending) {
         vending.slots = Array.from({ length: Rules.slotCount }, (_, index) => {
             const slot = vending.slots[index];
-            return slot === 'normal' || slot === 'special' ? slot : null;
+            return KINDS.includes(slot) ? slot : null;
+        });
+        // Packs from before the machine sold out over time stay until the
+        // next restock
+        const untilRestock = Math.max(vending.nextRestockAt, vending.restockedAt + Rules.restockEvery + Rules.restockVariation);
+        vending.goneAt = vending.slots.map((slot, index) => {
+            const goneAt = vending.goneAt[index];
+            return slot && !(goneAt > 0) ? untilRestock : (Number.isFinite(goneAt) ? goneAt : 0);
         });
         if (!Number.isInteger(vending.jammedSlot)) {
             vending.jammedSlot = null;
         }
+        if (!['share', 'first'].includes(vending.dropDeal)) {
+            vending.dropDeal = null;
+        }
     },
 
     /**
-     * Restock when the delivery driver is due, every half hour or so.
-     * The time of each visit is decided (and saved) after the one before.
+     * Restock when the delivery driver is due, every half hour or so, and
+     * take away what other people have bought since
      */
     tick(game, now) {
         if (!game.unlocked('mall')) {
@@ -53,11 +86,13 @@ export const Vending = {
 
         const vending = game.state.vending;
 
-        // The first time the machine is seen, it is full
+        // The first time the machine is seen, it is full of normal packs,
+        // and nobody else buys them before the next restock
         if (vending.restockedAt === 0) {
             vending.restockedAt = now;
             vending.nextRestockAt = Vending.driverDue(game, now);
-            Vending.fill(game);
+            vending.slots = new Array(Rules.slotCount).fill('normal');
+            vending.goneAt = new Array(Rules.slotCount).fill(vending.nextRestockAt);
             return;
         }
 
@@ -65,26 +100,20 @@ export const Vending = {
         if (vending.nextRestockAt === 0 || vending.nextRestockAt - now > Rules.restockEvery + Rules.restockVariation) {
             vending.nextRestockAt = Vending.driverDue(game, Math.min(vending.restockedAt, now));
         }
-        if (now < vending.nextRestockAt) {
-            return;
-        }
 
-        // After time away, only the latest visit matters
-        while (vending.nextRestockAt <= now) {
-            vending.restockedAt = vending.nextRestockAt;
-            vending.nextRestockAt = Vending.driverDue(game, vending.restockedAt);
+        if (now >= vending.nextRestockAt) {
+            // Every visit the driver made happens, even unwatched
+            while (vending.nextRestockAt <= now) {
+                vending.restockedAt = vending.nextRestockAt;
+                vending.nextRestockAt = Vending.driverDue(game, vending.restockedAt);
+                Vending.restock(game);
+            }
+            Vending.sellOut(game, now);
+            Vending.announceRestock(game);
+        } else {
+            Vending.sellOut(game, now);
+            Vending.checkCamper(game, now);
         }
-        Vending.fill(game);
-
-        const specialChance = Collection.attuned(game) ? Rules.attunedSpecialRestockChance : Rules.specialRestockChance;
-        if (game.chance(specialChance)) {
-            const slot = game.randomInt(0, Rules.slotCount - 1);
-            vending.slots[slot] = 'special';
-            game.say(Lines.mall.restockSpecial(Vending.slotLabel(slot)), 'good');
-        } else if (!game.awayReport) {
-            game.say(Lines.mall.restock);
-        }
-        game.reportAway(Lines.mall.restockAway);
     },
 
     /**
@@ -98,13 +127,115 @@ export const Vending = {
     },
 
     /**
-     * Fill every slot with a normal pack
+     * The driver fills every slot. Most are normal packs; some are bundles,
+     * special packs, or mega packs. Each one gets the time someone else
+     * will buy it. A deal made with Terry happens now.
      */
-    fill(game) {
+    restock(game) {
         const vending = game.state.vending;
-        vending.slots = new Array(Rules.slotCount).fill('normal');
+        const odds = Collection.attuned(game) ? Rules.attunedRestockOdds : Rules.restockOdds;
+        vending.slots = [];
+        vending.goneAt = [];
+        for (let index = 0; index < Rules.slotCount; index++) {
+            let roll = game.random();
+            const kind = Object.keys(odds).find(each => (roll -= odds[each]) < 0) || 'normal';
+            const [soonest, latest] = Rules.soldAfter[kind];
+            vending.slots.push(kind);
+            vending.goneAt.push(vending.restockedAt + game.randomInt(soonest * 60, latest * 60) * 1000);
+        }
+
         vending.bought = 0;
         vending.pipChecked = false;
+        vending.scalperChecked = false;
+        vending.camperChecked = false;
+
+        // The driver opens the machine, which unsticks a jam
+        if (vending.jammedSlot !== null) {
+            vending.jammedSlot = null;
+            game.say(Lines.mall.driverUnjams);
+        }
+
+        // Terry takes his share of the drop: row B, or the best pack
+        const deal = vending.dropDeal;
+        vending.dropDeal = null;
+        if (deal === 'share') {
+            vending.slots.fill(null, Rules.slotCount / 2);
+            game.say(Lines.terry.shared);
+        } else if (deal === 'first') {
+            const best = Vending.bestSlot(game);
+            game.say(Lines.terry.wentFirst(Lines.mall.kinds[vending.slots[best]]));
+            vending.slots[best] = null;
+        }
+    },
+
+    /**
+     * Take away the packs other people have bought by now, mentioning the
+     * good ones if the player is there to see them go
+     */
+    sellOut(game, now) {
+        const vending = game.state.vending;
+        const watching = !game.awayReport && game.state.story.here === 'mall';
+        vending.slots.forEach((kind, index) => {
+            // A pack stuck in a jam can't be bought by anyone
+            if (kind && vending.goneAt[index] <= now && index !== vending.jammedSlot) {
+                vending.slots[index] = null;
+                if (watching && kind !== 'normal') {
+                    game.say(Lines.mall.someoneBought(Lines.mall.kinds[kind], Vending.slotLabel(index)));
+                }
+            }
+        });
+    },
+
+    /**
+     * Tell the player about the latest restock, or add it to the summary
+     * of time away
+     */
+    announceRestock(game) {
+        if (game.awayReport) {
+            game.reportAway(Lines.mall.restockAway);
+            return;
+        }
+        const best = Vending.bestSlot(game);
+        const kind = best === -1 ? null : game.state.vending.slots[best];
+        if (kind && kind !== 'normal') {
+            game.say(Lines.mall.restockWith(Lines.mall.kinds[kind], Vending.slotLabel(best)), 'good');
+        } else {
+            game.say(Lines.mall.restock);
+        }
+        // A friend texts about a mega pack when the player isn't there
+        if (kind === 'mega' && game.state.people.terry.friend && game.state.story.here !== 'mall') {
+            game.say(Lines.terry.tip(Vending.slotLabel(best)), 'good');
+        }
+    },
+
+    /**
+     * In the minute before a drop, Terry may be waiting at the machine,
+     * if the player is there to see him
+     */
+    checkCamper(game, now) {
+        const vending = game.state.vending;
+        const inWindow = now >= vending.nextRestockAt - Rules.camperWindow;
+        if (!inWindow || vending.camperChecked || game.awayReport || game.state.encounter || game.state.story.here !== 'mall') {
+            return;
+        }
+        vending.camperChecked = true;
+        if (game.state.people.terry.encounters === 0 || game.chance(Rules.camperChance)) {
+            game.startEncounter('camper');
+        }
+    },
+
+    /**
+     * The slot with the most special pack in it, or -1 if the machine is empty
+     */
+    bestSlot(game) {
+        const slots = game.state.vending.slots;
+        let best = -1;
+        slots.forEach((kind, index) => {
+            if (kind && (best === -1 || KINDS.indexOf(kind) > KINDS.indexOf(slots[best]))) {
+                best = index;
+            }
+        });
+        return best;
     },
 
     nextRestockAt(game) {
@@ -137,15 +268,22 @@ export const Vending = {
         vending.slots[index] = null;
         vending.bought++;
         vending.packsBought++;
-        game.state.collection.packs[kind]++;
-        game.say(Lines.mall.bought(Vending.slotLabel(index), kind === 'special'));
+        // A bundle is three normal packs
+        if (kind === 'bundle') {
+            game.state.collection.packs.normal += 3;
+        } else {
+            game.state.collection.packs[kind]++;
+        }
+        game.say(Lines.mall.bought(Vending.slotLabel(index), Lines.mall.kinds[kind]));
         game.emit('pack-bought', { index, kind });
     },
 
     actions: {
-        buy(game, { slot }) {
+        buy(game, { slot }, now) {
             const vending = game.state.vending;
             const index = Number(slot);
+            // Someone may have bought it since the machine was last looked at
+            Vending.sellOut(game, now);
             const kind = vending.slots[index];
             if (!kind || !Vending.usable(game)) {
                 return;
@@ -171,7 +309,7 @@ export const Vending = {
          * Kick the machine. Frees a jammed pack half the time. Dale counts
          * every kick.
          */
-        kick(game) {
+        kick(game, args, now) {
             const vending = game.state.vending;
             vending.kicks++;
 
@@ -183,6 +321,8 @@ export const Vending = {
                     Vending.dispense(game, slot);
                 } else {
                     game.say(Lines.mall.kickLost, 'warning');
+                    // The pack is unstuck now, so someone else may have bought it
+                    Vending.sellOut(game, now);
                 }
                 return;
             }
@@ -191,12 +331,13 @@ export const Vending = {
             game.say(line, 'warning');
         },
 
-        walkAway(game) {
+        walkAway(game, args, now) {
             if (game.state.vending.jammedSlot === null) {
                 return;
             }
             game.state.vending.jammedSlot = null;
             game.say(Lines.mall.walkAway);
+            Vending.sellOut(game, now);
         },
 
         /**

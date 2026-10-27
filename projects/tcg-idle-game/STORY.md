@@ -107,7 +107,8 @@ file per topic.
 | **Doug** | A dad with his kid's binder | Honesty test |
 | **Mildred** | Obsessive collector | Will trade anything for a *Wet Sock Goblin* |
 | **Riley** | Regionals rival | Mostly plays Water (a tell) |
-| **Flip Resellington** | The shady businessman | Makes the dishonest offers |
+| **Flip Resellington** | The shady businessman | First seen in Act 1 as the scalper behind the player at the vending machine, with an empty duffel bag. Gets more annoyed each time he's bought out, and says they "should talk business some time". Later makes the dishonest offers |
+| **Terry** | Waits at the vending machine for the drop | Folding chair, thermos of soup. Splits the drop with a player who asks, then texts them when a mega pack turns up |
 | **xX_K3V1N_Xx** | The reigning world champion and final rival | Real name Kevin, 34. Has been world champion for 11 years. Wears a cape. Plays the netdeck everyone calls "The Meta". Says "skill issue" when he wins and "lag" when he loses, even though it's a card game. |
 
 Named cards so far (the full list is in `js/content/catalog.js`):
@@ -132,6 +133,34 @@ Named cards so far (the full list is in `js/content/catalog.js`):
 Act 5 closes the loop: the player ends up stocking the vending machine from
 Act 1 (with the key from its coin return), and Pip is the first customer
 through the door of the player's shop.
+
+### The vending machine
+
+- **The stock varies.** Each restock fills the 8 slots: mostly normal packs
+  ($3), and sometimes a bundle of three packs ($8, about 6% of slots), a
+  special pack ($6, 3%), or a mega pack ($10, 15 cards with a guaranteed rare
+  or better, 2%). Set 2 and Set 3 packs join the mix once those sets release.
+- **Other people buy it up.** The rarer the pack, the sooner it goes: mega
+  packs within 2 to 8 minutes of the drop, special packs 3 to 10, bundles 5
+  to 15, normal packs 10 to 60. About half the normal packs are left when the
+  driver comes back. Being there on the dot gets the good stuff; checking in
+  now and then still finds some packs.
+- **It runs on the wall clock.** When the driver restocks, each pack is given
+  the time someone else will buy it, so the machine at any moment is whatever
+  hasn't gone yet. Every restock the player missed is played out when they
+  return, so the machine is the same whether they watched or not.
+- **The scalper.** Once the player has bought 8 packs, Flip Resellington
+  lines up behind them (always the first time, then about 1 restock in 4),
+  sometimes with a kid behind him. The player can buy everything they can
+  afford (fair, and Flip gets more annoyed each time; a strike if a kid was
+  waiting), buy everything but leave one pack for the kid, or let him have
+  the rest. Whatever they can't afford, Flip takes.
+- **Terry, waiting for the drop.** If the player is at the machine in the
+  minute before a drop, Terry is already there (always the first time, then
+  sometimes). Asking him to split it: he takes row B, they take row A, and he
+  becomes a friend who texts when a mega pack turns up while they're away.
+  Letting him go first: he takes the best pack. Shoving him aside: a strike,
+  and Dale counts it in the Shame ending.
 
 ### Act 1 secrets
 
@@ -216,7 +245,7 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots; a special pack in about 1 of 10 restocks (1 of 5 after smelling 50 packs) |
+| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine) |
 | Pip in line | About 1 in 4 visits, once you've bought 3 in a row | Not after you've already let Pip go first that restock |
 | Locals at Gus's | Every hour, on the hour | One entry per hour. Gus calls it "Friday Night Locals" no matter what day it is. |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
@@ -298,7 +327,8 @@ while the page is open:
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
 - The vending machine restocks every half hour or so, and shows the time of
-  the next restock.
+  the next restock. Other people buy its packs at times decided when it
+  restocks.
 - Card shows and tournaments run on a schedule of real clock times.
 - New set releases have a release time, and preorders arrive then.
 - Everything is stored as timestamps in the save, so closing the page never
@@ -314,6 +344,8 @@ Strike sources (each is always a clear, deliberate choice, never something
 automation or a misclick can trigger):
 
 - Keep buying at the vending machine while a kid waits behind you.
+- Buy the machine out from under the scalper while a kid waits behind him.
+- Shove Terry aside before a drop.
 - Fleece someone who doesn't know what their cards are worth.
 - Knowingly sell a fake card.
 - Price-gouge customers in your own shop.
@@ -342,7 +374,8 @@ becomes a sidekick who offers cards the player needs.
 As built in Act 1: there is no strike counter. The first strike gets a
 reaction from Dale; the second tapes a BE NICE note to the machine and the
 narrator addresses the player directly; the third is the Shame ending, where
-Dale counts the kids made sad and the times the machine was kicked.
+Dale counts the kids made sad, the times Terry was shoved, and the times the
+machine was kicked.
 
 ## Tournaments
 

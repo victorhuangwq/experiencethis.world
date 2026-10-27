@@ -18,8 +18,15 @@ export const Story = {
         // What the player did with the childhood shoebox: 'sold' or 'kept'
         shoebox: null,
         // Locations the player has opened at least once
-        visited: ['home']
+        visited: ['home'],
+        // Where the player is looking now. Not saved: the page always
+        // opens at home.
+        here: 'home'
     }),
+
+    save({ here, ...story }) {
+        return story;
+    },
 
     setup(game) {
         game.on('start', ({ fresh }) => {
@@ -64,9 +71,13 @@ export const Story = {
 
     actions: {
         visit(game, { location }) {
-            const visited = game.state.story.visited;
-            if (typeof location === 'string' && !visited.includes(location)) {
-                visited.push(location);
+            if (typeof location !== 'string') {
+                return;
+            }
+            const story = game.state.story;
+            story.here = location;
+            if (!story.visited.includes(location)) {
+                story.visited.push(location);
             }
         }
     }

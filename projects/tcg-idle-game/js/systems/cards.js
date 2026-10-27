@@ -31,28 +31,29 @@ export const Cards = {
      * Open a pack: one card per slot (Rules.packSlots), with hit slots
      * rolling their rarity (Rules.hitOdds)
      * @param {Game} game - Game, for randomness
-     * @param {string} kind - normal or special
+     * @param {string} kind - normal, special, or mega
      * @returns {Array} - Cards
      */
     openPack(game, kind) {
         // Cards straight from a pack are in good shape
         const condition = () => game.randomInt(6, 10);
         return Rules.packSlots[kind].map(slot => {
-            if (slot !== 'hit') {
+            if (!Rules.hitOdds[slot]) {
                 return this.pull(game, slot, condition());
             }
             if (kind === 'special' && game.chance(Rules.primeChance)) {
                 return this.card('card-o-matic-prime', condition());
             }
-            return this.pull(game, this.hitRarity(game, kind), condition());
+            return this.pull(game, this.hitRarity(game, slot), condition());
         });
     },
 
     /**
      * Roll the rarity of a hit slot
+     * @param {string} hit - Kind of hit: a key of Rules.hitOdds
      */
-    hitRarity(game, kind) {
-        const odds = Object.entries(Rules.hitOdds[kind]);
+    hitRarity(game, hit) {
+        const odds = Object.entries(Rules.hitOdds[hit]);
         let roll = game.random();
         for (const [rarity, chance] of odds) {
             roll -= chance;

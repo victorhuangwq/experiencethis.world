@@ -19,6 +19,8 @@ import { Benny } from './benny.js';
 import { Pip } from './pip.js';
 import { Strikes } from './strikes.js';
 import { Gus } from './gus.js';
+import { Flip } from './flip.js';
+import { Terry } from './terry.js';
 import { Endings } from './endings.js';
 import { System } from './system.js';
 
@@ -34,6 +36,8 @@ export const Lines = {
     pip: Pip,
     strikes: Strikes,
     gus: Gus,
+    flip: Flip,
+    terry: Terry,
     endings: Endings,
     system: System
 };

@@ -133,10 +133,12 @@ test('names are unique, and every set has a numbered checklist', () => {
 });
 
 test('every rarity a pack can hold has cards, and the odds add up', () => {
+    for (const [hit, odds] of Object.entries(Rules.hitOdds)) {
+        assert.ok(Math.abs(Object.values(odds).reduce((sum, chance) => sum + chance, 0) - 1) < 1e-9, `${hit} odds add up to 1`);
+    }
     for (const [kind, slots] of Object.entries(Rules.packSlots)) {
-        const odds = Rules.hitOdds[kind];
-        assert.ok(Math.abs(Object.values(odds).reduce((sum, chance) => sum + chance, 0) - 1) < 1e-9, `${kind} hit odds add up to 1`);
-        for (const rarity of [...slots.filter(slot => slot !== 'hit'), ...Object.keys(odds)]) {
+        const rarities = slots.flatMap(slot => Rules.hitOdds[slot] ? Object.keys(Rules.hitOdds[slot]) : [slot]);
+        for (const rarity of rarities) {
             assert.ok(Catalog.inPacks(rarity).length > 0, `${kind}: no ${rarity} cards in packs`);
         }
     }

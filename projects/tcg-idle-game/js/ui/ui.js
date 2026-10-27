@@ -98,7 +98,6 @@ export class UI {
 
         if (action === 'go') {
             this.goTo(args.location);
-            this.game.perform('story.visit', args, now);
         } else if (action.startsWith('dev.')) {
             this.options.onDev?.(action);
         } else {
@@ -162,12 +161,14 @@ export class UI {
     }
 
     /**
-     * Show another place. Opened cards stay with the place they were opened in.
+     * Show another place, and tell the game the player is there. Opened
+     * cards stay with the place they were opened in.
      */
     goTo(location) {
         if (location !== this.location) {
             this.location = location;
             this.reveal.clear();
+            this.game.perform('story.visit', { location }, Date.now());
         }
     }
 

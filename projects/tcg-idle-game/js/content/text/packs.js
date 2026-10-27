@@ -9,12 +9,14 @@ export const Packs = {
     newCards: count => count === 1 ? '1 new card for the checklist.' : `${count} new cards for the checklist.`,
     open: 'You open a pack.',
     openSpecial: 'You open the special pack. It smells like a new car.',
+    openMega: 'You open the mega pack. It takes a while. Fifteen cards. You count them twice.',
     faster: 'You have opened 20 packs. You are faster at it now. This is called progress.',
     legendary: 'A legendary card. Your hands are shaking. That is normal.',
     rare: 'A good one.',
 
     unopened: count => `Unopened packs: ${count}`,
     unopenedSpecial: count => `Special packs: ${count}`,
+    unopenedMega: count => `Mega packs: ${count}`,
 
     // Lines for particular sniff counts; otherwise a random one of sniff
     sniffs: {

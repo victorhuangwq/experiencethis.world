@@ -62,7 +62,7 @@ function renderSet(set, counts, view) {
     parts.push(`<ol class="checklist checklist-grid">${items.join('')}</ol>`);
 
     if (set.inPacks) {
-        const odds = Rules.hitOdds.normal;
+        const odds = Rules.hitOdds.hit;
         parts.push(`<p class="muted">${escape(Lines.home.odds(Math.round(1 / (odds.rare + odds['ultra-rare'])), Math.round(1 / odds['ultra-rare'])))}</p>`);
     } else if (owned.length < cards.length) {
         parts.push(`<p class="muted">${escape(Lines.home.unknownNote)}</p>`);
