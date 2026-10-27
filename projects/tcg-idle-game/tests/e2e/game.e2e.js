@@ -9,10 +9,12 @@ import { browserTest, reopen, START } from './browser.js';
 import { Lines } from '../../js/content/text/index.js';
 import { Format } from '../../js/core/format.js';
 import { Rules } from '../../js/rules.js';
+import { Catalog } from '../../js/content/catalog.js';
 
 const HOUR = 60 * 60 * 1000;
 
 const BASE_SET = /^Critter Clash Base Set/;
+const BASE = Catalog.inSet('base');
 
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 // Navigation buttons can say "new" after the name
@@ -63,14 +65,17 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
     await button(page, Lines.packs.buttons.open).click();
     assert.equal(await page.locator('#reveal .card').count(), 5);
     assert.match(await page.locator('#reveal').textContent(), /\d new cards? for the checklist/);
-    await page.locator('#log').getByText(Lines.packs.checklist(30)).waitFor();
+    await page.locator('#log').getByText(Lines.packs.checklist(BASE.length)).waitFor();
 
     // Opened cards stay at the machine; the checklist goes home
     await place(page, Lines.home.name).click();
     assert.equal(await page.locator('#reveal .card').count(), 0);
-    await page.getByText(/^Critter Clash Base Set: \d\/30$/).waitFor();
-    assert.equal(await page.locator('.checklist-grid li').count(), 30);
-    assert.ok(await page.locator('.checklist-grid li', { hasText: '???' }).count() >= 25, 'the rest are still to find');
+    await page.getByText(new RegExp(`^Critter Clash Base Set: \\d/${BASE.length}$`)).waitFor();
+    const commons = BASE.filter(card => card.rarity === 'common').length;
+    assert.equal(await page.locator('.checklist-grid li').count(), commons, 'the commons tab is open');
+    assert.ok(await page.locator('.checklist-grid li', { hasText: '???' }).count() >= commons - 5, 'the rest are still to find');
+    await button(page, `${Lines.home.rarities['ultra-rare']} 0/${BASE.filter(card => card.rarity === 'ultra-rare').length}`).click();
+    assert.equal(await page.locator('.checklist-grid li').count(), BASE.filter(card => card.rarity === 'ultra-rare').length);
     await page.getByText(Lines.home.others).waitFor();
 });
 

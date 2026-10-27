@@ -32,12 +32,12 @@ function extraCards(t, count) {
 test('cards are grouped, with how many there are and the newest copy', () => {
     const game = gameWith([...copies('soggy-toad'), ...copies('spicy-gecko'), ...copies('soggy-toad')]);
     const toad = critterEntries(game).find(entry => entry.name === 'Soggy Toad');
-    assert.deepEqual(toad, { name: 'Soggy Toad', count: 2, rarity: 'common', type: 'Water', number: '2/30', newest: 3 });
+    assert.deepEqual(toad, { name: 'Soggy Toad', count: 2, rarity: 'common', type: 'Water', number: Catalog.number('soggy-toad'), newest: 3 });
 });
 
 test('every card is shown, promos and shoebox cards too', () => {
     const game = gameWith([...copies('wet-sock-goblin'), ...copies('pips-favourite'), ...copies('wet-sock-gobln')]);
-    assert.deepEqual(critterEntries(game).map(entry => entry.number), ['1/30', 'PROMO 5', '']);
+    assert.deepEqual(critterEntries(game).map(entry => entry.number), [Catalog.number('wet-sock-goblin'), 'PROMO 5', '']);
 });
 
 test('the shoebox is a pile, newest first, that trails off', (t) => {

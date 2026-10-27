@@ -99,7 +99,7 @@ test('the checklist comes in the first pack', () => {
     act(game, 'vending.buy', { slot: 0 });
     act(game, 'collection.open', { kind: 'normal' });
     assert.ok(Collection.hasChecklist(game));
-    assert.ok(game.messages.some(message => message.text === Lines.packs.checklist(30)));
+    assert.ok(game.messages.some(message => message.text === Lines.packs.checklist(Catalog.inSet('base').length)));
 });
 
 test('a card is new the first time only, even twice in one pack', () => {
@@ -130,7 +130,7 @@ test('completing each rarity, and then the set, is noticed once', () => {
 
     Collection.add(game, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
     Collection.checkCompleted(game);
-    assert.equal(game.messages[0].text, Lines.home.completed.set('Critter Clash Base Set', 30));
+    assert.equal(game.messages[0].text, Lines.home.completed.set('Critter Clash Base Set', Catalog.inSet('base').length));
     assert.deepEqual(game.state.collection.completed, ['base:common', 'base:uncommon', 'base:rare', 'base:ultra-rare', 'base']);
 });
 

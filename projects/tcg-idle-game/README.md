@@ -8,7 +8,7 @@ The story, voice, and design are in [STORY.md](STORY.md).
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a 30-card Base Set whose
+Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
 checklist comes in the first pack, a self-given allowance, a
 hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
 on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35

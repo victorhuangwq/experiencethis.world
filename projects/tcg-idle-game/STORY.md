@@ -239,7 +239,7 @@ All times come from the real clock and are saved as timestamps.
 | PackDrop.com booster box | 24 packs for $60 ($2.50 a pack) with one guaranteed legendary-tier hit |
 | A common's value | $0.05 to $0.15 (Benny pays 75% for duplicates) |
 | Business ending target | About $250,000 earned in total (to be tuned once shop income is known) |
-| Cards | 30 per set across 3 sets, plus about 12 promos, so roughly 100 to complete |
+| Cards | 100 to 150 per set across 3 sets (the Base Set has 120), plus about 12 promos |
 
 ## Cards
 
@@ -251,20 +251,24 @@ All times come from the real clock and are saved as timestamps.
   pack is 2 commons, 1 uncommon, and two hits at better odds (rare 55%,
   ultra-rare 15%), each with a 5% chance of the CARD-O-MATIC Prime promo. The
   odds are printed on the back of the checklist.
-- **The Base Set** (Set 1) has 30 cards: 15 commons, 8 uncommons, 4 rares,
-  and 3 ultra-rares, 10 of each type.
+- **Sets are big, like real ones:** 100 to 150 cards each. The Base Set
+  (Set 1) has 120: 60 commons, 36 uncommons, 18 rares, and 6 ultra-rares,
+  40 of each type. A first session of about 16 packs finds about half of it;
+  completing it from packs alone takes about 300, so trading, booster boxes,
+  and later acts matter.
 - **Promos** are legendaries that never come in packs; each comes from one
   place (the vending machine's special packs, the card show, the trade-up
   chain, tournaments, Pip). Their checklist appears once the first is found.
 - **The shoebox cards** (the misprint and the chewed dragon) are on no
   checklist at all.
 - **The checklist teaches the goal.** It falls out of the first pack, goes on
-  the fridge, and shows on Home: every card numbered, with the missing ones
-  as ???. Each pack says how many new cards it brought, with their flavour
-  lines, and completing each rarity and the whole set gets a line.
+  the fridge, and shows on Home: every card numbered, one rarity per tab,
+  with the missing ones as ???. Each pack says how many new cards it
+  brought, with their flavour lines, and completing each rarity and the
+  whole set gets a line.
 - Sets release over time (Set 1, Set 2, ...). A new set is what makes
   preorders matter.
-- About 30 cards per set across 3 sets, plus promos (see Pacing).
+- 100 to 150 cards per set across 3 sets, plus promos (see Pacing).
 
 ## Where packs come from
 

@@ -129,7 +129,7 @@ test('names are unique, and every set has a numbered checklist', () => {
         const numbers = Catalog.inSet(set.id).map(card => Catalog.number(card.id));
         assert.ok(numbers.length > 0 && unique(numbers), set.id);
     }
-    assert.equal(Catalog.number('wet-sock-goblin'), '1/30');
+    assert.equal(Catalog.number('wet-sock-goblin'), `1/${Catalog.inSet('base').length}`);
 });
 
 test('every rarity a pack can hold has cards, and the odds add up', () => {

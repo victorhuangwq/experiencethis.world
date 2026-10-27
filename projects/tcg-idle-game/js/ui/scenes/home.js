@@ -47,7 +47,7 @@ function renderHome(game, view) {
         parts.push(`<p>${button('collection.sellDuplicates', Lines.benny.sell(offer.count, offer.cents), { disabled: offer.count === 0 })}</p>`);
     }
 
-    parts.push(renderChecklists(game));
+    parts.push(renderChecklists(game, view));
     parts.push(renderCritters(game, view));
 
     return parts.join('');
