@@ -18,6 +18,7 @@ import { ShoeboxEncounters } from './shoebox.js';
 import { PipEncounter } from './pip.js';
 import { ScalperEncounter } from './scalper.js';
 import { CamperEncounter } from './camper.js';
+import { MatchEncounter } from './match.js';
 
 // When several could start on the same event, the first one listed does
-export const Encounters = [...ShoeboxEncounters, PipEncounter, ScalperEncounter, CamperEncounter];
+export const Encounters = [...ShoeboxEncounters, PipEncounter, ScalperEncounter, CamperEncounter, MatchEncounter];

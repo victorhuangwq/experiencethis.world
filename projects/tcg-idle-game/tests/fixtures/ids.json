@@ -133,7 +133,8 @@
         "shoebox-offer",
         "pip",
         "scalper",
-        "camper"
+        "camper",
+        "match"
     ],
     "unlocks": [
         "shoebox",
@@ -189,6 +190,14 @@
         "base",
         "promo",
         "secret"
+    ],
+    "regulars": [
+        "brenda",
+        "joe",
+        "hank",
+        "dev",
+        "kayla",
+        "marcus"
     ],
     "retired": {
         "unlocks": {

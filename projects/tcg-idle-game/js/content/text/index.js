@@ -21,6 +21,8 @@ import { Strikes } from './strikes.js';
 import { Gus } from './gus.js';
 import { Flip } from './flip.js';
 import { Terry } from './terry.js';
+import { Tournaments } from './tournaments.js';
+import { Marcus } from './marcus.js';
 import { Endings } from './endings.js';
 import { System } from './system.js';
 
@@ -38,6 +40,8 @@ export const Lines = {
     gus: Gus,
     flip: Flip,
     terry: Terry,
+    tournaments: Tournaments,
+    marcus: Marcus,
     endings: Endings,
     system: System
 };

@@ -107,6 +107,30 @@ export const Rules = {
     gradeValue: { 10: 10, 9: 3, 8: 1.5, 7: 1, 6: 0.8 },
     gusBuysGraded: 0.5,
 
+    // Marcus is at Gus's on these days of the week (from Sunday), from this
+    // hour, and offers this many trades each day: one card for one, of the
+    // same rarity. His cards have been traded around a bit.
+    marcusFrom: { 0: 0, 4: 18, 5: 18, 6: 0 },
+    marcusOffers: 3,
+    marcusWear: 1,
+
+    // Tournaments: three matches, each the best of three rounds. Each round
+    // both players play a card; the one whose type beats the other's gets
+    // this much extra power. A deck is the strongest few cards of each type.
+    tournamentMatches: 3,
+    typeBonus: 3,
+    deckPerType: 3,
+    // How often a regular plays the type they favour
+    tellChance: 0.8,
+    // How strong the regulars' cards are, by tournament
+    opponentRarity: {
+        locals: { uncommon: 0.3, rare: 0.5, 'ultra-rare': 0.2 }
+    },
+    // Locals: once an hour. Entry is buying this many packs from Gus, and
+    // the prize is packs, by matches won.
+    localsEntryPacks: 2,
+    localsPrizes: { 3: 3, 2: 1 },
+
     // Collection storage, in order. Each one goes on sale once the player
     // has this many cards, and costs this much (in cents).
     storage: [

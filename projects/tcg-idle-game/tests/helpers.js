@@ -62,6 +62,19 @@ export function gameAtMall(options) {
 }
 
 /**
+ * A game on the day Gus's store opened, the day after it was found
+ * @param {Object} options - seed, and cents: money to spend
+ */
+export function gameAtGus({ seed, cents = 100000 } = {}) {
+    const game = gameAtMall({ seed });
+    game.state.collection.cardsOpened = Rules.gusWithoutTip;
+    game.checkUnlocks();
+    game.tick(game.time + 24 * 60 * 60 * 1000);
+    game.state.wallet.cents = cents;
+    return game;
+}
+
+/**
  * Change tuning values for one test
  * @param {Object} t - The test context
  * @param {Object} changes - Rules to change

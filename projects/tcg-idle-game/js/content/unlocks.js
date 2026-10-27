@@ -14,6 +14,7 @@ import { Job } from '../systems/job.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
 import { Store } from '../systems/store.js';
+import { Trades } from '../systems/trades.js';
 
 export const Unlocks = [
     {
@@ -62,7 +63,9 @@ export const Unlocks = [
         when: game => game.unlocked('gus') && game.state.story.days >= Rules.gusOpensOnDay,
         run: game => {
             game.say(Lines.gus.opened, 'good');
+            // Stock the case, and Marcus may be in already
             Store.tick(game, game.time);
+            Trades.tick(game, game.time);
         }
     },
     // When the collection outgrows its storage, the next kind goes on sale

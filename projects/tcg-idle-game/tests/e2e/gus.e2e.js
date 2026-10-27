@@ -60,3 +60,31 @@ browserTest('a card sent to grading comes back the next day, and Gus will buy it
     await place(page, Lines.home.name).click();
     await page.getByRole('heading', { name: Lines.home.graded }).waitFor();
 });
+
+browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade with Marcus', {
+    save: foundGus,
+    // The Friday evening after the save
+    time: savedAt + 24 * HOUR
+}, async (page) => {
+    await place(page, Lines.gus.name).click();
+    await page.getByRole('heading', { name: Lines.marcus.title }).waitFor();
+    assert.match(await page.locator('#scene pre.art').first().textContent(), /\(-_-\)/, 'Marcus is at his table');
+
+    const trade = button(page, Lines.marcus.trade);
+    const offers = await trade.count();
+    assert.ok(offers > 0, 'Marcus has offers');
+    await trade.first().click();
+    await page.locator('#log').getByText(/^You trade your spare/).waitFor();
+    assert.equal(await trade.count(), offers - 1);
+
+    await button(page, Lines.tournaments.enterLocals(Format.money(2 * Rules.gusPrices.base))).click();
+    await page.getByText(/^Match 1 of 3: /).waitFor();
+    const choice = page.locator('[data-action="encounter.choose"]:not([disabled])');
+    for (let round = 0; round < 9 && await choice.count() > 0; round++) {
+        await choice.first().click();
+    }
+    assert.equal(await choice.count(), 0, 'the tournament is over');
+    await page.locator('#log').getByText(/^(You win every match|Two wins|One win|No wins)/).waitFor();
+    await page.getByText(/^You played this hour's locals\. Next one: /).waitFor();
+    await assertFits(page, 'Gus\'s store after locals');
+});

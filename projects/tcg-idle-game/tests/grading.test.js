@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gameAtMall, newGame, act, newestMessage, START } from './helpers.js';
+import { gameAtGus, newGame, act, newestMessage } from './helpers.js';
 import { Store } from '../js/systems/store.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
@@ -9,19 +9,6 @@ import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 
 const HOUR = 60 * 60 * 1000;
-
-/**
- * A game on the day Gus's store opened, with money to spend
- */
-function gameAtGus(seed) {
-    const game = gameAtMall({ seed });
-    game.state.collection.cardsOpened = Rules.gusWithoutTip;
-    game.checkUnlocks();
-    game.tick(START + 24 * HOUR);
-    assert.ok(Store.isOpen(game));
-    game.state.wallet.cents = 100000;
-    return game;
-}
 
 /**
  * Give the player a card in a given condition

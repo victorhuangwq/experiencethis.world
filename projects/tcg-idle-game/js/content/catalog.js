@@ -8,7 +8,11 @@
 export const Catalog = {
     types: ['Fire', 'Water', 'Nature'],
 
-    // Promos can also have this wildcard type
+    // Which type each type beats, in a loop
+    beats: { Fire: 'Nature', Nature: 'Water', Water: 'Fire' },
+
+    // Promos can also have this wildcard type, which beats nothing and
+    // loses to nothing
     wildType: 'Wild',
 
     rarities: ['common', 'uncommon', 'rare', 'ultra-rare', 'legendary'],

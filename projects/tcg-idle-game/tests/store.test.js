@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, gameAtMall, act, newestMessage, START } from './helpers.js';
+import { newGame, gameAtMall, gameAtGus as openStore, act, newestMessage, START } from './helpers.js';
 import { Store } from '../js/systems/store.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Rules } from '../js/rules.js';
@@ -22,13 +22,11 @@ function gameWithGus(options) {
 }
 
 /**
- * A game on the day Gus's store is open, with money to spend
+ * A game on the day Gus's store is open, with $20 to spend
  */
 function gameAtGus() {
-    const game = gameWithGus();
-    game.tick(NEXT_DAY);
+    const game = openStore({ cents: 2000 });
     assert.ok(Store.isOpen(game));
-    game.state.wallet.cents = 2000;
     return game;
 }
 

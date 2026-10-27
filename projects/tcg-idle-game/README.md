@@ -37,12 +37,13 @@ js/
   systems/         Game logic, one feature per file
     index.js       Every system, in tick order
     wallet.js  job.js  collection.js  vending.js  kindness.js  people.js
-    story.js  store.js
+    story.js  store.js  trades.js  tournaments.js
     cards.js       Card logic (making cards, opening packs, save packing)
   content/         Data
     catalog.js     The card catalogue
     unlocks.js     Things that happen once a condition is met
     endings.js     Endings
+    regulars.js    The people at Gus's tournaments, and how each one plays
     migrations.js  Steps that upgrade saves from older versions
     releases.js    Every release, with what changed, for players' saves
     encounters/    Choice moments, one file per encounter or group

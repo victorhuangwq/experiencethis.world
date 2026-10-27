@@ -45,3 +45,25 @@ export function inside({ marcus = false } = {}) {
         ' |_______________________________|'
     ].join('\n');
 }
+
+/**
+ * The tournament table: the opponent behind it, and the last cards played
+ * @param {string} face - The opponent's face
+ * @param {string} name - The opponent's name
+ * @param {Object|null} last - The last round: { theirs, mine }, each a card
+ *                             with a type and power
+ */
+export function table(face, name, last = null) {
+    const card = played => played ? `|${played.type[0]}${String(played.power).padStart(3)}|` : '|    |';
+    const half = text => text.slice(0, 13).padStart(Math.ceil((13 + text.length) / 2)).padEnd(13);
+    return [
+        '            ' + face,
+        '            /|=|\\',
+        ' ___________|_|_____________',
+        '|    .----.       .----.    |',
+        `|    ${card(last?.theirs)}       ${card(last?.mine)}    |`,
+        '|    \'----\'       \'----\'    |',
+        `|${half(name.toUpperCase())} ${half('YOU')}|`,
+        '|___________________________|'
+    ].join('\n');
+}

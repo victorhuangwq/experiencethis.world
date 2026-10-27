@@ -20,6 +20,7 @@ import { Lines } from '../js/content/text/index.js';
 import { Locations } from '../js/ui/scenes/index.js';
 import { Rules } from '../js/rules.js';
 import { Vending } from '../js/systems/vending.js';
+import { Regulars } from '../js/content/regulars.js';
 
 const FIXTURES = new URL('./fixtures/', import.meta.url);
 const register = JSON.parse(readFileSync(new URL('ids.json', FIXTURES), 'utf8'));
@@ -35,6 +36,7 @@ const current = {
     storage: Rules.storage.map(stage => stage.id),
     packs: Vending.kinds,
     sets: Catalog.sets.map(set => set.id),
+    regulars: Regulars.map(regular => regular.id),
     strikes: Object.keys(Lines.strikes).filter(key => key !== 'warning'),
     releases: Releases.map(release => release.id)
 };
@@ -87,6 +89,7 @@ test('once loaded, every old save holds only ids the game knows', () => {
             storage: [state.collection.storage],
             packs: [...state.vending.slots.filter(Boolean), ...Object.values(state.collection.packs).flatMap(Object.keys)],
             sets: Object.keys(state.collection.packs),
+            regulars: state.tournaments.current?.opponents || [],
             strikes: state.kindness.strikes.map(strike => strike.source),
             releases: [state.story.release]
         };

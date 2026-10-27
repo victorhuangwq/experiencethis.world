@@ -33,6 +33,8 @@ const MOVES = [
     { weight: 2, run: (game, roll) => act(game, 'store.buySingle', { spot: Math.floor(roll() * Rules.caseSlots.length) }) },
     { weight: 2, run: (game, roll) => act(game, 'store.grade', { id: pickCard(game, roll) }) },
     { weight: 1, run: (game, roll) => act(game, 'store.sellGraded', { id: pickCard(game, roll) }) },
+    { weight: 3, run: game => act(game, 'tournaments.enterLocals') },
+    { weight: 2, run: (game, roll) => act(game, 'trades.trade', { index: Math.floor(roll() * Rules.marcusOffers) }) },
     { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
     { weight: 2, run: game => act(game, 'vending.kick') },
     { weight: 2, run: game => act(game, 'vending.walkAway') },
@@ -137,6 +139,18 @@ function checkInvariants(game, last) {
     assert.equal(new Set([...away, ...collection.graded]).size, away.length + collection.graded.length, 'graded once each');
     assert.ok(state.store.grading.every(entry => entry.backAt > state.meta.lastTick || !game.unlocked('gus-open')), 'graded cards come back when due');
     assert.ok(state.store.singles.every(single => single === null || Catalog.find(single.cardId)), 'singles');
+
+    const tournament = state.tournaments.current;
+    assert.equal(tournament !== null, state.encounter?.id === 'match', 'a match is on only during a tournament');
+    if (tournament) {
+        assert.ok(tournament.results.length < Rules.tournamentMatches, 'the tournament is not over');
+        assert.ok(tournament.rounds.filter(round => round.won).length < 2 && tournament.rounds.filter(round => !round.won).length < 2, 'the match is not over');
+        const played = tournament.rounds.map(round => round.copy).filter(Boolean);
+        assert.equal(new Set(played).size, played.length, 'each card is played once a match');
+    }
+    assert.ok(state.tournaments.localsWon <= state.tournaments.localsPlayed);
+    assert.ok(state.trades.offers.every(offer => offer === null ||
+        (Catalog.find(offer.give).rarity === Catalog.find(offer.want).rarity)), 'Marcus trades the same rarity');
     assert.ok(last.completed.every(part => collection.completed.includes(part)), 'completed checklists stay completed');
     assert.ok(storageIndex(collection.storage) >= 0, `storage ${collection.storage}`);
     assert.ok(storageIndex(collection.storage) >= storageIndex(last.storage), 'storage never goes back');
@@ -226,7 +240,7 @@ function playRandomly(seed, steps = STEPS) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
@@ -234,18 +248,21 @@ test('the game always makes sense, whatever the player does', (t) => {
         reached.gus += game.unlocked('gus') ? 1 : 0;
         reached.gusOpen += game.unlocked('gus-open') ? 1 : 0;
         reached.graded += game.state.collection.graded.length > 0 ? 1 : 0;
+        reached.locals += game.state.tournaments.localsPlayed > 0 ? 1 : 0;
+        reached.trades += game.state.trades.made > 0 ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
         reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
         reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
     assert.ok(reached.gusOpen > 0, 'some games were there when Gus opened');
     assert.ok(reached.graded > 0, 'some games got a card back from grading');
+    assert.ok(reached.locals > 0 && reached.trades > 0, 'some games played locals and traded with Marcus');
     assert.ok(reached.endings > 0, 'some games ended in shame');
     assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
     assert.ok(reached.flip > 0 && reached.terry > 0, 'some games met the scalper and Terry');
