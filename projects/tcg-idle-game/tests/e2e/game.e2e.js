@@ -50,7 +50,7 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
     assert.equal(await page.locator('#reveal .card').count(), 5);
 
     // Opened cards stay at the machine
-    await place(page, Lines.home.names.shoebox).click();
+    await place(page, Lines.home.name).click();
     assert.equal(await page.locator('#reveal .card').count(), 0);
     await page.getByText(Lines.home.others).waitFor();
 });
@@ -107,10 +107,11 @@ browserTest('an old save loads, and a full shoebox can be traded up for a binder
     // The save was made with Pip waiting in line
     await button(page, Lines.pip.stepAside).click();
 
-    await place(page, Lines.home.names.shoebox).click();
+    await place(page, Lines.home.name).click();
+    await page.getByText(/^A shoebox\. \d+ cards\./).waitFor();
     await button(page, `${Lines.home.buy.binder} (${Format.money(Rules.storage[1].price)})`).click();
     assert.equal(await newestMessage(page).textContent(), Lines.home.upgraded.binder);
-    await place(page, Lines.home.names.binder).waitFor();
+    await page.getByText(/^A binder\. \d+ cards\./).waitFor();
     assert.equal(await page.locator('.pockets .pocket').count(), 9);
 
     await button(page, Lines.home.nextPage).click();
@@ -131,7 +132,7 @@ browserTest('on a phone, the log shows one line until expanded, and every place 
     assert.equal(await button(page, Lines.system.log.less).getAttribute('aria-expanded'), 'true');
 
     await page.clock.runFor(30 * 1000);
-    for (const name of [Lines.mall.name, Lines.job.name, Lines.home.names.shoebox]) {
+    for (const name of [Lines.mall.name, Lines.job.name, Lines.home.name]) {
         await place(page, name).click();
         const { scrollWidth, clientWidth } = await page.evaluate(() =>
             ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));

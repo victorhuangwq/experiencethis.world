@@ -16,7 +16,7 @@ import { workButton } from '../panels/work.js';
 
 export const HomeScene = {
     id: 'home',
-    name: game => game.unlocked('shoebox') ? Lines.home.names[Collection.storage(game)] : Lines.home.closet,
+    name: () => Lines.home.name,
     visible: () => true,
     render: renderHome
 };
@@ -37,7 +37,7 @@ function renderHome(game, view) {
     for (const card of cards) {
         counts.set(card.name, (counts.get(card.name) || 0) + 1);
     }
-    parts.push(`<p>${escape(Lines.home.count(cards.length, counts.size))}</p>`);
+    parts.push(`<p>${escape(Lines.home.count(Lines.home.names[Collection.storage(game)], cards.length, counts.size))}</p>`);
 
     if (forSale) {
         const label = `${Lines.home.buy[forSale.id]} (${Format.money(forSale.price)})`;

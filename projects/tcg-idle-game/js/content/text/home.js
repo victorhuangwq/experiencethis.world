@@ -1,11 +1,11 @@
 /**
- * Home: where the player keeps their cards
+ * Home: where the player keeps their cards, and works on home days
  */
 
 export const Home = {
-    closet: 'The closet',
+    name: 'Home',
 
-    // The location's name, by storage
+    // What the cards are kept in, by storage
     names: {
         'shoebox': 'A shoebox',
         'binder': 'A binder',
@@ -33,7 +33,7 @@ export const Home = {
         'card-room': 'The guest room is the card room now. Guests can sleep on the couch. There are no guests.'
     },
 
-    count: (cards, different) => `${cards} cards. ${different} different.`,
+    count: (storage, cards, different) => `${storage}. ${cards} cards. ${different} different.`,
     unknown: '???',
     unknownNote: 'The developer knows where the rest are. The developer is not telling.',
     others: 'Other critters',
