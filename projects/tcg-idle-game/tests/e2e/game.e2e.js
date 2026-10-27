@@ -74,8 +74,10 @@ browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, asy
     const commons = BASE.filter(card => card.rarity === 'common').length;
     assert.equal(await page.locator('.checklist-grid li').count(), commons, 'the commons tab is open');
     assert.ok(await page.locator('.checklist-grid li', { hasText: '???' }).count() >= commons - 5, 'the rest are still to find');
-    await button(page, `${Lines.home.rarities['ultra-rare']} 0/${BASE.filter(card => card.rarity === 'ultra-rare').length}`).click();
-    assert.equal(await page.locator('.checklist-grid li').count(), BASE.filter(card => card.rarity === 'ultra-rare').length);
+    // The first pack can hold an ultra-rare, so the tab's count may not be 0
+    const ultraRares = BASE.filter(card => card.rarity === 'ultra-rare').length;
+    await page.getByRole('button', { name: new RegExp(`^${Lines.home.rarities['ultra-rare']} \\d/${ultraRares}$`) }).click();
+    assert.equal(await page.locator('.checklist-grid li').count(), ultraRares);
     await page.getByText(Lines.home.others).waitFor();
 });
 
