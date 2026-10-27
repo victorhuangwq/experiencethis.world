@@ -70,8 +70,10 @@ function cheapestFirst(game) {
 function buyOut(game, leaveOne) {
     const vending = game.state.vending;
     const people = game.state.people;
-    // Buying out happens in one go; nobody else steps up mid-way
+    // Buying out happens in one go; nobody else steps up mid-way, even if
+    // the machine was restocked while he waited
     vending.pipChecked = true;
+    vending.scalperChecked = true;
 
     const forKid = leaveOne ? cheapestFirst(game)[0] : -1;
     const wanted = cheapestFirst(game).filter(index => index !== forKid).reverse();

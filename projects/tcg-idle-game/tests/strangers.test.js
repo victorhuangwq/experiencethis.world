@@ -70,6 +70,16 @@ test('leaving one pack for the kid is kind, and still annoys him', (t) => {
     assert.equal(game.state.people.flip.annoyed, 1);
 });
 
+test('a scalper still waiting after a restock is bought out once', (t) => {
+    overrideRules(t, { scalperChance: 1 });
+    const game = scalperGame(t);
+    restock(game);
+    assert.equal(game.state.encounter?.id, 'scalper', 'he waits through it');
+    choose(game, Lines.flip.buyAll);
+    assert.equal(game.state.encounter, null);
+    assert.equal(game.state.people.flip.encounters, 1);
+});
+
 test('without a kid, there is no pack to leave', (t) => {
     const game = scalperGame(t);
     const labels = game.encounter().choices(game).map(choice => choice.label);
