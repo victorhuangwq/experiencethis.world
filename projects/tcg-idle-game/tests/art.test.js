@@ -40,14 +40,14 @@ test('every card is drawn the same size as the back of a card', () => {
 });
 
 test('boxes have a straight right edge below their top edge', () => {
-    const boxes = { store, inside: inside(), insideBusy: inside({ marcus: true, newSet: true }), binder: storage('binder'), 'two-binders': storage('two-binders'), bookshelf: storage('bookshelf'), 'card-room': storage('card-room') };
+    const boxes = { store, inside: inside(), insideBusy: inside({ marcus: true, newSet: true, night: true }), binder: storage('binder'), 'two-binders': storage('two-binders'), bookshelf: storage('bookshelf'), 'card-room': storage('card-room') };
     for (const [name, art] of Object.entries(boxes)) {
         assert.equal(widths(art.split('\n').slice(1).join('\n')).size, 1, name);
     }
 });
 
 test('the store as buttons draws the same art as the plain store, one first piece per part', () => {
-    for (const options of [{}, { marcus: true, newSet: true }]) {
+    for (const options of [{}, { marcus: true, newSet: true, night: true }]) {
         const firsts = [];
         const html = insideHtml(options, (area, text, first) => {
             if (first) {

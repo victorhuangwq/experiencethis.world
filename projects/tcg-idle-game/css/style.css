@@ -182,10 +182,14 @@ button.current {
         flex-shrink: 0;
     }
 
-    /* Three pockets across still fit on a phone */
+    /* Three pockets across still fit on a phone, and so does Gus's store */
     .pockets {
         gap: 4px;
         font-size: 12px;
+    }
+
+    .store {
+        font-size: 11px;
     }
 }
 
@@ -231,18 +235,23 @@ button.current {
 
 /*
  * Parts of a place's art that can be looked at closer, like the shelves at
- * Gus's. A part drawn over several lines is several buttons; they light up
+ * Gus's. The room is drawn faintly and the parts in full, so they stand
+ * out. A part drawn over several lines is several buttons; they light up
  * together.
  */
+.store {
+    color: var(--muted);
+}
+
 .art-area {
     padding: 0;
     margin: 0;
     border: none;
     font: inherit;
+    font-weight: bold;
     line-height: inherit;
-    background: var(--button-background);
+    background: none;
     color: var(--text);
-    box-shadow: inset 0 -1px 0 var(--border);
     cursor: pointer;
 }
 

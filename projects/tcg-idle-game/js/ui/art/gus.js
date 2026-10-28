@@ -25,38 +25,115 @@ export const store = [
     ' |__|________|___________________|'
 ].join('\n');
 
-// Width inside the walls
-const INSIDE = 31;
-
 const plain = text => ({ text });
 const part = (area, text) => ({ text, area });
 const textOf = pieces => pieces.map(piece => piece.text).join('');
 
+// The store is three columns: the shelves, the corkboard, and the window on
+// the back wall, then Gus, the glass case, and the table at the front. Each
+// column's width:
+const COLUMNS = [13, 13, 11];
+// Width inside the walls: the columns, two spaces between them, and one at
+// each side
+const INSIDE = 43;
+
+/**
+ * Lines of a row of parts of the store, side by side. Only the drawn part
+ * of each line can be pressed, not the space around it.
+ * @param {Array} blocks - { area, lines }, one per column
+ * @param {string} align - 'top' or 'bottom'
+ */
+function side(blocks, align) {
+    const height = Math.max(...blocks.map(block => block.lines.length));
+    return Array.from({ length: height }, (_, row) => {
+        const pieces = [plain(' ')];
+        blocks.forEach((block, column) => {
+            const offset = align === 'top' ? 0 : height - block.lines.length;
+            const line = (block.lines[row - offset] ?? '').padEnd(COLUMNS[column]);
+            const drawn = line.trim();
+            const before = line.length - line.trimStart().length;
+            pieces.push(plain((column > 0 ? '  ' : '') + line.slice(0, before)));
+            if (drawn) {
+                pieces.push(part(block.area, drawn));
+            }
+            pieces.push(plain(line.slice(before + drawn.length)));
+        });
+        pieces.push(plain(' '));
+        return pieces;
+    });
+}
+
 /**
  * The inside of the store as lines of pieces
  * @param {Object} options - marcus: whether Marcus is at the table by the
- *                           window; newSet: whether a new set is on the shelves
+ *                           window; newSet: whether a new set is on the
+ *                           shelves; night: whether it's dark out
  */
-function insideLines({ marcus = false, newSet = false } = {}) {
-    const shelf = row => part('shelves', newSet && row < 2 ? '[BB][BB][BB]' : '[##][##][##]');
-    const rows = [
-        [plain(' '), shelf(0), plain('   '), part('board', '.-----------.')],
-        [plain(' '), shelf(1), plain('   '), part('board', '|  FRIDAY   |')],
-        [plain(' '), shelf(2), plain('   '), part('board', '|   NIGHT   |')],
-        [plain(' '), shelf(3), plain('   '), part('board', '|  LOCALS!  |')],
-        [plain('                '), part('board', '\'-----------\'')],
-        [plain('   '), part('gus', '(o_o)'), ...(marcus ? [plain('                '), part('table', '(-_-)')] : [])],
-        [plain('   '), part('gus', '/|=|\\'), ...(marcus ? [plain('                '), part('table', '/|#|\\')] : [])],
-        [plain('  '), part('gus', '__|_|__'), plain('  '), part('case', '.--------.'), plain('  '), part('table', marcus ? '__|_|__' : '_______')],
-        [plain(' '), part('gus', '| GUS   |'), plain(' '), part('case', '|[] [] []|'), plain(' '), part('table', '|_______|')],
-        [plain(' '), part('gus', '|_______|'), plain(' '), part('case', '\'--------\''), plain('   '), part('table', '| |')]
+function insideLines({ marcus = false, newSet = false, night = false } = {}) {
+    const shelves = [
+        '.-----------.',
+        '|   PACKS   |',
+        '| [##] [##] |',
+        '|===========|',
+        '| [##] [##] |',
+        '|===========|',
+        newSet ? '| [BB] [BB] |' : '| [##] [##] |',
+        '\'-----------\''
     ];
+    const board = [
+        '.-----------.',
+        '|o         o|',
+        '|  FRIDAY   |',
+        '|   NIGHT   |',
+        '|  LOCALS!  |',
+        '| EVERY HOUR|',
+        '|o         o|',
+        '\'-----------\''
+    ];
+    const window = [
+        '.---------.',
+        night ? '| *  |    |' : '|    |    |',
+        night ? '|    |  * |' : '|    |    |',
+        '|----+----|',
+        night ? '|  * |    |' : '|    |    |',
+        '\'----\'----\'',
+        '',
+        'TRADE TABLE'
+    ];
+    const gus = [
+        '    (o_o)',
+        '   _/|=|\\_',
+        '.-----------.',
+        '| [$]  GUS  |',
+        '\'-----------\''
+    ];
+    const glassCase = [
+        '   SINGLES',
+        '.-----------.',
+        '|[*] [*] [*]|',
+        '|[*] [*] [*]|',
+        '\'-----------\''
+    ];
+    const table = [
+        ...(marcus ? ['  (-_-)', '  /|#|\\'] : []),
+        '.---------.',
+        '\'---------\'',
+        '  |     |'
+    ];
+
+    const rows = [
+        ...side([{ area: 'shelves', lines: shelves }, { area: 'board', lines: board }, { area: 'table', lines: window }], 'top'),
+        [plain(' '.repeat(INSIDE))],
+        ...side([{ area: 'gus', lines: gus }, { area: 'case', lines: glassCase }, { area: 'table', lines: table }], 'bottom')
+    ];
+    const name = 'GUS\'S GAMES & GRUB';
+    const before = Math.floor((INSIDE - name.length) / 2);
     return [
-        [plain('  _______________________________')],
-        [plain(' |      GUS\'S GAMES & GRUB       |')],
-        [plain(' |_______________________________|')],
-        ...rows.map(row => [plain(' |'), ...row, plain(' '.repeat(INSIDE - textOf(row).length) + '|')]),
-        [plain(' |_______________________________|')]
+        [plain('  ' + '_'.repeat(INSIDE))],
+        [plain(' |' + ' '.repeat(before) + name + ' '.repeat(INSIDE - before - name.length) + '|')],
+        [plain(' |' + '='.repeat(INSIDE) + '|')],
+        ...rows.map(row => [plain(' |'), ...row, plain('|')]),
+        [plain(' |' + '_'.repeat(INSIDE) + '|')]
     ];
 }
 

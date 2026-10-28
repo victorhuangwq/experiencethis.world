@@ -63,7 +63,8 @@ function renderGus(game, view = {}) {
         title: Lines.gus.areas[id],
         hidden: !first
     });
-    const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game) };
+    const hour = new Date(game.time).getHours();
+    const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game), night: hour < 6 || hour >= 20 };
 
     return `<pre class="art store">${insideHtml(options, area)}</pre>` +
         (panel ? PANELS[panel].render(game) : `<p>${escape(Lines.gus.inside)}</p>`);
