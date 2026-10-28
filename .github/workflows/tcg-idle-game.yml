@@ -1,5 +1,10 @@
 # Tests for TCG Idle Collector (projects/tcg-idle-game). The game logic tests
 # need only Node. The browser tests run the built site in Chromium.
+#
+# Only what a change can affect runs: nothing for changes elsewhere in the
+# site or to the game's docs, the game logic tests for changes to the game's
+# code or those tests, and the browser tests for changes to anything the
+# page is built from or those tests. Running it by hand runs everything.
 name: TCG Idle Collector
 
 on:
@@ -7,6 +12,7 @@ on:
     branches: [master]
     paths:
       - 'projects/tcg-idle-game/**'
+      - '!projects/tcg-idle-game/**/*.md'
       - '.github/workflows/tcg-idle-game.yml'
       - '_config.yml'
       - 'Gemfile'
@@ -14,6 +20,7 @@ on:
   pull_request:
     paths:
       - 'projects/tcg-idle-game/**'
+      - '!projects/tcg-idle-game/**/*.md'
       - '.github/workflows/tcg-idle-game.yml'
       - '_config.yml'
       - 'Gemfile'
@@ -28,8 +35,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: What changed
+    runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch'
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      logic: ${{ steps.filter.outputs.logic }}
+      browser: ${{ steps.filter.outputs.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            logic:
+              - 'projects/tcg-idle-game/js/**'
+              - 'projects/tcg-idle-game/tests/*.js'
+              - 'projects/tcg-idle-game/tests/fixtures/**'
+              - 'projects/tcg-idle-game/package.json'
+              - '.github/workflows/tcg-idle-game.yml'
+            browser:
+              - 'projects/tcg-idle-game/js/**'
+              - 'projects/tcg-idle-game/css/**'
+              - 'projects/tcg-idle-game/index.html'
+              - 'projects/tcg-idle-game/tests/e2e/**'
+              - 'projects/tcg-idle-game/tests/fixtures/**'
+              - 'projects/tcg-idle-game/package.json'
+              - 'projects/tcg-idle-game/package-lock.json'
+              - '.github/workflows/tcg-idle-game.yml'
+              - '_config.yml'
+              - 'Gemfile'
+              - 'Gemfile.lock'
+
   unit:
     name: Game logic tests
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.logic == 'true') }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,6 +87,8 @@ jobs:
 
   browser:
     name: Browser tests
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.browser == 'true') }}
     runs-on: ubuntu-latest
     env:
       # Jekyll reads the site's files in the system's encoding

@@ -120,9 +120,12 @@ new game starts.
 
 ## Testing
 
-GitHub Actions runs every test on pull requests and pushes to `master` that
-touch the game (`.github/workflows/tcg-idle-game.yml`). To run them locally,
-from this folder:
+GitHub Actions runs the tests on pull requests and pushes to `master`
+(`.github/workflows/tcg-idle-game.yml`), but only the ones a change can
+affect: the game logic tests when the game's code or those tests change, the
+browser tests when anything the page is built from or those tests change,
+and nothing for changes to the docs or elsewhere in the site. To run them
+locally, from this folder:
 
 ```
 npm test                  # Game logic: Node 20 or later, no install needed
