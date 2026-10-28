@@ -17,6 +17,14 @@ export const Rules = {
     workplaces: [null, 'home', 'office', 'office', 'office', 'home', null],
     workPay: 50,
     workRest: 20 * SECOND,
+    // The chance an email is rarer than common, like a card; the rest are
+    // common
+    emailOdds: { 'ultra-rare': 0.02, rare: 0.08, uncommon: 0.25 },
+    // A side feature, on home days, takes this long and pays as it goes. It
+    // needs a second monitor first.
+    monitorPrice: 4000,
+    featureTime: 30 * MINUTE,
+    featureCentsPerSecond: 1,
     // Chance the boss walks past while a pack is opened at the desk
     bossWalkByChance: 0.25,
     // Lunches with Marcus before he starts bringing the player a special

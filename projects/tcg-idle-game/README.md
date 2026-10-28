@@ -12,7 +12,9 @@ for the whole game and what every act shares, and a file for each act.
 Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
 checklist comes in the first pack, a self-given allowance, a hybrid day job
 (a cubicle at the office on real Tuesdays to Thursdays, which the hobby
-slowly takes over, and the kitchen table on Mondays and Fridays), Marcus
+slowly takes over, and the kitchen table on Mondays and Fridays, where a
+second monitor means side features that the tab's title keeps count of),
+emails in rarities like cards, Marcus
 from IT (lunch games, then special packs at the machine's price), the
 CARD-O-MATIC 3000 restocking every 25 to 35 minutes of real time with a mix
 of packs that other people buy up, Pip, the scalper, Terry waiting for the
@@ -32,12 +34,14 @@ earliest.
 ## Code
 
 Plain HTML, CSS, and JavaScript modules, with no build step. `js/main.js`
-builds the game and is the only script the page loads. The code is in
+builds the game and is the only script the page loads (it starts
+`js/heartbeat.js` as a worker). The code is in
 layers; each folder with several files has an `index.js` that lists them.
 
 ```
 js/
   main.js          Builds the game, ticks it, saves it
+  heartbeat.js     A worker that keeps the tab's title ticking in the background
   rules.js         Every tuning value
   core/            The engine; nothing about this story
     game.js        State, systems, unlocks, encounters, events, endings

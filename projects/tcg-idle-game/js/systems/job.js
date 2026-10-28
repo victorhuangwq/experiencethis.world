@@ -5,10 +5,11 @@
  * Marcus from IT, who collects: he notices the cards on the desk, asks the
  * player to lunch (a game, once an office day), and after a couple of
  * lunches brings them a special pack each office day, at the machine's
- * price.
+ * price. At home, the player can work on a side feature, which pays as it
+ * goes while the tab keeps count.
  */
 
-import { localDay } from '../core/time.js';
+import { localDay, SECOND } from '../core/time.js';
 import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from '../content/text/index.js';
@@ -33,11 +34,42 @@ export const Job = {
         lunches: 0,
         lunchDay: 0,
         // The day the player last bought Marcus's special pack
-        packDay: 0
+        packDay: 0,
+        // Whether the player has bought a second monitor for working from
+        // home, which side features need
+        monitor: false,
+        // The side feature being worked on at home: when it was started (0
+        // when there isn't one) and what it has paid so far
+        featureStartedAt: 0,
+        featurePaid: 0,
+        featuresShipped: 0
     }),
 
     load(job, game, now) {
         job.readyAt = Math.min(job.readyAt, now + Rules.workRest);
+        job.featureStartedAt = Math.min(job.featureStartedAt, now);
+    },
+
+    /**
+     * Pay for the side feature as it is worked on, including time away, and
+     * ship it when it's done
+     */
+    tick(game, now) {
+        const job = game.state.job;
+        if (!job.featureStartedAt) {
+            return;
+        }
+        const earned = Job.featureEarned(game, now);
+        if (earned > job.featurePaid) {
+            Wallet.earn(game, earned - job.featurePaid);
+            job.featurePaid = earned;
+        }
+        if (now >= Job.featureShipsAt(game)) {
+            job.featureStartedAt = 0;
+            job.featurePaid = 0;
+            job.featuresShipped++;
+            game.say(game.pick(Lines.job.feature.shipped) + ' +' + Format.money(earned), 'good');
+        }
     },
 
     /**
@@ -53,6 +85,16 @@ export const Job = {
      */
     today(game, now = game.time) {
         return Lines.job.days[new Date(now).getDay()];
+    },
+
+    /**
+     * An email to answer. Emails come in rarities, like cards: most are
+     * common (Rules.emailOdds).
+     */
+    email(game) {
+        let roll = game.random();
+        const rarity = Object.keys(Rules.emailOdds).find(each => (roll -= Rules.emailOdds[each]) < 0) || 'common';
+        return game.pick(Lines.job.emails[rarity]);
     },
 
     /**
@@ -78,6 +120,30 @@ export const Job = {
             game.state.story.season === 'summer'
         ];
         return reached.lastIndexOf(true) + 1;
+    },
+
+    /**
+     * Whether the player can start a side feature: on a home day, with a
+     * second monitor, when they aren't working on one already
+     */
+    featureOpen(game, now = game.time) {
+        const job = game.state.job;
+        return game.unlocked('work') && Job.workplace(game, now) === 'home' && job.monitor && !job.featureStartedAt;
+    },
+
+    /**
+     * What the side feature being worked on has made by now, paid or not
+     */
+    featureEarned(game, now) {
+        const worked = Math.min(Math.max(now - game.state.job.featureStartedAt, 0), Rules.featureTime);
+        return Math.floor(worked / SECOND * Rules.featureCentsPerSecond);
+    },
+
+    /**
+     * When the side feature being worked on ships
+     */
+    featureShipsAt(game) {
+        return game.state.job.featureStartedAt + Rules.featureTime;
     },
 
     /**
@@ -125,7 +191,7 @@ export const Job = {
             Wallet.earn(game, Rules.workPay);
             job.readyAt = now + Rules.workRest;
             job.emailsAnswered++;
-            game.say(game.pick(Lines.job.emails) + ' +' + Format.money(Rules.workPay));
+            game.say(Job.email(game) + ' +' + Format.money(Rules.workPay));
 
             // The coworker notices what is on the desk, then the binder
             if (at === 'office' && job.coworker === 0 && Job.desk(game) > 0) {
@@ -135,6 +201,30 @@ export const Job = {
                 job.coworker = 2;
                 game.say(Lines.job.coworker.binder, 'good');
             }
+        },
+
+        /**
+         * Buy a second monitor for working from home, so there's a screen
+         * for work and a screen for watching the tab
+         */
+        buyMonitor(game) {
+            const job = game.state.job;
+            if (!game.unlocked('work') || job.monitor || !Wallet.spend(game, Rules.monitorPrice)) {
+                return;
+            }
+            job.monitor = true;
+            game.say(Lines.job.feature.boughtMonitor, 'good');
+        },
+
+        /**
+         * Start a side feature at home. It pays as it goes until it ships.
+         */
+        startFeature(game, args, now) {
+            if (!Job.featureOpen(game, now)) {
+                return;
+            }
+            game.state.job.featureStartedAt = now;
+            game.say(Lines.job.feature.started);
         },
 
         /**

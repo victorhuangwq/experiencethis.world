@@ -13,7 +13,7 @@ import { storage } from '../art/home.js';
 import { escape, button, art } from '../html.js';
 import { renderCritters } from './critters.js';
 import { renderChecklists } from './checklist.js';
-import { workButton } from '../panels/work.js';
+import { workButton, renderFeature } from '../panels/work.js';
 
 export const HomeScene = {
     id: 'home',
@@ -39,9 +39,14 @@ function renderHome(game, view) {
     const forSale = Collection.storageForSale(game);
     const parts = [];
 
-    // On home days, work happens at the kitchen table
-    if (game.unlocked('work') && Job.workplace(game) === 'home') {
+    // On home days, work happens at the kitchen table, and so does a side
+    // feature (which keeps going if the day ends first)
+    const home = game.unlocked('work') && Job.workplace(game) === 'home';
+    if (home) {
         parts.push(`<p>${escape(Lines.job.kitchenTable(Job.today(game)))} ${workButton(game, 'home')}</p>`);
+    }
+    if (home || game.state.job.featureStartedAt) {
+        parts.push(`<p>${renderFeature(game)}</p>`);
     }
 
     parts.push(art(storage(Collection.storage(game), game.state.story.shoebox, !!forSale)));

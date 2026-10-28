@@ -10,8 +10,11 @@ import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 import { desk } from '../js/ui/art/office.js';
 import { calendar } from '../js/ui/scenes/office.js';
+import { tabTitle } from '../js/ui/panels/work.js';
 
 const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
 
 // A week in October 2026, at 10 AM local time
 const days = {
@@ -70,6 +73,89 @@ test('on a home day, emails are answered at home', () => {
     const game = gameOn('Friday');
     act(game, 'job.work', { at: 'home' });
     assert.equal(game.state.job.emailsAnswered, 1);
+});
+
+test('emails come in rarities, like cards: mostly common, now and then one nobody has seen', (t) => {
+    const emails = Lines.job.emails;
+    assert.ok(Object.values(emails).flat().length >= 20, 'at least 20 emails');
+    assert.deepEqual(Object.keys(emails).sort(), ['common', ...Object.keys(Rules.emailOdds)].sort(), 'lines for every rarity');
+
+    const game = gameOn('Tuesday');
+    const seen = {};
+    for (let email = 0; email < 2000; email++) {
+        const line = Job.email(game);
+        const rarity = Object.keys(emails).find(each => emails[each].includes(line));
+        seen[rarity] = (seen[rarity] || 0) + 1;
+    }
+    assert.ok(seen.common > seen.uncommon && seen.uncommon > seen.rare && seen.rare > seen['ultra-rare'], JSON.stringify(seen));
+    assert.ok(seen['ultra-rare'] > 0 && seen['ultra-rare'] < 100, JSON.stringify(seen));
+
+    overrideRules(t, { emailOdds: { 'ultra-rare': 1 } });
+    act(game, 'job.work', { at: 'office' });
+    assert.ok(emails['ultra-rare'].some(line => newestMessage(game).startsWith(line)));
+});
+
+test('at home, a second monitor makes side features possible, which pay as they go', () => {
+    const game = gameOn('Monday');
+    const wallet = game.state.wallet;
+    act(game, 'job.startFeature');
+    assert.equal(game.state.job.featureStartedAt, 0, 'not without a second monitor');
+
+    wallet.cents = Rules.monitorPrice - 1;
+    act(game, 'job.buyMonitor');
+    assert.equal(game.state.job.monitor, false, 'not without the money');
+    wallet.cents = Rules.monitorPrice;
+    act(game, 'job.buyMonitor');
+    assert.equal(game.state.job.monitor, true);
+    assert.equal(wallet.cents, 0);
+
+    const startedAt = game.time;
+    act(game, 'job.startFeature');
+    assert.equal(game.state.job.featureStartedAt, startedAt);
+    assert.equal(Job.featureOpen(game), false, 'one at a time');
+    const allowanceBefore = wallet.allowanceEarned;
+
+    game.tick(startedAt + 10 * MINUTE);
+    assert.equal(game.state.job.featurePaid, 10 * 60 * Rules.featureCentsPerSecond);
+    game.tick(startedAt + Rules.featureTime);
+    const total = Rules.featureTime / SECOND * Rules.featureCentsPerSecond;
+    assert.equal(wallet.cents - (wallet.allowanceEarned - allowanceBefore), total, 'paid for the whole feature, on top of the allowance');
+    assert.equal(game.state.job.featureStartedAt, 0, 'it shipped');
+    assert.equal(game.state.job.featuresShipped, 1);
+    assert.ok(Lines.job.feature.shipped.some(line => newestMessage(game) === `${line} +$${(total / 100).toFixed(2)}`));
+    assert.equal(Job.featureOpen(game), true, 'another one can start');
+});
+
+test('side features are only started at home', () => {
+    for (const day of ['Tuesday', 'Saturday']) {
+        const game = gameOn(day);
+        game.state.job.monitor = true;
+        act(game, 'job.startFeature');
+        assert.equal(game.state.job.featureStartedAt, 0, day);
+    }
+});
+
+test('the tab shows what a side feature has made, and when it ships', () => {
+    const game = gameOn('Friday');
+    game.state.job.monitor = true;
+    assert.equal(tabTitle(game, game.time), null);
+    act(game, 'job.startFeature');
+    const startedAt = game.time;
+    assert.equal(tabTitle(game, startedAt + 100 * SECOND), Lines.job.feature.title('$1.00'));
+    // From a background tab the game doesn't tick, but the title keeps count
+    assert.equal(tabTitle(game, startedAt + 2 * HOUR), Lines.job.feature.shippedTitle('$18.00'));
+    game.tick(startedAt + 2 * HOUR);
+    assert.equal(tabTitle(game, game.time), null);
+});
+
+test('a side feature ships while the player is away, paid in full and no more', () => {
+    const game = gameOn('Monday');
+    game.state.job.monitor = true;
+    act(game, 'job.startFeature');
+    const cents = game.state.wallet.cents - game.state.wallet.allowanceEarned;
+    game.catchUp(game.time + 5 * HOUR);
+    assert.equal(game.state.wallet.cents - game.state.wallet.allowanceEarned - cents, Rules.featureTime / SECOND * Rules.featureCentsPerSecond);
+    assert.equal(game.state.job.featuresShipped, 1);
 });
 
 test('nobody works from the wrong place, or on a day off', () => {

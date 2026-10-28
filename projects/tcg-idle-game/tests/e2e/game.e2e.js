@@ -80,16 +80,18 @@ browserTest('opening a pack plays out card by card, and can be skipped', { reduc
     assert.equal(await button(page, Lines.packs.buttons.skip).count(), 0);
 });
 
-browserTest('progress survives reloading the page', {}, async (page) => {
+browserTest('progress survives reloading the page, and so does the log', {}, async (page) => {
     await finishOpening(page);
     await place(page, Lines.mall.name).click();
     await slot(page, 'A1').click();
+    const said = await page.locator('#log .message').allTextContents();
 
     await page.reload();
     await page.getByText(Lines.packs.unopened(1)).waitFor();
     assert.equal(await page.getByText(Lines.opening.closet[0]).count(), 0, 'the opening is over');
     assert.equal(await page.locator('[data-money]').textContent(), Format.money(0));
     await place(page, Lines.mall.name).waitFor();
+    assert.deepEqual(await page.locator('#log .message').allTextContents(), said.slice(0, 10), 'the newest messages are still there');
 });
 
 browserTest('the third strike ends the run, and the ending is remembered', { query: '?dev' }, async (page) => {
@@ -220,6 +222,48 @@ browserTest('on a home day, work is at the kitchen table, and the office is empt
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.home('Monday')).waitFor();
     assert.equal(await button(page, Lines.job.answer).count(), 0);
+});
+
+browserTest('working from home, a side feature counts its pay in the tab title, even from a background tab', {
+    time: Date.UTC(2026, 9, 26, 10),
+    query: '?dev'
+}, async (page) => {
+    const pageTitle = await page.title();
+    const icon = await page.locator('link[rel="icon"]').getAttribute('href');
+    assert.equal((await page.request.get(new URL(icon, page.url()).href)).status(), 200, 'the favicon is there');
+
+    await finishOpening(page);
+    await page.clock.runFor(30 * 1000);
+    const monitor = button(page, Lines.job.feature.buyMonitor(Format.money(Rules.monitorPrice)));
+    assert.ok(await monitor.isDisabled(), 'a second monitor costs money');
+    await button(page, '+$50').click();
+    await monitor.click();
+    await newestMessage(page).getByText(Lines.job.feature.boughtMonitor).waitFor();
+
+    await button(page, Lines.job.feature.button).click();
+    await page.getByText(Lines.job.feature.started).waitFor();
+    // What it has made after some seconds of work, give or take a second
+    const madeAfter = seconds => [seconds - 1, seconds].map(each => Format.money(each * Rules.featureCentsPerSecond));
+    const total = Format.money(Rules.featureTime / 1000 * Rules.featureCentsPerSecond);
+
+    await page.clock.runFor(100 * 1000);
+    assert.ok(madeAfter(100).map(Lines.job.feature.title).includes(await page.title()), await page.title());
+    const progress = await page.locator('[data-feature]').textContent();
+    assert.ok(madeAfter(100).some(made => progress.includes(made)), progress);
+
+    // From another tab, the title keeps count, and says when it ships
+    await setTabHidden(page, true);
+    await page.clock.runFor(10 * 60 * 1000);
+    assert.ok(madeAfter(700).map(Lines.job.feature.title).includes(await page.title()), await page.title());
+    await page.clock.fastForward(30 * 60 * 1000);
+    await page.clock.runFor(2000);
+    assert.equal(await page.title(), Lines.job.feature.shippedTitle(total));
+
+    await setTabHidden(page, false);
+    await page.clock.runFor(2000);
+    assert.equal(await page.title(), pageTitle);
+    await page.locator('#log .message', { hasText: `+${total}` }).first().waitFor();
+    await button(page, Lines.job.feature.button).waitFor();
 });
 
 browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {

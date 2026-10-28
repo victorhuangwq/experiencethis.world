@@ -173,7 +173,8 @@ test('a save from before the checklists hears what changed, once', () => {
 
     SaveSystem.save(game.toSaveData());
     const again = newGame({ save: SaveSystem.load(), now: game.time });
-    assert.ok(!again.messages.some(message => message.text === notes), 'not twice');
+    const heard = again.messages.filter(message => message.text === notes);
+    assert.deepEqual(heard.map(message => message.count), [1], 'still in the log, but not said twice');
 });
 
 test('a save hears only what changed in the releases after its own', () => {
