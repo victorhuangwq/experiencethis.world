@@ -24,6 +24,11 @@ export const Releases = [
         // Gus's store, Set 2, and summer
         id: 'act-2',
         notes: 'A note from the developer: Gus has finished counting his inventory. It took all spring. He counted the dice twice.'
+    },
+    {
+        // Emails in rarities, a sticky note for the tab, and a log that's saved
+        id: 'office-hours',
+        notes: 'A note from the developer: Linda has written more emails. Some of them are rare. Also, this log remembers things now. Hello again.'
     }
 ];
 

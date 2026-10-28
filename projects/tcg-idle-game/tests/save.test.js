@@ -53,6 +53,26 @@ test('an unknown encounter in a save is dropped', () => {
     assert.equal(newGame({ save: data }).encounter(), null);
 });
 
+test('the newest messages in the log are saved, so they are there on coming back', () => {
+    const game = gameAtMall();
+    for (let line = 1; line <= 15; line++) {
+        game.say(`Line ${line}`);
+    }
+    game.say('Line 15');
+    const loaded = newGame({ save: JSON.parse(JSON.stringify(game.toSaveData())), now: game.time });
+    assert.equal(loaded.messages.length, 10);
+    assert.deepEqual(loaded.messages[0], { text: 'Line 15', kind: 'info', count: 2 });
+    assert.equal(loaded.messages[9].text, 'Line 6');
+});
+
+test('anything in a saved log that is not a message is left out', () => {
+    const data = gameAtMall().toSaveData();
+    data.messages = [{ text: 'Kept', kind: 'good', count: 1, extra: true }, { text: 5, kind: 'info', count: 1 }, null, 'text', { text: 'No count', kind: 'info' }];
+    assert.deepEqual(newGame({ save: data }).messages, [{ text: 'Kept', kind: 'good', count: 1 }]);
+    data.messages = 'not a log';
+    assert.deepEqual(newGame({ save: data }).messages, []);
+});
+
 test('reloading cannot reroll: the seed is saved', () => {
     const game = gameAtMall();
     const reloaded = newGame({ save: JSON.parse(JSON.stringify(game.toSaveData())), now: game.time });

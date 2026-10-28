@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>TCG Idle Collector</title>
+  <g transform="rotate(-8 32 32.5)">
+    <rect x="10" y="4.5" width="44" height="56" rx="7" fill="#f2c14e" stroke="#2b2118" stroke-width="3.5"/>
+    <rect x="15.5" y="10" width="33" height="45" rx="3.5" fill="#fffaf0"/>
+    <path d="M32 22.5c0-4.6 2.9-7.5 7.5-7.5 0 4.6-2.9 7.5-7.5 7.5zM32 22.5c0-3.8-2.4-6.2-6.2-6.2 0 3.8 2.4 6.2 6.2 6.2z" fill="#3f9a4a"/>
+    <path d="M32 22.5v3.5" stroke="#3f9a4a" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="32" cy="38.5" rx="14" ry="12" fill="#7ccf83" stroke="#2b2118" stroke-width="2.5"/>
+    <circle cx="26.6" cy="37.5" r="2.8" fill="#2b2118"/>
+    <circle cx="37.4" cy="37.5" r="2.8" fill="#2b2118"/>
+    <circle cx="27.4" cy="36.6" r="0.95" fill="#fff"/>
+    <circle cx="38.2" cy="36.6" r="0.95" fill="#fff"/>
+    <ellipse cx="22.6" cy="42.2" rx="2.6" ry="1.6" fill="#ff8fa3"/>
+    <ellipse cx="41.4" cy="42.2" rx="2.6" ry="1.6" fill="#ff8fa3"/>
+    <path d="M29.6 42.2q2.4 2.4 4.8 0" fill="none" stroke="#2b2118" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <path d="M53 2.5l1.8 4.7 4.7 1.8-4.7 1.8L53 15.5l-1.8-4.7-4.7-1.8 4.7-1.8z" fill="#fff" stroke="#2b2118" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>

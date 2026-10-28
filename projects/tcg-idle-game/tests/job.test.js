@@ -10,8 +10,11 @@ import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 import { desk } from '../js/ui/art/office.js';
 import { calendar } from '../js/ui/scenes/office.js';
+import { tabTitle } from '../js/ui/panels/status.js';
+import { Format } from '../js/core/format.js';
 
 const SECOND = 1000;
+const MINUTE = 60 * SECOND;
 
 // A week in October 2026, at 10 AM local time
 const days = {
@@ -70,6 +73,73 @@ test('on a home day, emails are answered at home', () => {
     const game = gameOn('Friday');
     act(game, 'job.work', { at: 'home' });
     assert.equal(game.state.job.emailsAnswered, 1);
+});
+
+test('emails come in rarities, like cards: mostly common, now and then one nobody has seen', (t) => {
+    const emails = Lines.job.emails;
+    assert.ok(Object.values(emails).flat().length >= 20, 'at least 20 emails');
+    assert.deepEqual(Object.keys(emails).sort(), ['common', ...Object.keys(Rules.emailOdds)].sort(), 'lines for every rarity');
+
+    const game = gameOn('Tuesday');
+    const seen = {};
+    for (let email = 0; email < 2000; email++) {
+        const line = Job.email(game);
+        const rarity = Object.keys(emails).find(each => emails[each].includes(line));
+        seen[rarity] = (seen[rarity] || 0) + 1;
+    }
+    assert.ok(seen.common > seen.uncommon && seen.uncommon > seen.rare && seen.rare > seen['ultra-rare'], JSON.stringify(seen));
+    assert.ok(seen['ultra-rare'] > 0 && seen['ultra-rare'] < 100, JSON.stringify(seen));
+
+    overrideRules(t, { emailOdds: { 'ultra-rare': 1 } });
+    act(game, 'job.work', { at: 'office' });
+    assert.ok(emails['ultra-rare'].some(line => newestMessage(game).startsWith(line)));
+});
+
+test('at the kitchen table, a sticky note for the tab puts the money in the tab title', () => {
+    const game = gameOn('Monday');
+    const wallet = game.state.wallet;
+    const page = 'TCG Idle Collector';
+    assert.equal(tabTitle(game, game.time, page), page, 'just the page title to begin with');
+
+    wallet.cents = Rules.stickyNotePrice - 1;
+    act(game, 'job.buyStickyNote');
+    assert.equal(game.state.job.stickyNote, false, 'not without the money');
+    wallet.cents = Rules.stickyNotePrice + 150;
+    act(game, 'job.buyStickyNote');
+    assert.equal(game.state.job.stickyNote, true);
+    assert.equal(wallet.cents, 150);
+    assert.equal(newestMessage(game), Lines.job.stickyNote.bought(Format.money(Rules.stickyNotePrice)));
+    assert.equal(tabTitle(game, game.time, page), Lines.job.stickyNote.title('$1.50', page));
+
+    act(game, 'job.buyStickyNote');
+    assert.equal(wallet.cents, 150, 'one is enough');
+});
+
+test('the sticky note is only sold at home', () => {
+    for (const day of ['Tuesday', 'Saturday']) {
+        const game = gameOn(day);
+        game.state.wallet.cents = Rules.stickyNotePrice;
+        act(game, 'job.buyStickyNote');
+        assert.equal(game.state.job.stickyNote, false, day);
+    }
+});
+
+test('from a background tab, the title counts the allowance building up, up to the piggy bank\'s limit', () => {
+    const game = gameOn('Friday');
+    game.state.job.stickyNote = true;
+    const page = 'TCG Idle Collector';
+    const cents = game.state.wallet.cents;
+    // The game doesn't tick while the tab is hidden, but the title keeps count
+    const later = game.time + 10 * MINUTE;
+    const owed = 10 * 60 * Rules.allowanceCentsPerSecond;
+    assert.equal(tabTitle(game, later, page), Lines.job.stickyNote.title(Format.money(cents + owed), page));
+    const muchLater = game.time + 3 * Rules.offlineCap;
+    const full = Rules.offlineCap / SECOND * Rules.allowanceCentsPerSecond;
+    assert.equal(tabTitle(game, muchLater, page), Lines.job.stickyNote.title(Format.money(cents + full), page));
+
+    // And it's what coming back pays
+    game.catchUp(later);
+    assert.equal(tabTitle(game, later, page), Lines.job.stickyNote.title(Format.money(cents + owed), page));
 });
 
 test('nobody works from the wrong place, or on a day off', () => {

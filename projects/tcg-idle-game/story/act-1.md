@@ -22,6 +22,17 @@ and more cards pinned up (the poster at Gus's), a graded card on a stand
 synergy one, cards all round the screen, and a box of bulk under the desk.
 Packs can be opened under the desk, and the inbox count only goes up.
 
+Emails come in rarities, like cards: most of Linda's are common, some are
+uncommon or rare, and 1 in 50 is ultra-rare, so a player who has answered
+hundreds still sees one they haven't.
+
+## Working from home
+
+On home days the work is at the kitchen table. There's a sticky note for
+the tab for sale there ($20): once it's stuck on, the tab's title shows the
+player's money, and keeps counting from another tab, so they can watch it
+go up while they work.
+
 ## Marcus at the office
 
 Marcus from IT looks over the partition at the card on the terminal, then

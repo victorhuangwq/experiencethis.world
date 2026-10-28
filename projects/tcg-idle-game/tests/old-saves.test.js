@@ -53,8 +53,11 @@ for (const { file, raw } of saves) {
         const state = game.state;
 
         assert.equal(state.collection.cards.length, saved.collection.cards.length, 'every card');
-        // Every pack saved before Set 2 was a Base Set pack
-        assert.deepEqual(state.collection.packs.base, { normal: 0, special: 0, mega: 0, ...saved.collection.packs }, 'every unopened pack');
+        // Every pack saved before Set 2 (version 4) was a Base Set pack
+        const packs = JSON.parse(raw).version < 4 ? { base: saved.collection.packs } : saved.collection.packs;
+        for (const [set, kinds] of Object.entries(packs)) {
+            assert.deepEqual(state.collection.packs[set], { normal: 0, special: 0, mega: 0, ...kinds }, `every unopened ${set} pack`);
+        }
         assert.equal(state.collection.cardsOpened, saved.collection.cardsOpened);
         assert.equal(state.kindness.strikes.length, saved.kindness.strikes.length, 'strikes stick');
         for (const [person, known] of Object.entries(saved.people)) {
@@ -170,7 +173,8 @@ test('a save from before the checklists hears what changed, once', () => {
 
     SaveSystem.save(game.toSaveData());
     const again = newGame({ save: SaveSystem.load(), now: game.time });
-    assert.ok(!again.messages.some(message => message.text === notes), 'not twice');
+    const heard = again.messages.filter(message => message.text === notes);
+    assert.deepEqual(heard.map(message => message.count), [1], 'still in the log, but not said twice');
 });
 
 test('a save hears only what changed in the releases after its own', () => {

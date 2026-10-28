@@ -48,6 +48,7 @@ const MOVES = [
     { weight: 2, run: game => act(game, 'job.openAtDesk') },
     { weight: 2, run: game => act(game, 'job.lunch') },
     { weight: 1, run: game => act(game, 'job.buyPack') },
+    { weight: 1, run: game => act(game, 'job.buyStickyNote') },
     { weight: 1, run: game => act(game, 'people.knock') },
     { weight: 2, run: (game, roll) => act(game, 'story.visit', { location: Locations[Math.floor(roll() * Locations.length)].id }) },
     // Time passes: a few seconds, a while, or a long time away
@@ -124,6 +125,7 @@ function checkInvariants(game, last) {
     assert.ok(isCount(job.emailsAnswered) && job.emailsAnswered >= last.emailsAnswered, 'emails answered');
     assert.ok([0, 1, 2].includes(job.coworker) && job.coworker >= last.coworker, 'Marcus only gets friendlier');
     assert.ok(job.packsOpenedAtDesk <= collection.packsOpened, 'packs opened at the desk are packs opened');
+    assert.ok(job.stickyNote || !last.stickyNote, 'the sticky note stays on the tab');
 
     const ids = new Set();
     for (const card of collection.cards) {
@@ -216,7 +218,12 @@ function checkScreens(game) {
 function checkSave(game) {
     const data = JSON.parse(JSON.stringify(game.toSaveData()));
     const loaded = newGame({ save: data, now: game.time });
-    assert.deepEqual(loaded.toSaveData(), game.toSaveData());
+    const { messages, ...state } = loaded.toSaveData();
+    const { messages: saved, ...expected } = game.toSaveData();
+    assert.deepEqual(state, expected);
+    // The log is kept, under anything said on loading (like the time of night)
+    const texts = loaded.messages.map(message => message.text);
+    assert.deepEqual(texts.slice(texts.length - saved.length), saved.map(message => message.text), 'the log is kept');
 }
 
 function snapshot(game) {
@@ -229,6 +236,7 @@ function snapshot(game) {
         coworker: game.state.job.coworker,
         days: game.state.story.days,
         lunches: game.state.job.lunches,
+        stickyNote: game.state.job.stickyNote,
         unlocked: [...game.state.progress.unlocked]
     };
 }
@@ -295,7 +303,7 @@ function playRandomly(seed, steps = STEPS, { summer = false } = {}) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, summer: 0, cards: 0, lunch: 0, lunches: 0, flip: 0, terry: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, summer: 0, cards: 0, lunch: 0, lunches: 0, stickyNotes: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
@@ -309,11 +317,12 @@ test('the game always makes sense, whatever the player does', (t) => {
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
         reached.lunches += game.state.job.lunches > 0 ? 1 : 0;
+        reached.stickyNotes += game.state.job.stickyNote ? 1 : 0;
         reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
         reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}, summer in ${reached.summer}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch and played ${reached.lunches}; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}, summer in ${reached.summer}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch and played ${reached.lunches}; ${reached.stickyNotes} bought the sticky note; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');
@@ -322,6 +331,7 @@ test('the game always makes sense, whatever the player does', (t) => {
     assert.ok(reached.locals > 0 && reached.trades > 0, 'some games played locals and traded with Marcus');
     assert.ok(reached.endings > 0, 'some games ended in shame');
     assert.ok(reached.lunch > 0, 'some games got as far as lunch with Marcus');
+    assert.ok(reached.stickyNotes > 0, 'some games bought the sticky note');
     assert.ok(reached.flip > 0 && reached.terry > 0, 'some games met the scalper and Terry');
 });
 

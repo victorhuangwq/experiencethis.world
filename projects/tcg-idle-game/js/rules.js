@@ -17,6 +17,12 @@ export const Rules = {
     workplaces: [null, 'home', 'office', 'office', 'office', 'home', null],
     workPay: 50,
     workRest: 20 * SECOND,
+    // The chance an email is rarer than common, like a card; the rest are
+    // common
+    emailOdds: { 'ultra-rare': 0.02, rare: 0.08, uncommon: 0.25 },
+    // The sticky note for the browser tab, which shows the player's money in
+    // the tab's title. It's sold at the kitchen table on home days.
+    stickyNotePrice: 2000,
     // Chance the boss walks past while a pack is opened at the desk
     bossWalkByChance: 0.25,
     // Lunches with Marcus before he starts bringing the player a special

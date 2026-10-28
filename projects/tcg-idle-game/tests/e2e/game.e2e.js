@@ -80,16 +80,18 @@ browserTest('opening a pack plays out card by card, and can be skipped', { reduc
     assert.equal(await button(page, Lines.packs.buttons.skip).count(), 0);
 });
 
-browserTest('progress survives reloading the page', {}, async (page) => {
+browserTest('progress survives reloading the page, and so does the log', {}, async (page) => {
     await finishOpening(page);
     await place(page, Lines.mall.name).click();
     await slot(page, 'A1').click();
+    const said = await page.locator('#log .message').allTextContents();
 
     await page.reload();
     await page.getByText(Lines.packs.unopened(1)).waitFor();
     assert.equal(await page.getByText(Lines.opening.closet[0]).count(), 0, 'the opening is over');
     assert.equal(await page.locator('[data-money]').textContent(), Format.money(0));
     await place(page, Lines.mall.name).waitFor();
+    assert.deepEqual(await page.locator('#log .message').allTextContents(), said.slice(0, 10), 'the newest messages are still there');
 });
 
 browserTest('the third strike ends the run, and the ending is remembered', { query: '?dev' }, async (page) => {
@@ -220,6 +222,42 @@ browserTest('on a home day, work is at the kitchen table, and the office is empt
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.home('Monday')).waitFor();
     assert.equal(await button(page, Lines.job.answer).count(), 0);
+});
+
+browserTest('working from home, a sticky note puts the money in the tab title, even from a background tab', {
+    time: Date.UTC(2026, 9, 26, 10),
+    query: '?dev'
+}, async (page) => {
+    const pageTitle = await page.title();
+    const icon = await page.locator('link[rel="icon"]').getAttribute('href');
+    assert.equal((await page.request.get(new URL(icon, page.url()).href)).status(), 200, 'the favicon is there');
+
+    await finishOpening(page);
+    await page.clock.runFor(30 * 1000);
+    const stickyNote = button(page, Lines.job.stickyNote.buy(Format.money(Rules.stickyNotePrice)));
+    assert.ok(await stickyNote.isDisabled(), 'a sticky note costs money');
+    await button(page, '+$50').click();
+    await stickyNote.click();
+    await newestMessage(page).getByText(Lines.job.stickyNote.bought(Format.money(Rules.stickyNotePrice))).waitFor();
+    assert.equal(await stickyNote.count(), 0, 'one is enough');
+
+    const money = async () => Math.round(Number((await page.locator('[data-money]').textContent()).slice(1)) * 100);
+    await page.clock.runFor(2000);
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(await money()), pageTitle));
+
+    // From another tab, the title counts the allowance that will be paid on
+    // coming back
+    const before = await money();
+    await setTabHidden(page, true);
+    await page.clock.runFor(10 * 60 * 1000);
+    const owed = 10 * 60 * Rules.allowanceCentsPerSecond;
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(before + owed), pageTitle));
+    assert.equal(await money(), before, 'the page itself waits for the player to come back');
+
+    await setTabHidden(page, false);
+    await page.clock.runFor(1000);
+    assert.ok(await money() >= before + owed);
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(await money()), pageTitle));
 });
 
 browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {

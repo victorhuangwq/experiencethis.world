@@ -20,6 +20,10 @@
 import { mergeDefaults } from './merge.js';
 import { nextRandom } from './random.js';
 
+// Log messages kept in the save, newest first, so they're still there when
+// the player comes back
+const SAVED_MESSAGES = 10;
+
 export class Game {
     /**
      * @param {Object} options
@@ -37,7 +41,7 @@ export class Game {
         this.state = null;
         // The current time, set on every tick and action
         this.time = 0;
-        // Log messages, newest first. Not saved.
+        // Log messages, newest first. The newest few are saved.
         this.messages = [];
         // When the player last did something. Not saved.
         this.lastActionAt = 0;
@@ -77,6 +81,7 @@ export class Game {
         this.time = now;
         this.lastActionAt = now;
         this.state = mergeDefaults(this.defaults(now), saveData);
+        this.messages = savedMessages(saveData?.messages);
 
         if (saveData) {
             for (const system of this.systems) {
@@ -96,7 +101,7 @@ export class Game {
      * @returns {Object} - Game save data
      */
     toSaveData() {
-        const data = { ...this.state };
+        const data = { ...this.state, messages: this.messages.slice(0, SAVED_MESSAGES) };
         for (const system of this.systems) {
             if (system.save) {
                 data[system.id] = system.save(this.state[system.id]);
@@ -303,4 +308,19 @@ export class Game {
         this.endings.record(id);
         this.emit('end', { id });
     }
+}
+
+/**
+ * The log messages in a save, leaving out anything that isn't one
+ * @param {*} messages - Saved messages
+ * @returns {Array} - Messages, newest first
+ */
+function savedMessages(messages) {
+    if (!Array.isArray(messages)) {
+        return [];
+    }
+    return messages
+        .filter(message => typeof message?.text === 'string' && typeof message.kind === 'string' && Number.isInteger(message.count) && message.count > 0)
+        .slice(0, SAVED_MESSAGES)
+        .map(({ text, kind, count }) => ({ text, kind, count }));
 }

@@ -5,7 +5,8 @@
  * Marcus from IT, who collects: he notices the cards on the desk, asks the
  * player to lunch (a game, once an office day), and after a couple of
  * lunches brings them a special pack each office day, at the machine's
- * price.
+ * price. At home, the player can buy a sticky note for the browser tab,
+ * which shows their money in the tab's title.
  */
 
 import { localDay } from '../core/time.js';
@@ -33,7 +34,9 @@ export const Job = {
         lunches: 0,
         lunchDay: 0,
         // The day the player last bought Marcus's special pack
-        packDay: 0
+        packDay: 0,
+        // Whether the player has bought the sticky note for the tab
+        stickyNote: false
     }),
 
     load(job, game, now) {
@@ -53,6 +56,16 @@ export const Job = {
      */
     today(game, now = game.time) {
         return Lines.job.days[new Date(now).getDay()];
+    },
+
+    /**
+     * An email to answer. Emails come in rarities, like cards: most are
+     * common (Rules.emailOdds).
+     */
+    email(game) {
+        let roll = game.random();
+        const rarity = Object.keys(Rules.emailOdds).find(each => (roll -= Rules.emailOdds[each]) < 0) || 'common';
+        return game.pick(Lines.job.emails[rarity]);
     },
 
     /**
@@ -125,7 +138,7 @@ export const Job = {
             Wallet.earn(game, Rules.workPay);
             job.readyAt = now + Rules.workRest;
             job.emailsAnswered++;
-            game.say(game.pick(Lines.job.emails) + ' +' + Format.money(Rules.workPay));
+            game.say(Job.email(game) + ' +' + Format.money(Rules.workPay));
 
             // The coworker notices what is on the desk, then the binder
             if (at === 'office' && job.coworker === 0 && Job.desk(game) > 0) {
@@ -135,6 +148,19 @@ export const Job = {
                 job.coworker = 2;
                 game.say(Lines.job.coworker.binder, 'good');
             }
+        },
+
+        /**
+         * Buy the sticky note for the tab, on a home day: from then on the
+         * tab's title shows the player's money
+         */
+        buyStickyNote(game, args, now) {
+            const job = game.state.job;
+            if (!game.unlocked('work') || Job.workplace(game, now) !== 'home' || job.stickyNote || !Wallet.spend(game, Rules.stickyNotePrice)) {
+                return;
+            }
+            job.stickyNote = true;
+            game.say(Lines.job.stickyNote.bought(Format.money(Rules.stickyNotePrice)), 'good');
         },
 
         /**

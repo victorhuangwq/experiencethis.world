@@ -5,6 +5,7 @@
  */
 
 import { Format } from '../../core/format.js';
+import { Rules } from '../../rules.js';
 import { Lines } from '../../content/text/index.js';
 import { Collection, bennyOffer } from '../../systems/collection.js';
 import { Wallet } from '../../systems/wallet.js';
@@ -39,9 +40,14 @@ function renderHome(game, view) {
     const forSale = Collection.storageForSale(game);
     const parts = [];
 
-    // On home days, work happens at the kitchen table
+    // On home days, work happens at the kitchen table, next to a sticky note
+    // for the tab
     if (game.unlocked('work') && Job.workplace(game) === 'home') {
         parts.push(`<p>${escape(Lines.job.kitchenTable(Job.today(game)))} ${workButton(game, 'home')}</p>`);
+        if (!game.state.job.stickyNote) {
+            const price = Rules.stickyNotePrice;
+            parts.push(`<p>${button('job.buyStickyNote', Lines.job.stickyNote.buy(Format.money(price)), { disabled: !Wallet.canAfford(game, price) })}</p>`);
+        }
     }
 
     parts.push(art(storage(Collection.storage(game), game.state.story.shoebox, !!forSale)));

@@ -66,7 +66,9 @@ file per topic.
   with the collection. Strikes have no counter on screen.
 - **The log is quiet.** It sits to the right of the game, newest first, with
   older lines fading out; on phones it shrinks to the newest line at the top.
-  Feedback that the scene already shows (a slot emptying) doesn't need a line.
+  The newest ten are saved, so they're still there when the player comes
+  back. Feedback that the scene already shows (a slot emptying) doesn't need
+  a line.
 - **Things in the art can be pressed.** The vending machine's slots and coin
   return are buttons on the machine itself, not a row of buttons under it.
   At Gus's, the player looks around by pressing parts of the store, like

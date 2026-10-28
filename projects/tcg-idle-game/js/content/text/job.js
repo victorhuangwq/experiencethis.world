@@ -34,19 +34,53 @@ export const Job = {
         off: day => `It is ${day}. Nobody works on ${day}s. Except Linda. Linda emails: "No rush."`
     },
 
-    // Linda only ever speaks in subject lines
-    emails: [
-        'Linda: "Quick question". It is not quick. You answer it.',
-        'Linda: "RE: RE: RE: FW: Synergy". You reply "Sounds good".',
-        'Linda: "Per my last email". You reply "Per your last email".',
-        'Linda: "Circling back". You circle back.',
-        'Linda: "No rush". There is a rush.',
-        'Linda: "Meeting to plan the meeting". You accept.',
-        'Linda: "(no subject)". The worst kind. You answer it carefully.',
-        'You reply-all by accident. Forty people now know you said "lol".',
-        'You mark an email as unread so it is a problem for later you.',
-        'You say "circling back" out loud, to nobody.'
-    ],
+    // Linda only ever speaks in subject lines. Emails come in rarities, like
+    // cards (Rules.emailOdds), so now and then there's one nobody has seen.
+    emails: {
+        common: [
+            'Linda: "Quick question". It is not quick. You answer it.',
+            'Linda: "RE: RE: RE: FW: Synergy". You reply "Sounds good".',
+            'Linda: "Per my last email". You reply "Per your last email".',
+            'Linda: "Circling back". You circle back.',
+            'Linda: "No rush". There is a rush.',
+            'Linda: "Meeting to plan the meeting". You accept.',
+            'Linda: "(no subject)". The worst kind. You answer it carefully.',
+            'Linda: "Thoughts?". You have thoughts. You reply "Looks great!"',
+            'Linda: "Friendly reminder". It is not friendly. You are reminded.',
+            'Linda: "Going forward". You go forward.',
+            'Linda: "Updated deck attached". You get excited. It is slides.',
+            'You answer an email. Two replies come back. This is how inboxes work.',
+            'You mark an email as unread so it is a problem for later you.'
+        ],
+        uncommon: [
+            'You reply-all by accident. Forty people now know you said "lol".',
+            'You say "circling back" out loud, to nobody.',
+            'Linda: "Quick call?". Your camera is off. Your binder is open.',
+            'Linda: "Q3 priorities". Nobody knows which quarter it is. You reply "Aligned".',
+            'Linda: "Out of office". It is an auto-reply. It still needs a reply.',
+            'Linda: "Rare opportunity". It is a webinar. You know rare. This is not rare.',
+            'Accounting: "Has anyone seen the stapler?". Forty people reply-all "No". You are one of them.'
+        ],
+        rare: [
+            'Linda: "Thank you". Just that. You read it four times. You take a screenshot.',
+            'An email from 2019 arrives. Subject: "Quick question". It is still not quick.',
+            'You type "Best," and delete it. "Thanks," and delete it. "Best,". Twenty minutes pass.',
+            'The email is from you. You do not remember sending it. It says "Sounds good". You agree.',
+            'Linda: "Please stop clicking". You click.'
+        ],
+        'ultra-rare': [
+            'Linda: "Free packs in the break room". You run. They are packets. Of ketchup.',
+            'A note from the developer, in your inbox: "This is the rarest email. You may never see it again. Do not tell Benny."'
+        ]
+    },
+
+    // The sticky note for the browser tab, sold at the kitchen table
+    stickyNote: {
+        buy: price => `Buy a sticky note for the tab (${price})`,
+        bought: price => `You buy a sticky note and stick it to the browser tab. It cost ${price}. It shows your money, even from your work tab. It is a very good sticky note.`,
+        // The tab's title
+        title: (money, page) => `${money} · ${page}`
+    },
 
     boss: {
         // Linda walking past while a pack is open at the desk. The last one

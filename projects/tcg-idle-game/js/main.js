@@ -1,7 +1,7 @@
 /**
  * Main entry point for TCG Idle Collector
  * Builds the game from its systems and content, ticks it every second,
- * and handles saving.
+ * keeps the tab's title up to date, and handles saving.
  */
 
 import { Game } from './core/game.js';
@@ -13,6 +13,7 @@ import { Systems } from './systems/index.js';
 import { Wallet } from './systems/wallet.js';
 import { Vending } from './systems/vending.js';
 import { UI } from './ui/ui.js';
+import { tabTitle } from './ui/panels/status.js';
 
 const game = new Game({
     systems: Systems,
@@ -80,13 +81,34 @@ const ui = new UI(game, document.getElementById('app'), {
 });
 ui.render();
 
+// With the sticky note, the tab's title shows the player's money, even from
+// a background tab
+const pageTitle = document.title;
+function updateTitle() {
+    document.title = tabTitle(game, Date.now(), pageTitle);
+}
+
 setInterval(() => {
     // While the tab is hidden, time builds up for one catch-up on return
     if (!document.hidden) {
         game.tick(Date.now());
         ui.render();
     }
+    updateTitle();
 }, 1000);
+
+// A background tab's timers slow down, but a worker's don't (heartbeat.js)
+try {
+    const heartbeat = new Worker(new URL('./heartbeat.js', import.meta.url));
+    heartbeat.addEventListener('message', () => {
+        if (document.hidden) {
+            updateTitle();
+        }
+    });
+} catch (error) {
+    // Without a worker the title still updates, just less often
+}
+
 setInterval(save, 30000);
 
 // Time spent in a background tab is summarised once, on return
