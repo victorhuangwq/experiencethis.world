@@ -13,7 +13,7 @@ Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
 checklist comes in the first pack, a self-given allowance, a hybrid day job
 (a cubicle at the office on real Tuesdays to Thursdays, which the hobby
 slowly takes over, and the kitchen table on Mondays and Fridays, where a
-second monitor means side features that the tab's title keeps count of),
+sticky note for the tab puts the player's money in the tab's title),
 emails in rarities like cards, Marcus
 from IT (lunch games, then special packs at the machine's price), the
 CARD-O-MATIC 3000 restocking every 25 to 35 minutes of real time with a mix

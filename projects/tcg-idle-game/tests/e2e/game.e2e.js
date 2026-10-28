@@ -224,7 +224,7 @@ browserTest('on a home day, work is at the kitchen table, and the office is empt
     assert.equal(await button(page, Lines.job.answer).count(), 0);
 });
 
-browserTest('working from home, a side feature counts its pay in the tab title, even from a background tab', {
+browserTest('working from home, a sticky note puts the money in the tab title, even from a background tab', {
     time: Date.UTC(2026, 9, 26, 10),
     query: '?dev'
 }, async (page) => {
@@ -234,36 +234,30 @@ browserTest('working from home, a side feature counts its pay in the tab title, 
 
     await finishOpening(page);
     await page.clock.runFor(30 * 1000);
-    const monitor = button(page, Lines.job.feature.buyMonitor(Format.money(Rules.monitorPrice)));
-    assert.ok(await monitor.isDisabled(), 'a second monitor costs money');
+    const stickyNote = button(page, Lines.job.stickyNote.buy(Format.money(Rules.stickyNotePrice)));
+    assert.ok(await stickyNote.isDisabled(), 'a sticky note costs money');
     await button(page, '+$50').click();
-    await monitor.click();
-    await newestMessage(page).getByText(Lines.job.feature.boughtMonitor).waitFor();
+    await stickyNote.click();
+    await newestMessage(page).getByText(Lines.job.stickyNote.bought(Format.money(Rules.stickyNotePrice))).waitFor();
+    assert.equal(await stickyNote.count(), 0, 'one is enough');
 
-    await button(page, Lines.job.feature.button).click();
-    await page.getByText(Lines.job.feature.started).waitFor();
-    // What it has made after some seconds of work, give or take a second
-    const madeAfter = seconds => [seconds - 1, seconds].map(each => Format.money(each * Rules.featureCentsPerSecond));
-    const total = Format.money(Rules.featureTime / 1000 * Rules.featureCentsPerSecond);
+    const money = async () => Math.round(Number((await page.locator('[data-money]').textContent()).slice(1)) * 100);
+    await page.clock.runFor(2000);
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(await money()), pageTitle));
 
-    await page.clock.runFor(100 * 1000);
-    assert.ok(madeAfter(100).map(Lines.job.feature.title).includes(await page.title()), await page.title());
-    const progress = await page.locator('[data-feature]').textContent();
-    assert.ok(madeAfter(100).some(made => progress.includes(made)), progress);
-
-    // From another tab, the title keeps count, and says when it ships
+    // From another tab, the title counts the allowance that will be paid on
+    // coming back
+    const before = await money();
     await setTabHidden(page, true);
     await page.clock.runFor(10 * 60 * 1000);
-    assert.ok(madeAfter(700).map(Lines.job.feature.title).includes(await page.title()), await page.title());
-    await page.clock.fastForward(30 * 60 * 1000);
-    await page.clock.runFor(2000);
-    assert.equal(await page.title(), Lines.job.feature.shippedTitle(total));
+    const owed = 10 * 60 * Rules.allowanceCentsPerSecond;
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(before + owed), pageTitle));
+    assert.equal(await money(), before, 'the page itself waits for the player to come back');
 
     await setTabHidden(page, false);
-    await page.clock.runFor(2000);
-    assert.equal(await page.title(), pageTitle);
-    await page.locator('#log .message', { hasText: `+${total}` }).first().waitFor();
-    await button(page, Lines.job.feature.button).waitFor();
+    await page.clock.runFor(1000);
+    assert.ok(await money() >= before + owed);
+    assert.equal(await page.title(), Lines.job.stickyNote.title(Format.money(await money()), pageTitle));
 });
 
 browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {

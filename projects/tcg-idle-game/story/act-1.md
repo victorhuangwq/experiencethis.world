@@ -28,10 +28,10 @@ hundreds still sees one they haven't.
 
 ## Working from home
 
-On home days the work is at the kitchen table. A second monitor ($40) lets
-the player work on a side feature: half an hour that pays a cent a second,
-while the tab's title counts what it has made, from another tab too. Then
-it ships, and another can start.
+On home days the work is at the kitchen table. There's a sticky note for
+the tab for sale there ($20): once it's stuck on, the tab's title shows the
+player's money, and keeps counting from another tab, so they can watch it
+go up while they work.
 
 ## Marcus at the office
 

@@ -10,11 +10,11 @@ import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 import { desk } from '../js/ui/art/office.js';
 import { calendar } from '../js/ui/scenes/office.js';
-import { tabTitle } from '../js/ui/panels/work.js';
+import { tabTitle } from '../js/ui/panels/status.js';
+import { Format } from '../js/core/format.js';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
 
 // A week in October 2026, at 10 AM local time
 const days = {
@@ -95,67 +95,51 @@ test('emails come in rarities, like cards: mostly common, now and then one nobod
     assert.ok(emails['ultra-rare'].some(line => newestMessage(game).startsWith(line)));
 });
 
-test('at home, a second monitor makes side features possible, which pay as they go', () => {
+test('at the kitchen table, a sticky note for the tab puts the money in the tab title', () => {
     const game = gameOn('Monday');
     const wallet = game.state.wallet;
-    act(game, 'job.startFeature');
-    assert.equal(game.state.job.featureStartedAt, 0, 'not without a second monitor');
+    const page = 'TCG Idle Collector';
+    assert.equal(tabTitle(game, game.time, page), page, 'just the page title to begin with');
 
-    wallet.cents = Rules.monitorPrice - 1;
-    act(game, 'job.buyMonitor');
-    assert.equal(game.state.job.monitor, false, 'not without the money');
-    wallet.cents = Rules.monitorPrice;
-    act(game, 'job.buyMonitor');
-    assert.equal(game.state.job.monitor, true);
-    assert.equal(wallet.cents, 0);
+    wallet.cents = Rules.stickyNotePrice - 1;
+    act(game, 'job.buyStickyNote');
+    assert.equal(game.state.job.stickyNote, false, 'not without the money');
+    wallet.cents = Rules.stickyNotePrice + 150;
+    act(game, 'job.buyStickyNote');
+    assert.equal(game.state.job.stickyNote, true);
+    assert.equal(wallet.cents, 150);
+    assert.equal(newestMessage(game), Lines.job.stickyNote.bought(Format.money(Rules.stickyNotePrice)));
+    assert.equal(tabTitle(game, game.time, page), Lines.job.stickyNote.title('$1.50', page));
 
-    const startedAt = game.time;
-    act(game, 'job.startFeature');
-    assert.equal(game.state.job.featureStartedAt, startedAt);
-    assert.equal(Job.featureOpen(game), false, 'one at a time');
-    const allowanceBefore = wallet.allowanceEarned;
-
-    game.tick(startedAt + 10 * MINUTE);
-    assert.equal(game.state.job.featurePaid, 10 * 60 * Rules.featureCentsPerSecond);
-    game.tick(startedAt + Rules.featureTime);
-    const total = Rules.featureTime / SECOND * Rules.featureCentsPerSecond;
-    assert.equal(wallet.cents - (wallet.allowanceEarned - allowanceBefore), total, 'paid for the whole feature, on top of the allowance');
-    assert.equal(game.state.job.featureStartedAt, 0, 'it shipped');
-    assert.equal(game.state.job.featuresShipped, 1);
-    assert.ok(Lines.job.feature.shipped.some(line => newestMessage(game) === `${line} +$${(total / 100).toFixed(2)}`));
-    assert.equal(Job.featureOpen(game), true, 'another one can start');
+    act(game, 'job.buyStickyNote');
+    assert.equal(wallet.cents, 150, 'one is enough');
 });
 
-test('side features are only started at home', () => {
+test('the sticky note is only sold at home', () => {
     for (const day of ['Tuesday', 'Saturday']) {
         const game = gameOn(day);
-        game.state.job.monitor = true;
-        act(game, 'job.startFeature');
-        assert.equal(game.state.job.featureStartedAt, 0, day);
+        game.state.wallet.cents = Rules.stickyNotePrice;
+        act(game, 'job.buyStickyNote');
+        assert.equal(game.state.job.stickyNote, false, day);
     }
 });
 
-test('the tab shows what a side feature has made, and when it ships', () => {
+test('from a background tab, the title counts the allowance building up, up to the piggy bank\'s limit', () => {
     const game = gameOn('Friday');
-    game.state.job.monitor = true;
-    assert.equal(tabTitle(game, game.time), null);
-    act(game, 'job.startFeature');
-    const startedAt = game.time;
-    assert.equal(tabTitle(game, startedAt + 100 * SECOND), Lines.job.feature.title('$1.00'));
-    // From a background tab the game doesn't tick, but the title keeps count
-    assert.equal(tabTitle(game, startedAt + 2 * HOUR), Lines.job.feature.shippedTitle('$18.00'));
-    game.tick(startedAt + 2 * HOUR);
-    assert.equal(tabTitle(game, game.time), null);
-});
+    game.state.job.stickyNote = true;
+    const page = 'TCG Idle Collector';
+    const cents = game.state.wallet.cents;
+    // The game doesn't tick while the tab is hidden, but the title keeps count
+    const later = game.time + 10 * MINUTE;
+    const owed = 10 * 60 * Rules.allowanceCentsPerSecond;
+    assert.equal(tabTitle(game, later, page), Lines.job.stickyNote.title(Format.money(cents + owed), page));
+    const muchLater = game.time + 3 * Rules.offlineCap;
+    const full = Rules.offlineCap / SECOND * Rules.allowanceCentsPerSecond;
+    assert.equal(tabTitle(game, muchLater, page), Lines.job.stickyNote.title(Format.money(cents + full), page));
 
-test('a side feature ships while the player is away, paid in full and no more', () => {
-    const game = gameOn('Monday');
-    game.state.job.monitor = true;
-    act(game, 'job.startFeature');
-    const cents = game.state.wallet.cents - game.state.wallet.allowanceEarned;
-    game.catchUp(game.time + 5 * HOUR);
-    assert.equal(game.state.wallet.cents - game.state.wallet.allowanceEarned - cents, Rules.featureTime / SECOND * Rules.featureCentsPerSecond);
-    assert.equal(game.state.job.featuresShipped, 1);
+    // And it's what coming back pays
+    game.catchUp(later);
+    assert.equal(tabTitle(game, later, page), Lines.job.stickyNote.title(Format.money(cents + owed), page));
 });
 
 test('nobody works from the wrong place, or on a day off', () => {

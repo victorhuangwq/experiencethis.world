@@ -41,7 +41,7 @@ export const Wallet = {
 
         const capped = elapsed > Rules.offlineCap;
         const msPerCent = 1000 / Rules.allowanceCentsPerSecond;
-        const cents = Math.floor(Math.min(elapsed, Rules.offlineCap) / msPerCent);
+        const cents = Wallet.owed(game, now);
         if (cents === 0) {
             return;
         }
@@ -53,6 +53,19 @@ export const Wallet = {
         if (elapsed > MINUTE) {
             game.reportAway(Lines.money.allowanceAway(cents, capped));
         }
+    },
+
+    /**
+     * The allowance owed for the time since it was last paid, up to the
+     * piggy bank's limit. While the tab is hidden it builds up, to be paid
+     * on coming back.
+     */
+    owed(game, now) {
+        const elapsed = now - game.state.wallet.paidUntil;
+        if (!game.unlocked('allowance') || elapsed < 0) {
+            return 0;
+        }
+        return Math.floor(Math.min(elapsed, Rules.offlineCap) / (1000 / Rules.allowanceCentsPerSecond));
     },
 
     startAllowance(game) {

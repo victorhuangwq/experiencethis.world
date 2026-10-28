@@ -1,11 +1,13 @@
 /**
- * The status bar: money and unopened packs. Work is in the office or at
- * home (panels/work.js).
+ * The status bar: money and unopened packs, and the tab's title, which
+ * shows the money too once the player has the sticky note. Work is in the
+ * office or at home (panels/work.js).
  */
 
 import { Format } from '../../core/format.js';
 import { Lines } from '../../content/text/index.js';
 import { Catalog } from '../../content/catalog.js';
+import { Wallet } from '../../systems/wallet.js';
 import { escape, button } from '../html.js';
 
 export function renderStatus(game) {
@@ -54,4 +56,17 @@ export function updateStatus(element, game) {
     if (money) {
         money.textContent = Format.money(game.state.wallet.cents);
     }
+}
+
+/**
+ * The tab's title: the page's own, with the player's money in front once
+ * they have the sticky note, so it can be watched from another tab. While
+ * the tab is hidden it counts the allowance building up there too.
+ * @param {string} pageTitle - The page's own title
+ */
+export function tabTitle(game, now, pageTitle) {
+    if (!game.state.job.stickyNote) {
+        return pageTitle;
+    }
+    return Lines.job.stickyNote.title(Format.money(game.state.wallet.cents + Wallet.owed(game, now)), pageTitle);
 }

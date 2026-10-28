@@ -74,22 +74,12 @@ export const Job = {
         ]
     },
 
-    // A side feature, worked on at home, once there's a second monitor to
-    // watch the tab on. The tab keeps count.
-    feature: {
-        buyMonitor: price => `Buy a second monitor (${price})`,
-        boughtMonitor: 'You buy a second monitor. Now you can work on one screen and watch the other. You will not be watching the work one.',
-        button: 'Work on a side feature',
-        started: 'You start on a side feature. Nobody asked for it. You will be paid for it anyway. The tab will keep count.',
-        progress: (earned, shipsAt) => `Side feature: ${earned} so far. It ships at ${shipsAt}.`,
-        // The tab's title, so it can be watched from another tab
-        title: earned => `+${earned} · side feature`,
-        shippedTitle: earned => `Shipped! +${earned}`,
-        shipped: [
-            'The side feature ships. Nobody notices. You notice.',
-            'The side feature ships. Linda replies "Great work!" to a different email.',
-            'The side feature ships. It has one bug. It is a feature now.'
-        ]
+    // The sticky note for the browser tab, sold at the kitchen table
+    stickyNote: {
+        buy: price => `Buy a sticky note for the tab (${price})`,
+        bought: price => `You buy a sticky note and stick it to the browser tab. It cost ${price}. It shows your money, even from your work tab. It is a very good sticky note.`,
+        // The tab's title
+        title: (money, page) => `${money} · ${page}`
     },
 
     boss: {

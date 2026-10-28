@@ -13,7 +13,7 @@ import { Systems } from './systems/index.js';
 import { Wallet } from './systems/wallet.js';
 import { Vending } from './systems/vending.js';
 import { UI } from './ui/ui.js';
-import { tabTitle } from './ui/panels/work.js';
+import { tabTitle } from './ui/panels/status.js';
 
 const game = new Game({
     systems: Systems,
@@ -81,11 +81,11 @@ const ui = new UI(game, document.getElementById('app'), {
 });
 ui.render();
 
-// While a side feature is being worked on, the tab's title shows what it
-// has made, even from a background tab
+// With the sticky note, the tab's title shows the player's money, even from
+// a background tab
 const pageTitle = document.title;
 function updateTitle() {
-    document.title = tabTitle(game, Date.now()) ?? pageTitle;
+    document.title = tabTitle(game, Date.now(), pageTitle);
 }
 
 setInterval(() => {
