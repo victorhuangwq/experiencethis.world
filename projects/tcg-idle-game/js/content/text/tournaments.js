@@ -4,13 +4,13 @@
  */
 
 export const Tournaments = {
-    localsTitle: 'Friday Night Locals',
-    localsNote: '"Friday Night Locals," says Gus, tapping the poster. "Every day. Buy two packs and you\'re in. Win, and you go home with more."',
+    localsTitle: 'Friday Night Clash',
+    localsNote: '"Friday Night Clash," says Gus, tapping the poster. "The local tourney. Every day. Buy two packs and you\'re in. Win, and you go home with more."',
     enterLocals: price => `Sign me up (buy two packs: ${price})`,
-    nextLocals: '"You\'ve had your go," says Gus. "Come back tomorrow. It will be Friday Night Locals again."',
+    nextLocals: '"You\'ve had your go," says Gus. "Come back tomorrow. It will be Friday Night Clash again."',
     entered: day => day === 'Friday'
-        ? 'Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is actually Friday. Gus looks uneasy about it.'
-        : `Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is ${day}.`,
+        ? 'Gus writes your name on the bracket. "Friday Night Clash," says Gus. It is actually Friday. Gus looks uneasy about it.'
+        : `Gus writes your name on the bracket. "Friday Night Clash," says Gus. It is ${day}.`,
 
     match: (number, name) => `Match ${number} of 3: ${name}.`,
     score: (mine, name, theirs) => `Rounds: you ${mine}, ${name} ${theirs}. Best of three.`,

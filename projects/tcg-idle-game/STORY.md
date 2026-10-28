@@ -55,7 +55,8 @@ file per topic.
 - **Things in the art can be pressed.** The vending machine's slots and coin
   return are buttons on the machine itself, not a row of buttons under it.
   At Gus's, the player looks around by pressing parts of the store, like
-  an RPG: one part is shown at a time. Opened cards stay with the place
+  an RPG: one part is shown at a time. The glass case of singles is Gus's
+  counter, as in a real card shop. Opened cards stay with the place
   they were opened in.
 - **Pack opening is a moment.** The pack tears, cards flip one at a time, and
   the last card waits a beat.
@@ -200,10 +201,10 @@ through the door of the player's shop.
   visit he offers up to three trades, one card for one: a card the player
   doesn't have, for a spare copy of one they do, of the same rarity. If the
   player met him at the office, he pretends not to know them.
-- **Locals.** Once a day (Gus calls it Friday Night Locals no matter what
-  day it is). Entry is buying two packs from Gus, which the player keeps.
-  The player plays their own cards (see Tournaments). Prizes are packs:
-  three for winning every match, one for winning two.
+- **Locals.** Friday Night Clash, the local tourney, once a day (Gus calls
+  it that whatever day it is). Entry is buying two packs from Gus, which
+  the player keeps. The player plays their own cards (see Tournaments).
+  Prizes are packs: three for winning every match, one for winning two.
 - **The pre-release.** After the player first wins locals, Gus says they're
   a regular now and invites them to the Set 2 pre-release: a kit of four
   Set 2 packs for $30, opened at the table, playing with only those cards.
@@ -306,7 +307,7 @@ All times come from the real clock and are saved as timestamps.
 | Gus's store opens | The second day of play | The sign appears in Act 1 |
 | Gus's glass case | Restocked every 4 hours (00:00, 04:00, ...) | Six singles |
 | Marcus at Gus's | Thursday and Friday from 6 PM, all day Saturday and Sunday | Up to three trades each visit |
-| Locals at Gus's | Once a day, any time | One entry per day. Gus calls it "Friday Night Locals" no matter what day it is. |
+| Locals at Gus's (Friday Night Clash) | Once a day, any time | One entry per day. Gus calls it "Friday Night Clash" no matter what day it is. |
 | Grading, sent by Gus | Back 24 hours after sending | |
 | Summer, and Set 2 | The third day of play at the earliest, once the player has played the pre-release | |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |

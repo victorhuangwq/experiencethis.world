@@ -124,7 +124,7 @@ function renderPrerelease(game) {
 }
 
 /**
- * Friday Night Locals, once a day
+ * Friday Night Clash, the local tourney, once a day
  */
 function renderLocals(game) {
     const parts = [`<h3>${escape(Lines.tournaments.localsTitle)}</h3>`, `<p>${escape(Lines.tournaments.localsNote)}</p>`];

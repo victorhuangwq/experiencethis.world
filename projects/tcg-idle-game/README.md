@@ -19,8 +19,9 @@ better), and three secrets.
 
 Act 2 is playable too: Gus's store opens on the second day of play, with
 packs at a markup, a glass case of singles, grading (back a day later),
-Friday Night Locals once a day against regulars the player learns to read,
-and Marcus trading on Thursday and Friday evenings and weekends. Winning
+Friday Night Clash (the local tourney) once a day against regulars the
+player learns to read, and Marcus trading on Thursday and Friday evenings
+and weekends. Winning
 locals gets an invitation to the pre-release, and summer brings Set 2,
 Backyard Brawl (102 cards), on the third day of play at the earliest.
 

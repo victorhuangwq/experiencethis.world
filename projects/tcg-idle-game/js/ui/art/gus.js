@@ -29,36 +29,55 @@ const plain = text => ({ text });
 const part = (area, text) => ({ text, area });
 const textOf = pieces => pieces.map(piece => piece.text).join('');
 
-// The store is three columns: the shelves, the corkboard, and the window on
-// the back wall, then Gus, the glass case, and the table at the front. Each
-// column's width:
-const COLUMNS = [13, 13, 11];
-// Width inside the walls: the columns, two spaces between them, and one at
-// each side
-const INSIDE = 43;
+// The store is three columns: the shelves of packs down the left wall;
+// the corkboard, with Gus behind the counter below it; and the window, with
+// the trade table below it. Each column's width, and the space before it:
+const COLUMNS = [{ width: 10, gap: 1 }, { width: 16, gap: 2 }, { width: 11, gap: 3 }];
+// Width inside the walls
+const INSIDE = 44;
+// Rows inside the walls
+const HEIGHT = 16;
 
 /**
- * Lines of a row of parts of the store, side by side. Only the drawn part
- * of each line can be pressed, not the space around it.
- * @param {Array} blocks - { area, lines }, one per column
- * @param {string} align - 'top' or 'bottom'
+ * Lay out the parts of the store in their columns, each part at the top or
+ * the bottom of its column, and turn each row into pieces. Only the drawn
+ * part of each line can be pressed, not the space around it.
+ * @param {Array} columns - Per column, a list of { area, lines, bottom }
+ * @returns {Array} - Rows of pieces
  */
-function side(blocks, align) {
-    const height = Math.max(...blocks.map(block => block.lines.length));
-    return Array.from({ length: height }, (_, row) => {
-        const pieces = [plain(' ')];
-        blocks.forEach((block, column) => {
-            const offset = align === 'top' ? 0 : height - block.lines.length;
-            const line = (block.lines[row - offset] ?? '').padEnd(COLUMNS[column]);
+function layOut(columns) {
+    const grid = columns.map(parts => {
+        const cells = Array.from({ length: HEIGHT }, () => ({ text: '', area: null }));
+        let top = 0;
+        let bottom = HEIGHT;
+        for (const { area, lines, bottom: atBottom } of parts) {
+            const start = atBottom ? (bottom -= lines.length) : top;
+            lines.forEach((text, index) => {
+                cells[start + index] = { text, area };
+            });
+            if (!atBottom) {
+                top += lines.length;
+            }
+        }
+        return cells;
+    });
+
+    return Array.from({ length: HEIGHT }, (_, row) => {
+        const pieces = [];
+        grid.forEach((cells, column) => {
+            const { width, gap } = COLUMNS[column];
+            const { text, area } = cells[row];
+            const line = text.padEnd(width);
             const drawn = line.trim();
             const before = line.length - line.trimStart().length;
-            pieces.push(plain((column > 0 ? '  ' : '') + line.slice(0, before)));
+            pieces.push(plain(' '.repeat(gap) + line.slice(0, before)));
             if (drawn) {
-                pieces.push(part(block.area, drawn));
+                pieces.push(part(area, drawn));
             }
             pieces.push(plain(line.slice(before + drawn.length)));
         });
-        pieces.push(plain(' '));
+        const used = textOf(pieces).length;
+        pieces.push(plain(' '.repeat(INSIDE - used)));
         return pieces;
     });
 }
@@ -71,61 +90,62 @@ function side(blocks, align) {
  */
 function insideLines({ marcus = false, newSet = false, night = false } = {}) {
     const shelves = [
-        '.-----------.',
-        '|   PACKS   |',
-        '| [##] [##] |',
-        '|===========|',
-        '| [##] [##] |',
-        '|===========|',
-        newSet ? '| [BB] [BB] |' : '| [##] [##] |',
-        '\'-----------\''
+        '.--------.',
+        '| PACKS  |',
+        ...Array.from({ length: HEIGHT - 3 }, (_, row) => newSet && row < 4 ? '|[BB][BB]|' : '|[##][##]|'),
+        '\'--------\''
     ];
-    const board = [
-        '.-----------.',
-        '|o         o|',
-        '|  FRIDAY   |',
-        '|   NIGHT   |',
-        '|  LOCALS!  |',
-        '| EVERY DAY |',
-        '|o         o|',
-        '\'-----------\''
+    const poster = [
+        '.--------------.',
+        '|o  FRIDAY    o|',
+        '|  NIGHT CLASH |',
+        '|--------------|',
+        '| LOCAL TOURNEY|',
+        '|o EVERY DAY  o|',
+        '\'--------------\''
+    ];
+    const gus = [
+        '     (o_o)',
+        '    _/|=|\\_'
+    ];
+    // The counter is a glass case of singles, with Gus's till at the front
+    const glassCase = [
+        '.--------------.',
+        '| [*] [*] [*]  |',
+        '|   SINGLES    |'
+    ];
+    const counter = [
+        '|--------------|',
+        '|  COUNTER  [$]|',
+        '\'--------------\''
     ];
     const window = [
         '.---------.',
         night ? '| *  |    |' : '|    |    |',
-        night ? '|    |  * |' : '|    |    |',
         '|----+----|',
-        night ? '|  * |    |' : '|    |    |',
-        '\'----\'----\'',
-        '',
-        'TRADE TABLE'
-    ];
-    const gus = [
-        '    (o_o)',
-        '   _/|=|\\_',
-        '.-----------.',
-        '| [$]  GUS  |',
-        '\'-----------\''
-    ];
-    const glassCase = [
-        '   SINGLES',
-        '.-----------.',
-        '|[*] [*] [*]|',
-        '|[*] [*] [*]|',
-        '\'-----------\''
+        night ? '|    |  * |' : '|    |    |',
+        '\'---------\''
     ];
     const table = [
-        ...(marcus ? ['  (-_-)', '  /|#|\\'] : []),
-        '.---------.',
-        '\'---------\'',
-        '  |     |'
+        ...(marcus ? ['  (-_-)', ' _/|#|\\_'] : []),
+        '|=======|',
+        '|       |',
+        'TRADE TABLE'
     ];
 
-    const rows = [
-        ...side([{ area: 'shelves', lines: shelves }, { area: 'board', lines: board }, { area: 'table', lines: window }], 'top'),
-        [plain(' '.repeat(INSIDE))],
-        ...side([{ area: 'gus', lines: gus }, { area: 'case', lines: glassCase }, { area: 'table', lines: table }], 'bottom')
-    ];
+    const rows = layOut([
+        [{ area: 'shelves', lines: shelves }],
+        [
+            { area: 'board', lines: poster },
+            { area: 'gus', lines: counter, bottom: true },
+            { area: 'case', lines: glassCase, bottom: true },
+            { area: 'gus', lines: gus, bottom: true }
+        ],
+        [
+            { area: 'table', lines: window },
+            { area: 'table', lines: table, bottom: true }
+        ]
+    ]);
     const name = 'GUS\'S GAMES & GRUB';
     const before = Math.floor((INSIDE - name.length) / 2);
     return [
