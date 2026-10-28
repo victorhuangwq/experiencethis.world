@@ -4,7 +4,8 @@ A text and ASCII idle game in the spirit of Candy Box and A Dark Room: an
 adult rediscovers their childhood card collection and gets back into the
 hobby, from single packs at a mall vending machine to the top of the scene.
 Inside the story, the card game everyone collects is called Critter Clash.
-The story, voice, and design are in [STORY.md](STORY.md).
+The story, voice, and design are in [story/](story/story.md): `story.md`
+for the whole game and what every act shares, and a file for each act.
 
 ## Current state
 
@@ -144,7 +145,7 @@ The tests are in `tests/`, and are not published with the site:
   checks that money, cards, strikes, the machine, and saves always make
   sense. A failure names the seed and step to replay.
 - `pacing.test.js` has bots play like an active player and an idle one, and
-  checks milestones against the targets in STORY.md. Add
+  checks milestones against the targets in `story/story.md`. Add
   `--test-reporter=spec` to see the measured times.
 - `old-saves.test.js` loads every save in `tests/fixtures/` (each made by a
   released version) the way the page does, and checks the game carries on
@@ -166,7 +167,7 @@ When adding things:
   `tests/fixtures/` as `save-<release>.json` (play to an interesting point
   with the released code and store `localStorage.critterClashSave`).
 - **A new place or a new milestone:** add a browser journey through it, and
-  a pacing check if STORY.md sets a target for it.
+  a pacing check if `story/story.md` sets a target for it.
 
 To try things in the browser, add `?dev` to the page URL for shortcuts to add
 money, restock, call the kid into line, count another day of play (and bring

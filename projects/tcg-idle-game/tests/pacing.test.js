@@ -1,6 +1,6 @@
 /**
  * Pacing: bots play the way real players do, and the story's milestones
- * must come about when STORY.md (Pacing) says they should. If a tuning
+ * must come about when story/story.md (Pacing) says they should. If a tuning
  * change in rules.js fails these, either the change or the target is wrong.
  * Run with --test-reporter=spec to see the measured times.
  */

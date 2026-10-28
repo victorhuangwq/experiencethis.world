@@ -3,6 +3,21 @@
 Working design document for the story expansion. Sections marked **Open**
 still need a decision.
 
+The design is in this folder. This file is the whole game at a glance, and
+what every act shares: the vision, the voice, the cast, the pacing, the
+cards, the kindness code, and the endings. Each act has its own file, with
+what happens in it:
+
+- [Act 1: The vending machine](act-1.md) (built)
+- [Act 2: Gus's Games & Grub](act-2.md) (built)
+- [Act 3: The online store and deck building](act-3.md) (planned)
+- [Act 4: Card shows](act-4.md) (planned)
+- [Act 5: Your own shop](act-5.md) (planned)
+
+To add to an act, add to its file. To add an act, add a file that starts the
+way the others do (whether it's built or planned, what unlocks it, and what
+it leads to), then its places and systems, and list it here and under Acts.
+
 ## Status
 
 - **Built:** Act 1, spring (the shoebox opening, the allowance, the hybrid
@@ -73,21 +88,7 @@ file per topic.
 - **The day job is hybrid,** by the player's real weekday: Tuesday to
   Thursday they have to go to the office (a place of its own), Monday and
   Friday they work from the kitchen table at home, and weekends are off.
-  The office is a cubicle, like Severance: low partitions, a QUARTERLY
-  SYNERGY poster, a corkboard with one memo, a calendar with the real date
-  and time, and an old terminal with a trackball. It fills up as the hobby
-  takes over: a card taped to the terminal (first pack), a binder (bought
-  one), another and a playmat (second binder), the Friday Night Clash flyer
-  and more cards pinned up (the poster at Gus's), a graded card on a stand
-  (the first one back), and in summer a BACKYARD BRAWL poster over the
-  synergy one, cards all round the screen, and a box of bulk under the desk.
-  Packs can be opened under the desk, and the inbox count only goes up.
-- **Marcus at the office.** He looks over the partition at the card on the
-  terminal, then asks the player to lunch when he sees a binder or a pack
-  opened at the desk. Lunch is a game in the break room, once an office
-  day. After two, he brings a special pack each office day, for $6, what
-  the machine charges ("I am not Flip"). The first time the player is at
-  Gus's while he is, they run into him there, and pretend this is normal.
+  The office, and Marcus from IT, are in [Act 1](act-1.md).
 - **Quitting the job comes later.** When the player opens their own shop
   (Act 5), the shop's income replaces the salary, and quitting is the moment
   that starts the act.
@@ -146,101 +147,11 @@ Named cards so far (the full list is in `js/content/catalog.js`):
 
 | Act | Location | New verbs | Unlocked by |
 |---|---|---|---|
-| 1 (spring) | Vending machine, the office | Buy one pack, open it, sell duplicates to Benny, answer emails | Start |
-| 2 (spring, then summer) | Hobby store | Buy packs at a markup and singles, grade cards, trade with Marcus, locals, the pre-release; Set 2 | Gus's store appears after 40 cards opened with Pip's tip, or 60 without. It opens on the second day of play. |
-| 3 | Online store and deck building | Preorders, shipping, building real decks, regionals | Summer: Set 2 sells out everywhere (Gus mentions PackDrop.com) |
-| 4 | Card shows | Rent a table, haggle, hunt specific cards, nationals | First booster box delivered |
-| 5 | Your own shop | Stock shelves, host tournaments, refill the vending machine; quit the day job | A money target, after the first card show |
-
-Act 5 closes the loop: the player ends up stocking the vending machine from
-Act 1 (with the key from its coin return), and Pip is the first customer
-through the door of the player's shop.
-
-### The vending machine
-
-- **The stock varies.** Each restock fills the 8 slots: mostly normal packs
-  ($3), and sometimes a bundle of three packs ($8, about 6% of slots), a
-  special pack ($6, 3%), or a mega pack ($10, 15 cards with a guaranteed rare
-  or better, 2%). Set 2 and Set 3 packs join the mix once those sets release.
-- **Other people buy it up.** The rarer the pack, the sooner it goes: mega
-  packs within 2 to 8 minutes of the drop, special packs 3 to 10, bundles 5
-  to 15, normal packs 10 to 60. About half the normal packs are left when the
-  driver comes back. Being there on the dot gets the good stuff; checking in
-  now and then still finds some packs.
-- **It runs on the wall clock.** When the driver restocks, each pack is given
-  the time someone else will buy it, so the machine at any moment is whatever
-  hasn't gone yet. Every restock the player missed is played out when they
-  return, so the machine is the same whether they watched or not.
-- **The scalper.** Once the player has met Pip and bought 8 packs, Flip
-  Resellington lines up behind them (always the first time, then about 1 restock in 4),
-  sometimes with a kid behind him. The player can buy everything they can
-  afford (fair, and Flip gets more annoyed each time; a strike if a kid was
-  waiting), buy everything but leave one pack for the kid, or let him have
-  the rest. Whatever they can't afford, Flip takes.
-- **Terry, waiting for the drop.** If the player is at the machine in the
-  minute before a drop, Terry is already there (always the first time, then
-  sometimes). Asking him to split it: he takes row B, they take row A, and he
-  becomes a friend who texts when a mega pack turns up while they're away.
-  Letting him go first: he takes the best pack. Shoving him aside: a strike,
-  and Dale counts it in the Shame ending.
-
-- **In summer,** Set 2 packs fill about half the slots at the same price as
-  the Base Set's. The game is popular now and $3 is cheap for the new set,
-  so they go two and a half times as fast, and the scalper lines up about 2
-  restocks in 5. Special packs stay Base Set packs.
-
-### Act 2: Gus's Games & Grub
-
-- **Looking around.** The store is explored by pressing parts of its art:
-  the shelves (packs), the glass case (singles), the corkboard (Gus talks
-  about locals and, for regulars, the pre-release), the table by the window
-  (Marcus), and Gus himself, who asks what it'll be: packs, grading, or
-  what's on the corkboard.
-- **The store opens on the second day.** The sign appears in Act 1 (after
-  40 cards opened with Pip's tip, or 60 without). On the first day it says
-  GRAND OPENING TOMORROW, and Gus says so through the door. From the second
-  day of play it's open, always (Gus lives in the back).
-- **Packs at a markup.** Gus sells Base Set packs for $4.50, more than the
-  machine's $3, but he never runs out and nobody else buys them first. The
-  machine stays the cheap, contested source; Gus is the sure thing.
-- **Singles.** A glass case of six single cards (two commons, two uncommons,
-  a rare, and a rare or ultra-rare), restocked every 4 hours, at twice each
-  card's value (25 cents at least). It's the way to hunt a specific card
-  instead of opening another pack.
-- **Grading.** Gus sends a card to Mint Condition Co. for $5 and it comes
-  back a day later, graded (see Card grading).
-- **Marcus trades.** On Thursday and Friday from 6 PM, and all day Saturday
-  and Sunday, Marcus is at the table by the window with his trade binder. Each
-  visit he offers up to three trades, one card for one: a card the player
-  doesn't have, for a spare copy of one they do, of the same rarity. If the
-  player met him at the office, he pretends not to know them.
-- **Locals.** Gus puts up a poster on the third day of play, and from the
-  fourth there's Friday Night Clash, the local tourney, once a day (Gus calls
-  it that whatever day it is). Entry is buying two packs from Gus, which
-  the player keeps. The player plays their own cards (see Tournaments).
-  Prizes are packs: three for winning every match, one for winning two.
-- **The pre-release.** When the player first wins locals, Gus says they're
-  a regular now and invites them to the Set 2 pre-release, there and then:
-  a kit of four Set 2 packs for $30, opened at the table, playing with only
-  those cards.
-  Everyone who plays gets the pre-release promo, The Early Bird, and each
-  match won earns a Set 2 pack. It's the first look at Set 2, and it can be
-  played once.
-- **Summer, and Set 2.** Summer comes the day after the player plays the
-  pre-release, so the fifth day of play at the earliest. For now it ends
-  with a note from the developer: this is as far as the game goes. Set 2, Backyard
-  Brawl, is out: Critter Clash got popular, so Gus charges $7.50 a pack for
-  it, and the vending machine, still at $3, is cleared out faster (see The
-  vending machine). Locals entry and prizes become Set 2 packs.
-
-### Act 1 secrets
-
-- **Smell the pack:** pointless, with escalating lines. The 50th sniff makes
-  special packs restock more often.
-- **The coin return:** usually nothing, sometimes a quarter (at most once per
-  restock), and once, the machine's key. The key does nothing until Act 5.
-- **Kicking the machine:** never a strike, but Officer Dale writes it down,
-  the machine gets dents, and the Shame ending reads out the total.
+| [1](act-1.md) (spring) | Vending machine, the office | Buy one pack, open it, sell duplicates to Benny, answer emails | Start |
+| [2](act-2.md) (spring, then summer) | Hobby store | Buy packs at a markup and singles, grade cards, trade with Marcus, locals, the pre-release; Set 2 | Gus's store appears after 40 cards opened with Pip's tip, or 60 without. It opens on the second day of play. |
+| [3](act-3.md) | Online store and deck building | Preorders, shipping, building real decks, regionals | Summer: Set 2 sells out everywhere (Gus mentions PackDrop.com) |
+| [4](act-4.md) | Card shows | Rent a table, haggle, hunt specific cards, nationals | First booster box delivered |
+| [5](act-5.md) | Your own shop | Stock shelves, host tournaments, refill the vending machine; quit the day job | A money target, after the first card show |
 
 ## Locations and ASCII scenes
 
@@ -320,7 +231,7 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine) |
+| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine in [Act 1](act-1.md)) |
 | Pip in line | Not before the first restock, then about 1 in 3 restocks, once you've bought 3 since it | Not after you've already let Pip go first that restock |
 | Gus's store opens | The second day of play | The sign appears in Act 1 |
 | Gus's glass case | Restocked every 4 hours (00:00, 04:00, ...) | Six singles |
@@ -484,86 +395,11 @@ rock-paper-scissors decision.
 - Tiers: Friday locals, regionals, nationals, and a final championship. At
   locals a good read beats raw power; at the top tiers both matter, which
   pushes the player to collect and trade for stronger cards.
-- **As built for Act 2:** a tournament is three matches against Gus's
-  regulars. Type advantage is worth 3 power; a Wild card has no advantage
-  and gives none. Each round the player picks a type and plays their
-  strongest unplayed card of it. At locals their deck is the three
-  strongest cards of each type in their collection; at the pre-release it
-  is the same, from only the cards in their kit. Graded cards can't be
-  played. A tied round is settled with a coin.
+- How it's built so far is in [Act 2](act-2.md) (Tournaments, as built).
 - After beating a tier, the player can auto-play it.
 - Prizes: money, prize packs, and tournament-only promos.
 - This replaces the current HP-and-turns battle system, which is slower and
   more complex than this design needs.
-
-## Trading and side quests
-
-Trades are short encounters with recurring characters. Ideas so far:
-
-- **Pip:** the loyal sidekick. Tips, the occasional free card, cheering at
-  tournaments, and the first customer at the player's shop.
-- **Marcus from IT:** the coworker who collects in secret. In Act 2 he
-  trades at Gus's on his evenings and weekends (see Act 2).
-- **The confident trader:** offers suspiciously shiny cards. Can the player
-  spot the fakes?
-- **The dad with his kid's binder:** has no idea what's in it. An honesty
-  test; fleecing him is a strike.
-- **The obsessive collector:** will trade almost anything for one specific
-  common card.
-- **The trade-up chain** (required for the collector ending): start with the
-  "Wet Sock Gobln" misprint from the childhood shoebox (or, if the shoebox
-  was sold, some other worthless card) and trade up, one card show at a time,
-  until it becomes a specific legendary. Each step is a different person who
-  wants exactly what the player has.
-
-## Card shows
-
-Card shows are scheduled events (see clock time) where the player can:
-
-- rent a table and set prices for their cards;
-- watch NPC buyers browse and haggle;
-- browse other tables for specific cards;
-- risk buying fakes if they don't check carefully.
-
-Pricing far above market means no sales. Knowingly selling a fake is a strike.
-
-## Card grading
-
-Unlocks in Act 2, at Gus's. Gus mails a card to Mint Condition Co. for the
-player, and it comes back a day later in a sealed plastic case with a grade
-from 1 to 10: its condition, which it has had since it came out of the
-pack. Grading reveals it; it never rolls anything. Gus reads each card by
-eye first, so the player can tell which cards are worth sending, but a
-"looks perfect" may come back a 9 or a 10.
-
-```
- .------------------------.
- | MINT CONDITION CO.  10 |
- | ABSOLUTELY MASSIVE     |
- | DRAGON      GEM MINT   |
- |------------------------|
- |  .------------------.  |
- |  |      /\_/\       |  |
- |  |     ( o.o )      |  |
- |  |      > ^ <       |  |
- |  '------------------'  |
- '------------------------'
-```
-
-- Every card has a hidden condition (see Cards). Cards straight from a
-  fresh pack are in the best shape; cards that have been traded around a
-  lot are worse.
-- The grade multiplies the card's value. For example: 10 Gem Mint ×10,
-  9 ×3, 8 ×1.5, 6 or lower ×0.8.
-- **The main trade-off: a graded card is sealed and can't be played.** Do you
-  grade your best legendary for money and collector prestige, or keep it in
-  your deck for the championship? The player can crack the case open to play
-  the card, but loses the grade.
-- Gus buys graded cards for half their value. Graded cards sell best at
-  card shows (Act 4), so grading feeds the business path.
-- The binder has a "Gem Mint shelf" for 10s, as a collector side goal.
-- Another dishonest offer for the business path: Flip offers to "reseal"
-  low-grade cards into 10 cases. Accepting it gives the bad ending.
 
 ## Endings
 

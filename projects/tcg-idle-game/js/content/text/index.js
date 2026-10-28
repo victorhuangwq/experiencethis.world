@@ -5,7 +5,7 @@
  * a mechanic; let new buttons speak for themselves, and let characters hint
  * at things in their own words. The narrator may talk to the player, joke
  * about idle games, react to the real clock, and the developer may leave
- * the occasional note. See STORY.md for the full style guide.
+ * the occasional note. See story/story.md for the full style guide.
  */
 
 import { Story } from './story.js';

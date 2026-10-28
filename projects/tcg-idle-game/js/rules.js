@@ -1,5 +1,5 @@
 /**
- * Tuning values. See STORY.md (Pacing) for the targets behind them.
+ * Tuning values. See story/story.md (Pacing) for the targets behind them.
  * Money is in cents.
  */
 
