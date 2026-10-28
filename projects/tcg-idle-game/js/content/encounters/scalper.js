@@ -24,7 +24,9 @@ export const ScalperEncounter = {
         }
         // One chance per restock. The first time always happens.
         vending.scalperChecked = true;
-        return game.state.people.flip.encounters === 0 || game.chance(Rules.scalperChance);
+        // Once the game is popular, there is more to scalp
+        const chance = Vending.newSet(game) ? Rules.summerScalperChance : Rules.scalperChance;
+        return game.state.people.flip.encounters === 0 || game.chance(chance);
     },
     start: game => {
         game.state.people.flip.encounters++;
@@ -70,8 +72,10 @@ function cheapestFirst(game) {
 function buyOut(game, leaveOne) {
     const vending = game.state.vending;
     const people = game.state.people;
-    // Buying out happens in one go; nobody else steps up mid-way
+    // Buying out happens in one go; nobody else steps up mid-way, even if
+    // the machine was restocked while he waited
     vending.pipChecked = true;
+    vending.scalperChecked = true;
 
     const forKid = leaveOne ? cheapestFirst(game)[0] : -1;
     const wanted = cheapestFirst(game).filter(index => index !== forKid).reverse();

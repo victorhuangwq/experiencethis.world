@@ -61,7 +61,18 @@ export const Job = {
 
     // Marcus from IT
     coworker: {
-        notices: 'Marcus from IT stops at your desk to fix nothing. He looks at the card under your monitor for a long time. "Base set," he says, and leaves.',
-        lunch: 'Marcus appears as the pack opens. He has been waiting. "What did you pull?" You show him. He nods like a doctor. "Lunch sometime," he says. "Bring the binder."'
+        notices: 'Marcus from IT looks over the partition. He looks at the card taped to your terminal for a long time. "Base set," he says, and goes back down.',
+        lunch: 'Marcus appears as the pack opens. He has been waiting. "What did you pull?" You show him. He nods like a doctor. "Lunch sometime," he says. "Bring the binder."',
+        binder: 'Marcus looks over the partition at your binder. He looks at it the way other people look at puppies. "Lunch," he says. "Bring that."',
+        // Looking over the partition when there's a game or a pack today
+        around: 'Marcus is looking over the partition with his deck box. It is lunch somewhere.',
+        lunchButton: 'Lunch with Marcus',
+        lunchTitle: 'Lunch with Marcus in the break room. One game, best of three. Nobody else is here. Nobody else is ever here.',
+        lunchWon: 'You win. Marcus nods slowly. "Again tomorrow," he says. He means it.',
+        lunchLost: 'Marcus wins. He does not gloat. He writes something in a small notebook.',
+        offersPacks: '"I pass the good vending machine on my way in," says Marcus. "I can get you a special pack. Six dollars. What it costs. I am not Flip."',
+        packButton: price => `Buy the special pack Marcus brought (${price})`,
+        boughtPack: 'Marcus passes a special pack over the partition. "Six dollars," he says. "Exact change. I am not a bank."',
+        cantAfford: price => `"${price}," says Marcus. "Tomorrow, then." He keeps the pack. It is still yours, morally.`
     }
 };

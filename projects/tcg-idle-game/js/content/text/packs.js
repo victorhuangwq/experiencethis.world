@@ -6,6 +6,7 @@ export const Packs = {
     first: 'You open your first pack in years. Your hands remember how.',
     // The checklist comes in the first pack
     checklist: total => `A checklist falls out of the pack. Every card in the Base Set, numbered 1 to ${total}. You take it home and put it on the fridge. You have not put anything on the fridge since 1998.`,
+    newChecklist: (set, total) => `Another checklist falls out. ${set}, numbered 1 to ${total}. It goes on the fridge, next to the other one. The fridge is filling up.`,
     newCards: count => count === 1 ? '1 new card for the checklist.' : `${count} new cards for the checklist.`,
     open: 'You open a pack.',
     openSpecial: 'You open the special pack. It smells like a new car.',
@@ -17,6 +18,9 @@ export const Packs = {
     unopened: count => `Unopened packs: ${count}`,
     unopenedSpecial: count => `Special packs: ${count}`,
     unopenedMega: count => `Mega packs: ${count}`,
+    // Packs of a set after the first
+    unopenedOf: (set, count) => `${set} packs: ${count}`,
+    unopenedMegaOf: (set, count) => `${set} mega packs: ${count}`,
 
     // Lines for particular sniff counts; otherwise a random one of sniff
     sniffs: {

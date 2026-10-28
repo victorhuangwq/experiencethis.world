@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { gameAtMall, newGame, act, finishOpening, START } from './helpers.js';
+import { gameAtMall, gameAtClash, newGame, act, finishOpening, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Systems } from '../js/systems/index.js';
 import { Unlocks } from '../js/content/unlocks.js';
@@ -22,6 +22,7 @@ import { renderEncounter } from '../js/ui/panels/encounter.js';
 import { renderEnding } from '../js/ui/panels/ending.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
+import { Tournaments } from '../js/systems/tournaments.js';
 
 // Actions the UI handles itself instead of passing to the game
 const UI_ACTIONS = ['go', 'view.set', 'log.toggle', 'reveal.skip', 'restart'];
@@ -98,8 +99,16 @@ test('every ending has a name', () => {
 
 test('every encounter and ending screen renders', () => {
     const game = gameAtMall();
+    // A match needs a tournament on
+    const locals = gameAtClash();
+    Collection.add(locals, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
+    act(locals, 'tournaments.enterLocals');
+    // So does lunch with Marcus
+    const lunch = gameAtClash();
+    Collection.add(lunch, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
+    Tournaments.start(lunch, 'lunch', 'base', Collection.loose(lunch), ['marcus']);
     for (const encounter of Encounters) {
-        const html = renderEncounter(game, encounter);
+        const html = renderEncounter({ match: locals, lunch }[encounter.id] || game, encounter);
         assert.ok(html.includes('data-action="encounter.choose"'), encounter.id);
         assert.ok(!html.includes('undefined'), encounter.id);
     }
@@ -138,8 +147,12 @@ test('every rarity a pack can hold has cards, and the odds add up', () => {
     }
     for (const [kind, slots] of Object.entries(Rules.packSlots)) {
         const rarities = slots.flatMap(slot => Rules.hitOdds[slot] ? Object.keys(Rules.hitOdds[slot]) : [slot]);
-        for (const rarity of rarities) {
-            assert.ok(Catalog.inPacks(rarity).length > 0, `${kind}: no ${rarity} cards in packs`);
+        for (const set of Catalog.packSets()) {
+            for (const rarity of rarities) {
+                for (const type of Catalog.types) {
+                    assert.ok(Catalog.inSet(set.id, rarity).some(card => card.type === type), `${set.id} ${kind}: no ${type} ${rarity} cards`);
+                }
+            }
         }
     }
     assert.ok(Catalog.inPacks().every(card => card.source === 'pack'));
@@ -244,6 +257,9 @@ test('every button runs an action that exists', () => {
     }
 });
 
+// What can be shown below Gus's store, and one that can't
+const PANELS = ['gus', 'packs', 'grading', 'board', 'case', 'table', 'nonsense'];
+
 test('every place renders at every stage of the game', () => {
     const fresh = newGame();
     const kept = newGame();
@@ -258,11 +274,23 @@ test('every place renders at every stage of the game', () => {
     const tuesday = START + 2 * 24 * 60 * 60 * 1000;
     const office = gameAtMall({ now: tuesday });
     office.tick(tuesday + 60 * 1000);
-    office.state.collection.packs.normal = 2;
+    office.state.collection.packs.base.normal = 2;
+    // The day after Gus opened: a single bought, one card away being
+    // graded, and one back
+    const gus = gameAtMall();
+    gus.state.collection.cardsOpened = Rules.gusWithoutTip;
+    gus.checkUnlocks();
+    gus.tick(START + 24 * 60 * 60 * 1000);
+    gus.state.wallet.cents = 10000;
+    act(gus, 'store.buySingle', { spot: 5 });
+    Collection.add(gus, [Cards.card('lawnmower-lion', 9), Cards.card('chewed-dragon', 1)]);
+    act(gus, 'store.grade', { id: gus.state.collection.cards[1].id });
+    gus.tick(gus.time + Rules.gradingTime);
+    act(gus, 'store.grade', { id: gus.state.collection.cards[0].id });
 
-    for (const [name, game] of Object.entries({ fresh, kept, busy, big, office })) {
+    for (const [name, game] of Object.entries({ fresh, kept, busy, big, office, gus })) {
         for (const place of Locations) {
-            for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }]) {
+            for (const view of [{}, { binder: 'Water', page: 2 }, { page: 'nonsense' }, ...PANELS.map(panel => ({ panel }))]) {
                 const html = place.render(game, view);
                 assert.equal(typeof html, 'string', `${place.id} (${name})`);
                 assert.ok(!html.includes('undefined') && !html.includes('NaN'), `${place.id} (${name}): ${html}`);

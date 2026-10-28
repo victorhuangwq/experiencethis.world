@@ -22,6 +22,18 @@ export const HomeScene = {
     render: renderHome
 };
 
+/**
+ * Cards back from grading, sealed in hard plastic
+ */
+function renderGraded(game) {
+    const graded = game.state.collection.cards.filter(card => Collection.isGraded(game, card));
+    if (graded.length === 0) {
+        return '';
+    }
+    const items = graded.map(card => `<li class="${card.rarity}">${escape(Lines.gus.gradedCard(card.name, card.condition, Lines.gus.grades[card.condition]))}</li>`);
+    return `<h3>${escape(Lines.home.graded)}</h3><ul class="checklist">${items.join('')}</ul>`;
+}
+
 function renderHome(game, view) {
     const cards = game.state.collection.cards;
     const forSale = Collection.storageForSale(game);
@@ -48,6 +60,7 @@ function renderHome(game, view) {
     }
 
     parts.push(renderChecklists(game, view));
+    parts.push(renderGraded(game));
     parts.push(renderCritters(game, view));
 
     return parts.join('');

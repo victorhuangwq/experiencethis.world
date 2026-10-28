@@ -37,7 +37,7 @@ exclude:
   - README.md
   - AGENTS.md
   - projects/tcg-idle-game/README.md
-  - projects/tcg-idle-game/STORY.md
+  - projects/tcg-idle-game/story
   - projects/tcg-idle-game/package.json
   - projects/tcg-idle-game/tests
   - projects/tcg-idle-game/package-lock.json

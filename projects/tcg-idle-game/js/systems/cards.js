@@ -21,10 +21,14 @@ export const Cards = {
     },
 
     /**
-     * A random card of a rarity, from the set in packs
+     * A random card of a rarity from a set
+     * @param {Game} game - Game, for randomness
+     * @param {string} rarity - Rarity
+     * @param {number} condition - Condition
+     * @param {string} set - Set id
      */
-    pull(game, rarity, condition) {
-        return this.card(game.pick(Catalog.inPacks(rarity)).id, condition);
+    pull(game, rarity, condition, set = 'base') {
+        return this.card(game.pick(Catalog.inSet(set, rarity)).id, condition);
     },
 
     /**
@@ -32,20 +36,38 @@ export const Cards = {
      * rolling their rarity (Rules.hitOdds)
      * @param {Game} game - Game, for randomness
      * @param {string} kind - normal, special, or mega
+     * @param {string} set - The pack's set
      * @returns {Array} - Cards
      */
-    openPack(game, kind) {
-        // Cards straight from a pack are in good shape
-        const condition = () => game.randomInt(6, 10);
+    openPack(game, kind, set = 'base') {
+        const condition = () => this.packCondition(game);
         return Rules.packSlots[kind].map(slot => {
             if (!Rules.hitOdds[slot]) {
-                return this.pull(game, slot, condition());
+                return this.pull(game, slot, condition(), set);
             }
             if (kind === 'special' && game.chance(Rules.primeChance)) {
                 return this.card('card-o-matic-prime', condition());
             }
-            return this.pull(game, this.hitRarity(game, slot), condition());
+            return this.pull(game, this.hitRarity(game, slot), condition(), set);
         });
+    },
+
+    /**
+     * The condition of a card straight from a pack: good, and now and then
+     * perfect (Rules.packCondition)
+     * @param {Game} game - Game, for randomness
+     * @returns {number} - Condition from 1 to 10
+     */
+    packCondition(game) {
+        const odds = Object.entries(Rules.packCondition);
+        let roll = game.random();
+        for (const [condition, chance] of odds) {
+            roll -= chance;
+            if (roll < 0) {
+                return Number(condition);
+            }
+        }
+        return Number(odds[odds.length - 1][0]);
     },
 
     /**
@@ -93,32 +115,13 @@ export const Cards = {
      * @returns {Object|null} - Card, or null if the entry is invalid
      */
     unpack(packed) {
-        if (!Array.isArray(packed) || !Number.isInteger(packed[0])) {
+        if (!Array.isArray(packed) || packed.length !== 3) {
             return null;
         }
-        const [id, cardId, condition] = packed.length === 3 ? packed : fromFirstRelease(packed);
-        if (!Catalog.find(cardId)) {
+        const [id, cardId, condition] = packed;
+        if (!Number.isInteger(id) || !Catalog.find(cardId)) {
             return null;
         }
         return { id, ...this.card(cardId, Number.isInteger(condition) ? condition : 5) };
     }
 };
-
-/**
- * Cards saved by the first release: [id, name, type, rarity, power, value,
- * fixed card id, condition]. Its critters were made up at random; each one
- * becomes a Base Set card of the same rarity, and the same name always
- * becomes the same card, so duplicates stay duplicates.
- * @returns {Array} - [id, catalogue id, condition]
- */
-function fromFirstRelease([id, name, , rarity, , , fixedId, condition]) {
-    if (Catalog.find(fixedId)) {
-        return [id, fixedId, condition];
-    }
-    const pool = Catalog.inPacks(rarity).length > 0 ? Catalog.inPacks(rarity) : Catalog.inPacks('common');
-    let hash = 0;
-    for (const char of String(name)) {
-        hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-    }
-    return [id, pool[hash % pool.length].id, condition];
-}

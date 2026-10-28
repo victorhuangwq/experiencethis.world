@@ -62,6 +62,30 @@ export function gameAtMall(options) {
 }
 
 /**
+ * A game on the day Gus's store opened (the day after it was found), or
+ * some days of play later
+ * @param {Object} options - seed, cents (money to spend), later (days of
+ *                           play after the opening)
+ */
+export function gameAtGus({ seed, cents = 100000, later = 0 } = {}) {
+    const game = gameAtMall({ seed });
+    game.state.collection.cardsOpened = Rules.gusWithoutTip;
+    game.checkUnlocks();
+    for (let day = 0; day <= later; day++) {
+        game.tick(game.time + 24 * 60 * 60 * 1000);
+    }
+    game.state.wallet.cents = cents;
+    return game;
+}
+
+/**
+ * A game on the day of the first Friday Night Clash
+ */
+export function gameAtClash(options = {}) {
+    return gameAtGus({ ...options, later: Rules.clashFromDay - Rules.gusOpensOnDay });
+}
+
+/**
  * Change tuning values for one test
  * @param {Object} t - The test context
  * @param {Object} changes - Rules to change

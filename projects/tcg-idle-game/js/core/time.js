@@ -5,6 +5,17 @@
 export const SECOND = 1000;
 export const MINUTE = 60 * SECOND;
 export const HOUR = 60 * MINUTE;
+export const DAY = 24 * HOUR;
+
+/**
+ * The day of the player's calendar a time falls on, counted in whole days,
+ * so two times on the same local date give the same number
+ * @param {number} time - Timestamp
+ * @returns {number} - Day number
+ */
+export function localDay(time) {
+    return Math.floor((time - new Date(time).getTimezoneOffset() * MINUTE) / DAY);
+}
 
 /**
  * A repeating window on the real clock, lined up with local time.

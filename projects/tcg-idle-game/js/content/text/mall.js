@@ -24,6 +24,17 @@ export const Mall = {
         special: 'special pack',
         mega: 'mega pack'
     },
+    // Packs of a set after the first
+    setKinds: {
+        normal: set => `a ${set} pack`,
+        bundle: set => `a bundle of three ${set} packs`,
+        mega: set => `a ${set} MEGA PACK`
+    },
+    setNames: {
+        normal: set => `${set} pack`,
+        bundle: set => `bundle of three ${set} packs`,
+        mega: set => `${set} mega pack`
+    },
     nextRestock: time => `The delivery driver comes every half hour or so. Next: ${time}.`,
     empty: 'The machine is empty. It looks smug about it.',
 

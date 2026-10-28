@@ -182,10 +182,15 @@ button.current {
         flex-shrink: 0;
     }
 
-    /* Three pockets across still fit on a phone */
+    /* Three pockets across still fit on a phone, and so do the wide
+       places, like Gus's store and the cubicle */
     .pockets {
         gap: 4px;
         font-size: 12px;
+    }
+
+    .wide {
+        font-size: 11px;
     }
 }
 
@@ -226,6 +231,55 @@ button.current {
 .art-button.special:hover:not(:disabled),
 .art-button.special:focus-visible {
     background: var(--legendary);
+    color: var(--background);
+}
+
+/*
+ * Parts of a place's art that can be looked at closer, like the shelves at
+ * Gus's. The room is drawn faintly and the parts in full, so they stand
+ * out. A part drawn over several lines is several buttons; they light up
+ * together.
+ */
+.store {
+    color: var(--muted);
+}
+
+.art-area {
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    font-weight: bold;
+    line-height: inherit;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.art-area.current,
+.art-area:focus-visible,
+.store:has(.area-shelves:hover) .area-shelves,
+.store:has(.area-board:hover) .area-board,
+.store:has(.area-gus:hover) .area-gus,
+.store:has(.area-case:hover) .area-case,
+.store:has(.area-table:hover) .area-table {
+    background: var(--text);
+    color: var(--background);
+}
+
+/* A button that steps back, like "Something else" */
+.quiet {
+    color: var(--muted);
+}
+
+/* A newer set's packs, in summer */
+.art-button.new-set {
+    color: var(--good);
+}
+
+.art-button.new-set:hover:not(:disabled),
+.art-button.new-set:focus-visible {
+    background: var(--good);
     color: var(--background);
 }
 

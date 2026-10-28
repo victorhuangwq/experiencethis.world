@@ -5,7 +5,7 @@
 
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { browserTest, reopen, START } from './browser.js';
+import { browserTest, reopen, button, place, assertFits, START } from './browser.js';
 import { Lines } from '../../js/content/text/index.js';
 import { Format } from '../../js/core/format.js';
 import { Rules } from '../../js/rules.js';
@@ -16,26 +16,12 @@ const HOUR = 60 * 60 * 1000;
 const BASE_SET = /^Critter Clash Base Set/;
 const BASE = Catalog.inSet('base');
 
-const button = (page, name) => page.getByRole('button', { name, exact: true });
-// Navigation buttons can say "new" after the name
-const place = (page, name) => page.locator('#locations').getByRole('button', { name });
 const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Lines.mall.names.normal, Format.money(Rules.prices.normal)));
 const newestMessage = page => page.locator('#log .message').first();
 
 async function finishOpening(page, choice = 'sell') {
     await button(page, Lines.opening.lookUp).click();
     await button(page, choice === 'sell' ? `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})` : Lines.opening.keep).click();
-}
-
-/**
- * Check that the page doesn't scroll sideways and no art is cut off
- */
-async function assertFits(page, name) {
-    const { scrollWidth, clientWidth } = await page.evaluate(() =>
-        ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
-    assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
-    const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
-    assert.equal(cutOff, 0, `${name}: art fits on the screen`);
 }
 
 /**

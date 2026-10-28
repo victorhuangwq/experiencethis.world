@@ -1,6 +1,6 @@
 /**
  * Pacing: bots play the way real players do, and the story's milestones
- * must come about when STORY.md (Pacing) says they should. If a tuning
+ * must come about when story/story.md (Pacing) says they should. If a tuning
  * change in rules.js fails these, either the change or the target is wrong.
  * Run with --test-reporter=spec to see the measured times.
  */
@@ -13,6 +13,9 @@ import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
 import { Collection } from '../js/systems/collection.js';
 import { Job } from '../js/systems/job.js';
+import { Store } from '../js/systems/store.js';
+import { Tournaments } from '../js/systems/tournaments.js';
+import { Catalog } from '../js/content/catalog.js';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -42,9 +45,11 @@ function playVisit(game) {
         }
         act(game, 'vending.buy', { slot });
     }
-    for (const kind of ['normal', 'special', 'mega']) {
-        while (game.state.collection.packs[kind] > 0) {
-            act(game, 'collection.open', { kind });
+    for (const [set, kinds] of Object.entries(game.state.collection.packs)) {
+        for (const kind of Object.keys(kinds)) {
+            while (kinds[kind] > 0) {
+                act(game, 'collection.open', { set, kind });
+            }
         }
     }
     act(game, 'collection.sellDuplicates');
@@ -134,4 +139,90 @@ test('a player who only checks in now and then still finds Gus within a day', (t
     const times = measure(idle, gus);
     t.diagnostic(`Gus, checking in every 4 hours: ${range(times)}`);
     assert.ok(times[times.length - 1] <= 24 * HOUR);
+});
+
+test('Gus\'s store opens on the second day of play, not in the first session', (t) => {
+    const daysWhenOpened = [];
+    const times = measure(idle, game => {
+        const open = game.unlocked('gus-open');
+        if (open) {
+            daysWhenOpened.push(game.state.story.days);
+        }
+        return open;
+    });
+    t.diagnostic(`Gus's store open, checking in every 4 hours: ${range(times)}`);
+    assert.ok(daysWhenOpened.every(days => days >= 2), 'never on the first day');
+    assert.ok(times[times.length - 1] <= 2 * DAY, 'by the second day');
+
+    // An active first session finds the store, but not open
+    for (let seed = 1; seed <= SEEDS; seed++) {
+        assert.equal(timeUntil({ ...active, seed, until: game => game.unlocked('gus-open') }), null, `seed ${seed}`);
+    }
+});
+
+/**
+ * A visit to Gus's: play locals, reading the regulars, and the pre-release
+ * when invited
+ */
+function playAtGus(game) {
+    if (!Store.isOpen(game)) {
+        return;
+    }
+    if (Tournaments.prereleaseSet(game) && Wallet.canAfford(game, Rules.prereleaseKitPrice)) {
+        act(game, 'tournaments.enterPrerelease');
+    } else if (Tournaments.localsOpen(game) && Wallet.canAfford(game, Tournaments.localsEntry(game))) {
+        act(game, 'tournaments.enterLocals');
+    }
+    while (game.state.tournaments.current) {
+        const current = game.state.tournaments.current;
+        const last = Catalog.find(current.rounds.at(-1)?.mine)?.type;
+        const guess = { brenda: 'Water', joe: 'Nature', hank: 'Fire', dev: last, kayla: beating(last) }[current.opponents[current.results.length]];
+        const choices = game.encounter().choices(game);
+        const open = choices.filter(choice => !choice.disabled);
+        const pick = open.find(choice => guess && choice.label.startsWith(beating(guess) + ':')) || open[0];
+        act(game, 'encounter.choose', { index: choices.indexOf(pick) });
+    }
+}
+
+// The type that beats a type
+const beating = type => Catalog.types.find(each => Catalog.beats[each] === type);
+
+test('a player who checks in a few times a day reaches summer on the fifth day (target: day 5)', (t) => {
+    const reachedOn = [];
+    for (let seed = 1; seed <= SEEDS; seed++) {
+        const start = START + (seed % 7) * DAY;
+        const game = newGame({ seed, now: start });
+        finishOpening(game, 'sell');
+        // An hour of play on the first day, then four check-ins a day
+        const visits = [];
+        for (let now = start; now <= start + HOUR; now += 5 * SECOND) {
+            visits.push(now);
+        }
+        const midnight = new Date(start).setHours(0, 0, 0, 0);
+        for (let day = 0; day < 7; day++) {
+            for (const hour of [9, 12.5, 18.5, 22]) {
+                const time = midnight + day * DAY + hour * HOUR;
+                if (time > start + HOUR) {
+                    visits.push(time);
+                }
+            }
+        }
+        for (const now of visits) {
+            game.catchUp(now);
+            playVisit(game);
+            playAtGus(game);
+            if (game.state.story.season === 'summer') {
+                break;
+            }
+        }
+        assert.equal(game.state.story.season, 'summer', `seed ${seed} never got there`);
+        reachedOn.push(game.state.story.days);
+    }
+    reachedOn.sort((a, b) => a - b);
+    t.diagnostic(`summer on day: ${reachedOn.join(', ')}`);
+    // The first Friday Night Clash, the pre-release when they win, then summer
+    const target = Rules.clashFromDay + 1;
+    assert.ok(reachedOn[0] >= target, 'never before the fifth day');
+    assert.equal(median(reachedOn), target);
+    assert.ok(reachedOn.at(-1) <= target + 2);
 });

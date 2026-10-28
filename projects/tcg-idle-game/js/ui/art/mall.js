@@ -31,8 +31,9 @@ function beside(lines, extra, fromLine) {
     });
 }
 
-// How each kind of pack looks in its slot
+// How each kind of pack looks in its slot, and a newer set's packs
 const CELLS = { normal: '[##]', bundle: '[3x]', special: '[**]', mega: '[MM]' };
+const NEW_SET_CELLS = { normal: '[BB]', bundle: '[3B]', mega: '[MB]' };
 
 // People who stand beside the machine during an encounter
 const VISITORS = {
@@ -47,15 +48,15 @@ const VISITORS = {
  * @param {string|null} visitor - Who is drawn beside it: kid, flip, or terry
  */
 function machineLines(state, visitor) {
-    const { slots, jammedSlot, kicks } = state.vending;
-    const cell = kind => CELLS[kind] || '[  ]';
+    const { slots, sets, jammedSlot, kicks } = state.vending;
+    const cell = index => (sets[index] === 'base' ? CELLS : NEW_SET_CELLS)[slots[index]] || '[  ]';
     const slotRow = start => {
         const pieces = [plain('  ')];
         for (let index = start; index < start + 4; index++) {
             if (index > start) {
                 pieces.push(plain('  '));
             }
-            pieces.push({ text: cell(slots[index]), slot: index });
+            pieces.push({ text: cell(index), slot: index });
         }
         return framed(...pieces);
     };

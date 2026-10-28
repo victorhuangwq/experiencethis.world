@@ -10,5 +10,6 @@ export function renderDevBar() {
         button('dev.restock', 'Restock now') + ' ' +
         button('dev.soon', 'Driver in a minute') + ' ' +
         button('dev.pip', 'Kid in line') + ' ' +
+        button('dev.day', 'Another day') + ' ' +
         button('dev.delete', 'Delete save and endings') + '</p>';
 }

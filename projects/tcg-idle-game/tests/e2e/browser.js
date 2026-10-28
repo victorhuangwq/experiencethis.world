@@ -152,3 +152,24 @@ export async function reopen(context) {
     await page.goto(origin + GAME);
     return page;
 }
+
+/**
+ * A button, by its exact text
+ */
+export const button = (page, name) => page.getByRole('button', { name, exact: true });
+
+/**
+ * A place in the navigation. Its button can say "new" after the name.
+ */
+export const place = (page, name) => page.locator('#locations').getByRole('button', { name });
+
+/**
+ * Check that the page doesn't scroll sideways and no art is cut off
+ */
+export async function assertFits(page, name) {
+    const { scrollWidth, clientWidth } = await page.evaluate(() =>
+        ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
+    assert.ok(scrollWidth <= clientWidth, `${name}: the page is ${scrollWidth}px wide on a ${clientWidth}px screen`);
+    const cutOff = await page.locator('pre.art').evaluateAll(pres => pres.filter(pre => pre.scrollWidth > pre.clientWidth).length);
+    assert.equal(cutOff, 0, `${name}: art fits on the screen`);
+}

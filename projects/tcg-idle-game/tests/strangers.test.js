@@ -49,7 +49,7 @@ test('buying the scalper out is fair, and annoys him', (t) => {
     const game = scalperGame(t);
     choose(game, Lines.flip.buyAll);
     assert.equal(Vending.stockLeft(game), 0);
-    assert.equal(game.state.collection.packs.normal, 8);
+    assert.equal(game.state.collection.packs.base.normal, 8);
     assert.equal(game.state.kindness.strikes.length, 0);
     assert.equal(game.state.people.flip.annoyed, 1);
     assert.equal(game.messages[0].text, Lines.flip.annoyed[0]);
@@ -65,9 +65,19 @@ test('leaving one pack for the kid is kind, and still annoys him', (t) => {
     const game = scalperGame(t, { kid: true });
     choose(game, Lines.flip.leaveOne);
     assert.equal(Vending.stockLeft(game), 0);
-    assert.equal(game.state.collection.packs.normal, 7, 'the kid got one');
+    assert.equal(game.state.collection.packs.base.normal, 7, 'the kid got one');
     assert.equal(game.state.kindness.strikes.length, 0);
     assert.equal(game.state.people.flip.annoyed, 1);
+});
+
+test('a scalper still waiting after a restock is bought out once', (t) => {
+    overrideRules(t, { scalperChance: 1 });
+    const game = scalperGame(t);
+    restock(game);
+    assert.equal(game.state.encounter?.id, 'scalper', 'he waits through it');
+    choose(game, Lines.flip.buyAll);
+    assert.equal(game.state.encounter, null);
+    assert.equal(game.state.people.flip.encounters, 1);
 });
 
 test('without a kid, there is no pack to leave', (t) => {
@@ -80,7 +90,7 @@ test('letting him have the rest empties the machine', (t) => {
     const game = scalperGame(t, { kid: true });
     choose(game, Lines.flip.letHim);
     assert.equal(Vending.stockLeft(game), 0);
-    assert.equal(game.state.collection.packs.normal, 1);
+    assert.equal(game.state.collection.packs.base.normal, 1);
     assert.equal(game.state.kindness.strikes.length, 0);
     assert.equal(game.state.people.flip.annoyed, 0);
 });
@@ -88,7 +98,7 @@ test('letting him have the rest empties the machine', (t) => {
 test('what the player cannot afford, the scalper takes', (t) => {
     const game = scalperGame(t, { money: 900 });
     choose(game, Lines.flip.buyAll);
-    assert.equal(game.state.collection.packs.normal, 3);
+    assert.equal(game.state.collection.packs.base.normal, 3);
     assert.equal(Vending.stockLeft(game), 0);
     assert.equal(game.state.people.flip.annoyed, 0, 'he still got some');
     assert.equal(game.messages[0].text, Lines.flip.takesTheRest);

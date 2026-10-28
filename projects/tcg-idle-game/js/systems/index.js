@@ -11,5 +11,8 @@ import { Collection } from './collection.js';
 import { Vending } from './vending.js';
 import { Kindness } from './kindness.js';
 import { People } from './people.js';
+import { Store } from './store.js';
+import { Trades } from './trades.js';
+import { Tournaments } from './tournaments.js';
 
-export const Systems = [Story, Wallet, Job, Collection, Vending, Kindness, People];
+export const Systems = [Story, Wallet, Job, Collection, Vending, Kindness, People, Store, Trades, Tournaments];

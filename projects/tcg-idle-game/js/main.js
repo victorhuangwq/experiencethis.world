@@ -63,6 +63,13 @@ const ui = new UI(game, document.getElementById('app'), {
             game.state.vending.nextRestockAt = Date.now() + 60 * 1000;
         } else if (action === 'dev.pip' && game.unlocked('mall') && !game.state.encounter) {
             game.startEncounter('pip');
+        } else if (action === 'dev.day') {
+            // Count another day of play, and bring back cards from grading
+            game.state.story.days++;
+            game.state.store.grading.forEach(entry => {
+                entry.backAt = Date.now();
+            });
+            game.tick(Date.now());
         } else if (action === 'dev.delete' && confirm('Delete the save and the endings found?')) {
             saveDisabled = true;
             SaveSystem.clear();

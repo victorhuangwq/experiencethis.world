@@ -7,12 +7,16 @@
  *   run(game)   Optional: what happens when it unlocks
  */
 
+import { localDay } from '../core/time.js';
 import { Rules } from '../rules.js';
 import { Lines } from './text/index.js';
 import { Wallet } from '../systems/wallet.js';
 import { Job } from '../systems/job.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
+import { Store } from '../systems/store.js';
+import { Trades } from '../systems/trades.js';
+import { Tournaments } from '../systems/tournaments.js';
 
 export const Unlocks = [
     {
@@ -54,6 +58,44 @@ export const Unlocks = [
             return (game.state.people.pip.mentionedGus && opened >= Rules.gusWithTip) || opened >= Rules.gusWithoutTip;
         },
         run: game => game.say(game.state.people.pip.mentionedGus ? Lines.gus.unlockedWithTip : Lines.gus.unlockedWithoutTip, 'good')
+    },
+    {
+        // The grand opening, on a later day than the first
+        id: 'gus-open',
+        when: game => game.unlocked('gus') && game.state.story.days >= Rules.gusOpensOnDay,
+        run: game => {
+            game.say(Lines.gus.opened, 'good');
+            // Stock the case, and Marcus may be in already
+            Store.tick(game, game.time);
+            Trades.tick(game, game.time);
+        }
+    },
+    {
+        // Gus puts up the poster for his tourney, a day before the first one
+        id: 'clash-poster',
+        when: game => game.unlocked('gus-open') && game.state.story.days >= Rules.posterOnDay,
+        run: game => game.say(Lines.tournaments.posterUp, 'good')
+    },
+    {
+        id: 'clash',
+        when: game => game.unlocked('clash-poster') && Tournaments.clashStarted(game),
+        run: game => game.say(Lines.tournaments.clashToday, 'good')
+    },
+    {
+        // Winning locals makes the player a regular
+        id: 'prerelease-invite',
+        when: game => game.state.tournaments.localsWon > 0 && Tournaments.upcomingSet(game) !== null,
+        run: game => game.say(Lines.tournaments.invited, 'good')
+    },
+    {
+        // Set 2 comes out with the summer, the day after the pre-release
+        id: 'summer',
+        when: game => Tournaments.playedPrerelease(game) && !game.state.tournaments.current && localDay(game.time) > game.state.tournaments.prereleaseDay,
+        run: game => {
+            game.state.story.season = 'summer';
+            game.say(Lines.story.summer, 'good');
+            game.say(Lines.story.endForNow);
+        }
     },
     // When the collection outgrows its storage, the next kind goes on sale
     ...Rules.storage.slice(1).map(stage => ({
