@@ -67,7 +67,7 @@ function renderGus(game, view = {}) {
     const poster = Tournaments.clashStarted(game) ? 'clash' : game.unlocked('clash-poster') ? 'soon' : 'notices';
     const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game), night: hour < 6 || hour >= 20, poster };
 
-    return `<pre class="art store">${insideHtml(options, area)}</pre>` +
+    return `<pre class="art store wide">${insideHtml(options, area)}</pre>` +
         (panel ? PANELS[panel].render(game) : `<p>${escape(Lines.gus.inside)}</p>`);
 }
 

@@ -39,6 +39,18 @@ const regular = upgraded(game => {
 });
 
 const money = async page => page.locator('[data-money]').textContent();
+
+/**
+ * Go into Gus's store. The first time Marcus is there, the player runs
+ * into him: they knew him from work, so they pretend this is normal.
+ */
+async function enterGus(page) {
+    await place(page, Lines.gus.name).click();
+    const pretend = button(page, Lines.marcus.pretend);
+    if (await pretend.count() > 0) {
+        await pretend.click();
+    }
+}
 const literally = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 browserTest('Gus opens the day after the store is found, and sells packs at a markup', {
@@ -72,7 +84,7 @@ browserTest('a card sent to grading comes back the next day, and Gus will buy it
     save: foundGus,
     time: savedAt + 24 * HOUR
 }, async (page) => {
-    await place(page, Lines.gus.name).click();
+    await enterGus(page);
     await button(page, Lines.gus.areas.case).click();
     await page.getByText(Lines.gus.caseTitle).waitFor();
     assert.equal(await page.locator('#scene li', { has: button(page, Lines.gus.buySingle) }).count(), Rules.caseSlots.length, 'a full case');
@@ -97,7 +109,12 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     // The Friday evening after the save
     time: savedAt + 24 * HOUR
 }, async (page) => {
+    // The first time Marcus is at Gus's, the player runs into him
     await place(page, Lines.gus.name).click();
+    await page.getByText(Lines.marcus.bump(true)[0]).waitFor();
+    await button(page, Lines.marcus.pretend).click();
+    await page.locator('#log').getByText(Lines.marcus.bumped(true)).waitFor();
+
     await button(page, Lines.gus.areas.table).click();
     await page.getByRole('heading', { name: Lines.marcus.title }).waitFor();
     assert.match(await page.locator('#scene pre.art').first().textContent(), /\(-_-\)/, 'Marcus is at his table');
@@ -127,7 +144,7 @@ browserTest('a regular plays the pre-release, and summer brings Set 2 the next d
     save: regular,
     time: savedAt + 24 * HOUR
 }, async (page) => {
-    await place(page, Lines.gus.name).click();
+    await enterGus(page);
     await button(page, Lines.gus.areas.board).click();
     await page.getByRole('heading', { name: Lines.tournaments.prereleaseTitle }).waitFor();
     await button(page, Lines.tournaments.enterPrerelease(Rules.prereleaseKitPacks, Format.money(Rules.prereleaseKitPrice))).click();
@@ -150,4 +167,34 @@ browserTest('a regular plays the pre-release, and summer brings Set 2 the next d
 
     await place(page, Lines.home.name).click();
     await page.getByText(/^Critter Clash: Backyard Brawl: \d+\/102$/).waitFor();
+});
+
+browserTest('lunch with Marcus at the office, then his special pack', {
+    save: upgraded(game => {
+        game.job.coworker = 2;
+        game.job.lunches = Rules.lunchesBeforePacks - 1;
+        game.wallet.cents = 10000;
+    }),
+    // A Tuesday lunchtime: an office day
+    time: Date.UTC(2026, 9, 27, 12, 30)
+}, async (page) => {
+    await place(page, Lines.job.name).click();
+    const cubicle = page.locator('#scene pre.art').first();
+    assert.match(await cubicle.textContent(), /\|TUE 27 \|[\s\S]*\|12:30PM\|/, 'the calendar shows the date and time');
+    assert.match(await cubicle.textContent(), /\(o_o\)/, 'Marcus looks over the partition');
+    await page.getByText(Lines.job.coworker.around).waitFor();
+
+    await button(page, Lines.job.coworker.lunchButton).click();
+    await page.getByText(Lines.job.coworker.lunchTitle).waitFor();
+    const choice = page.locator('[data-action="encounter.choose"]:not([disabled])');
+    for (let round = 0; round < 3 && await choice.count() > 0; round++) {
+        await choice.first().click();
+    }
+    await page.locator('#log').getByText(Lines.job.coworker.offersPacks).waitFor();
+
+    await button(page, Lines.job.coworker.packButton(Format.money(Rules.prices.special))).click();
+    await page.getByText(Lines.packs.unopenedSpecial(2)).waitFor();
+
+    await page.setViewportSize({ width: 360, height: 740 });
+    await assertFits(page, 'the cubicle on a phone');
 });

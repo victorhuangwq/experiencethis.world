@@ -94,6 +94,7 @@ export const Unlocks = [
         run: game => {
             game.state.story.season = 'summer';
             game.say(Lines.story.summer, 'good');
+            game.say(Lines.story.endForNow);
         }
     },
     // When the collection outgrows its storage, the next kind goes on sale

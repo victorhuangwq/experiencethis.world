@@ -22,6 +22,7 @@ import { renderEncounter } from '../js/ui/panels/encounter.js';
 import { renderEnding } from '../js/ui/panels/ending.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
+import { Tournaments } from '../js/systems/tournaments.js';
 
 // Actions the UI handles itself instead of passing to the game
 const UI_ACTIONS = ['go', 'view.set', 'log.toggle', 'reveal.skip', 'restart'];
@@ -102,8 +103,12 @@ test('every encounter and ending screen renders', () => {
     const locals = gameAtClash();
     Collection.add(locals, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
     act(locals, 'tournaments.enterLocals');
+    // So does lunch with Marcus
+    const lunch = gameAtClash();
+    Collection.add(lunch, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
+    Tournaments.start(lunch, 'lunch', 'base', Collection.loose(lunch), ['marcus']);
     for (const encounter of Encounters) {
-        const html = renderEncounter(encounter.id === 'match' ? locals : game, encounter);
+        const html = renderEncounter({ match: locals, lunch }[encounter.id] || game, encounter);
         assert.ok(html.includes('data-action="encounter.choose"'), encounter.id);
         assert.ok(!html.includes('undefined'), encounter.id);
     }

@@ -73,9 +73,21 @@ file per topic.
 - **The day job is hybrid,** by the player's real weekday: Tuesday to
   Thursday they have to go to the office (a place of its own), Monday and
   Friday they work from the kitchen table at home, and weekends are off.
-  At the office, the desk fills up as the hobby takes over (a card under the
-  monitor, then a binder, then a playmat for a mousepad), packs can be
-  opened under the desk, and the inbox count only goes up.
+  The office is a cubicle, like Severance: low partitions, a QUARTERLY
+  SYNERGY poster, a corkboard with one memo, a calendar with the real date
+  and time, and an old terminal with a trackball. It fills up as the hobby
+  takes over: a card taped to the terminal (first pack), a binder (bought
+  one), another and a playmat (second binder), the Friday Night Clash flyer
+  and more cards pinned up (the poster at Gus's), a graded card on a stand
+  (the first one back), and in summer a BACKYARD BRAWL poster over the
+  synergy one, cards all round the screen, and a box of bulk under the desk.
+  Packs can be opened under the desk, and the inbox count only goes up.
+- **Marcus at the office.** He looks over the partition at the card on the
+  terminal, then asks the player to lunch when he sees a binder or a pack
+  opened at the desk. Lunch is a game in the break room, once an office
+  day. After two, he brings a special pack each office day, for $6, what
+  the machine charges ("I am not Flip"). The first time the player is at
+  Gus's while he is, they run into him there, and pretend this is normal.
 - **Quitting the job comes later.** When the player opens their own shop
   (Act 5), the shop's income replaces the salary, and quitting is the moment
   that starts the act.
@@ -107,7 +119,7 @@ file per topic.
 | **Benny** | The neighbour's kid, age 9 | A ruthless little businessman. Buys the shoebox and later the player's duplicates, with a 25% "finder's fee". Pays in nickels. |
 | **Gus** | Owner of *Gus's Games & Grub*, the hobby store | Sells packs at a markup and singles from the glass case, sends cards off to be graded, runs locals, and invites regulars to the pre-release. Lives in the back, so the store is always open |
 | **Linda** | The player's boss | Only ever speaks in email subject lines ("Quick question", "No rush"). Walks past when packs are opened at the desk; never a strike, always a reply-all. May collect in secret. |
-| **Marcus from IT** | A coworker | Collects in secret. Notices the card under the player's monitor, then asks them to lunch ("Bring the binder"). An after-work regular at Gus's on Thursday and Friday evenings and all weekend: the first trading partner in Act 2 |
+| **Marcus from IT** | A coworker | Collects in secret. Looks over the partition at the card on the player's terminal, then asks them to lunch ("Bring the binder"): a game, once an office day. After two, he brings them a special pack each office day at the machine's price. An after-work regular at Gus's on Thursday and Friday evenings and all weekend: the first trading partner in Act 2 |
 | **Gus's regulars** | Locals opponents | Brenda (Water, head to toe), Grandpa Joe (Nature is the only real type), Hank (hot sauce, Fire), Dev, age 11 (copies whatever you just played), and Kayla (plays whatever beats it). Their tells are in how they're described, never stated |
 | **Officer Dale** | Mall security | Eats pretzels. Writes down every kick at the vending machine and reads the count out in the Shame ending |
 | **PackDrop.com** | The online store | Shipping arrives at clock times |
@@ -215,7 +227,8 @@ through the door of the player's shop.
   match won earns a Set 2 pack. It's the first look at Set 2, and it can be
   played once.
 - **Summer, and Set 2.** Summer comes the day after the player plays the
-  pre-release, so the fifth day of play at the earliest. Set 2, Backyard
+  pre-release, so the fifth day of play at the earliest. For now it ends
+  with a note from the developer: this is as far as the game goes. Set 2, Backyard
   Brawl, is out: Critter Clash got popular, so Gus charges $7.50 a pack for
   it, and the vending machine, still at $3, is cleared out faster (see The
   vending machine). Locals entry and prizes become Set 2 packs.

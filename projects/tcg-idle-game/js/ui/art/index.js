@@ -14,6 +14,8 @@ export const ArtByKey = {
     shoebox: () => shoebox(['CARDS - DO NOT', 'TOUCH']),
     machine: (game, encounter) => machine(game.state, { pip: 'kid', scalper: 'flip', camper: 'terry' }[encounter.id] || null),
     guard: () => guard,
+    // Marcus at the table by the window, at Gus's
+    marcus: () => table('(-_-)', Lines.tournaments.regulars.marcus.name),
     // The tournament table, with the last round's cards on it
     table: game => {
         const current = game.state.tournaments.current;

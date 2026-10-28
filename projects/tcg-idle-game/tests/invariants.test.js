@@ -46,6 +46,8 @@ const MOVES = [
     { weight: 3, run: game => act(game, 'collection.buyStorage') },
     { weight: 4, run: (game, roll) => act(game, 'job.work', { at: roll() < 0.8 ? Job.workplace(game) : 'home' }) },
     { weight: 2, run: game => act(game, 'job.openAtDesk') },
+    { weight: 2, run: game => act(game, 'job.lunch') },
+    { weight: 1, run: game => act(game, 'job.buyPack') },
     { weight: 1, run: game => act(game, 'people.knock') },
     { weight: 2, run: (game, roll) => act(game, 'story.visit', { location: Locations[Math.floor(roll() * Locations.length)].id }) },
     // Time passes: a few seconds, a while, or a long time away
@@ -143,7 +145,10 @@ function checkInvariants(game, last) {
     assert.ok(state.store.singles.every(single => single === null || Catalog.find(single.cardId)), 'singles');
 
     const tournament = state.tournaments.current;
-    assert.equal(tournament !== null, state.encounter?.id === 'match', 'a match is on only during a tournament');
+    assert.equal(tournament !== null, ['match', 'lunch'].includes(state.encounter?.id), 'a match is on only during a tournament');
+    assert.ok(isCount(job.lunches) && job.lunches >= last.lunches, 'lunches with Marcus');
+    assert.ok(job.lunches === 0 || job.coworker === 2, 'lunch is after Marcus asks');
+    assert.ok(job.packDay === 0 || job.lunches >= Rules.lunchesBeforePacks, 'Marcus brings packs after a couple of lunches');
     if (tournament) {
         assert.ok(tournament.results.length < Rules.tournamentMatches, 'the tournament is not over');
         assert.ok(tournament.rounds.filter(round => round.won).length < 2 && tournament.rounds.filter(round => !round.won).length < 2, 'the match is not over');
@@ -223,6 +228,7 @@ function snapshot(game) {
         completed: [...game.state.collection.completed],
         coworker: game.state.job.coworker,
         days: game.state.story.days,
+        lunches: game.state.job.lunches,
         unlocked: [...game.state.progress.unlocked]
     };
 }
@@ -289,7 +295,7 @@ function playRandomly(seed, steps = STEPS, { summer = false } = {}) {
 }
 
 test('the game always makes sense, whatever the player does', (t) => {
-    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, summer: 0, cards: 0, lunch: 0, flip: 0, terry: 0 };
+    const reached = { storage: new Set(), endings: 0, gus: 0, gusOpen: 0, graded: 0, locals: 0, trades: 0, summer: 0, cards: 0, lunch: 0, lunches: 0, flip: 0, terry: 0 };
     for (let seed = 1; seed <= SEEDS; seed++) {
         const game = playRandomly(seed);
         reached.storage.add(game.state.collection.storage);
@@ -302,11 +308,12 @@ test('the game always makes sense, whatever the player does', (t) => {
         reached.summer += game.state.story.season === 'summer' ? 1 : 0;
         reached.cards = Math.max(reached.cards, game.state.collection.cards.length);
         reached.lunch += game.state.job.coworker === 2 ? 1 : 0;
+        reached.lunches += game.state.job.lunches > 0 ? 1 : 0;
         reached.flip += game.state.people.flip.encounters > 0 ? 1 : 0;
         reached.terry += game.state.people.terry.encounters > 0 ? 1 : 0;
     }
 
-    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}, summer in ${reached.summer}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
+    t.diagnostic(`storage reached: ${[...reached.storage].join(', ')}; Gus found in ${reached.gus} games, open in ${reached.gusOpen}, a graded card in ${reached.graded}, locals in ${reached.locals}, a trade with Marcus in ${reached.trades}, summer in ${reached.summer}; ${reached.endings} ended; most cards ${reached.cards}; Marcus asked ${reached.lunch} to lunch and played ${reached.lunches}; met Flip in ${reached.flip}, Terry in ${reached.terry}`);
     // The random player has to get far enough for this test to mean something
     assert.ok([...reached.storage].some(id => id !== 'shoebox'), 'some games bought storage');
     assert.ok(reached.gus > 0, 'some games found Gus');

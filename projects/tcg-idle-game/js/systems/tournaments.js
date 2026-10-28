@@ -3,7 +3,8 @@
  * Gus, and the prize is more packs. The pre-release, once, for regulars
  * before a new set comes out: the player opens a kit of the new set's packs
  * at the table and plays with only those cards; everyone gets the promo,
- * and each match won earns a pack.
+ * and each match won earns a pack. Lunch with Marcus at the office is a
+ * single match, for fun (see js/systems/job.js).
  *
  * A tournament is a few matches against Gus's regulars (content/regulars.js),
  * each the best of three rounds. Each round the player picks a type and
@@ -26,7 +27,13 @@ import { Store } from './store.js';
 import { Story } from './story.js';
 import { Cards } from './cards.js';
 
-const KINDS = ['locals', 'prerelease'];
+// Each kind of tournament: how many matches, and the encounter that shows
+// them
+const KINDS = {
+    locals: { matches: () => Rules.tournamentMatches, encounter: 'match' },
+    prerelease: { matches: () => Rules.tournamentMatches, encounter: 'match' },
+    lunch: { matches: () => 1, encounter: 'lunch' }
+};
 
 export const Tournaments = {
     id: 'tournaments',
@@ -42,7 +49,7 @@ export const Tournaments = {
         // or 0 before they have
         prereleaseDay: 0,
         // The tournament being played, or null:
-        //   kind      'locals' or 'prerelease'
+        //   kind      'locals', 'prerelease', or 'lunch'
         //   set       The set its packs are from
         //   opponents Regular ids, one per match
         //   deck      Ids of the player's cards they play with
@@ -57,7 +64,7 @@ export const Tournaments = {
         if (current && !isTournament(current)) {
             tournaments.current = null;
         }
-        if (!tournaments.current && game.state.encounter?.id === 'match') {
+        if (!tournaments.current && ['match', 'lunch'].includes(game.state.encounter?.id)) {
             game.state.encounter = null;
         }
     },
@@ -151,21 +158,31 @@ export const Tournaments = {
     },
 
     /**
+     * How many matches a kind of tournament has
+     */
+    matches(kind) {
+        return KINDS[kind].matches();
+    },
+
+    /**
      * Start a tournament
      * @param {Game} game - Game
      * @param {string} kind - Kind of tournament
      * @param {string} set - The set its packs are from
      * @param {Array} cards - The cards the player picks their deck from
+     * @param {Array} opponents - Who the player plays; by default, regulars
+     *                            picked at random
      */
-    start(game, kind, set, cards) {
-        const available = Regulars.filter(regular => !regular.only || regular.only(game));
-        const opponents = [];
-        while (opponents.length < Rules.tournamentMatches) {
-            const regular = game.pick(available.filter(each => !opponents.includes(each.id)));
-            opponents.push(regular.id);
+    start(game, kind, set, cards, opponents = null) {
+        if (!opponents) {
+            const available = Regulars.filter(regular => !regular.only || regular.only(game));
+            opponents = [];
+            while (opponents.length < Tournaments.matches(kind)) {
+                opponents.push(game.pick(available.filter(each => !opponents.includes(each.id))).id);
+            }
         }
         game.state.tournaments.current = { kind, set, opponents, deck: Tournaments.deckFrom(cards), results: [], rounds: [] };
-        game.startEncounter('match');
+        game.startEncounter(KINDS[kind].encounter);
     },
 
     /**
@@ -193,12 +210,12 @@ export const Tournaments = {
             current.rounds = [];
             const name = Lines.tournaments.regulars[regular.id].name;
             game.say(wins === 2 ? Lines.tournaments.matchWon(name) : Lines.tournaments.matchLost(name), wins === 2 ? 'good' : 'info');
-            if (current.results.length === Rules.tournamentMatches) {
+            if (current.results.length === Tournaments.matches(current.kind)) {
                 Tournaments.finish(game);
                 return;
             }
         }
-        game.startEncounter('match');
+        game.startEncounter(KINDS[current.kind].encounter);
     },
 
     /**
@@ -220,6 +237,17 @@ export const Tournaments = {
         const current = tournaments.current;
         const wins = current.results.filter(result => result.won).length;
         tournaments.current = null;
+
+        if (current.kind === 'lunch') {
+            // A game for fun; after a couple, Marcus starts bringing packs
+            const job = game.state.job;
+            job.lunches++;
+            game.say(wins > 0 ? Lines.job.coworker.lunchWon : Lines.job.coworker.lunchLost);
+            if (job.lunches === Rules.lunchesBeforePacks) {
+                game.say(Lines.job.coworker.offersPacks, 'good');
+            }
+            return;
+        }
 
         if (current.kind === 'prerelease') {
             // Everyone gets the promo; each match won earns a pack
@@ -288,9 +316,9 @@ function bonus(type, other) {
 }
 
 function isTournament(current) {
-    return KINDS.includes(current.kind) && Catalog.findSet(current.set) &&
-        Array.isArray(current.opponents) && current.opponents.length === Rules.tournamentMatches &&
+    return !!KINDS[current.kind] && Catalog.findSet(current.set) &&
+        Array.isArray(current.opponents) && current.opponents.length === Tournaments.matches(current.kind) &&
         current.opponents.every(id => Regulars.some(regular => regular.id === id)) &&
         Array.isArray(current.deck) && Array.isArray(current.results) && Array.isArray(current.rounds) &&
-        current.results.length < Rules.tournamentMatches;
+        current.results.length < Tournaments.matches(current.kind);
 }

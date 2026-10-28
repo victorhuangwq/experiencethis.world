@@ -16,7 +16,9 @@ export const People = {
         flip: { encounters: 0, annoyed: 0 },
         // Terry waits for the drop. A friend splits it and texts about mega
         // packs.
-        terry: { encounters: 0, friend: false }
+        terry: { encounters: 0, friend: false },
+        // Marcus from IT, once the player has run into him at Gus's
+        marcus: { metAtGus: false }
     }),
 
     actions: {

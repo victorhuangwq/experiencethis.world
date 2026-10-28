@@ -19,6 +19,9 @@ export const Rules = {
     workRest: 20 * SECOND,
     // Chance the boss walks past while a pack is opened at the desk
     bossWalkByChance: 0.25,
+    // Lunches with Marcus before he starts bringing the player a special
+    // pack each office day
+    lunchesBeforePacks: 2,
 
     // CARD-O-MATIC 3000
     // The delivery driver comes every 25 to 35 minutes
@@ -139,7 +142,9 @@ export const Rules = {
     opponentRarity: {
         locals: { uncommon: 0.3, rare: 0.5, 'ultra-rare': 0.2 },
         // Sealed: everyone plays with what they opened
-        prerelease: { common: 0.35, uncommon: 0.4, rare: 0.2, 'ultra-rare': 0.05 }
+        prerelease: { common: 0.35, uncommon: 0.4, rare: 0.2, 'ultra-rare': 0.05 },
+        // Lunch with Marcus at the office: friendly
+        lunch: { uncommon: 0.4, rare: 0.45, 'ultra-rare': 0.15 }
     },
     // Locals: once a day. Entry is buying this many packs from Gus, and the
     // prize is packs, by matches won.

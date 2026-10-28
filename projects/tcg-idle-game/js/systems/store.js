@@ -34,7 +34,9 @@ export const Store = {
         caseStockedAt: 0,
         singles: [],
         // Cards away at Mint Condition Co.: { id, backAt }
-        grading: []
+        grading: [],
+        // Cards that have come back from grading, ever
+        gradedBack: 0
     }),
 
     load(store, game) {
@@ -66,6 +68,7 @@ export const Store = {
                 continue;
             }
             game.state.collection.graded.push(card.id);
+            store.gradedBack++;
             const grade = Lines.gus.grades[card.condition];
             if (game.awayReport) {
                 game.reportAway(Lines.gus.gradedAway(card.name, card.condition, grade));

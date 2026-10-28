@@ -9,13 +9,15 @@ The story, voice, and design are in [STORY.md](STORY.md).
 ## Current state
 
 Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
-checklist comes in the first pack, a self-given allowance, a
-hybrid day job (the office on real Tuesdays to Thursdays, the kitchen table
-on Mondays and Fridays), the CARD-O-MATIC 3000 restocking every 25 to 35
-minutes of real time with a mix of packs that other people buy up, Pip, the
-scalper, Terry waiting for the drop, the kindness code, Benny buying duplicates,
-storage to buy as the collection outgrows it (each one organising the cards
-better), and three secrets.
+checklist comes in the first pack, a self-given allowance, a hybrid day job
+(a cubicle at the office on real Tuesdays to Thursdays, which the hobby
+slowly takes over, and the kitchen table on Mondays and Fridays), Marcus
+from IT (lunch games, then special packs at the machine's price), the
+CARD-O-MATIC 3000 restocking every 25 to 35 minutes of real time with a mix
+of packs that other people buy up, Pip, the scalper, Terry waiting for the
+drop, the kindness code, Benny buying duplicates, storage to buy as the
+collection outgrows it (each one organising the cards better), and three
+secrets.
 
 Act 2 is playable too: Gus's store opens on the second day of play, with
 packs at a markup, a glass case of singles, grading (back a day later), and

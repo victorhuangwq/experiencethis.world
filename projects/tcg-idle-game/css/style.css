@@ -182,13 +182,14 @@ button.current {
         flex-shrink: 0;
     }
 
-    /* Three pockets across still fit on a phone, and so does Gus's store */
+    /* Three pockets across still fit on a phone, and so do the wide
+       places, like Gus's store and the cubicle */
     .pockets {
         gap: 4px;
         font-size: 12px;
     }
 
-    .store {
+    .wide {
         font-size: 11px;
     }
 }
