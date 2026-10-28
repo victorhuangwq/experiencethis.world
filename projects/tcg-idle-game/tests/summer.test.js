@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gameAtGus, newGame, act, overrideRules, restock, newestMessage } from './helpers.js';
+import { gameAtGus, gameAtClash, newGame, act, overrideRules, restock, newestMessage } from './helpers.js';
 import { Tournaments } from '../js/systems/tournaments.js';
 import { Store } from '../js/systems/store.js';
 import { Vending } from '../js/systems/vending.js';
@@ -9,6 +9,7 @@ import { Cards } from '../js/systems/cards.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
+import { localDay } from '../js/core/time.js';
 
 const DAY = 24 * 60 * 60 * 1000;
 const SET_2 = Catalog.inSet('backyard');
@@ -18,7 +19,7 @@ const SET_2 = Catalog.inSet('backyard');
  * invited to the pre-release
  */
 function invitedGame(seed) {
-    const game = gameAtGus({ seed });
+    const game = gameAtClash({ seed });
     Collection.add(game, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
     game.state.collection.packsOpened = 30;
     game.state.tournaments.localsWon = 1;
@@ -38,7 +39,7 @@ function playOut(game) {
 }
 
 /**
- * A game in summer, on its third day
+ * A game in summer, the day after the pre-release
  */
 function summerGame(seed) {
     const game = invitedGame(seed);
@@ -69,7 +70,7 @@ test('before summer, Set 2 is nowhere to be bought', () => {
 });
 
 test('winning locals for the first time gets an invitation to the pre-release', () => {
-    const game = gameAtGus();
+    const game = gameAtClash();
     game.checkUnlocks();
     assert.equal(game.unlocked('prerelease-invite'), false);
     game.state.tournaments.localsWon = 1;
@@ -104,7 +105,7 @@ test('everyone at the pre-release gets the promo, and a Set 2 pack for each matc
     playOut(game);
     const promo = game.state.collection.cards.filter(card => card.cardId === 'early-bird');
     assert.equal(promo.length, 1);
-    assert.ok(game.state.tournaments.prerelease);
+    assert.equal(game.state.tournaments.prereleaseDay, localDay(game.time));
     assert.equal(game.state.tournaments.localsPlayed, 0, 'not locals');
 
     const before = game.state.wallet.cents;
@@ -122,21 +123,20 @@ test('pre-release regulars play Set 2 cards too', () => {
     assert.equal(Catalog.find(round.theirs).set, 'backyard');
 });
 
-test('summer comes on the third day at the earliest, after the pre-release', () => {
-    // Played on the second day: summer waits for the third
-    const early = invitedGame();
-    act(early, 'tournaments.enterPrerelease');
-    playOut(early);
-    early.tick(early.time + 1000);
-    assert.equal(early.state.story.season, 'spring');
-    early.tick(early.time + DAY);
-    assert.equal(early.state.story.season, 'summer');
-    assert.ok(early.messages.some(message => message.text === Lines.story.summer));
+test('summer comes the day after the pre-release', () => {
+    const game = invitedGame();
+    act(game, 'tournaments.enterPrerelease');
+    playOut(game);
+    game.tick(game.time + 1000);
+    assert.equal(game.state.story.season, 'spring', 'not the same day');
+    game.tick(game.time + DAY);
+    assert.equal(game.state.story.season, 'summer');
+    assert.equal(game.state.story.days, Rules.clashFromDay + 1);
+    assert.ok(game.messages.some(message => message.text === Lines.story.summer));
 
-    // On the third day, but no pre-release: still spring
-    const late = gameAtGus();
-    late.tick(late.time + DAY);
-    assert.equal(late.state.story.days, 3);
+    // Days go by, but without the pre-release it stays spring
+    const late = gameAtClash();
+    late.tick(late.time + 5 * DAY);
     assert.equal(late.state.story.season, 'spring');
 });
 

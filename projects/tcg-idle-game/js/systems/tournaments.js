@@ -38,8 +38,9 @@ export const Tournaments = {
         localsPlayed: 0,
         // Locals where the player won every match
         localsWon: 0,
-        // Whether the player has played the pre-release
-        prerelease: false,
+        // The day the player played the pre-release (a localDay() number),
+        // or 0 before they have
+        prereleaseDay: 0,
         // The tournament being played, or null:
         //   kind      'locals' or 'prerelease'
         //   set       The set its packs are from
@@ -74,10 +75,22 @@ export const Tournaments = {
     },
 
     /**
+     * Whether Friday Night Clash has started running: from a later day of
+     * play than the store's opening (Rules.clashFromDay)
+     */
+    clashStarted(game) {
+        return game.state.story.days >= Rules.clashFromDay;
+    },
+
+    /**
      * Whether today's locals is still to play
      */
     localsOpen(game, now = game.time) {
-        return game.state.tournaments.localsDay !== localDay(now);
+        return Tournaments.clashStarted(game) && game.state.tournaments.localsDay !== localDay(now);
+    },
+
+    playedPrerelease(game) {
+        return game.state.tournaments.prereleaseDay > 0;
     },
 
     /**
@@ -94,7 +107,7 @@ export const Tournaments = {
      * @returns {string|null} - Set id
      */
     prereleaseSet(game) {
-        if (!game.unlocked('prerelease-invite') || game.state.tournaments.prerelease) {
+        if (!game.unlocked('prerelease-invite') || Tournaments.playedPrerelease(game)) {
             return null;
         }
         return Tournaments.upcomingSet(game);
@@ -210,7 +223,7 @@ export const Tournaments = {
 
         if (current.kind === 'prerelease') {
             // Everyone gets the promo; each match won earns a pack
-            tournaments.prerelease = true;
+            tournaments.prereleaseDay = localDay(game.time);
             Collection.addPacks(game, current.set, 'normal', wins);
             Collection.add(game, [Cards.card('early-bird', Cards.packCondition(game))]);
             game.say(Lines.tournaments.prereleaseFinished(wins), 'good');

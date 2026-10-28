@@ -64,7 +64,8 @@ function renderGus(game, view = {}) {
         hidden: !first
     });
     const hour = new Date(game.time).getHours();
-    const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game), night: hour < 6 || hour >= 20 };
+    const poster = Tournaments.clashStarted(game) ? 'clash' : game.unlocked('clash-poster') ? 'soon' : 'notices';
+    const options = { marcus: Trades.here(game), newSet: !!Vending.newSet(game), night: hour < 6 || hour >= 20, poster };
 
     return `<pre class="art store">${insideHtml(options, area)}</pre>` +
         (panel ? PANELS[panel].render(game) : `<p>${escape(Lines.gus.inside)}</p>`);
@@ -98,9 +99,16 @@ function renderPacks(game) {
 }
 
 /**
- * The corkboard: Gus talks about locals, and the pre-release for regulars
+ * The corkboard: Gus talks about locals, and the pre-release for regulars.
+ * Before his tourney, it's just the neighbourhood's notices.
  */
 function renderBoard(game) {
+    if (!game.unlocked('clash-poster')) {
+        return `<p>${escape(Lines.tournaments.notices)}</p>` + backToGus();
+    }
+    if (!Tournaments.clashStarted(game)) {
+        return `<h3>${escape(Lines.tournaments.localsTitle)}</h3><p>${escape(Lines.tournaments.posterSoon)}</p>` + backToGus();
+    }
     return renderLocals(game) + renderPrerelease(game) + backToGus();
 }
 
@@ -113,7 +121,7 @@ function renderPrerelease(game) {
         return '';
     }
     const parts = [`<h3>${escape(Lines.tournaments.prereleaseTitle)}</h3>`];
-    if (tournaments.prerelease) {
+    if (Tournaments.playedPrerelease(game)) {
         parts.push(`<p class="muted">${escape(Lines.tournaments.waitingForSummer)}</p>`);
     } else {
         parts.push(`<p>${escape(Lines.tournaments.prereleaseNote)}</p>`);

@@ -129,7 +129,7 @@ test('the store shows one part at a time: whatever the player pressed in the art
 
     assert.ok(render('packs').includes('data-action="store.buyPack"'));
     assert.ok(render('case').includes('data-action="store.buySingle"'));
-    assert.ok(render('board').includes('data-action="tournaments.enterLocals"'));
+    assert.ok(render('board').includes(escape(Lines.tournaments.notices)), 'no tourney on the opening day');
     assert.ok(render('table').includes(escape(Lines.marcus.away)));
     assert.ok(render('nonsense').includes(escape(Lines.gus.inside)));
 });
@@ -143,4 +143,21 @@ test('Gus asks what it will be, and leads to packs, grading, and his tournaments
     }
     assert.ok(GusScene.render(game, { panel: 'grading' }).includes(escape(Lines.gus.gradingNote('$5.00'))));
     assert.ok(GusScene.render(game, { panel: 'board' }).includes('data-panel="gus"'), 'and back');
+});
+
+test('the corkboard has notices, then the poster on the third day, then the tourney from the fourth', () => {
+    const game = gameAtGus();
+    const board = () => GusScene.render(game, { panel: 'board' });
+    const art = () => GusScene.render(game, {});
+    assert.ok(board().includes(escape(Lines.tournaments.notices)));
+    assert.ok(art().includes('LOST CAT'));
+
+    game.tick(game.time + 24 * HOUR);
+    assert.ok(board().includes(escape(Lines.tournaments.posterSoon)));
+    assert.ok(art().includes('TOMORROW!'));
+
+    game.tick(game.time + 24 * HOUR);
+    assert.ok(board().includes('data-action="tournaments.enterLocals"'));
+    assert.ok(art().includes('EVERY DAY'));
+    assert.ok(game.messages.some(message => message.text === Lines.tournaments.clashToday));
 });

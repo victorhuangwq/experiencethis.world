@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gameAtGus, newGame, act, overrideRules, newestMessage } from './helpers.js';
+import { gameAtGus, gameAtClash, newGame, act, overrideRules, newestMessage } from './helpers.js';
 import { Tournaments } from '../js/systems/tournaments.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
@@ -22,7 +22,7 @@ function give(game, ...cardIds) {
  * A game at Gus's with a collection like a player's after a day of packs
  */
 function gameWithCards(seed = 1) {
-    const game = gameAtGus({ seed });
+    const game = gameAtClash({ seed });
     for (let pack = 0; pack < 25; pack++) {
         Collection.add(game, Cards.openPack(game, 'normal'));
     }
@@ -44,6 +44,25 @@ const play = (game, type) => {
     const index = game.encounter().choices(game).findIndex(choice => choice.label.startsWith(type));
     act(game, 'encounter.choose', { index });
 };
+
+test('the poster goes up on the third day of play, and the first Friday Night Clash is on the fourth', () => {
+    const game = gameAtGus({ seed: 1, later: 0 });
+    Collection.add(game, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
+    act(game, 'tournaments.enterLocals');
+    assert.equal(game.state.tournaments.current, null, 'no tourney on the opening day');
+    assert.equal(game.unlocked('clash-poster'), false);
+
+    game.tick(game.time + 24 * HOUR);
+    assert.ok(game.unlocked('clash-poster'));
+    assert.ok(game.messages.some(message => message.text === Lines.tournaments.posterUp));
+    act(game, 'tournaments.enterLocals');
+    assert.equal(game.state.tournaments.current, null, 'not until tomorrow');
+
+    game.tick(game.time + 24 * HOUR);
+    assert.equal(game.state.story.days, Rules.clashFromDay);
+    act(game, 'tournaments.enterLocals');
+    assert.ok(game.state.tournaments.current, 'the first Friday Night Clash');
+});
 
 test('entering locals is buying two packs from Gus, once a day', () => {
     const game = gameWithCards();
@@ -73,20 +92,20 @@ test('no locals without the entry, or without any cards', () => {
     assert.equal(broke.state.tournaments.current, null);
     assert.equal(broke.state.wallet.cents, 2 * Rules.gusPrices.base - 1);
 
-    const empty = gameAtGus();
+    const empty = gameAtClash();
     act(empty, 'tournaments.enterLocals');
     assert.equal(empty.state.tournaments.current, null);
 });
 
 test('the deck is the strongest three cards of each type in hand, never graded ones', () => {
-    const game = gameAtGus();
+    const game = gameAtClash();
     const [lion, turtle, gnome, pigeon, toad] = give(game, 'lawnmower-lion', 'thousand-year-turtle', 'great-garden-gnome', 'suspicious-pigeon', 'soggy-toad');
     game.state.collection.graded.push(lion.id);
     assert.deepEqual(Tournaments.deckFrom(Collection.loose(game)), [toad.id, turtle.id, gnome.id, pigeon.id]);
 });
 
 test('each round plays the strongest card left of the type picked', () => {
-    const game = gameAtGus();
+    const game = gameAtClash();
     const [, gnome, lion] = give(game, 'suspicious-pigeon', 'great-garden-gnome', 'lawnmower-lion', 'soggy-toad');
     enter(game);
     assert.equal(Tournaments.nextCard(game, 'Nature').id, lion.id);
@@ -101,7 +120,7 @@ test('each round plays the strongest card left of the type picked', () => {
 
 test('a type that beats the other is worth more than raw power', (t) => {
     overrideRules(t, { tellChance: 1, opponentRarity: { locals: { common: 1 } } });
-    const game = gameAtGus();
+    const game = gameAtClash();
     give(game, 'soggy-toad', 'lukewarm-newt', 'damp-towel-weasel');
     // Hank plays Fire commons (power 1 to 3); a power 1 Water card beats them
     enter(game, ['hank', 'joe', 'brenda']);
@@ -115,7 +134,7 @@ test('a type that beats the other is worth more than raw power', (t) => {
 
 test('a match is the best of three rounds, and locals is three matches with packs for prizes', (t) => {
     overrideRules(t, { tellChance: 1, opponentRarity: { locals: { common: 1 } } });
-    const game = gameAtGus();
+    const game = gameAtClash();
     // Strong cards of every type, so every round is won
     give(game, ...Catalog.inSet('base', 'ultra-rare').map(card => card.id), ...Catalog.inSet('base', 'rare').map(card => card.id));
     enter(game, ['brenda', 'joe', 'hank']);
@@ -135,7 +154,7 @@ test('a match is the best of three rounds, and locals is three matches with pack
 
 test('losing every match wins nothing but a sticker', (t) => {
     overrideRules(t, { tellChance: 1, opponentRarity: { locals: { 'ultra-rare': 1 } } });
-    const game = gameAtGus();
+    const game = gameAtClash();
     give(game, 'soggy-toad', 'lukewarm-newt', 'damp-towel-weasel');
     enter(game, ['brenda', 'joe', 'hank']);
     while (game.state.tournaments.current) {
@@ -147,7 +166,7 @@ test('losing every match wins nothing but a sticker', (t) => {
 });
 
 test('a player out of cards can always play nothing, and the tournament ends', () => {
-    const game = gameAtGus();
+    const game = gameAtClash();
     give(game, 'soggy-toad');
     enter(game);
     let rounds = 0;

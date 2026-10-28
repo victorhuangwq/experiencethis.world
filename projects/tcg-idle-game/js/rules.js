@@ -93,9 +93,11 @@ export const Rules = {
     // Gus's price for a pack of each set, once it's out: a markup on the
     // machine's, and a big one on the new set
     gusPrices: { base: 450, backyard: 750 },
-    // Summer, and Set 2, come on this day of play at the earliest, once the
-    // player has played the pre-release
-    summerOnDay: 3,
+    // Friday Night Clash: Gus puts the poster up on this day of play, and
+    // the first one is on this day. Summer, and Set 2, come the day after
+    // the player plays the pre-release.
+    posterOnDay: 3,
+    clashFromDay: 4,
     // In summer, about this share of the machine's slots hold the new set
     // (special packs stay Base Set packs). It is cheap for how many people
     // want it, so other people buy it this many times sooner, and the

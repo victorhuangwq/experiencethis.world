@@ -187,7 +187,7 @@ function playAtGus(game) {
 // The type that beats a type
 const beating = type => Catalog.types.find(each => Catalog.beats[each] === type);
 
-test('a player who checks in a few times a day reaches summer on the third day (target: day 3)', (t) => {
+test('a player who checks in a few times a day reaches summer on the fifth day (target: day 5)', (t) => {
     const reachedOn = [];
     for (let seed = 1; seed <= SEEDS; seed++) {
         const start = START + (seed % 7) * DAY;
@@ -220,7 +220,9 @@ test('a player who checks in a few times a day reaches summer on the third day (
     }
     reachedOn.sort((a, b) => a - b);
     t.diagnostic(`summer on day: ${reachedOn.join(', ')}`);
-    assert.ok(reachedOn[0] >= Rules.summerOnDay, 'never before the third day');
-    assert.equal(median(reachedOn), Rules.summerOnDay);
-    assert.ok(reachedOn.at(-1) <= Rules.summerOnDay + 1);
+    // The first Friday Night Clash, the pre-release when they win, then summer
+    const target = Rules.clashFromDay + 1;
+    assert.ok(reachedOn[0] >= target, 'never before the fifth day');
+    assert.equal(median(reachedOn), target);
+    assert.ok(reachedOn.at(-1) <= target + 2);
 });

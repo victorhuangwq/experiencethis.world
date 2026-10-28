@@ -7,6 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { newGame, act, finishOpening, START } from './helpers.js';
+import { localDay } from '../js/core/time.js';
 import { nextRandom } from '../js/core/random.js';
 import { Rules } from '../js/rules.js';
 import { Job } from '../js/systems/job.js';
@@ -152,9 +153,11 @@ function checkInvariants(game, last) {
     assert.ok(state.tournaments.localsWon <= state.tournaments.localsPlayed);
     assert.ok(['spring', 'summer'].includes(state.story.season), 'season');
     if (state.story.season === 'summer') {
-        assert.ok(state.tournaments.prerelease && state.story.days >= Rules.summerOnDay, 'summer after the pre-release, on the third day or later');
+        const played = state.tournaments.prereleaseDay;
+        assert.ok(played > 0 && played < localDay(state.meta.lastTick), 'summer comes the day after the pre-release');
     }
-    assert.ok(!state.tournaments.prerelease || game.unlocked('prerelease-invite'), 'the pre-release is for regulars');
+    assert.ok(state.tournaments.prereleaseDay === 0 || game.unlocked('prerelease-invite'), 'the pre-release is for regulars');
+    assert.ok(state.tournaments.localsPlayed === 0 || state.story.days >= Rules.clashFromDay, 'Friday Night Clash starts on the fourth day');
     assert.equal(vending.sets.length, Rules.slotCount);
     vending.sets.forEach((set, index) => {
         assert.ok(set === 'base' || (state.story.season === 'summer' && vending.slots[index] !== 'special'), `slot ${index}: ${set}`);
@@ -231,7 +234,10 @@ function snapshot(game) {
 function toSummer(game) {
     finishOpening(game);
     game.state.collection.cardsOpened = Rules.gusWithoutTip;
-    game.tick(game.time + 24 * HOUR);
+    // To the day of the first Friday Night Clash
+    for (let day = 1; day < Rules.clashFromDay; day++) {
+        game.tick(game.time + 24 * HOUR);
+    }
     game.state.wallet.cents += 10000;
     game.state.collection.packs.base.normal = 10;
     for (let pack = 0; pack < 10; pack++) {

@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { gameAtMall, gameAtGus, newGame, act, finishOpening, START } from './helpers.js';
+import { gameAtMall, gameAtClash, newGame, act, finishOpening, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Systems } from '../js/systems/index.js';
 import { Unlocks } from '../js/content/unlocks.js';
@@ -99,7 +99,7 @@ test('every ending has a name', () => {
 test('every encounter and ending screen renders', () => {
     const game = gameAtMall();
     // A match needs a tournament on
-    const locals = gameAtGus();
+    const locals = gameAtClash();
     Collection.add(locals, Catalog.inSet('base').map(card => Cards.card(card.id, 8)));
     act(locals, 'tournaments.enterLocals');
     for (const encounter of Encounters) {

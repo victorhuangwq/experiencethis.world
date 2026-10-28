@@ -7,6 +7,7 @@
  *   run(game)   Optional: what happens when it unlocks
  */
 
+import { localDay } from '../core/time.js';
 import { Rules } from '../rules.js';
 import { Lines } from './text/index.js';
 import { Wallet } from '../systems/wallet.js';
@@ -70,16 +71,26 @@ export const Unlocks = [
         }
     },
     {
+        // Gus puts up the poster for his tourney, a day before the first one
+        id: 'clash-poster',
+        when: game => game.unlocked('gus-open') && game.state.story.days >= Rules.posterOnDay,
+        run: game => game.say(Lines.tournaments.posterUp, 'good')
+    },
+    {
+        id: 'clash',
+        when: game => game.unlocked('clash-poster') && Tournaments.clashStarted(game),
+        run: game => game.say(Lines.tournaments.clashToday, 'good')
+    },
+    {
         // Winning locals makes the player a regular
         id: 'prerelease-invite',
         when: game => game.state.tournaments.localsWon > 0 && Tournaments.upcomingSet(game) !== null,
         run: game => game.say(Lines.tournaments.invited, 'good')
     },
     {
-        // Set 2 comes out with the summer, on a later day than the
-        // pre-release at the earliest
+        // Set 2 comes out with the summer, the day after the pre-release
         id: 'summer',
-        when: game => game.state.tournaments.prerelease && !game.state.tournaments.current && game.state.story.days >= Rules.summerOnDay,
+        when: game => Tournaments.playedPrerelease(game) && !game.state.tournaments.current && localDay(game.time) > game.state.tournaments.prereleaseDay,
         run: game => {
             game.state.story.season = 'summer';
             game.say(Lines.story.summer, 'good');

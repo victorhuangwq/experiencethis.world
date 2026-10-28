@@ -5,6 +5,11 @@
 
 export const Tournaments = {
     localsTitle: 'Friday Night Clash',
+    // Before the tourney: the corkboard, and the poster going up
+    notices: '"Lost cat," says Gus. "Not mine. The band is mine. We need a drummer. We do not need a drummer."',
+    posterUp: 'Gus pins a new poster to the corkboard: FRIDAY NIGHT CLASH. STARTS TOMORROW. He stands back and looks at it for a while.',
+    posterSoon: '"Friday Night Clash," says Gus, tapping the new poster. "The local tourney. First one is tomorrow. Bring your best cards. Bring a pen."',
+    clashToday: 'Today is the first Friday Night Clash at Gus\'s. It is not Friday. Gus does not care.',
     localsNote: '"Friday Night Clash," says Gus, tapping the poster. "The local tourney. Every day. Buy two packs and you\'re in. Win, and you go home with more."',
     enterLocals: price => `Sign me up (buy two packs: ${price})`,
     nextLocals: '"You\'ve had your go," says Gus. "Come back tomorrow. It will be Friday Night Clash again."',

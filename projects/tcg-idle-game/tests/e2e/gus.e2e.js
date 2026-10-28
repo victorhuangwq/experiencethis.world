@@ -16,13 +16,27 @@ const HOUR = 60 * 60 * 1000;
 const foundGus = readFileSync(new URL('../fixtures/save-save-upgrades.json', import.meta.url), 'utf8');
 const savedAt = JSON.parse(foundGus).savedAt;
 
-// The same save, upgraded, after the player has won locals: a regular
-const regular = (() => {
+/**
+ * The same save, upgraded, with some changes
+ * @param {Function} change - (game) changing the game save data
+ */
+function upgraded(change) {
     const { game } = SaveSystem.migrate(JSON.parse(foundGus));
+    change(game);
+    return JSON.stringify({ version: SaveSystem.version, savedAt, game });
+}
+
+// Played on three days, so the next is the first Friday Night Clash
+const beforeClash = upgraded(game => {
+    game.story.days = Rules.clashFromDay - 1;
+});
+
+// A regular, who has won Friday Night Clash
+const regular = upgraded(game => {
+    game.story.days = Rules.clashFromDay - 1;
     game.tournaments = { localsWon: 1, localsPlayed: 1 };
     game.wallet.cents = 10000;
-    return JSON.stringify({ version: SaveSystem.version, savedAt, game });
-})();
+});
 
 const money = async page => page.locator('[data-money]').textContent();
 const literally = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -79,7 +93,7 @@ browserTest('a card sent to grading comes back the next day, and Gus will buy it
 });
 
 browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade with Marcus', {
-    save: foundGus,
+    save: beforeClash,
     // The Friday evening after the save
     time: savedAt + 24 * HOUR
 }, async (page) => {

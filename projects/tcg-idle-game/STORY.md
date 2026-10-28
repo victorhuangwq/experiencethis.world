@@ -24,7 +24,7 @@ that appear one at a time as the player earns them.
 - Each act changes what the player does, not just the size of the numbers.
   Earlier mechanics either get automated or gain a new purpose, so the early
   game never becomes redundant.
-- A full playthrough to the first ending takes about 6 days of wall-clock
+- A full playthrough to the first ending takes about 8 days of wall-clock
   time and about 8 hours of active play (see Pacing).
 - Being kind in the hobby is a core rule. Being a scalper ends the game.
 
@@ -85,7 +85,8 @@ file per topic.
 - **Separate days count.** The game counts the days (by the player's clock)
   on which they have played. Some things wait for a later day, so that the
   game is played over several days rather than in one sitting: Gus's store
-  opens on the second day, and summer comes on the third at the earliest.
+  opens on the second day, his tourney starts on the fourth, and summer
+  comes on the fifth at the earliest.
 - **Storage grows:** a shoebox, a binder, two binders, a bookshelf of
   binders, and finally the card room (formerly the guest room). Each one
   goes on sale when the collection outgrows the one before ("The shoebox lid
@@ -201,18 +202,20 @@ through the door of the player's shop.
   visit he offers up to three trades, one card for one: a card the player
   doesn't have, for a spare copy of one they do, of the same rarity. If the
   player met him at the office, he pretends not to know them.
-- **Locals.** Friday Night Clash, the local tourney, once a day (Gus calls
+- **Locals.** Gus puts up a poster on the third day of play, and from the
+  fourth there's Friday Night Clash, the local tourney, once a day (Gus calls
   it that whatever day it is). Entry is buying two packs from Gus, which
   the player keeps. The player plays their own cards (see Tournaments).
   Prizes are packs: three for winning every match, one for winning two.
-- **The pre-release.** After the player first wins locals, Gus says they're
-  a regular now and invites them to the Set 2 pre-release: a kit of four
-  Set 2 packs for $30, opened at the table, playing with only those cards.
+- **The pre-release.** When the player first wins locals, Gus says they're
+  a regular now and invites them to the Set 2 pre-release, there and then:
+  a kit of four Set 2 packs for $30, opened at the table, playing with only
+  those cards.
   Everyone who plays gets the pre-release promo, The Early Bird, and each
   match won earns a Set 2 pack. It's the first look at Set 2, and it can be
   played once.
-- **Summer, and Set 2.** Summer comes on the third day of play at the
-  earliest, once the player has played the pre-release. Set 2, Backyard
+- **Summer, and Set 2.** Summer comes the day after the player plays the
+  pre-release, so the fifth day of play at the earliest. Set 2, Backyard
   Brawl, is out: Critter Clash got popular, so Gus charges $7.50 a pack for
   it, and the vending machine, still at $3, is cleared out faster (see The
   vending machine). Locals entry and prizes become Set 2 packs.
@@ -254,8 +257,8 @@ is there. A first sketch of the vending machine:
 
 ## Pacing
 
-Target: about **8 hours of active play spread over about 6 days**, reaching
-the first ending on day 6. The other endings can be chased afterwards.
+Target: about **8 hours of active play spread over about 8 days**, reaching
+the first ending on day 8. The other endings can be chased afterwards.
 
 ### Principles
 
@@ -287,11 +290,13 @@ the first ending on day 6. The other endings can be chased afterwards.
 | Day | Active time | Acts | Main beats | Reason to come back |
 |---|---|---|---|---|
 | 1 | about 1 h | 1 | Vending machine (0:00), first Pip event (about 0:30, at the first restock), Gus's sign (about 0:30), the binder | Gus's grand opening is tomorrow |
-| 2 | about 1.5 h | 2 | Gus's store opens: packs and singles, the first card sent off to be graded, first locals win, Marcus (on his days), the pre-release | A card comes back from grading; summer and Set 2 tomorrow |
-| 3 | about 1.5 h | 2 -> 3 | Summer: Set 2 releases (prices spike; Flip's first offer: buy out every store), Set 2 locals, PackDrop.com unlocks | First online order arrives the next morning |
-| 4 | about 1.5 h | 3 -> 4 | First booster box, real deck building, regionals vs Riley, first Card-a-Palooza, trade-up chain step 1, nationals | Preorder boxes, the next card show |
-| 5 | about 1.5 h | 4 -> 5 | First table at a card show, trade-up steps 2-4, open your own shop, Flip's second offer (print counterfeits), Set 3 announced | The shop runs overnight; Set 3 release |
-| 6 | about 1 h | 5 | Set 3 releases, the last legendaries, the championship vs xX_K3V1N_Xx, first ending | Post-game: chase the other endings |
+| 2 | about 1 h | 2 | Gus's store opens: packs and singles, the first card sent off to be graded, Marcus (on his days) | A card comes back from grading |
+| 3 | about 45 min | 2 | The graded card is back; Gus puts up the Friday Night Clash poster | The first Friday Night Clash is tomorrow |
+| 4 | about 1 h | 2 | The first Friday Night Clash; winning it means the pre-release, a first look at Set 2 | Summer and Set 2 tomorrow (or another try at the tourney) |
+| 5 | about 1 h | 2 -> 3 | Summer: Set 2 releases (prices spike; Flip's first offer: buy out every store), Set 2 locals, PackDrop.com unlocks | First online order arrives the next morning |
+| 6 | about 1.5 h | 3 -> 4 | First booster box, real deck building, regionals vs Riley, first Card-a-Palooza, trade-up chain step 1, nationals | Preorder boxes, the next card show |
+| 7 | about 1.5 h | 4 -> 5 | First table at a card show, trade-up steps 2-4, open your own shop, Flip's second offer (print counterfeits), Set 3 announced | The shop runs overnight; Set 3 release |
+| 8 | about 1 h | 5 | Set 3 releases, the last legendaries, the championship vs xX_K3V1N_Xx, first ending | Post-game: chase the other endings |
 
 Rough active time per act: Act 1 0.5 h, Act 2 2 h, Act 3 2 h, Act 4 2 h,
 Act 5 1.5 h.
@@ -307,9 +312,10 @@ All times come from the real clock and are saved as timestamps.
 | Gus's store opens | The second day of play | The sign appears in Act 1 |
 | Gus's glass case | Restocked every 4 hours (00:00, 04:00, ...) | Six singles |
 | Marcus at Gus's | Thursday and Friday from 6 PM, all day Saturday and Sunday | Up to three trades each visit |
-| Locals at Gus's (Friday Night Clash) | Once a day, any time | One entry per day. Gus calls it "Friday Night Clash" no matter what day it is. |
+| Locals at Gus's (Friday Night Clash) | Once a day, any time, from the fourth day of play | One entry per day. Gus calls it "Friday Night Clash" no matter what day it is. |
 | Grading, sent by Gus | Back 24 hours after sending | |
-| Summer, and Set 2 | The third day of play at the earliest, once the player has played the pre-release | |
+| Friday Night Clash poster | The third day of play | The first one is the next day |
+| Summer, and Set 2 | The day after the player plays the pre-release: the fifth day of play at the earliest | |
 | Regionals | Every 6 hours (00:00, 06:00, 12:00, 18:00) | One entry per block |
 | Nationals | Once per calendar day | One entry per day |
 | Championship | Opens once Set 3 has released and you've won nationals | One-time event, can be retried daily |

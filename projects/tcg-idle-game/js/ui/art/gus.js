@@ -86,24 +86,47 @@ function layOut(columns) {
  * The inside of the store as lines of pieces
  * @param {Object} options - marcus: whether Marcus is at the table by the
  *                           window; newSet: whether a new set is on the
- *                           shelves; night: whether it's dark out
+ *                           shelves; night: whether it's dark out; poster:
+ *                           what's on the corkboard ('notices', 'soon', or
+ *                           'clash')
  */
-function insideLines({ marcus = false, newSet = false, night = false } = {}) {
+function insideLines({ marcus = false, newSet = false, night = false, poster: posterShows = 'clash' } = {}) {
     const shelves = [
         '.--------.',
         '| PACKS  |',
         ...Array.from({ length: HEIGHT - 3 }, (_, row) => newSet && row < 4 ? '|[BB][BB]|' : '|[##][##]|'),
         '\'--------\''
     ];
-    const poster = [
-        '.--------------.',
-        '|o  FRIDAY    o|',
-        '|  NIGHT CLASH |',
-        '|--------------|',
-        '| LOCAL TOURNEY|',
-        '|o EVERY DAY  o|',
-        '\'--------------\''
-    ];
+    // The corkboard: the neighbourhood's notices, then Gus's poster
+    const poster = {
+        notices: [
+            '.--------------.',
+            '|o  LOST CAT  o|',
+            '|  (NOT GUS\'S) |',
+            '|--------------|',
+            '| BAND WANTED  |',
+            '|o  NO DRUMS  o|',
+            '\'--------------\''
+        ],
+        soon: [
+            '.--------------.',
+            '|o  FRIDAY    o|',
+            '|  NIGHT CLASH |',
+            '|--------------|',
+            '| LOCAL TOURNEY|',
+            '|o TOMORROW!  o|',
+            '\'--------------\''
+        ],
+        clash: [
+            '.--------------.',
+            '|o  FRIDAY    o|',
+            '|  NIGHT CLASH |',
+            '|--------------|',
+            '| LOCAL TOURNEY|',
+            '|o EVERY DAY  o|',
+            '\'--------------\''
+        ]
+    }[posterShows];
     const gus = [
         '     (o_o)',
         '    _/|=|\\_'
