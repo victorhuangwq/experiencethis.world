@@ -267,9 +267,9 @@ browserTest('Terry waits for the drop, and splits it with a player who asks', { 
     await page.clock.runFor(2000);
     await page.getByText(Lines.terry.arrive[0]).waitFor();
 
+    // Once they've agreed, the driver comes, and row B goes to Terry
     await button(page, Lines.terry.persuade).click();
     await page.locator('#log').getByText(Lines.terry.agreed).waitFor();
-    await page.clock.runFor(60 * 1000);
     await page.locator('#log').getByText(Lines.terry.shared).waitFor();
     const keys = await page.locator('.machine [data-action="vending.buy"]').count();
     assert.ok(keys <= Rules.slotCount / 2, `row B went to Terry: ${keys} packs left`);

@@ -176,6 +176,18 @@ export const Vending = {
     },
 
     /**
+     * The driver comes now, a little before he was due: once a deal is made
+     * with Terry, nobody waits around for the drop
+     */
+    dropNow(game) {
+        const vending = game.state.vending;
+        vending.restockedAt = game.time;
+        vending.nextRestockAt = Vending.driverDue(game, game.time);
+        Vending.restock(game);
+        Vending.announceRestock(game);
+    },
+
+    /**
      * Take away the packs other people have bought by now, mentioning the
      * good ones if the player is there to see them go
      */

@@ -8,6 +8,7 @@ import { Vending } from '../js/systems/vending.js';
 import { Wallet } from '../js/systems/wallet.js';
 
 const SECOND = 1000;
+const MINUTE = 60 * SECOND;
 
 // The scalper
 
@@ -136,11 +137,12 @@ test('coming back just before a drop does not count as being there', () => {
     assert.equal(game.state.encounter, null);
 });
 
-test('persuading Terry makes a friend, and he takes row B at the drop', () => {
+test('persuading Terry makes a friend, and the driver comes: Terry takes row B of the drop', () => {
     const game = beforeDrop(30 * SECOND);
     choose(game, Lines.terry.persuade);
     assert.equal(game.state.people.terry.friend, true);
-    restock(game);
+    assert.equal(game.state.vending.restockedAt, game.time, 'nobody waits for the drop once there is a deal');
+    assert.ok(Vending.nextRestockAt(game) > game.time + Rules.restockEvery - Rules.restockVariation - MINUTE);
     const { slots } = game.state.vending;
     assert.deepEqual(slots.slice(4), [null, null, null, null]);
     assert.ok(slots.slice(0, 4).every(Boolean), 'row A is the player\'s');
@@ -150,7 +152,7 @@ test('persuading Terry makes a friend, and he takes row B at the drop', () => {
 test('letting Terry go first means he takes the best pack', () => {
     const game = beforeDrop(30 * SECOND);
     choose(game, Lines.terry.letHimFirst);
-    restock(game);
+    assert.equal(game.state.vending.restockedAt, game.time, 'the driver comes');
     const { slots } = game.state.vending;
     assert.equal(slots.filter(kind => kind === null).length, 1);
     const taken = Vending.kinds.find(kind => game.messages.some(message => message.text === Lines.terry.wentFirst(Lines.mall.kinds[kind])));
