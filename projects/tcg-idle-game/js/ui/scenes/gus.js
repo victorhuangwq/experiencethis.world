@@ -124,7 +124,7 @@ function renderPrerelease(game) {
 }
 
 /**
- * Friday Night Locals, every hour
+ * Friday Night Locals, once a day
  */
 function renderLocals(game) {
     const parts = [`<h3>${escape(Lines.tournaments.localsTitle)}</h3>`, `<p>${escape(Lines.tournaments.localsNote)}</p>`];
@@ -132,7 +132,7 @@ function renderLocals(game) {
         const entry = Tournaments.localsEntry(game);
         parts.push(`<p>${button('tournaments.enterLocals', Lines.tournaments.enterLocals(Format.money(entry)), { disabled: !Wallet.canAfford(game, entry) })}</p>`);
     } else {
-        parts.push(`<p class="muted">${escape(Lines.tournaments.nextLocals(Format.clock(Tournaments.nextLocals(game))))}</p>`);
+        parts.push(`<p class="muted">${escape(Lines.tournaments.nextLocals)}</p>`);
     }
     return parts.join('');
 }

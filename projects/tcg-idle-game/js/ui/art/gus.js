@@ -86,7 +86,7 @@ function insideLines({ marcus = false, newSet = false, night = false } = {}) {
         '|  FRIDAY   |',
         '|   NIGHT   |',
         '|  LOCALS!  |',
-        '| EVERY HOUR|',
+        '| EVERY DAY |',
         '|o         o|',
         '\'-----------\''
     ];

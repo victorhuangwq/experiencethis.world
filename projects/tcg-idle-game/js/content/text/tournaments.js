@@ -5,9 +5,9 @@
 
 export const Tournaments = {
     localsTitle: 'Friday Night Locals',
-    localsNote: '"Friday Night Locals," says Gus, tapping the poster. "Every hour, on the hour. Buy two packs and you\'re in. Win, and you go home with more."',
+    localsNote: '"Friday Night Locals," says Gus, tapping the poster. "Every day. Buy two packs and you\'re in. Win, and you go home with more."',
     enterLocals: price => `Sign me up (buy two packs: ${price})`,
-    nextLocals: time => `"You've had your go," says Gus. "Next one's at ${time}."`,
+    nextLocals: '"You\'ve had your go," says Gus. "Come back tomorrow. It will be Friday Night Locals again."',
     entered: day => day === 'Friday'
         ? 'Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is actually Friday. Gus looks uneasy about it.'
         : `Gus writes your name on the bracket. "Friday Night Locals," says Gus. It is ${day}.`,

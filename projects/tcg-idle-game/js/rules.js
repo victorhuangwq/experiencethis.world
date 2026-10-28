@@ -139,8 +139,8 @@ export const Rules = {
         // Sealed: everyone plays with what they opened
         prerelease: { common: 0.35, uncommon: 0.4, rare: 0.2, 'ultra-rare': 0.05 }
     },
-    // Locals: once an hour. Entry is buying this many packs from Gus, and
-    // the prize is packs, by matches won.
+    // Locals: once a day. Entry is buying this many packs from Gus, and the
+    // prize is packs, by matches won.
     localsEntryPacks: 2,
     localsPrizes: { 3: 3, 2: 1 },
     // The pre-release: a kit of new-set packs, opened at the table, for

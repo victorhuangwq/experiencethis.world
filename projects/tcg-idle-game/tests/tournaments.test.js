@@ -45,7 +45,7 @@ const play = (game, type) => {
     act(game, 'encounter.choose', { index });
 };
 
-test('entering locals is buying two packs from Gus, once an hour', () => {
+test('entering locals is buying two packs from Gus, once a day', () => {
     const game = gameWithCards();
     const before = game.state.wallet.cents;
     const current = enter(game);
@@ -57,10 +57,13 @@ test('entering locals is buying two packs from Gus, once an hour', () => {
     game.state.tournaments.current = null;
     game.state.encounter = null;
     act(game, 'tournaments.enterLocals');
-    assert.equal(game.state.tournaments.current, null, 'one locals an hour');
-    game.tick(Tournaments.nextLocals(game));
+    assert.equal(game.state.tournaments.current, null, 'one locals a day');
+    game.tick(game.time + 6 * HOUR);
     act(game, 'tournaments.enterLocals');
-    assert.ok(game.state.tournaments.current, 'the next hour, again');
+    assert.equal(game.state.tournaments.current, null, 'not later the same day either');
+    game.tick(game.time + 24 * HOUR);
+    act(game, 'tournaments.enterLocals');
+    assert.ok(game.state.tournaments.current, 'the next day, again');
 });
 
 test('no locals without the entry, or without any cards', () => {
@@ -231,14 +234,17 @@ test('a broken tournament in a save is dropped, with its match', () => {
 
 test('Marcus only plays at locals when he is at Gus\'s', () => {
     const game = gameWithCards();
-    for (let hour = 0; hour < 40; hour++) {
-        game.tick(game.time + HOUR);
-        enter(game);
-        assert.ok(!game.state.tournaments.current.opponents.includes('marcus'), 'Monday, no Marcus');
-        game.state.tournaments.current = null;
-        game.state.encounter = null;
-        if (new Date(game.time).getDay() !== 1) {
-            break;
+    const opponents = () => {
+        const seen = new Set();
+        for (let tries = 0; tries < 30; tries++) {
+            game.state.tournaments.localsDay = 0;
+            enter(game).opponents.forEach(id => seen.add(id));
+            game.state.tournaments.current = null;
+            game.state.encounter = null;
         }
-    }
+        return seen;
+    };
+    assert.ok(!opponents().has('marcus'), 'not on a Monday');
+    game.tick(new Date(2026, 9, 31, 12).getTime());
+    assert.ok(opponents().has('marcus'), 'on a Saturday');
 });

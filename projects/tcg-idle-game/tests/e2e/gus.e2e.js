@@ -105,7 +105,7 @@ browserTest('a Friday evening at Gus\'s: locals, a round at a time, and a trade 
     }
     assert.equal(await choice.count(), 0, 'the tournament is over');
     await page.locator('#log').getByText(/^(You win every match|Two wins|One win|No wins)/).waitFor();
-    await page.getByText(/^"You've had your go," says Gus\. "Next one's at /).waitFor();
+    await page.getByText(/^"You've had your go," says Gus\. "Come back tomorrow/).waitFor();
     await assertFits(page, 'Gus\'s store after locals');
 });
 

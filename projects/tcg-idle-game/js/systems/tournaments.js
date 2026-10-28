@@ -1,5 +1,5 @@
 /**
- * Tournaments at Gus's. Locals run once an hour: entry is buying packs from
+ * Tournaments at Gus's. Locals run once a day: entry is buying packs from
  * Gus, and the prize is more packs. The pre-release, once, for regulars
  * before a new set comes out: the player opens a kit of the new set's packs
  * at the table and plays with only those cards; everyone gets the promo,
@@ -14,7 +14,7 @@
  * have in hand. The match encounter (content/encounters/match.js) shows it.
  */
 
-import { every, HOUR } from '../core/time.js';
+import { localDay } from '../core/time.js';
 import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Catalog } from '../content/catalog.js';
@@ -26,15 +26,15 @@ import { Store } from './store.js';
 import { Story } from './story.js';
 import { Cards } from './cards.js';
 
-const hours = every(HOUR);
 const KINDS = ['locals', 'prerelease'];
 
 export const Tournaments = {
     id: 'tournaments',
 
     defaults: () => ({
-        // The hour of the last locals the player entered
-        localsAt: 0,
+        // The day of the last locals the player entered (a localDay()
+        // number)
+        localsDay: 0,
         localsPlayed: 0,
         // Locals where the player won every match
         localsWon: 0,
@@ -74,14 +74,10 @@ export const Tournaments = {
     },
 
     /**
-     * Whether this hour's locals is still to play
+     * Whether today's locals is still to play
      */
     localsOpen(game, now = game.time) {
-        return game.state.tournaments.localsAt !== hours.lastStart(now);
-    },
-
-    nextLocals(game, now = game.time) {
-        return hours.nextStart(now);
+        return game.state.tournaments.localsDay !== localDay(now);
     },
 
     /**
@@ -233,7 +229,7 @@ export const Tournaments = {
 
     actions: {
         /**
-         * Enter this hour's locals: buy the entry packs from Gus, and play
+         * Enter today's locals: buy the entry packs from Gus, and play
          */
         enterLocals(game, args, now) {
             const tournaments = game.state.tournaments;
@@ -247,7 +243,7 @@ export const Tournaments = {
                 game.say(Lines.gus.cantAfford(Format.money(entry)));
                 return;
             }
-            tournaments.localsAt = hours.lastStart(now);
+            tournaments.localsDay = localDay(now);
             Collection.addPacks(game, set, 'normal', Rules.localsEntryPacks);
             game.say(Lines.tournaments.entered(Lines.job.days[new Date(now).getDay()]));
             Tournaments.start(game, 'locals', set, Collection.loose(game));
