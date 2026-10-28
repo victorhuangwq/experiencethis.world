@@ -1,10 +1,12 @@
 /**
  * Terry waits for the drop: he is at the machine in the minute before the
  * driver comes, if the player is there too. Vending.checkCamper starts this.
+ * Once they've made a deal, the driver comes, so the deal is seen to happen.
  */
 
 import { Lines } from '../text/index.js';
 import { Kindness } from '../../systems/kindness.js';
+import { Vending } from '../../systems/vending.js';
 
 export const CamperEncounter = {
     id: 'camper',
@@ -29,6 +31,7 @@ export const CamperEncounter = {
                 game.say(terry.friend ? Lines.terry.agreedAgain : Lines.terry.agreed, 'good');
                 terry.friend = true;
                 game.state.vending.dropDeal = 'share';
+                Vending.dropNow(game);
             }
         },
         {
@@ -36,6 +39,7 @@ export const CamperEncounter = {
             run: game => {
                 game.state.vending.dropDeal = 'first';
                 game.say(Lines.terry.waiting);
+                Vending.dropNow(game);
             }
         },
         {

@@ -65,9 +65,10 @@ into him there, and pretend this is normal.
   the rest. Whatever they can't afford, Flip takes.
 - **Terry, waiting for the drop.** If the player is at the machine in the
   minute before a drop, Terry is already there (always the first time, then
-  sometimes). Asking him to split it: he takes row B, they take row A, and he
-  becomes a friend who texts when a mega pack turns up while they're away.
-  Letting him go first: he takes the best pack. Shoving him aside: a strike,
+  sometimes). Once they've made a deal, the driver comes. Asking him to
+  split it: he takes row B, they take row A, and he becomes a friend who
+  texts when a mega pack turns up while they're away. Letting him go first:
+  he takes the best pack. Shoving him aside: a strike,
   and Dale counts it in the Shame ending.
 - **In summer,** Set 2 packs fill about half the slots at the same price as
   the Base Set's. The game is popular now and $3 is cheap for the new set,
