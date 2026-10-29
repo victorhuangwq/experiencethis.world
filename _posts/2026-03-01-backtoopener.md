@@ -6,7 +6,7 @@ categories: projects
 selected: true
 project_url: https://issues.chromium.org/issues/448173940
 project_action: View the Chromium feature
-project_summary: A Chromium feature that lets the back button close a new tab and return to the tab that opened it. Running as an experiment in Edge and Chrome.
+project_summary: A Chromium feature that lets the back button close a new tab and return to the tab that opened it. Shipped in Edge; still experimenting in Chrome.
 project_image: /assets/images/backtoopener-close-and-go-back-dropdown.png
 project_image_alt: Edge's back button menu showing Close and go back to ChatGPT on a recipe page
 project_image_width: 1600
@@ -108,17 +108,17 @@ All of it goes away with BackToOpener: one native browser behavior, and years of
 
 ## Where it stands
 
-BackToOpener is currently running as an A/B experiment in both Edge and Chrome ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)), so we'll see what the numbers say. The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
+BackToOpener has shipped in Edge. In Chrome, it is still running as an experiment ([the feature is tracked publicly in Chromium's issue tracker](https://issues.chromium.org/issues/448173940)). The one guardrail I care most about is that new tab launch latency must not regress. The whole point of the feature is smoother navigation, and it would be a bad joke if it slowed down tab creation to get there.
 
 ![Animation of BackToOpener in Chrome: a recipe page opened from a Gemini conversation is closed with the back button, returning focus to the chat](/assets/images/backtoopener-in-action.gif)
-*Here's the whole loop in Chrome: a page opened from a Gemini chat, one press of back, and you're back in the conversation at the right place. It's the same feature in a different browser, which is the point of building it into Chromium.*
+*Here's the whole loop in the Chrome experiment: a page opened from a Gemini chat, one press of back, and you're back in the conversation at the right place. It's the same feature in a different browser, which is the point of building it into Chromium.*
 
 ---
 
-## Before I know how it ends
+## A back button I can point at
 
 When coworkers started trying BackToOpener internally, the common reaction was along the lines of "wait, how did this not exist?" Which is the funny thing about the feature: it seems obvious in hindsight, but it sat unbuilt in Chromium for years, because obvious and shipped are very different things.
 
-I work on a browser used by hundreds of millions of people, which is a part of a bigger open source project used by billions (thanks Chromium), and most of what I do is too diffuse to point at. If this ships, I'll be able to point at the back button and say: I did that. That's a pretty fun thing to get to say at a party.
+I work on a browser used by hundreds of millions of people, which is a part of a bigger open source project used by billions (thanks Chromium), and most of what I do is too diffuse to point at. Now that it's shipped in Edge, I can point at the back button and say: I did that. That's a pretty fun thing to get to say at a party.
 
-The experiment is still running, so nothing is final and I don't want to celebrate too early. But that's exactly why I wanted to write this all down now, before I know how it ends.
+Chrome's experiment is still running, so that part of the story isn't finished. But in Edge, the thing I kept wishing the back button would do is now something it does.
