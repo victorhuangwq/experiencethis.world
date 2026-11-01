@@ -36,13 +36,18 @@ export const Unlocks = [
         }
     },
     {
-        // The day job, once the player is out of money; where it happens
-        // depends on the day
+        // The day job, once the player is out of money or out of box, so
+        // there's always something to click; where it happens depends on
+        // the day
         id: 'work',
-        when: game => game.unlocked('mall') && !Wallet.canAfford(game, Rules.prices.normal),
+        when: game => game.unlocked('mall') && (game.unlocked('shoebox') || !Wallet.canAfford(game, Rules.prices.normal)),
         run: game => {
             Job.fillInbox(game, game.time);
-            game.say(Lines.job.unlocked[Job.workplace(game) || 'off'](Job.today(game)));
+            const broke = !Wallet.canAfford(game, Rules.prices.normal);
+            game.say(Lines.job.unlocked[Job.workplace(game) || 'off'](Job.today(game), broke));
+            if (game.state.vending.packsBought === 0 && !broke) {
+                game.say(Lines.mall.stillWaiting, 'good');
+            }
         }
     },
     {

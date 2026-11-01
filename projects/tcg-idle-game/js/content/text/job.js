@@ -4,14 +4,16 @@
  * not told anyone.
  */
 
+const why = broke => broke ? 'You are out of money.' : 'That is the box done.';
+
 export const Job = {
     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 
     // When work first appears, by where the player works that day
     unlocked: {
-        office: day => `You are out of money. Your laptop dings. It is your boss, Linda. It is ${day}, which is an office day. You have a job. You forgot. Hybrid is three days a week. Nobody remembers choosing which three.`,
-        home: day => `You are out of money. Your laptop dings. It is work. It is ${day}, so you work from home today. You have a job, by the way. You forgot.`,
-        off: day => `You are out of money. Your laptop dings. It is your boss, Linda, on a ${day}. Subject: "No rush." You have a job, it turns out. You forgot. Nobody works on ${day}s. Except Linda.`
+        office: (day, broke = true) => `${why(broke)} Your laptop dings. It is your boss, Linda. It is ${day}, which is an office day. You have a job. You forgot. Hybrid is three days a week. Nobody remembers choosing which three.`,
+        home: (day, broke = true) => `${why(broke)} Your laptop dings. It is work. It is ${day}, so you work from home today. You have a job, by the way. You forgot.`,
+        off: (day, broke = true) => `${why(broke)} Your laptop dings. It is your boss, Linda, on a ${day}. Subject: "No rush." You have a job, it turns out. You forgot. Nobody works on ${day}s. Except Linda.`
     },
 
     name: 'The office',
@@ -25,8 +27,8 @@ export const Job = {
     // What the office says about today
     today: {
         office: day => `${day}. An office day. Your badge works on the second try.`,
-        home: day => `${day}. You work from home on ${day}s. Your desk is here anyway, waiting. So is everything on it.`,
-        off: day => `${day}. The office is closed. The lights are on anyway. Nobody knows who pays for that.`
+        home: day => `${day}. You work from home on ${day}s. Your desk is here anyway, waiting. So is everything on it. Your laptop is at home.`,
+        off: day => `${day}. The office is closed. The lights are on anyway. Nobody knows who pays for that. Your laptop is at home. So are Linda's emails.`
     },
     kitchenTable: day => `${day}. You work from home today. Your laptop is on the kitchen table, next to your cards.`,
     dayOff: day => `${day}. Nobody works on ${day}s. Linda has emailed anyway. Your laptop is on the kitchen table, next to your cards.`,
