@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, finishOpening, sortCards, buyFirst, overrideRules, newestMessage, gameAtGus } from './helpers.js';
+import { newGame, act, finishOpening, takeCards, buyFirst, overrideRules, newestMessage, gameAtGus } from './helpers.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
 import { Catalog } from '../js/content/catalog.js';
@@ -50,7 +50,7 @@ test('work turns up once the first pack has been bought, saying where it happens
     for (const [day, place] of [['Tuesday', 'office'], ['Monday', 'home'], ['Saturday', 'off']]) {
         const game = newGame({ now: days[day] });
         act(game, 'encounter.choose', { index: 0 });
-        sortCards(game, Rules.boxFinds.flyer);
+        takeCards(game, Rules.boxFinds.flyer);
         assert.equal(game.unlocked('work'), false);
         buyFirst(game);
         assert.ok(game.messages.some(message => message.text === Lines.job.unlocked[place](day)), day);

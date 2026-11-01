@@ -39,11 +39,10 @@ const MOVES = [
     { weight: 2, run: (game, roll) => act(game, 'trades.trade', { index: Math.floor(roll() * Rules.marcusOffers) }) },
     { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
     { weight: 6, run: game => {
-        // A run of cards, and now and then the wrong stack
-        for (let card = 0; card < 15 && game.state.box.top; card++) {
-            act(game, 'box.sort', { type: Catalog.find(game.state.box.top).type });
+        // A run of cards
+        for (let card = 0; card < 15; card++) {
+            act(game, 'box.take');
         }
-        act(game, 'box.sort', { type: 'Fire' });
     } },
     { weight: 2, run: game => act(game, 'box.buySorter') },
     { weight: 2, run: game => act(game, 'vending.kick') },
@@ -134,7 +133,7 @@ function checkInvariants(game, last) {
     assert.ok(isCount(job.inbox) && job.inbox <= Rules.inboxCap, 'the inbox has a limit');
     const box = state.box;
     assert.ok(isCount(box.sorted) && box.sorted <= Rules.boxCards, 'the box holds so many cards');
-    assert.equal(Object.values(box.stacks).reduce((sum, count) => sum + count), box.sorted, 'every sorted card is on a stack');
+    assert.ok(box.sorterAt > 0 || box.sorted <= Rules.boxStuckAt || state.story.shoebox !== null, 'only the SORT-O-MATIC gets through the brick');
     assert.ok([0, 1, 2].includes(job.coworker) && job.coworker >= last.coworker, 'Marcus only gets friendlier');
     assert.ok(job.packsOpenedAtDesk <= collection.packsOpened, 'packs opened at the desk are packs opened');
     assert.ok(job.stickyNote || !last.stickyNote, 'the sticky note stays on the tab');

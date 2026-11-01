@@ -7,7 +7,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, finishOpening, sortCards, START } from './helpers.js';
+import { newGame, act, finishOpening, takeCards, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
@@ -61,15 +61,14 @@ function playVisit(game) {
 }
 
 /**
- * A first session's worth of the box: sort by hand until the flyer turns up
- * and the machine takes over, and save up for the SORT-O-MATIC once it's
- * advertised
+ * A first session's worth of the box: take cards out by hand until they
+ * stop coming, and save up for the SORT-O-MATIC once it's advertised
  * @returns {boolean} - Whether the player is saving up
  */
 function playBox(game, cards) {
     const { box } = game.state;
-    if (!game.unlocked('mall') && !game.state.encounter) {
-        sortCards(game, cards);
+    for (let card = 0; card < cards && Box.canTake(game); card++) {
+        act(game, 'box.take');
     }
     act(game, 'box.buySorter');
     return game.unlocked('sorter-ad') && Box.open(game) && box.sorterAt === 0;
@@ -79,7 +78,7 @@ function playBox(game, cards) {
  * Play until a milestone, or give up. Each seed starts on a different day
  * of the week, since the day job depends on the day.
  * @param {Object} options - seed, step (time between moves), work (answer
- *                           emails?), sorts (cards sorted by hand each move;
+ *                           emails?), sorts (cards taken out by hand each move;
  *                           without it the opening is skipped), until(game),
  *                           limit
  * @returns {number|null} - Time taken, or null if never reached
@@ -180,7 +179,9 @@ test('an active player is never long without a pack to buy in the first half hou
     }
     waits.sort((a, b) => a - b);
     t.diagnostic(`longest empty machine: ${range(waits)}`);
-    assert.ok(median(waits) <= 6 * MINUTE);
+    // This player buys everything, so the wait is about the gap between
+    // early deliveries
+    assert.ok(median(waits) <= Rules.earlyRestockEvery + MINUTE);
 });
 
 test('an active player finds Gus\'s store in the first session (target: about 30 minutes)', (t) => {

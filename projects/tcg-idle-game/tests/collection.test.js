@@ -246,9 +246,9 @@ test('knocking at Gus\'s before it is on the map does nothing', () => {
 
 test('a repeated message is counted instead of added again', () => {
     const game = gameAtMall();
-    const messages = game.messages.length;
+    game.messages.length = 0;
     game.say('You open a pack.');
     game.say('You open a pack.');
-    assert.equal(game.messages.length, messages + 1);
+    assert.equal(game.messages.length, 1);
     assert.equal(game.messages[0].count, 2);
 });

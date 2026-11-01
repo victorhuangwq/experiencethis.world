@@ -4,6 +4,7 @@
 
 export const Mall = {
     name: 'The back of the mall',
+    stillWaiting: 'You still have the flyer. CARD-O-MATIC 3000. BACK OF THE MALL. You have not been to see it. It says the machine is always open.',
     unlocked: 'There is a vending machine at the back of the mall. It sells Critter Clash packs. It has been there since you were seven. It has been waiting.',
 
     restock: 'A delivery driver restocks the machine. The driver does not make eye contact.',

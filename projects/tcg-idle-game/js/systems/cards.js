@@ -87,18 +87,12 @@ export const Cards = {
     },
 
     /**
-     * The cards in the shoebox from the player's childhood
-     * @param {Game} game - Game, for randomness
+     * The cards kept from the box: what was put to one side, and the dragon
      * @returns {Array} - Cards
      */
-    shoeboxCards(game) {
-        const cards = [];
-        while (cards.length < 6) {
-            cards.push(this.pull(game, 'common', game.randomInt(1, 3)));
-        }
-        cards.push(this.card('wet-sock-gobln', 4));
-        cards.push(this.card('chewed-dragon', 1));
-        return cards;
+    shoeboxCards() {
+        const found = Object.values(Rules.boxCardFinds).map(([id, condition]) => this.card(id, condition));
+        return [...found, this.card('chewed-dragon', 1)];
     },
 
     /**

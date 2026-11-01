@@ -8,7 +8,6 @@ import { Systems } from '../js/systems/index.js';
 import { Unlocks } from '../js/content/unlocks.js';
 import { Encounters } from '../js/content/encounters/index.js';
 import { Rules } from '../js/rules.js';
-import { Catalog } from '../js/content/catalog.js';
 
 // Sunday 25 October 2026, 2:07 PM local time
 export const START = new Date(2026, 9, 25, 14, 7).getTime();
@@ -46,25 +45,35 @@ export function act(game, name, args = {}, now = game.time) {
 }
 
 /**
- * Sort cards out of the box by hand, each onto the right stack
+ * Take cards out of the box by hand
  * @param {Game} game - Game, past the box's arrival
  * @param {number} count - How many
  */
-export function sortCards(game, count) {
+export function takeCards(game, count) {
     for (let card = 0; card < count; card++) {
-        act(game, 'box.sort', { type: Catalog.find(game.state.box.top).type });
+        act(game, 'box.take');
     }
 }
 
 /**
- * Play the opening: sort the whole box, then sell or keep it to Benny. The
+ * Empty the box: everything that comes out by hand, then the SORT-O-MATIC,
+ * bought in a hurry and left to it
+ */
+export function emptyBox(game) {
+    takeCards(game, Rules.boxStuckAt);
+    game.state.box.sorterAt = game.time - (Rules.boxCards - Rules.boxStuckAt) * Rules.sorterEvery;
+    game.tick(game.time);
+}
+
+/**
+ * Play the opening: empty the box, then sell or keep it to Benny. The
  * money from the box is left out, so what's in the wallet is Benny's, and
  * the job and the allowance start now, as they do once the player has spent
  * it.
  */
 export function finishOpening(game, choice = 'sell') {
     act(game, 'encounter.choose', { index: 0 });
-    sortCards(game, Rules.boxCards);
+    emptyBox(game);
     game.state.wallet.cents = 0;
     game.checkUnlocks();
     act(game, 'encounter.choose', { index: choice === 'sell' ? 0 : 1 });

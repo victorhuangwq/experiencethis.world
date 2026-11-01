@@ -10,7 +10,7 @@ for the whole game and what every act shares, and a file for each act.
 ## Current state
 
 Act 1 (spring) is playable: the massive box from the player's childhood room,
-sorted into stacks by hand and then by the SORT-O-MATIC, a 120-card Base Set
+gone through a card at a time by hand and then by the SORT-O-MATIC, a 120-card Base Set
 with a checklist, a self-given allowance, a hybrid day job
 (a cubicle at the office on real Tuesdays to Thursdays, which the hobby
 slowly takes over, and the kitchen table on other days, where a

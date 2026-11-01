@@ -20,7 +20,7 @@ it leads to), then its places and systems, and list it here and under Acts.
 
 ## Status
 
-- **Built:** Act 1, spring (the box to sort, the allowance, the hybrid
+- **Built:** Act 1, spring (the box, the allowance, the hybrid
   day job and the office, the vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
   secrets), and Act 2 (Gus's Games & Grub, locals, grading, Marcus's
   trades, the pre-release, and summer with Set 2).
@@ -83,13 +83,16 @@ file per topic.
 - **The player is an adult returning to the hobby.** It starts when their
   parents move house and drop off everything from their childhood room,
   including a massive box of cards. The holo Absolutely Massive Dragon is on
-  top, with its corner chewed off when they were seven. The 249 cards under
-  it are sorted into a stack for each type, by hand and then by the
-  SORT-O-MATIC. The finished box is worth $0.43, and Benny offers $3 for it.
-  Selling is the better deal on paper; keeping it holds on to a misprint
-  "Wet Sock Gobln" that later starts Mildred's trade-up chain. **Open:** in
-  Act 4, Benny could be at a card show selling a sold box for $40, as
-  "PROFESSIONALLY SORTED".
+  top, with its corner chewed off when they were seven. The 80 cards under
+  it come out one at a time, by hand until the rest turns out to be stuck
+  together, then by the SORT-O-MATIC. Most are junk; finds among them point at
+  Benny and at another box. The finished box is worth $0.43, and Benny offers
+  $3 for it, as a note at the bottom said he would. Selling is the better deal
+  on paper; keeping it holds on to a small pile of cards, including a misprint
+  "Wet Sock Gobln" that later starts Mildred's trade-up chain. **Open:** what
+  the other box is, why Benny has been nine since 1998, and which card he takes
+  from the pile. In Act 4, he could be at a card show selling a sold box for
+  $40.
 - **The opening expands one thing at a time.** Each thing appears because the
   player has run into a need for it: a flyer in the box leads to the machine,
   being out of money brings the job, and the job's inbox brings the money for

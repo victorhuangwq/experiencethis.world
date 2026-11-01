@@ -15,22 +15,33 @@ Pip's tip, or 120 without (see [Act 2](act-2.md)).
 | Time | What happens |
 |---|---|
 | 0 to 1 min | The box arrives, with the chewed dragon on top |
-| 1 to 3 min | Sorting by hand: the crayon checklist, a rare, a note about another box |
-| About 3 min | $5 in a birthday card, then the machine's flyer. One pack, and out of money |
+| 1 to 2 min | Cards come out one click at a time: junk, notes about Benny, the map, $5 in a birthday card, the machine's flyer |
+| About 3 min | The rest of the box is stuck together. One pack, and out of money |
 | About 4 min | The job, with 24 unread emails, then an advert for the SORT-O-MATIC |
-| About 5 min | The SORT-O-MATIC takes over the box |
+| About 5 min | The SORT-O-MATIC starts on the brick |
 | About 8 min | The first delivery, and Pip |
-| 15 min on | Terry at a drop, the binder, then the box empties: $0.43, and Benny's offer |
+| About 15 to 20 min | The box empties: $0.43, a note that says what Benny will offer, and Benny's offer |
 | About 25 to 30 min | Gus's sign |
 
 ## The box
 
-The box's 249 cards are bulk commons: they never join the collection, and
-they don't count towards storage or Gus's sign. Each one goes on the stack for
-its type, which teaches the types before the first tournament. The wrong
-stack costs nothing. What's found along the way, and when, is in
-`Rules.boxFinds`. The SORT-O-MATIC ($15) sorts one card every 6 seconds on the
-wall clock. Once the box is empty it has nothing to do, and seems happy.
+The box holds 80 cards under the dragon. Each click takes one out and shows
+it: most are junk commons with a line about them, and 25 finds turn up, at most
+5 cards apart (`Rules.boxFinds`). Seven finds are real cards put to one side
+(`Rules.boxCardFinds`), and with the dragon they make the pile that keeping the
+box keeps. The junk never joins the collection, and doesn't count towards
+storage or Gus's sign.
+
+The finds tell a story: Benny appears in things the player wrote at seven, a
+birthday photo from 1998 has a boy who looks about nine, and a map and two notes
+mention another box. The last note says Benny will offer three dollars. When he
+does, he is looking at the pile.
+
+After 50 cards the rest of the box is one brick, stuck together with apple
+juice, and can't come out by hand. That keeps the order of the opening: the
+machine, the job, then the SORT-O-MATIC ($15), which goes through one card every
+30 seconds on the wall clock. Once the box is empty it has nothing to do, and
+seems happy.
 
 ## The office
 
