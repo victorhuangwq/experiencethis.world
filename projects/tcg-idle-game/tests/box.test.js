@@ -152,3 +152,21 @@ test('a save from before the box skips it', () => {
     assert.equal(Box.open(loaded), false);
     assert.equal(loaded.encounter(), null);
 });
+
+test('deciding on the box with money left still leaves emails to answer, wherever today is', () => {
+    const days = { Sunday: 0, Monday: 1, Tuesday: 2 };
+    for (const [day, offset] of Object.entries(days)) {
+        for (const index of [0, 1]) {
+            const game = newGame({ now: START + offset * 24 * 60 * 60 * 1000 });
+            act(game, 'encounter.choose', { index: 0 });
+            sortCards(game, Rules.boxCards);
+            act(game, 'encounter.choose', { index });
+
+            assert.ok(game.unlocked('work'), day);
+            assert.equal(game.state.job.inbox, Rules.inboxStart, day);
+            assert.ok(game.messages.some(message => message.text === Lines.mall.stillWaiting), day);
+            act(game, 'job.work', { at: Job.answeredAt(game) });
+            assert.equal(game.state.job.inbox, Rules.inboxStart - 1, day);
+        }
+    }
+});

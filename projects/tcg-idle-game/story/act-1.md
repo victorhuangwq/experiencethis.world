@@ -21,6 +21,7 @@ Pip's tip, or 120 without (see [Act 2](act-2.md)).
 | About 5 min | The SORT-O-MATIC takes over the box |
 | About 8 min | The first delivery, and Pip |
 | 15 min on | Terry at a drop, the binder, then the box empties: $0.43, and Benny's offer |
+| If sorted by hand | The box empties at about 4 min, and the job starts straight after Benny's offer |
 | About 25 to 30 min | Gus's sign |
 
 ## The box
