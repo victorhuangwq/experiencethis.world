@@ -7,12 +7,13 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, finishOpening, START } from './helpers.js';
+import { newGame, act, finishOpening, sortCards, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Wallet } from '../js/systems/wallet.js';
 import { Vending } from '../js/systems/vending.js';
 import { Collection } from '../js/systems/collection.js';
 import { Job } from '../js/systems/job.js';
+import { Box } from '../js/systems/box.js';
 import { Store } from '../js/systems/store.js';
 import { Tournaments } from '../js/systems/tournaments.js';
 import { Catalog } from '../js/content/catalog.js';
@@ -60,22 +61,48 @@ function playVisit(game) {
 }
 
 /**
+ * A first session's worth of the box: sort by hand until the flyer turns up
+ * and the machine takes over, and save up for the SORT-O-MATIC once it's
+ * advertised
+ * @returns {boolean} - Whether the player is saving up
+ */
+function playBox(game, cards) {
+    const { box } = game.state;
+    if (!game.unlocked('mall') && !game.state.encounter) {
+        sortCards(game, cards);
+    }
+    act(game, 'box.buySorter');
+    return game.unlocked('sorter-ad') && Box.open(game) && box.sorterAt === 0;
+}
+
+/**
  * Play until a milestone, or give up. Each seed starts on a different day
  * of the week, since the day job depends on the day.
  * @param {Object} options - seed, step (time between moves), work (answer
- *                           emails whenever rested?), until(game), limit
+ *                           emails?), sorts (cards sorted by hand each move;
+ *                           without it the opening is skipped), until(game),
+ *                           limit
  * @returns {number|null} - Time taken, or null if never reached
  */
-function timeUntil({ seed, step, work, until, limit }) {
+function timeUntil({ seed, step, work, sorts, until, limit }) {
     const start = START + (seed % 7) * DAY;
     const game = newGame({ seed, now: start });
-    finishOpening(game, 'sell');
+    if (sorts) {
+        act(game, 'encounter.choose', { index: 0 });
+    } else {
+        finishOpening(game, 'sell');
+    }
     for (let now = start; now <= start + limit; now += step) {
         game.catchUp(now);
         if (work) {
-            act(game, 'job.work', { at: Job.workplace(game) });
+            while (game.unlocked('work') && game.state.job.inbox > 0) {
+                act(game, 'job.work', { at: Job.answeredAt(game) });
+            }
         }
-        playVisit(game);
+        const saving = sorts && playBox(game, sorts);
+        if (!saving) {
+            playVisit(game);
+        }
         if (until(game)) {
             return now - start;
         }
@@ -87,8 +114,9 @@ const firstPip = game => game.state.people.pip.encounters > 0;
 const gus = game => game.unlocked('gus');
 const binder = game => Collection.storage(game) !== 'shoebox';
 
-// A player with the game open, answering emails whenever they can
-const active = { step: 5 * SECOND, work: true, limit: 3 * HOUR };
+// A player with the game open, sorting a card or two a second, answering
+// emails whenever they can
+const active = { step: 5 * SECOND, work: true, sorts: 7, limit: 3 * HOUR };
 // A player who checks in every few hours and never answers emails
 const idle = { step: 4 * HOUR, work: false, limit: 7 * 24 * HOUR };
 
@@ -115,11 +143,44 @@ test('an active player can buy packs within a couple of minutes', (t) => {
     assert.ok(times[times.length - 1] <= 3 * MINUTE);
 });
 
-test('an active player meets Pip at the first restock (target: about 30 minutes)', (t) => {
+test('an active player meets Pip around the first restock (target: about 8 minutes)', (t) => {
     const times = measure(active, firstPip);
     t.diagnostic(`first Pip: ${range(times)}`);
-    assert.ok(times[0] >= Rules.pipNotBefore, 'not for the first stock');
-    assert.ok(times[times.length - 1] <= 45 * MINUTE);
+    assert.ok(times[0] >= Rules.pipNotBefore);
+    assert.ok(median(times) <= 12 * MINUTE);
+});
+
+test('the SORT-O-MATIC empties the box in the first session (target: about 20 minutes)', (t) => {
+    const times = measure(active, game => game.state.story.shoebox !== null);
+    t.diagnostic(`box empty: ${range(times)}`);
+    assert.ok(median(times) >= 12 * MINUTE && median(times) <= 25 * MINUTE);
+});
+
+test('an active player is never long without a pack to buy in the first half hour', (t) => {
+    // How long the machine stays empty, for a player who buys all they can
+    const waits = [];
+    for (let seed = 1; seed <= SEEDS; seed++) {
+        let emptySince = null;
+        let longest = 0;
+        timeUntil({
+            ...active,
+            seed,
+            limit: 30 * MINUTE,
+            until: game => {
+                if (Vending.stockLeft(game) > 0 || !game.unlocked('mall')) {
+                    emptySince = null;
+                } else {
+                    emptySince ??= game.time;
+                    longest = Math.max(longest, game.time - emptySince);
+                }
+                return false;
+            }
+        });
+        waits.push(longest);
+    }
+    waits.sort((a, b) => a - b);
+    t.diagnostic(`longest empty machine: ${range(waits)}`);
+    assert.ok(median(waits) <= 6 * MINUTE);
 });
 
 test('an active player finds Gus\'s store in the first session (target: about 30 minutes)', (t) => {

@@ -17,7 +17,6 @@ import { renderEncounter } from './panels/encounter.js';
 import { renderLog } from './panels/log.js';
 import { renderEnding, renderEndingsFound } from './panels/ending.js';
 import { renderDevBar } from './panels/dev.js';
-import { updateWork } from './panels/work.js';
 import { PackReveal } from './reveal.js';
 
 export class UI {
@@ -157,7 +156,6 @@ export class UI {
         this.setHTML(this.parts.log, renderLog(game));
         this.setHTML(this.parts['endings-found'], renderEndingsFound(game));
         updateStatus(this.parts.status, game);
-        updateWork(this.parts.scene, game, now);
     }
 
     /**

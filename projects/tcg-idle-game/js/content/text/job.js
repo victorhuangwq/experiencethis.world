@@ -9,14 +9,17 @@ export const Job = {
 
     // When work first appears, by where the player works that day
     unlocked: {
-        office: day => `Your laptop dings. It is your boss, Linda. It is ${day}, which is an office day. You have to go in. Hybrid is three days a week. Nobody remembers choosing which three.`,
-        home: day => `Your laptop dings. It is work. It is ${day}, so you work from home today. You have a job, by the way. You forgot.`,
-        off: day => `Your laptop dings. It is your boss, Linda, on a ${day}. Subject: "No rush." You have a job, it turns out. It starts again on Monday.`
+        office: day => `You are out of money. Your laptop dings. It is your boss, Linda. It is ${day}, which is an office day. You have a job. You forgot. Hybrid is three days a week. Nobody remembers choosing which three.`,
+        home: day => `You are out of money. Your laptop dings. It is work. It is ${day}, so you work from home today. You have a job, by the way. You forgot.`,
+        off: day => `You are out of money. Your laptop dings. It is your boss, Linda, on a ${day}. Subject: "No rush." You have a job, it turns out. You forgot. Nobody works on ${day}s. Except Linda.`
     },
 
     name: 'The office',
-    answer: 'Answer an email',
-    resting: 'Pretending to read',
+    answer: count => `Answer an email (${count} unread)`,
+    caughtUp: 'No unread emails',
+    // When the inbox is empty
+    inboxZero: 'Inbox zero. Linda will fix that. Go outside.',
+    inboxAway: count => `${count} emails piled up`,
     openAtDesk: 'Open a pack under the desk',
 
     // What the office says about today
@@ -26,6 +29,7 @@ export const Job = {
         off: day => `${day}. The office is closed. The lights are on anyway. Nobody knows who pays for that.`
     },
     kitchenTable: day => `${day}. You work from home today. Your laptop is on the kitchen table, next to your cards.`,
+    dayOff: day => `${day}. Nobody works on ${day}s. Linda has emailed anyway. Your laptop is on the kitchen table, next to your cards.`,
 
     // Answering an email from the wrong place, after the day has changed
     wrongPlace: {

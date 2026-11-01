@@ -10,7 +10,9 @@ import { Lines } from '../../content/text/index.js';
 import { Collection, bennyOffer } from '../../systems/collection.js';
 import { Wallet } from '../../systems/wallet.js';
 import { Job } from '../../systems/job.js';
-import { storage } from '../art/home.js';
+import { Box } from '../../systems/box.js';
+import { Catalog } from '../../content/catalog.js';
+import { storage, shoebox, stacks } from '../art/home.js';
 import { escape, button, art } from '../html.js';
 import { renderCritters } from './critters.js';
 import { renderChecklists } from './checklist.js';
@@ -35,18 +37,52 @@ function renderGraded(game) {
     return `<h3>${escape(Lines.home.graded)}</h3><ul class="checklist">${items.join('')}</ul>`;
 }
 
+/**
+ * The box from the player's childhood room, with a card in hand and a
+ * button for each type's stack
+ */
+function renderBox(game) {
+    const box = game.state.box;
+    const card = Catalog.find(box.top);
+    const parts = [
+        art(shoebox(['CARDS - DO NOT', 'TOUCH'])),
+        art(stacks(box.stacks)),
+        `<p class="muted">${escape(Lines.box.left(Box.left(game)))}</p>`
+    ];
+    if (card) {
+        parts.push(`<p><b>${escape(Lines.box.inHand(card.name, card.type))}</b></p>`);
+        parts.push(`<p>${Catalog.types.map(type => button('box.sort', type, { args: { type } })).join(' ')}</p>`);
+    }
+    if (box.sorterAt > 0) {
+        parts.push(`<p class="muted">${escape(Lines.box.sorterRunning)}</p>`);
+    } else if (game.unlocked('sorter-ad')) {
+        parts.push(`<p>${button('box.buySorter', Lines.box.buySorter(Format.money(Rules.sorterPrice)), { disabled: !Wallet.canAfford(game, Rules.sorterPrice) })}</p>`);
+    }
+    return parts.join('');
+}
+
 function renderHome(game, view) {
     const cards = game.state.collection.cards;
     const forSale = Collection.storageForSale(game);
     const parts = [];
 
     // On home days, work happens at the kitchen table, next to a sticky note
-    // for the tab
-    if (game.unlocked('work') && Job.workplace(game) === 'home') {
-        parts.push(`<p>${escape(Lines.job.kitchenTable(Job.today(game)))} ${workButton(game, 'home')}</p>`);
-        if (!game.state.job.stickyNote) {
+    // for the tab. On days off Linda emails anyway.
+    const workplace = Job.workplace(game);
+    if (game.unlocked('work') && workplace !== 'office') {
+        const table = workplace === 'home' ? Lines.job.kitchenTable : Lines.job.dayOff;
+        parts.push(`<p>${escape(table(Job.today(game)))} ${workButton(game, 'home')}</p>`);
+        if (workplace === 'home' && !game.state.job.stickyNote) {
             const price = Rules.stickyNotePrice;
             parts.push(`<p>${button('job.buyStickyNote', Lines.job.stickyNote.buy(Format.money(price)), { disabled: !Wallet.canAfford(game, price) })}</p>`);
+        }
+    }
+
+    if (Box.open(game)) {
+        parts.push(renderBox(game));
+        if (cards.length === 0) {
+            parts.push(renderChecklists(game, view));
+            return parts.join('');
         }
     }
 

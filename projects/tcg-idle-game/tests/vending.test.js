@@ -36,19 +36,29 @@ test('the machine restocks when the driver is due, not before', () => {
     assert.equal(game.state.vending.bought, 0);
 });
 
-test('the driver comes every 25 to 35 minutes, on the minute', () => {
+test('the driver comes every 12 to 18 minutes, on the minute', () => {
     const game = gameAtMall();
+    game.tick(game.state.meta.startedAt + Rules.earlyRestocksUntil);
+    restock(game);
     const gaps = new Set();
     for (let visit = 0; visit < 300; visit++) {
         const before = game.state.vending.restockedAt;
         restock(game);
         const after = game.state.vending.restockedAt;
         const minutes = (after - Math.floor(before / MINUTE) * MINUTE) / MINUTE;
-        assert.ok(minutes >= 25 && minutes <= 35, `${minutes} minutes`);
+        assert.ok(minutes >= 12 && minutes <= 18, `${minutes} minutes`);
         assert.equal(after % MINUTE, 0);
         gaps.add(minutes);
     }
-    assert.ok(gaps.size >= 8, 'the gap varies');
+    assert.ok(gaps.size >= 5, 'the gap varies');
+});
+
+test('the driver comes soon after the machine is found, and often at first', () => {
+    const game = gameAtMall();
+    const start = game.state.meta.startedAt;
+    assert.ok(Vending.nextRestockAt(game) <= start + Rules.firstRestockAfter);
+    restock(game);
+    assert.ok(Vending.nextRestockAt(game) - game.time <= Rules.earlyRestockEvery);
 });
 
 test('the next restock time is saved, so reloading cannot change it', () => {
@@ -208,13 +218,43 @@ test('the machine can jam, and kicking it settles it either way', (t) => {
     assert.equal(game.state.vending.kicks, 1);
 });
 
-test('Dale counts every kick', () => {
+test('Dale counts every kick, out loud now and then', () => {
     const game = gameAtMall();
     for (let i = 0; i < 6; i++) {
         act(game, 'vending.kick');
     }
     assert.equal(game.state.vending.kicks, 6);
     assert.equal(game.messages.some(message => message.text === Lines.mall.kicks[1]), true);
+    assert.equal(game.messages.some(message => message.text === Lines.mall.kickCounts[5]), true);
+});
+
+test('enough kicks knock a pack loose, once', () => {
+    const game = gameAtMall();
+    const kick = times => {
+        for (let i = 0; i < times; i++) {
+            act(game, 'vending.kick');
+        }
+    };
+    kick(Rules.kickPrizeAt - 1);
+    assert.equal(game.state.collection.packs.base.normal, 0);
+    kick(1);
+    assert.equal(game.state.collection.packs.base.normal, 1);
+    assert.equal(newestMessage(game), Lines.mall.kickPrize(Rules.kickPrizeAt));
+    kick(20);
+    assert.equal(game.state.collection.packs.base.normal, 1, 'only once');
+});
+
+test('the kick that knocks a pack loose still comes after a jam', (t) => {
+    overrideRules(t, { jamChance: 1 });
+    const game = gameAtMall();
+    game.state.vending.kicks = Rules.kickPrizeAt - 1;
+    game.state.vending.packsBought = 2;
+    buyFirst(game);
+    act(game, 'vending.kick');
+    assert.equal(game.state.vending.kickPrize, false, 'that one was about the jam');
+    const before = game.state.collection.packs.base.normal;
+    act(game, 'vending.kick');
+    assert.equal(game.state.collection.packs.base.normal, before + 1);
 });
 
 test('the coin return pays a quarter at most once per restock', (t) => {

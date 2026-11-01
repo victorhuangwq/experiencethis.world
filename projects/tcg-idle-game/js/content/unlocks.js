@@ -8,10 +8,12 @@
  */
 
 import { localDay } from '../core/time.js';
+import { Format } from '../core/format.js';
 import { Rules } from '../rules.js';
 import { Lines } from './text/index.js';
 import { Wallet } from '../systems/wallet.js';
 import { Job } from '../systems/job.js';
+import { Box } from '../systems/box.js';
 import { Collection } from '../systems/collection.js';
 import { Vending } from '../systems/vending.js';
 import { Store } from '../systems/store.js';
@@ -25,26 +27,39 @@ export const Unlocks = [
         when: game => game.state.story.shoebox !== null
     },
     {
+        // The player takes themselves in hand once the job has reminded them
         id: 'allowance',
-        when: game => game.unlocked('shoebox'),
+        when: game => game.unlocked('work'),
         run: game => {
             Wallet.startAllowance(game);
             game.say(Lines.money.allowance);
         }
     },
     {
-        // The day job; where it happens depends on the day
+        // The day job, once the player is out of money; where it happens
+        // depends on the day
         id: 'work',
-        when: game => game.state.wallet.allowanceEarned >= 60,
-        run: game => game.say(Lines.job.unlocked[Job.workplace(game) || 'off'](Job.today(game)))
+        when: game => game.unlocked('mall') && !Wallet.canAfford(game, Rules.prices.normal),
+        run: game => {
+            Job.fillInbox(game, game.time);
+            game.say(Lines.job.unlocked[Job.workplace(game) || 'off'](Job.today(game)));
+        }
     },
     {
+        // The flyer in the box
         id: 'mall',
-        when: game => game.unlocked('allowance') && Wallet.canAfford(game, Rules.prices.normal),
+        when: game => game.state.box.sorted >= Rules.boxFinds.flyer || game.unlocked('shoebox'),
         run: game => {
             game.say(Lines.mall.unlocked, 'good');
             Vending.tick(game, game.time);
         }
+    },
+    {
+        // An advert for the SORT-O-MATIC gets through, while there's a box
+        // for it to sort
+        id: 'sorter-ad',
+        when: game => Box.open(game) && game.state.job.emailsAnswered >= Rules.sorterAfterEmails,
+        run: game => game.say(Lines.box.ad(Format.money(Rules.sorterPrice)), 'good')
     },
     {
         id: 'benny-buys',

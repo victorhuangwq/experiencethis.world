@@ -21,8 +21,10 @@ export const Job = {
     id: 'job',
 
     defaults: () => ({
-        // When the player can answer another email
-        readyAt: 0,
+        // Emails waiting to be answered, and the time they've been counted
+        // up to; 0 until the job starts
+        inbox: 0,
+        inboxAt: 0,
         emailsAnswered: 0,
         packsOpenedAtDesk: 0,
         bossWalkBys: 0,
@@ -39,8 +41,35 @@ export const Job = {
         stickyNote: false
     }),
 
-    load(job, game, now) {
-        job.readyAt = Math.min(job.readyAt, now + Rules.workRest);
+    tick(game, now) {
+        if (game.unlocked('work')) {
+            Job.fillInbox(game, now);
+        }
+    },
+
+    /**
+     * Count the emails that have arrived by now, up to the inbox's limit.
+     * The first time, the inbox is already a backlog.
+     */
+    fillInbox(game, now) {
+        const job = game.state.job;
+        if (job.inboxAt === 0) {
+            job.inbox = Rules.inboxStart;
+            job.inboxAt = now;
+            return;
+        }
+        if (now < job.inboxAt) {
+            // The clock went backwards; start again from now
+            job.inboxAt = now;
+            return;
+        }
+        const arrived = Math.floor((now - job.inboxAt) / Rules.emailEvery);
+        const before = job.inbox;
+        job.inboxAt += arrived * Rules.emailEvery;
+        job.inbox = Math.min(Rules.inboxCap, job.inbox + arrived);
+        if (job.inbox > before && arrived > 1) {
+            game.reportAway(Lines.job.inboxAway(job.inbox));
+        }
     },
 
     /**
@@ -49,6 +78,14 @@ export const Job = {
      */
     workplace(game, now = game.time) {
         return Rules.workplaces[new Date(now).getDay()];
+    },
+
+    /**
+     * Where emails are answered today: where the player works, or the
+     * kitchen table on a day off, because Linda doesn't have days off
+     */
+    answeredAt(game, now = game.time) {
+        return Job.workplace(game, now) || 'home';
     },
 
     /**
@@ -66,14 +103,6 @@ export const Job = {
         let roll = game.random();
         const rarity = Object.keys(Rules.emailOdds).find(each => (roll -= Rules.emailOdds[each]) < 0) || 'common';
         return game.pick(Lines.job.emails[rarity]);
-    },
-
-    /**
-     * How rested the player is after an email, from 0 (just answered) to 1 (ready)
-     */
-    progress(game, now) {
-        const remaining = game.state.job.readyAt - now;
-        return remaining <= 0 ? 1 : 1 - remaining / Rules.workRest;
     },
 
     /**
@@ -124,19 +153,18 @@ export const Job = {
          * @param {Object} args - at: where the player is answering it from
          */
         work(game, { at }, now) {
-            if (!game.unlocked('work') || Job.progress(game, now) < 1) {
+            const job = game.state.job;
+            if (!game.unlocked('work') || job.inbox <= 0) {
                 return;
             }
-            const workplace = Job.workplace(game, now);
-            if (at !== workplace) {
+            if (at !== Job.answeredAt(game, now)) {
                 // A button left open from another day
-                game.say(Lines.job.wrongPlace[workplace || 'off'](Job.today(game, now)));
+                game.say(Lines.job.wrongPlace[Job.workplace(game, now) || 'off'](Job.today(game, now)));
                 return;
             }
 
-            const job = game.state.job;
             Wallet.earn(game, Rules.workPay);
-            job.readyAt = now + Rules.workRest;
+            job.inbox--;
             job.emailsAnswered++;
             game.say(Job.email(game) + ' +' + Format.money(Rules.workPay));
 

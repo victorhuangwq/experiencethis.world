@@ -29,6 +29,12 @@ export const Releases = [
         // Emails in rarities, a sticky note for the tab, and a log that's saved
         id: 'office-hours',
         notes: 'A note from the developer: Linda has written more emails. Some of them are rare. Also, this log remembers things now. Hello again.'
+    },
+    {
+        // The box to sort, an inbox that piles up, and a driver who comes
+        // twice as often
+        id: 'the-box',
+        notes: 'A note from the developer: Linda\'s emails pile up now, and you can answer them as fast as you like. The driver comes twice as often. Dale has started counting out loud.'
     }
 ];
 

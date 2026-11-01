@@ -6,6 +6,17 @@
 import { SECOND, MINUTE, HOUR } from './core/time.js';
 
 export const Rules = {
+    // The box from the player's childhood room: the cards under the dragon,
+    // and how many have been sorted when each thing turns up
+    boxCards: 249,
+    boxFinds: { checklist: 25, rare: 60, note: 80, birthday: 95, flyer: 100, library: 150, goblin: 200 },
+    birthdayMoney: 500,
+    // The SORT-O-MATIC is advertised after this many emails, and sorts one
+    // card this often
+    sorterAfterEmails: 10,
+    sorterPrice: 1500,
+    sorterEvery: 6 * SECOND,
+
     // Money
     allowanceCentsPerSecond: 2,
     offlineCap: 8 * HOUR,
@@ -16,7 +27,11 @@ export const Rules = {
     // own clock, from Sunday: the office, home, or null for a day off.
     workplaces: [null, 'home', 'office', 'office', 'office', 'home', null],
     workPay: 50,
-    workRest: 20 * SECOND,
+    // Emails pile up in the inbox, one every so often up to a limit, and can
+    // be answered as fast as the player can click. It starts with a backlog.
+    emailEvery: 20 * SECOND,
+    inboxStart: 24,
+    inboxCap: 30,
     // The chance an email is rarer than common, like a card; the rest are
     // common
     emailOdds: { 'ultra-rare': 0.02, rare: 0.08, uncommon: 0.25 },
@@ -30,9 +45,14 @@ export const Rules = {
     lunchesBeforePacks: 2,
 
     // CARD-O-MATIC 3000
-    // The delivery driver comes every 25 to 35 minutes
-    restockEvery: 30 * MINUTE,
-    restockVariation: 5 * MINUTE,
+    // The delivery driver comes every 12 to 18 minutes. The first session has
+    // no long wait in it: he comes soon after the machine is first found,
+    // then more often until this far into the game.
+    restockEvery: 15 * MINUTE,
+    restockVariation: 3 * MINUTE,
+    firstRestockAfter: 5 * MINUTE,
+    earlyRestockEvery: 7 * MINUTE,
+    earlyRestocksUntil: 20 * MINUTE,
     slotCount: 8,
     // A bundle is 3 normal packs; a mega pack is one big pack
     prices: { normal: 300, special: 600, bundle: 800, mega: 1000 },
@@ -43,13 +63,15 @@ export const Rules = {
     // Other people buy what's in the machine: each pack goes this many
     // minutes after the restock (between the two), the rarer ones first.
     // About half the normal packs are left when the driver comes back.
-    soldAfter: { mega: [2, 8], special: [3, 10], bundle: [5, 15], normal: [10, 60] },
+    soldAfter: { mega: [2, 8], special: [3, 10], bundle: [5, 15], normal: [5, 30] },
     jamChance: 0.04,
     coinReturnChance: 0.3,
     coinReturnCents: 25,
     keyAfterChecks: 8,
     keyChance: 0.06,
     keyGuaranteedAt: 40,
+    // Kick this many times and something finally happens, once
+    kickPrizeAt: 20,
 
     // Packs, like the odds printed on a real pack. Each slot holds a card of
     // that rarity from the set in packs, or is a hit, which rolls its rarity
@@ -72,9 +94,9 @@ export const Rules = {
     sniffsToAttune: 50,
     fastOpeningAfter: 20,
 
-    // Pip turns up once the player has been playing for a while (so not
-    // before the first restock), and has bought a few packs since it
-    pipNotBefore: 20 * MINUTE,
+    // Pip turns up once the player has been playing for a while (so around
+    // the first restock), and has bought a few packs since it
+    pipNotBefore: 7 * MINUTE,
     pipAfterPacks: 3,
     pipChance: 0.35,
     pipGiftChance: 0.3,
@@ -95,8 +117,8 @@ export const Rules = {
     maxStrikes: 3,
 
     // Cards opened before Gus's store appears, with and without Pip's tip
-    gusWithTip: 40,
-    gusWithoutTip: 60,
+    gusWithTip: 100,
+    gusWithoutTip: 120,
     // Gus's store opens on this day of play (counting separate days)
     gusOpensOnDay: 2,
     // Gus's price for a pack of each set, once it's out: a markup on the
