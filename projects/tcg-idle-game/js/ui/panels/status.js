@@ -7,13 +7,15 @@
 import { Format } from '../../core/format.js';
 import { Lines } from '../../content/text/index.js';
 import { Catalog } from '../../content/catalog.js';
+import { Rules } from '../../rules.js';
 import { Wallet } from '../../systems/wallet.js';
 import { escape, button } from '../html.js';
 
 export function renderStatus(game) {
     const parts = [];
 
-    if (game.unlocked('allowance')) {
+    // Money shows from the first dollars in the box
+    if (game.unlocked('allowance') || game.state.box.sorted >= Rules.boxFinds.birthday) {
         parts.push(`<p>${Lines.money.label} <b data-money></b></p>`);
     }
 

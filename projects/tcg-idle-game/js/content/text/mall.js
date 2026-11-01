@@ -35,7 +35,7 @@ export const Mall = {
         bundle: set => `bundle of three ${set} packs`,
         mega: set => `${set} mega pack`
     },
-    nextRestock: time => `The delivery driver comes every half hour or so. Next: ${time}.`,
+    nextRestock: time => `The delivery driver comes every 15 minutes or so. Next: ${time}.`,
     empty: 'The machine is empty. It looks smug about it.',
 
     cantAfford: price => `You need ${price}. You check your pockets again. Same pockets.`,
@@ -56,6 +56,14 @@ export const Mall = {
         'You kick the machine. The dent gets a little bigger. You did that.',
         'You kick the machine. Dale turns a page in his notebook. It is a new page.'
     ],
+
+    // Dale counts out loud now and then, and enough kicks knock a pack loose
+    kickCounts: {
+        5: 'You kick the machine. "Five," says Dale, to his pretzel.',
+        10: 'You kick the machine. "Ten," says Dale. He has moved closer to see.',
+        15: 'You kick the machine. "Fifteen." Dale has brought a chair.'
+    },
+    kickPrize: kicks => `You kick the machine. Something inside gives up. A pack falls out. "${kicks}," says Dale, and writes for a long time. Then he looks at the pack, and at you, and finishes his pretzel.`,
 
     coinNothing: [
         'Nothing.',

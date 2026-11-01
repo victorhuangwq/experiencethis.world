@@ -246,6 +246,7 @@
         "allowance",
         "work",
         "mall",
+        "sorter-ad",
         "benny-buys",
         "gus",
         "outgrew-binder",
@@ -294,7 +295,8 @@
         "checklists",
         "save-upgrades",
         "act-2",
-        "office-hours"
+        "office-hours",
+        "the-box"
     ],
     "sets": [
         "base",

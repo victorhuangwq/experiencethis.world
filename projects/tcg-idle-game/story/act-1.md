@@ -4,11 +4,33 @@
 reason to come back the next day. The shared design (voice, cast, pacing,
 cards, the kindness code, endings) is in [story.md](story.md).
 
-**Unlocked by:** the start. The shoebox in the closet, then the allowance,
-the day job, and the vending machine at the back of the mall.
+**Unlocked by:** the start. The box from the childhood room, then the vending
+machine at the back of the mall, then the day job and the allowance.
 
-**Leads to:** Gus's store, whose sign appears after 40 cards opened with
-Pip's tip, or 60 without (see [Act 2](act-2.md)).
+**Leads to:** Gus's store, whose sign appears after 100 cards opened with
+Pip's tip, or 120 without (see [Act 2](act-2.md)).
+
+## The first half hour
+
+| Time | What happens |
+|---|---|
+| 0 to 1 min | The box arrives, with the chewed dragon on top |
+| 1 to 3 min | Sorting by hand: the crayon checklist, a rare, a note about another box |
+| About 3 min | $5 in a birthday card, then the machine's flyer. One pack, and out of money |
+| About 4 min | The job, with 24 unread emails, then an advert for the SORT-O-MATIC |
+| About 5 min | The SORT-O-MATIC takes over the box |
+| About 8 min | The first delivery, and Pip |
+| 15 min on | Terry at a drop, the binder, then the box empties: $0.43, and Benny's offer |
+| About 25 to 30 min | Gus's sign |
+
+## The box
+
+The box's 249 cards are bulk commons: they never join the collection, and
+they don't count towards storage or Gus's sign. Each one goes on the stack for
+its type, which teaches the types before the first tournament. The wrong
+stack costs nothing. What's found along the way, and when, is in
+`Rules.boxFinds`. The SORT-O-MATIC ($15) sorts one card every 6 seconds on the
+wall clock. Once the box is empty it has nothing to do, and seems happy.
 
 ## The office
 
@@ -21,6 +43,10 @@ and more cards pinned up (the poster at Gus's), a graded card on a stand
 (the first one back), and in summer a BACKYARD BRAWL poster over the
 synergy one, cards all round the screen, and a box of bulk under the desk.
 Packs can be opened under the desk, and the inbox count only goes up.
+
+Emails arrive one every 20 seconds and wait in the inbox, up to 30, so they can
+be answered as fast as the player can click, or left for later. The job starts
+with a backlog of 24. An empty inbox tells the player to go outside.
 
 Emails come in rarities, like cards: most of Linda's are common, some are
 uncommon or rare, and 1 in 50 is ultra-rare, so a player who has answered
@@ -50,9 +76,12 @@ into him there, and pretend this is normal.
   or better, 2%). Set 2 and Set 3 packs join the mix once those sets release.
 - **Other people buy it up.** The rarer the pack, the sooner it goes: mega
   packs within 2 to 8 minutes of the drop, special packs 3 to 10, bundles 5
-  to 15, normal packs 10 to 60. About half the normal packs are left when the
+  to 15, normal packs 5 to 30. About half the normal packs are left when the
   driver comes back. Being there on the dot gets the good stuff; checking in
   now and then still finds some packs.
+- **The driver comes every 12 to 18 minutes,** after a first visit 5 minutes
+  after the machine is found and one every 7 minutes for the first 20 minutes
+  of the game.
 - **It runs on the wall clock.** When the driver restocks, each pack is given
   the time someone else will buy it, so the machine at any moment is whatever
   hasn't gone yet. Every restock the player missed is played out when they
@@ -82,4 +111,5 @@ into him there, and pretend this is normal.
 - **The coin return:** usually nothing, sometimes a quarter (at most once per
   restock), and once, the machine's key. The key does nothing until Act 5.
 - **Kicking the machine:** never a strike, but Officer Dale writes it down,
-  the machine gets dents, and the Shame ending reads out the total.
+  counts out loud at 5, 10, and 15, and the machine gets dents. The 20th kick
+  knocks a pack loose, once. The Shame ending reads out the total.

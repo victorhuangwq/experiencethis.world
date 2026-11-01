@@ -38,6 +38,14 @@ const MOVES = [
     { weight: 1, run: game => act(game, 'tournaments.enterPrerelease') },
     { weight: 2, run: (game, roll) => act(game, 'trades.trade', { index: Math.floor(roll() * Rules.marcusOffers) }) },
     { weight: 6, run: (game, roll) => act(game, 'encounter.choose', { index: roll() < 0.6 ? 0 : Math.floor(roll() * 3) }) },
+    { weight: 6, run: game => {
+        // A run of cards, and now and then the wrong stack
+        for (let card = 0; card < 15 && game.state.box.top; card++) {
+            act(game, 'box.sort', { type: Catalog.find(game.state.box.top).type });
+        }
+        act(game, 'box.sort', { type: 'Fire' });
+    } },
+    { weight: 2, run: game => act(game, 'box.buySorter') },
     { weight: 2, run: game => act(game, 'vending.kick') },
     { weight: 2, run: game => act(game, 'vending.walkAway') },
     { weight: 3, run: game => act(game, 'vending.coinReturn') },
@@ -123,6 +131,10 @@ function checkInvariants(game, last) {
 
     const job = state.job;
     assert.ok(isCount(job.emailsAnswered) && job.emailsAnswered >= last.emailsAnswered, 'emails answered');
+    assert.ok(isCount(job.inbox) && job.inbox <= Rules.inboxCap, 'the inbox has a limit');
+    const box = state.box;
+    assert.ok(isCount(box.sorted) && box.sorted <= Rules.boxCards, 'the box holds so many cards');
+    assert.equal(Object.values(box.stacks).reduce((sum, count) => sum + count), box.sorted, 'every sorted card is on a stack');
     assert.ok([0, 1, 2].includes(job.coworker) && job.coworker >= last.coworker, 'Marcus only gets friendlier');
     assert.ok(job.packsOpenedAtDesk <= collection.packsOpened, 'packs opened at the desk are packs opened');
     assert.ok(job.stickyNote || !last.stickyNote, 'the sticky note stays on the tab');
@@ -282,6 +294,9 @@ function playRandomly(seed, steps = STEPS, { summer = false } = {}) {
     const game = newGame({ seed, now: START + Math.floor(roll() * 7 * 24) * HOUR });
     if (summer) {
         toSummer(game);
+    } else if (seed % 2 === 0) {
+        // Half the games start past the box, to get further in the steps
+        finishOpening(game, roll() < 0.5 ? 'sell' : 'keep');
     }
     let last = snapshot(game);
 

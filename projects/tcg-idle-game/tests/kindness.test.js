@@ -38,7 +38,7 @@ test('the kid does not come for the first stock of the machine', (t) => {
     assert.equal(game.encounter(), null, 'too soon');
 
     restock(game);
-    assert.ok(game.time - game.state.meta.startedAt >= Rules.pipNotBefore);
+    game.tick(game.state.meta.startedAt + Rules.pipNotBefore);
     buyFirst(game);
     buyFirst(game);
     buyFirst(game);

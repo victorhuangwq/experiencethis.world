@@ -19,9 +19,33 @@ const BASE = Catalog.inSet('base');
 const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Lines.mall.names.normal, Format.money(Rules.prices.normal)));
 const newestMessage = page => page.locator('#log .message').first();
 
+/**
+ * Sort cards out of the box by reading each one and pressing its stack
+ */
+async function sortCards(page, count) {
+    await page.evaluate(cards => {
+        for (let card = 0; card < cards; card++) {
+            const type = document.querySelector('#scene p b').textContent.match(/(\w+)\.$/)[1];
+            document.querySelector(`[data-action="box.sort"][data-type="${type}"]`).click();
+        }
+    }, count);
+}
+
 async function finishOpening(page, choice = 'sell') {
-    await button(page, Lines.opening.lookUp).click();
+    await button(page, Lines.opening.takeOut).click();
+    await sortCards(page, Rules.boxCards);
     await button(page, choice === 'sell' ? `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})` : Lines.opening.keep).click();
+}
+
+/**
+ * Play the opening, keeping the box, and spend the money from it: that's
+ * when the job and the allowance start
+ */
+async function goToWork(page) {
+    await finishOpening(page, 'keep');
+    await place(page, Lines.mall.name).click();
+    await slot(page, 'A1').click();
+    await place(page, Lines.home.name).click();
 }
 
 /**
@@ -34,19 +58,40 @@ async function setTabHidden(page, hidden) {
     }, hidden);
 }
 
-browserTest('a new player sells the shoebox, buys a pack, and opens it', {}, async (page) => {
-    await assert.doesNotReject(page.getByText(Lines.opening.closet[0]).waitFor());
+browserTest('a new player sorts the box, and the machine, then the job, turn up', { time: Date.UTC(2026, 9, 27, 10) }, async (page) => {
+    await page.getByText(Lines.opening.arrival(Rules.boxCards)[3]).waitFor();
+    await button(page, Lines.opening.takeOut).click();
+    assert.equal(await page.locator('#locations button').count(), 0, 'only the box to begin with');
+
+    await sortCards(page, Rules.boxFinds.flyer);
+    await page.getByText(Lines.box.left(Rules.boxCards - Rules.boxFinds.flyer)).waitFor();
+    assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.birthdayMoney));
+    await place(page, Lines.mall.name).click();
+    assert.equal(await place(page, Lines.job.name).count(), 0);
+
+    await slot(page, 'A1').click();
+    await place(page, Lines.job.name).click();
+    for (let email = 0; email < Rules.sorterAfterEmails; email++) {
+        await button(page, Lines.job.answer(Rules.inboxStart - email)).click();
+    }
+    await place(page, Lines.home.name).click();
+    await button(page, Lines.box.buySorter(Format.money(Rules.sorterPrice))).waitFor();
+    await assertFits(page, 'the box');
+});
+
+browserTest('a player sells the box, buys packs, and opens one', {}, async (page) => {
+    await assert.doesNotReject(page.getByText(Lines.opening.arrival(Rules.boxCards)[0]).waitFor());
     assert.equal(await page.locator('#season-tag').textContent(), Lines.story.seasons.spring);
 
     await finishOpening(page);
-    assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.shoeboxOffer));
-    assert.equal(await page.getByText(BASE_SET).count(), 0, 'no checklist before the first pack');
+    assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.shoeboxOffer + Rules.birthdayMoney));
     await place(page, Lines.mall.name).click();
 
     await slot(page, 'A1').click();
-    assert.equal(await page.locator('[data-money]').textContent(), Format.money(0));
-    await page.getByText(Lines.packs.unopened(1)).waitFor();
-    assert.ok(await slot(page, 'A2').isDisabled(), 'the next pack is too expensive');
+    await slot(page, 'A2').click();
+    assert.equal(await page.locator('[data-money]').textContent(), Format.money(200));
+    await page.getByText(Lines.packs.unopened(2)).waitFor();
+    assert.ok(await slot(page, 'A3').isDisabled(), 'the next pack is too expensive');
 
     await button(page, Lines.packs.buttons.open).click();
     assert.equal(await page.locator('#reveal .card').count(), 5);
@@ -88,8 +133,8 @@ browserTest('progress survives reloading the page, and so does the log', {}, asy
 
     await page.reload();
     await page.getByText(Lines.packs.unopened(1)).waitFor();
-    assert.equal(await page.getByText(Lines.opening.closet[0]).count(), 0, 'the opening is over');
-    assert.equal(await page.locator('[data-money]').textContent(), Format.money(0));
+    assert.equal(await page.getByText(Lines.opening.arrival(Rules.boxCards)[0]).count(), 0, 'the opening is over');
+    assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.shoeboxOffer + Rules.birthdayMoney - Rules.prices.normal));
     await place(page, Lines.mall.name).waitFor();
     assert.deepEqual(await page.locator('#log .message').allTextContents(), said.slice(0, 10), 'the newest messages are still there');
 });
@@ -108,7 +153,7 @@ browserTest('the third strike ends the run, and the ending is remembered', { que
     await page.getByText(Lines.endings.screen.found(1, 5)).waitFor();
 
     await button(page, Lines.endings.screen.startOver).click();
-    await page.getByText(Lines.opening.closet[0]).waitFor();
+    await page.getByText(Lines.opening.arrival(Rules.boxCards)[0]).waitFor();
     await page.locator('#endings-found').getByText(Lines.endings.screen.found(1, 5)).waitFor();
 });
 
@@ -135,7 +180,7 @@ browserTest('an old save loads, and a full shoebox can be traded up for a binder
 browserTest('on a phone, the log shows one line until expanded, and every place fits the screen', {
     viewport: { width: 390, height: 844 }
 }, async (page) => {
-    await finishOpening(page);
+    await goToWork(page);
     const messages = page.locator('#log .message');
     assert.ok(await messages.count() > 1);
     assert.ok(await messages.nth(0).isVisible());
@@ -165,7 +210,7 @@ browserTest('on a phone, a page of the binder fits the screen', {
 });
 
 browserTest('time in a background tab is summed up once, on return', {}, async (page) => {
-    await finishOpening(page);
+    await goToWork(page);
     await place(page, Lines.mall.name).click();
 
     await setTabHidden(page, true);
@@ -181,7 +226,7 @@ browserTest('time in a background tab is summed up once, on return', {}, async (
 });
 
 browserTest('coming back later in a new tab catches up on the time away', {}, async (page, context) => {
-    await finishOpening(page);
+    await goToWork(page);
     await page.close();
     await context.clock.fastForward(5 * HOUR);
 
@@ -193,35 +238,31 @@ browserTest('coming back later in a new tab catches up on the time away', {}, as
 });
 
 browserTest('on an office day, work means going to the office', { time: Date.UTC(2026, 9, 27, 10) }, async (page) => {
-    await finishOpening(page);
-    await page.clock.runFor(30 * 1000);
+    await goToWork(page);
+    await page.clock.runFor(1000);
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.office('Tuesday')).waitFor();
 
     const money = async () => (await page.locator('[data-money]').textContent());
     const before = await money();
-    await button(page, Lines.job.answer).click();
+    await button(page, Lines.job.answer(Rules.inboxStart)).click();
     assert.equal(await money(), Format.money(Math.round(Number(before.slice(1)) * 100) + Rules.workPay));
-    assert.ok(await button(page, Lines.job.resting).isDisabled(), 'resting between emails');
+    await button(page, Lines.job.answer(Rules.inboxStart - 1)).click();
 
-    await place(page, Lines.mall.name).click();
-    await slot(page, 'A1').click();
-    await place(page, Lines.job.name).click();
     await button(page, Lines.job.openAtDesk).click();
     assert.equal(await page.locator('#reveal .card').count(), 5, 'opened under the desk');
     assert.match(await page.locator('#scene pre').first().textContent(), /\[#\]/, 'a card under the monitor now');
 });
 
 browserTest('on a home day, work is at the kitchen table, and the office is empty', { time: Date.UTC(2026, 9, 26, 10) }, async (page) => {
-    await finishOpening(page);
-    await page.clock.runFor(30 * 1000);
+    await goToWork(page);
     await page.getByText(Lines.job.kitchenTable('Monday')).waitFor();
-    await button(page, Lines.job.answer).click();
-    await button(page, Lines.job.resting).waitFor();
+    await button(page, Lines.job.answer(Rules.inboxStart)).click();
+    await button(page, Lines.job.answer(Rules.inboxStart - 1)).waitFor();
 
     await place(page, Lines.job.name).click();
     await page.getByText(Lines.job.today.home('Monday')).waitFor();
-    assert.equal(await button(page, Lines.job.answer).count(), 0);
+    assert.equal(await page.locator('[data-action="job.work"]').count(), 0);
 });
 
 browserTest('working from home, a sticky note puts the money in the tab title, even from a background tab', {
@@ -232,8 +273,7 @@ browserTest('working from home, a sticky note puts the money in the tab title, e
     const icon = await page.locator('link[rel="icon"]').getAttribute('href');
     assert.equal((await page.request.get(new URL(icon, page.url()).href)).status(), 200, 'the favicon is there');
 
-    await finishOpening(page);
-    await page.clock.runFor(30 * 1000);
+    await goToWork(page);
     const stickyNote = button(page, Lines.job.stickyNote.buy(Format.money(Rules.stickyNotePrice)));
     assert.ok(await stickyNote.isDisabled(), 'a sticky note costs money');
     await button(page, '+$50').click();
@@ -263,6 +303,8 @@ browserTest('working from home, a sticky note puts the money in the tab title, e
 browserTest('Terry waits for the drop, and splits it with a player who asks', { query: '?dev' }, async (page) => {
     await finishOpening(page);
     await place(page, Lines.mall.name).click();
+    await button(page, 'Kid in line').click();
+    await button(page, Lines.pip.stepAside).click();
     await button(page, 'Driver in a minute').click();
     await page.clock.runFor(2000);
     await page.getByText(Lines.terry.arrive[0]).waitFor();

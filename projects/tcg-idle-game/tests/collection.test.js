@@ -103,8 +103,9 @@ test('every card in the Base Set turns up in packs', () => {
     assert.deepEqual([...seen].sort(), Catalog.inSet('base').map(card => card.id).sort());
 });
 
-test('the checklist comes in the first pack', () => {
+test('without the box, the checklist comes in the first pack', () => {
     const game = gameAtMall();
+    game.state.box.sorted = 0;
     assert.equal(Collection.hasChecklist(game), false);
     act(game, 'vending.buy', { slot: 0 });
     act(game, 'collection.open', { kind: 'normal' });
@@ -218,21 +219,21 @@ test('players whose storage upgraded by itself in an older version keep it', () 
     assert.ok(!loaded.state.progress.unlocked.some(id => id.startsWith('storage-')), 'the old unlocks are retired');
 });
 
-test("Gus's store appears after 40 cards opened with Pip's tip, or 60 without", () => {
+test("Gus's store appears sooner with Pip's tip than without", () => {
     const withTip = gameAtMall();
     withTip.state.people.pip.mentionedGus = true;
-    withTip.state.collection.cardsOpened = 39;
+    withTip.state.collection.cardsOpened = Rules.gusWithTip - 1;
     withTip.checkUnlocks();
     assert.equal(withTip.unlocked('gus'), false);
-    withTip.state.collection.cardsOpened = 40;
+    withTip.state.collection.cardsOpened = Rules.gusWithTip;
     withTip.checkUnlocks();
     assert.ok(withTip.unlocked('gus'));
 
     const withoutTip = gameAtMall();
-    withoutTip.state.collection.cardsOpened = 59;
+    withoutTip.state.collection.cardsOpened = Rules.gusWithoutTip - 1;
     withoutTip.checkUnlocks();
     assert.equal(withoutTip.unlocked('gus'), false);
-    withoutTip.state.collection.cardsOpened = 60;
+    withoutTip.state.collection.cardsOpened = Rules.gusWithoutTip;
     withoutTip.checkUnlocks();
     assert.ok(withoutTip.unlocked('gus'));
 });

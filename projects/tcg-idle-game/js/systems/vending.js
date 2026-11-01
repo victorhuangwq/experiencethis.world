@@ -1,5 +1,5 @@
 /**
- * The CARD-O-MATIC 3000: restocks on the real clock every half hour or so
+ * The CARD-O-MATIC 3000: restocks on the real clock every 15 minutes or so
  * with a mix of packs, which other people buy up before the next restock,
  * the rarer ones first. It sometimes jams, and hides things in its coin
  * return.
@@ -53,6 +53,8 @@ export const Vending = {
         dropDeal: null,
         jammedSlot: null,
         kicks: 0,
+        // Whether enough kicks have knocked a pack loose
+        kickPrize: false,
         coinChecks: 0,
         // The restock when the coin return was last checked
         coinCheckedAt: 0,
@@ -75,7 +77,7 @@ export const Vending = {
     },
 
     /**
-     * Restock when the delivery driver is due, every half hour or so, and
+     * Restock when the delivery driver is due, every 15 minutes or so, and
      * take away what other people have bought since
      */
     tick(game, now) {
@@ -89,7 +91,7 @@ export const Vending = {
         // and nobody else buys them before the next restock
         if (vending.restockedAt === 0) {
             vending.restockedAt = now;
-            vending.nextRestockAt = Vending.driverDue(game, now);
+            vending.nextRestockAt = Math.floor(now / MINUTE) * MINUTE + Rules.firstRestockAfter;
             vending.slots = new Array(Rules.slotCount).fill('normal');
             vending.sets = new Array(Rules.slotCount).fill('base');
             vending.goneAt = new Array(Rules.slotCount).fill(vending.nextRestockAt);
@@ -117,12 +119,14 @@ export const Vending = {
     },
 
     /**
-     * When the driver comes after a visit: half an hour or so, on the minute
+     * When the driver comes after a visit: a quarter of an hour or so, on
+     * the minute
      * @param {Game} game - Game, for randomness
      * @param {number} after - Time of the visit before
      */
     driverDue(game, after) {
-        const minutes = Math.round((Rules.restockEvery + game.randomInt(-Rules.restockVariation, Rules.restockVariation)) / MINUTE);
+        const early = after - game.state.meta.startedAt < Rules.earlyRestocksUntil;
+        const minutes = early ? Rules.earlyRestockEvery / MINUTE : Math.round((Rules.restockEvery + game.randomInt(-Rules.restockVariation, Rules.restockVariation)) / MINUTE);
         return Math.floor(after / MINUTE) * MINUTE + minutes * MINUTE;
     },
 
@@ -239,7 +243,9 @@ export const Vending = {
             return;
         }
         vending.camperChecked = true;
-        if (game.state.people.terry.encounters === 0 || game.chance(Rules.camperChance)) {
+        // Pip comes first, so a new face turns up at each drop
+        const terry = game.state.people.terry;
+        if (terry.encounters === 0 ? game.state.people.pip.encounters > 0 : game.chance(Rules.camperChance)) {
             game.startEncounter('camper');
         }
     },
@@ -347,7 +353,8 @@ export const Vending = {
 
         /**
          * Kick the machine. Frees a jammed pack half the time. Dale counts
-         * every kick.
+         * every kick, out loud now and then, and enough of them knock a pack
+         * loose, once.
          */
         kick(game, args, now) {
             const vending = game.state.vending;
@@ -367,7 +374,14 @@ export const Vending = {
                 return;
             }
 
-            const line = Lines.mall.kicks[vending.kicks - 1] || game.pick(Lines.mall.kickMore);
+            if (vending.kicks >= Rules.kickPrizeAt && !vending.kickPrize) {
+                vending.kickPrize = true;
+                Collection.addPacks(game, 'base', 'normal');
+                game.say(Lines.mall.kickPrize(vending.kicks), 'good');
+                return;
+            }
+
+            const line = Lines.mall.kickCounts[vending.kicks] || Lines.mall.kicks[vending.kicks - 1] || game.pick(Lines.mall.kickMore);
             game.say(line, 'warning');
         },
 

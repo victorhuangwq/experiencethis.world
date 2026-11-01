@@ -404,11 +404,6 @@ button.current {
     display: none;
 }
 
-/* Buttons that fill back up while they rest */
-button.cooldown:disabled {
-    background: linear-gradient(to right, var(--button-hover) var(--progress, 0%), var(--button-background) var(--progress, 0%));
-}
-
 .new {
     color: var(--good);
     font-size: 0.85em;

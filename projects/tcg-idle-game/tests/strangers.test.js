@@ -112,6 +112,7 @@ test('what the player cannot afford, the scalper takes', (t) => {
  */
 function beforeDrop(before, { here = 'mall' } = {}) {
     const game = gameAtMall();
+    game.state.people.pip.encounters = 1;
     act(game, 'story.visit', { location: here });
     game.tick(Vending.nextRestockAt(game) - before);
     return game;
@@ -120,6 +121,13 @@ function beforeDrop(before, { here = 'mall' } = {}) {
 test('Terry is at the machine in the minute before a drop', () => {
     const game = beforeDrop(30 * SECOND);
     assert.equal(game.state.encounter?.id, 'camper');
+});
+
+test('Terry waits until the player has met Pip', () => {
+    const game = gameAtMall();
+    act(game, 'story.visit', { location: 'mall' });
+    game.tick(Vending.nextRestockAt(game) - 30 * SECOND);
+    assert.equal(game.state.encounter, null);
 });
 
 test('Terry is only seen by a player who is at the machine', () => {
@@ -137,7 +145,8 @@ test('coming back just before a drop does not count as being there', () => {
     assert.equal(game.state.encounter, null);
 });
 
-test('persuading Terry makes a friend, and the driver comes: Terry takes row B of the drop', () => {
+test('persuading Terry makes a friend, and the driver comes: Terry takes row B of the drop', (t) => {
+    overrideRules(t, { earlyRestocksUntil: 0 });
     const game = beforeDrop(30 * SECOND);
     choose(game, Lines.terry.persuade);
     assert.equal(game.state.people.terry.friend, true);

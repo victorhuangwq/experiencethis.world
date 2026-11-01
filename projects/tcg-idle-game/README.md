@@ -9,15 +9,16 @@ for the whole game and what every act shares, and a file for each act.
 
 ## Current state
 
-Act 1 (spring) is playable: the shoebox opening, a 120-card Base Set whose
-checklist comes in the first pack, a self-given allowance, a hybrid day job
+Act 1 (spring) is playable: the massive box from the player's childhood room,
+sorted into stacks by hand and then by the SORT-O-MATIC, a 120-card Base Set
+with a checklist, a self-given allowance, a hybrid day job
 (a cubicle at the office on real Tuesdays to Thursdays, which the hobby
-slowly takes over, and the kitchen table on Mondays and Fridays, where a
+slowly takes over, and the kitchen table on other days, where a
 sticky note for the tab puts the player's money in the tab's title),
-emails in rarities like cards, Marcus
+an inbox that piles up, with emails in rarities like cards, Marcus
 from IT (lunch games, then special packs at the machine's price), the
-CARD-O-MATIC 3000 restocking every 25 to 35 minutes of real time with a mix
-of packs that other people buy up, Pip, the scalper, Terry waiting for the
+CARD-O-MATIC 3000 restocking every 12 to 18 minutes of real time (more often
+in the first session) with a mix of packs that other people buy up, Pip, the scalper, Terry waiting for the
 drop, the kindness code, Benny buying duplicates, storage to buy as the
 collection outgrows it (each one organising the cards better), and three
 secrets.
@@ -52,7 +53,7 @@ js/
     random.js      Seeded random numbers
   systems/         Game logic, one feature per file
     index.js       Every system, in tick order
-    wallet.js  job.js  collection.js  vending.js  kindness.js  people.js
+    wallet.js  job.js  box.js  collection.js  vending.js  kindness.js  people.js
     story.js  store.js  trades.js  tournaments.js
     cards.js       Card logic (making cards, opening packs, save packing)
   content/         Data

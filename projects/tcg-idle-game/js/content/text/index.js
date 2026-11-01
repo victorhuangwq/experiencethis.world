@@ -10,6 +10,7 @@
 
 import { Story } from './story.js';
 import { Opening } from './opening.js';
+import { Box } from './box.js';
 import { Money } from './money.js';
 import { Job } from './job.js';
 import { Mall } from './mall.js';
@@ -29,6 +30,7 @@ import { System } from './system.js';
 export const Lines = {
     story: Story,
     opening: Opening,
+    box: Box,
     money: Money,
     job: Job,
     mall: Mall,

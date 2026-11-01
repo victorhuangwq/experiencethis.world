@@ -77,10 +77,11 @@ export const Collection = {
     },
 
     /**
-     * Whether the player has the checklist yet. It comes in the first pack.
+     * Whether the player has the checklist yet. It's in the box, or comes in
+     * the first pack.
      */
     hasChecklist(game) {
-        return game.state.collection.packsOpened > 0;
+        return game.state.collection.packsOpened > 0 || game.state.box.sorted >= Rules.boxFinds.checklist;
     },
 
     isGraded(game, card) {

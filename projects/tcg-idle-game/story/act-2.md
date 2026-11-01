@@ -16,7 +16,7 @@ the second day of play.
   (Marcus), and Gus himself, who asks what it'll be: packs, grading, or
   what's on the corkboard.
 - **The store opens on the second day.** The sign appears in Act 1 (after
-  40 cards opened with Pip's tip, or 60 without). On the first day it says
+  100 cards opened with Pip's tip, or 120 without). On the first day it says
   GRAND OPENING TOMORROW, and Gus says so through the door. From the second
   day of play it's open, always (Gus lives in the back).
 - **Packs at a markup.** Gus sells Base Set packs for $4.50, more than the

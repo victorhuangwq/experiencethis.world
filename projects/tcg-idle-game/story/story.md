@@ -20,7 +20,7 @@ it leads to), then its places and systems, and list it here and under Acts.
 
 ## Status
 
-- **Built:** Act 1, spring (the shoebox opening, the allowance, the hybrid
+- **Built:** Act 1, spring (the box to sort, the allowance, the hybrid
   day job and the office, the vending machine, Pip, strikes and the Shame ending, Benny, the storage, the
   secrets), and Act 2 (Gus's Games & Grub, locals, grading, Marcus's
   trades, the pre-release, and summer with Set 2).
@@ -80,16 +80,26 @@ file per topic.
 
 ## Player and time
 
-- **The player is an adult returning to the hobby.** It starts when they find
-  their childhood shoebox of cards: it's worth $0.43, because they chewed the
-  corner off the one valuable card when they were seven. Benny offers $3 for
-  it. Selling buys the first pack sooner; keeping it holds on to a misprint
-  "Wet Sock Gobln" that later starts Mildred's trade-up chain.
-- **Money:** a self-given allowance ("You are a responsible adult"), plus
-  answering emails at the day job.
+- **The player is an adult returning to the hobby.** It starts when their
+  parents move house and drop off everything from their childhood room,
+  including a massive box of cards. The holo Absolutely Massive Dragon is on
+  top, with its corner chewed off when they were seven. The 249 cards under
+  it are sorted into a stack for each type, by hand and then by the
+  SORT-O-MATIC. The finished box is worth $0.43, and Benny offers $3 for it.
+  Selling is the better deal on paper; keeping it holds on to a misprint
+  "Wet Sock Gobln" that later starts Mildred's trade-up chain. **Open:** in
+  Act 4, Benny could be at a card show selling a sold box for $40, as
+  "PROFESSIONALLY SORTED".
+- **The opening expands one thing at a time.** Each thing appears because the
+  player has run into a need for it: a flyer in the box leads to the machine,
+  being out of money brings the job, and the job's inbox brings the money for
+  the SORT-O-MATIC, which is the first thing that works while they're away.
+- **Money:** $5 in a birthday card in the box, then a self-given allowance
+  ("You are a responsible adult"), plus answering emails at the day job.
 - **The day job is hybrid,** by the player's real weekday: Tuesday to
-  Thursday they have to go to the office (a place of its own), Monday and
-  Friday they work from the kitchen table at home, and weekends are off.
+  Thursday they have to go to the office (a place of its own), and Monday and
+  Friday they work from the kitchen table at home. Weekends are off, but Linda
+  emails anyway, so the inbox can still be answered from the kitchen table.
   The office, and Marcus from IT, are in [Act 1](act-1.md).
 - **Quitting the job comes later.** When the player opens their own shop
   (Act 5), the shop's income replaces the salary, and quitting is the moment
@@ -150,7 +160,7 @@ Named cards so far (the full list is in `js/content/catalog.js`):
 | Act | Location | New verbs | Unlocked by |
 |---|---|---|---|
 | [1](act-1.md) (spring) | Vending machine, the office | Buy one pack, open it, sell duplicates to Benny, answer emails | Start |
-| [2](act-2.md) (spring, then summer) | Hobby store | Buy packs at a markup and singles, grade cards, trade with Marcus, locals, the pre-release; Set 2 | Gus's store appears after 40 cards opened with Pip's tip, or 60 without. It opens on the second day of play. |
+| [2](act-2.md) (spring, then summer) | Hobby store | Buy packs at a markup and singles, grade cards, trade with Marcus, locals, the pre-release; Set 2 | Gus's store appears after 100 cards opened with Pip's tip, or 120 without. It opens on the second day of play. |
 | [3](act-3.md) | Online store and deck building | Preorders, shipping, building real decks, regionals | Summer: Set 2 sells out everywhere (Gus mentions PackDrop.com) |
 | [4](act-4.md) | Card shows | Rent a table, haggle, hunt specific cards, nationals | First booster box delivered |
 | [5](act-5.md) | Your own shop | Stock shelves, host tournaments, refill the vending machine; quit the day job | A money target, after the first card show |
@@ -188,8 +198,10 @@ the first ending on day 8. The other endings can be chased afterwards.
 
 ### Principles
 
-- **The first session hooks hard.** Act 1 is fully active and short
-  (about 30 minutes), with no waiting. The first session should find the
+- **The first session hooks hard.** Act 1 is active and short (about 30
+  minutes), with no long waits. The dragon lands in the first seconds, a new
+  thing appears every minute or two, and the driver comes early and often at
+  first. The first session should find the
   hobby store's sign and end with a reason to come back the next day: the
   grand opening.
 - **One new system per day.** Each day of play introduces something new, so
@@ -233,7 +245,7 @@ All times come from the real clock and are saved as timestamps.
 
 | Event | Schedule | Notes |
 |---|---|---|
-| Vending machine restock | Every 25 to 35 minutes, at a random time; the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine in [Act 1](act-1.md)) |
+| Vending machine restock | Every 12 to 18 minutes, at a random time (more often in the first session); the machine shows when the next one is | Fills all 8 slots with a mix of packs, which other people buy up before the next one (see The vending machine in [Act 1](act-1.md)) |
 | Pip in line | Not before the first restock, then about 1 in 3 restocks, once you've bought 3 since it | Not after you've already let Pip go first that restock |
 | Gus's store opens | The second day of play | The sign appears in Act 1 |
 | Gus's glass case | Restocked every 4 hours (00:00, 04:00, ...) | Six singles |
@@ -332,7 +344,7 @@ while the page is open:
 
 - An online order shows an arrival time ("Arrives 3:40 PM"). If the player is
   away when it arrives, the package is waiting on the doorstep when they return.
-- The vending machine restocks every half hour or so, and shows the time of
+- The vending machine restocks every 15 minutes or so, and shows the time of
   the next restock. Other people buy its packs at times decided when it
   restocks.
 - Card shows and tournaments run on a schedule of real clock times.

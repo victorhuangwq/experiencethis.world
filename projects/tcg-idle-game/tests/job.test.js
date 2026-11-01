@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, finishOpening, overrideRules, newestMessage, gameAtGus } from './helpers.js';
+import { newGame, act, finishOpening, sortCards, buyFirst, overrideRules, newestMessage, gameAtGus } from './helpers.js';
 import { Collection } from '../js/systems/collection.js';
 import { Cards } from '../js/systems/cards.js';
 import { Catalog } from '../js/content/catalog.js';
@@ -11,6 +11,7 @@ import { Lines } from '../js/content/text/index.js';
 import { desk } from '../js/ui/art/office.js';
 import { calendar } from '../js/ui/scenes/office.js';
 import { tabTitle } from '../js/ui/panels/status.js';
+import { workButton } from '../js/ui/panels/work.js';
 import { Format } from '../js/core/format.js';
 
 const SECOND = 1000;
@@ -45,28 +46,62 @@ test('the job is hybrid: the office Tuesday to Thursday, home Monday and Friday,
     });
 });
 
-test('work turns up after 30 seconds of allowance, saying where it happens today', () => {
+test('work turns up once the first pack has been bought, saying where it happens today', () => {
     for (const [day, place] of [['Tuesday', 'office'], ['Monday', 'home'], ['Saturday', 'off']]) {
         const game = newGame({ now: days[day] });
-        finishOpening(game, 'keep');
-        game.tick(days[day] + 29 * SECOND);
+        act(game, 'encounter.choose', { index: 0 });
+        sortCards(game, Rules.boxFinds.flyer);
         assert.equal(game.unlocked('work'), false);
-        game.tick(days[day] + 30 * SECOND);
-        assert.equal(newestMessage(game), Lines.job.unlocked[place](day), day);
+        buyFirst(game);
+        assert.ok(game.messages.some(message => message.text === Lines.job.unlocked[place](day)), day);
     }
 });
 
-test('on an office day, emails are answered at the office, then need a rest', () => {
+test('on an office day, emails are answered at the office, as fast as the player likes', () => {
     const game = gameOn('Tuesday');
     const before = game.state.wallet.cents;
     act(game, 'job.work', { at: 'office' });
     act(game, 'job.work', { at: 'office' });
-    assert.equal(game.state.wallet.cents, before + Rules.workPay, 'the second click is ignored while resting');
-    assert.equal(game.state.job.emailsAnswered, 1);
-
-    game.tick(game.time + Rules.workRest);
-    act(game, 'job.work', { at: 'office' });
+    assert.equal(game.state.wallet.cents, before + 2 * Rules.workPay);
     assert.equal(game.state.job.emailsAnswered, 2);
+});
+
+test('the inbox runs out, and fills up again over time, to a limit', () => {
+    const game = gameOn('Tuesday');
+    const { job } = game.state;
+    const cents = game.state.wallet.cents;
+    const waiting = job.inbox;
+    for (let email = 0; email < waiting + 5; email++) {
+        act(game, 'job.work', { at: 'office' });
+    }
+    assert.equal(job.inbox, 0);
+    assert.equal(game.state.wallet.cents, cents + waiting * Rules.workPay);
+
+    game.tick(job.inboxAt + Rules.emailEvery - 1);
+    assert.equal(job.inbox, 0);
+    game.tick(job.inboxAt + Rules.emailEvery);
+    assert.equal(job.inbox, 1);
+
+    game.catchUp(game.time + 24 * 60 * 60 * SECOND);
+    assert.equal(job.inbox, Rules.inboxCap);
+    assert.match(newestMessage(game), new RegExp(Lines.job.inboxAway(Rules.inboxCap)));
+});
+
+test('an empty inbox tells the player to go', () => {
+    const game = gameOn('Tuesday');
+    assert.ok(workButton(game, 'office').includes(Lines.job.answer(game.state.job.inbox)));
+    game.state.job.inbox = 0;
+    assert.ok(workButton(game, 'office').includes(Lines.job.inboxZero));
+    assert.ok(workButton(game, 'office').includes('disabled'));
+});
+
+test('a save from before the inbox starts with the backlog', () => {
+    const game = gameOn('Tuesday');
+    const save = JSON.parse(JSON.stringify(game.toSaveData()));
+    save.job.inbox = 0;
+    save.job.inboxAt = 0;
+    const loaded = newGame({ save, now: game.time });
+    assert.equal(loaded.state.job.inbox, Rules.inboxStart);
 });
 
 test('on a home day, emails are answered at home', () => {
@@ -142,8 +177,14 @@ test('from a background tab, the title counts the allowance building up, up to t
     assert.equal(tabTitle(game, later, page), Lines.job.stickyNote.title(Format.money(cents + owed), page));
 });
 
-test('nobody works from the wrong place, or on a day off', () => {
-    for (const [day, at, today] of [['Wednesday', 'home', 'office'], ['Monday', 'office', 'home'], ['Sunday', 'home', 'off']]) {
+test('on a day off, Linda emails anyway, and they are answered at home', () => {
+    const game = gameOn('Sunday');
+    act(game, 'job.work', { at: 'home' });
+    assert.equal(game.state.job.emailsAnswered, 1);
+});
+
+test('nobody works from the wrong place', () => {
+    for (const [day, at, today] of [['Wednesday', 'home', 'office'], ['Monday', 'office', 'home'], ['Sunday', 'office', 'off']]) {
         const game = gameOn(day);
         const cents = game.state.wallet.cents;
         act(game, 'job.work', { at });
@@ -200,7 +241,6 @@ test('Marcus from IT notices the desk, then asks the player to lunch', () => {
     assert.equal(game.state.job.coworker, 0, 'nothing on the desk to notice');
 
     act(game, 'collection.open', { kind: 'normal' });
-    game.tick(game.time + Rules.workRest);
     act(game, 'job.work', { at: 'office' });
     assert.equal(game.state.job.coworker, 1);
     assert.equal(newestMessage(game), Lines.job.coworker.notices);
@@ -235,11 +275,11 @@ test('packs are only opened at the desk on office days', () => {
     assert.equal(game.state.collection.packs.base.normal, 1);
 });
 
-test('a rest saved from a clock that ran ahead is cut short on load', () => {
+test('if the clock goes backwards, the inbox carries on from then', () => {
     const game = gameOn('Tuesday');
-    game.state.job.readyAt = game.time + 10 * 60 * SECOND;
-    const loaded = newGame({ save: JSON.parse(JSON.stringify(game.toSaveData())), now: game.time });
-    assert.ok(loaded.state.job.readyAt <= game.time + Rules.workRest);
+    game.state.job.inboxAt = game.time + 10 * 60 * SECOND;
+    game.tick(game.time);
+    assert.equal(game.state.job.inboxAt, game.time);
 });
 
 /**
