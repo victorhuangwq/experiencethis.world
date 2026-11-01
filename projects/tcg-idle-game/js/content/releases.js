@@ -35,7 +35,9 @@ export const Releases = [
         // twice as often
         id: 'the-box',
         notes: 'A note from the developer: Linda\'s emails pile up now, and you can answer them as fast as you like. The driver comes twice as often. Dale has started counting out loud.'
-    }
+    },
+    // A shorter box with something to find in it, and a brick at the bottom
+    { id: 'box-reveals', notes: null }
 ];
 
 export const currentRelease = Releases[Releases.length - 1];

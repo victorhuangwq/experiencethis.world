@@ -11,16 +11,17 @@ export const Opening = {
     ],
     takeOut: 'Take a card out',
     // Once the box is empty
-    value: (count, sorter) => [
+    value: (count, sorter, pile) => [
         sorter ? 'The SORT-O-MATIC stops. The box is empty.' : 'The box is empty.',
         `You look up all ${count} cards online.`,
         'Total value: $0.43.',
-        'There is a knock at the window. It is Benny, age 9, from next door.',
+        `There are ${pile} in the pile you would like to keep.`,
+        'There is a knock at the window. It is Benny, age 9, from next door. He is looking at the pile.',
         '"Three dollars for the box," says Benny. "Final offer."',
-        'It is the first offer.'
+        'It is the first offer. It is the one the box said it would be.'
     ],
     sell: 'Sell it to Benny',
     keep: 'Keep it',
-    sold: sorter => `Benny counts out three dollars in nickels. He flips through the first stack. "Sorted by type," he says. "Nice." He leaves without saying goodbye.${sorter ? ' The SORT-O-MATIC keeps running. It has nothing left to sort. It seems happy.' : ''} You find another box for your cards. This one says SHOES.`,
-    kept: count => `You put the lid back on. You sorted ${count} cards. You are not selling them for three dollars. "Your loss," says Benny. It is unclear whose loss it is.`
+    sold: sorter => `Benny counts out three dollars in nickels. He goes straight to the pile and takes one card out of it. He looks at it for a long time. He leaves without saying goodbye.${sorter ? ' The SORT-O-MATIC keeps running. It has nothing left to go through. It seems happy.' : ''} You find another box for your cards. This one says SHOES.`,
+    kept: pile => `You put your hand on the pile. ${pile} cards. You are not selling them for three dollars. "Your loss," says Benny. It is unclear whose loss it is. He is still looking at the pile. He leaves.`
 };

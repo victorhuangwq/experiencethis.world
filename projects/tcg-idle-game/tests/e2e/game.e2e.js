@@ -20,20 +20,35 @@ const slot = (page, label) => button(page, Lines.mall.buttons.slot(label, Lines.
 const newestMessage = page => page.locator('#log .message').first();
 
 /**
- * Sort cards out of the box by reading each one and pressing its stack
+ * Take cards out of the box
  */
-async function sortCards(page, count) {
+async function takeCards(page, count) {
     await page.evaluate(cards => {
         for (let card = 0; card < cards; card++) {
-            const type = document.querySelector('#scene p b').textContent.match(/(\w+)\.$/)[1];
-            document.querySelector(`[data-action="box.sort"][data-type="${type}"]`).click();
+            document.querySelector('[data-action="box.take"]').click();
         }
     }, count);
 }
 
+/**
+ * Take out everything that comes out by hand, then come back to a save
+ * with an empty box, as if the SORT-O-MATIC had finished it
+ */
+async function emptyBox(page) {
+    await takeCards(page, Rules.boxStuckAt);
+    const game = page.url();
+    await page.goto(new URL('/__blank', game).href);
+    await page.evaluate(cards => {
+        const save = JSON.parse(localStorage.getItem('critterClashSave'));
+        save.game.box.sorted = cards;
+        localStorage.setItem('critterClashSave', JSON.stringify(save));
+    }, Rules.boxCards);
+    await page.goto(game);
+}
+
 async function finishOpening(page, choice = 'sell') {
     await button(page, Lines.opening.takeOut).click();
-    await sortCards(page, Rules.boxCards);
+    await emptyBox(page);
     await button(page, choice === 'sell' ? `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})` : Lines.opening.keep).click();
 }
 
@@ -58,12 +73,12 @@ async function setTabHidden(page, hidden) {
     }, hidden);
 }
 
-browserTest('a new player sorts the box, and the machine, then the job, turn up', { time: Date.UTC(2026, 9, 27, 10) }, async (page) => {
+browserTest('a new player goes through the box, and the machine, then the job, turn up', { time: Date.UTC(2026, 9, 27, 10) }, async (page) => {
     await page.getByText(Lines.opening.arrival(Rules.boxCards)[3]).waitFor();
     await button(page, Lines.opening.takeOut).click();
     assert.equal(await page.locator('#locations button').count(), 0, 'only the box to begin with');
 
-    await sortCards(page, Rules.boxFinds.flyer);
+    await takeCards(page, Rules.boxFinds.flyer);
     await page.getByText(Lines.box.left(Rules.boxCards - Rules.boxFinds.flyer)).waitFor();
     assert.equal(await page.locator('[data-money]').textContent(), Format.money(Rules.birthdayMoney));
     await place(page, Lines.mall.name).click();

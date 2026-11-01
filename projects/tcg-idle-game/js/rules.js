@@ -7,15 +7,32 @@ import { SECOND, MINUTE, HOUR } from './core/time.js';
 
 export const Rules = {
     // The box from the player's childhood room: the cards under the dragon,
-    // and how many have been sorted when each thing turns up
-    boxCards: 249,
-    boxFinds: { checklist: 25, rare: 60, note: 80, birthday: 95, flyer: 100, library: 150, goblin: 200 },
+    // how many have come out when each thing turns up, and how many can come
+    // out by hand before the rest turns out to be stuck together
+    boxCards: 80,
+    boxStuckAt: 50,
+    boxFinds: {
+        tag: 2, iou: 4, tooth: 7, cereal: 9, contract: 12, bag: 15, note: 18, map: 21, birthday: 24, rare: 26,
+        flyer: 29, checklist: 32, photo: 35, sleeve: 38, receipt: 41, goblin: 44, letter: 47, stuck: 50,
+        library: 53, sticker: 57, corner: 61, captain: 65, knows: 69, mole: 73, three: 77
+    },
+    // The finds worth keeping: a card and its condition. Keeping the box
+    // keeps these and the dragon; the misprint matters much later.
+    boxCardFinds: {
+        iou: ['bathtub-snail', 3],
+        bag: ['lawn-crab', 2],
+        rare: ['puddle-kraken', 4],
+        sleeve: ['squirrels-in-a-trench-coat', 4],
+        goblin: ['wet-sock-gobln', 4],
+        captain: ['captain-bathwater', 3],
+        mole: ['moist-mole', 1]
+    },
     birthdayMoney: 500,
-    // The SORT-O-MATIC is advertised after this many emails, and sorts one
-    // card this often
+    // The SORT-O-MATIC is advertised after this many emails, and goes through
+    // one card this often
     sorterAfterEmails: 10,
     sorterPrice: 1500,
-    sorterEvery: 6 * SECOND,
+    sorterEvery: 30 * SECOND,
 
     // Money
     allowanceCentsPerSecond: 2,
@@ -117,7 +134,7 @@ export const Rules = {
     maxStrikes: 3,
 
     // Cards opened before Gus's store appears, with and without Pip's tip
-    gusWithTip: 100,
+    gusWithTip: 95,
     gusWithoutTip: 120,
     // Gus's store opens on this day of play (counting separate days)
     gusOpensOnDay: 2,

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, finishOpening, sortCards, buyFirst, START, newestMessage } from './helpers.js';
+import { newGame, act, finishOpening, takeCards, buyFirst, START, newestMessage } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 import { HOUR } from '../js/core/time.js';
@@ -37,7 +37,7 @@ test('keeping the shoebox keeps the misprint and the chewed dragon', () => {
 test('the job and the allowance come once the player is out of money', () => {
     const game = newGame();
     act(game, 'encounter.choose', { index: 0 });
-    sortCards(game, Rules.boxFinds.flyer);
+    takeCards(game, Rules.boxFinds.flyer);
     assert.equal(game.unlocked('work'), false, 'there is still a pack in the wallet');
     assert.equal(game.unlocked('allowance'), false);
     buyFirst(game);

@@ -32,7 +32,7 @@ export const ShoeboxEncounters = [
         start: game => {
             game.state.people.benny.met = true;
         },
-        text: game => Lines.opening.value(cardsInBox(), game.state.box.sorterAt > 0),
+        text: game => Lines.opening.value(cardsInBox(), game.state.box.sorterAt > 0, Box.pile(game)),
         choices: () => [
             {
                 label: `${Lines.opening.sell} (${Format.money(Rules.shoeboxOffer)})`,
@@ -43,12 +43,13 @@ export const ShoeboxEncounters = [
                 }
             },
             {
-                // Keeping it holds on to a misprint that matters much later
+                // Keeping it holds on to the pile, and a misprint in it that
+                // matters much later
                 label: Lines.opening.keep,
                 run: game => {
-                    Collection.add(game, Cards.shoeboxCards(game));
+                    Collection.add(game, Cards.shoeboxCards());
                     game.state.story.shoebox = 'kept';
-                    game.say(Lines.opening.kept(cardsInBox()));
+                    game.say(Lines.opening.kept(Box.pile(game)));
                 }
             }
         ]

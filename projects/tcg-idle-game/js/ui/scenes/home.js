@@ -11,8 +11,7 @@ import { Collection, bennyOffer } from '../../systems/collection.js';
 import { Wallet } from '../../systems/wallet.js';
 import { Job } from '../../systems/job.js';
 import { Box } from '../../systems/box.js';
-import { Catalog } from '../../content/catalog.js';
-import { storage, shoebox, stacks } from '../art/home.js';
+import { storage, shoebox } from '../art/home.js';
 import { escape, button, art } from '../html.js';
 import { renderCritters } from './critters.js';
 import { renderChecklists } from './checklist.js';
@@ -38,20 +37,23 @@ function renderGraded(game) {
 }
 
 /**
- * The box from the player's childhood room, with a card in hand and a
- * button for each type's stack
+ * The box from the player's childhood room: what last came out of it, and
+ * the button for the next card
  */
 function renderBox(game) {
     const box = game.state.box;
-    const card = Catalog.find(box.top);
+    const reveal = Box.reveal(game);
     const parts = [
         art(shoebox(['CARDS - DO NOT', 'TOUCH'])),
-        art(stacks(box.stacks)),
-        `<p class="muted">${escape(Lines.box.left(Box.left(game)))}</p>`
+        `<p class="muted">${escape(Lines.box.left(Box.left(game)))} ${escape(Lines.box.pile(Box.pile(game)))}</p>`
     ];
-    if (card) {
-        parts.push(`<p><b>${escape(Lines.box.inHand(card.name, card.type))}</b></p>`);
-        parts.push(`<p>${Catalog.types.map(type => button('box.sort', type, { args: { type } })).join(' ')}</p>`);
+    if (reveal) {
+        parts.push(`<p><b>${escape(reveal)}</b></p>`);
+    }
+    if (Box.canTake(game)) {
+        parts.push(`<p>${button('box.take', Lines.opening.takeOut)}</p>`);
+    } else if (box.sorterAt === 0) {
+        parts.push(`<p class="muted">${escape(Lines.box.stuckHint)}</p>`);
     }
     if (box.sorterAt > 0) {
         parts.push(`<p class="muted">${escape(Lines.box.sorterRunning)}</p>`);

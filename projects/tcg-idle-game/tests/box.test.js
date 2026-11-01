@@ -1,12 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newGame, act, sortCards, buyFirst, finishOpening, newestMessage, START } from './helpers.js';
+import { newGame, act, takeCards, emptyBox, buyFirst, finishOpening, newestMessage, START } from './helpers.js';
 import { Rules } from '../js/rules.js';
 import { Lines } from '../js/content/text/index.js';
 import { Catalog } from '../js/content/catalog.js';
 import { Box } from '../js/systems/box.js';
 import { Job } from '../js/systems/job.js';
 import { HomeScene } from '../js/ui/scenes/home.js';
+import { escape } from '../js/ui/html.js';
 
 const MINUTE = 60 * 1000;
 
@@ -22,7 +23,7 @@ function gameAtBox() {
  */
 function gameWithAdvert() {
     const game = gameAtBox();
-    sortCards(game, Rules.boxFinds.flyer);
+    takeCards(game, Rules.boxFinds.flyer);
     buyFirst(game);
     for (let email = 0; email < Rules.sorterAfterEmails; email++) {
         act(game, 'job.work', { at: Job.answeredAt(game) });
@@ -31,63 +32,97 @@ function gameWithAdvert() {
     return game;
 }
 
-test('the box arrives with the dragon on top, and a card is in hand', () => {
+test('the box arrives with the dragon on top, and the first card comes out', () => {
     const game = newGame();
     assert.ok(game.encounter().text(game).some(line => line.includes(`${Rules.boxCards} cards under it`)));
     act(game, 'encounter.choose', { index: 0 });
     const card = Catalog.find(game.state.box.top);
     assert.equal(card.rarity, 'common');
     assert.equal(card.set, 'base');
+    assert.equal(Box.reveal(game), Lines.box.junk(card.name, Lines.box.quirks[game.state.box.quirk]));
 });
 
-test('a card on the right stack is sorted, and the next comes out', () => {
+test('each click takes one card out and shows what it was', () => {
     const game = gameAtBox();
-    const { type } = Catalog.find(game.state.box.top);
-    sortCards(game, 1);
+    takeCards(game, 1);
     assert.equal(game.state.box.sorted, 1);
-    assert.equal(game.state.box.stacks[type], 1);
     assert.equal(Box.left(game), Rules.boxCards - 1);
+    const html = HomeScene.render(game, {});
+    assert.ok(html.includes(escape(Box.reveal(game))));
+    assert.ok(html.includes('box.take'));
 });
 
-test('a card on the wrong stack stays in hand, at no cost', () => {
-    const game = gameAtBox();
-    const { top } = game.state.box;
-    const wrong = Catalog.types.find(type => type !== Catalog.find(top).type);
-    act(game, 'box.sort', { type: wrong });
-    assert.equal(game.state.box.sorted, 0);
-    assert.equal(game.state.box.top, top);
-    assert.ok(Lines.box.wrong.includes(newestMessage(game)));
+test('every find has its text, turns up at its own card, and something is always close', () => {
+    const places = Object.values(Rules.boxFinds);
+    assert.deepEqual(places, [...places].sort((a, b) => a - b), 'in order');
+    assert.equal(new Set(places).size, places.length);
+    assert.ok(places[places.length - 1] < Rules.boxCards);
+    assert.ok(places.includes(Rules.boxStuckAt));
+    places.slice(1).forEach((place, index) => {
+        assert.ok(place - places[index] <= 5, `a find within 5 cards of card ${places[index]}`);
+    });
+    assert.deepEqual(Object.keys(Lines.box.finds), Object.keys(Rules.boxFinds));
+    for (const find of Object.keys(Rules.boxCardFinds)) {
+        assert.ok(find in Rules.boxFinds, find);
+    }
 });
 
-test('things turn up in order: the checklist, the money, then the machine', () => {
+test('a find shows in the box and in the log', () => {
     const game = gameAtBox();
-    const { checklist, birthday, flyer } = Rules.boxFinds;
-    sortCards(game, checklist - 1);
-    assert.ok(!game.messages.some(message => message.text === Lines.box.finds.checklist));
-    sortCards(game, 1);
-    assert.ok(game.messages.some(message => message.text === Lines.box.finds.checklist));
+    takeCards(game, Rules.boxFinds.tag);
+    assert.equal(Box.reveal(game), Lines.box.finds.tag);
+    assert.equal(newestMessage(game), Lines.box.finds.tag);
+});
 
-    sortCards(game, birthday - checklist - 1);
+test('things turn up in order: the money, the machine, then the checklist', () => {
+    const game = gameAtBox();
+    const { birthday, flyer, checklist } = Rules.boxFinds;
+    takeCards(game, birthday - 1);
     assert.equal(game.state.wallet.cents, 0);
-    sortCards(game, 1);
+    takeCards(game, 1);
     assert.equal(game.state.wallet.cents, Rules.birthdayMoney);
 
     assert.equal(game.unlocked('mall'), false);
-    sortCards(game, flyer - birthday);
+    takeCards(game, flyer - birthday);
     assert.ok(game.unlocked('mall'));
     assert.equal(game.unlocked('work'), false, 'not out of money yet');
+
+    assert.ok(!game.messages.some(message => message.text === Lines.box.finds.checklist));
+    takeCards(game, checklist - flyer);
+    assert.ok(game.messages.some(message => message.text === Lines.box.finds.checklist));
+});
+
+test('the bottom of the box will not come out by hand', () => {
+    const game = gameAtBox();
+    takeCards(game, Rules.boxCards);
+    assert.equal(game.state.box.sorted, Rules.boxStuckAt);
+    assert.equal(game.encounter(), null, 'no Benny yet');
+    assert.ok(game.messages.some(message => message.text === Lines.box.finds.stuck));
+    const html = HomeScene.render(game, {});
+    assert.ok(!html.includes('box.take'));
+    assert.ok(html.includes(escape(Lines.box.stuckHint)));
+});
+
+test('the pile counts what has been put to one side, and the dragon', () => {
+    const game = gameAtBox();
+    assert.equal(Box.pile(game), 1);
+    takeCards(game, Rules.boxFinds.iou);
+    assert.equal(Box.pile(game), 2);
+    const kept = gameAtBox();
+    emptyBox(kept);
+    assert.equal(Box.pile(kept), Object.keys(Rules.boxCardFinds).length + 1);
 });
 
 test('nothing but the box is on offer to begin with', () => {
     const game = gameAtBox();
     const html = HomeScene.render(game, {});
-    assert.ok(Catalog.types.every(type => html.includes(`data-type="${type}"`)));
+    assert.ok(html.includes('box.take'));
     assert.ok(!html.includes('job.work') && !html.includes('box.buySorter'));
 });
 
 test('the machine, then the job, then the SORT-O-MATIC', () => {
     const game = gameAtBox();
-    sortCards(game, Rules.boxFinds.flyer);
+    takeCards(game, Rules.boxFinds.flyer);
     buyFirst(game);
     assert.ok(game.unlocked('work'), 'the first pack leaves too little for a second');
     assert.equal(game.unlocked('sorter-ad'), false);
@@ -109,7 +144,6 @@ test('the SORT-O-MATIC costs money and sorts the box over time, even away', () =
     game.catchUp(game.time + 5 * Rules.sorterEvery);
     assert.equal(game.state.box.sorted, start + 6);
     assert.match(newestMessage(game), new RegExp(Lines.box.sorterAway(5)));
-    assert.equal(Object.values(game.state.box.stacks).reduce((sum, count) => sum + count), start + 6);
 });
 
 test('an empty box brings Benny, away or not, once nothing else is going on', () => {
@@ -127,9 +161,10 @@ test('an empty box brings Benny, away or not, once nothing else is going on', ()
     assert.ok(game.encounter().text(game).some(line => line.includes('$0.43')));
 });
 
-test('sorting the whole box by hand brings Benny too', () => {
+test('a save that has taken every card out brings Benny, even with no SORT-O-MATIC', () => {
     const game = gameAtBox();
-    sortCards(game, Rules.boxCards);
+    game.state.box.sorted = Rules.boxCards;
+    game.tick(game.time);
     assert.equal(game.encounter().id, 'shoebox-offer');
     assert.ok(!game.encounter().text(game).some(line => line.includes('SORT-O-MATIC')));
 });
@@ -159,7 +194,7 @@ test('deciding on the box with money left still leaves emails to answer, whereve
         for (const index of [0, 1]) {
             const game = newGame({ now: START + offset * 24 * 60 * 60 * 1000 });
             act(game, 'encounter.choose', { index: 0 });
-            sortCards(game, Rules.boxCards);
+            emptyBox(game);
             act(game, 'encounter.choose', { index });
 
             assert.ok(game.unlocked('work'), day);

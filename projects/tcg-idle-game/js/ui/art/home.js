@@ -7,17 +7,6 @@ import { Lines } from '../../content/text/index.js';
 import { wrap, edges, bottomEdge } from './cards.js';
 
 /**
- * The stacks of cards sorted out of the box, one line for each type
- * @param {Object} counts - How many cards are in each type's stack
- * @returns {string} - Art
- */
-export function stacks(counts) {
-    return Object.entries(counts)
-        .map(([type, count]) => Lines.box.stack(type, count, '|'.repeat(Math.ceil(count / 5))))
-        .join('\n');
-}
-
-/**
  * A shoebox. When it's overflowing, cards stick out of the top.
  * @param {Array} label - Two lines written on the side
  * @param {boolean} overflowing - Whether cards are spilling out

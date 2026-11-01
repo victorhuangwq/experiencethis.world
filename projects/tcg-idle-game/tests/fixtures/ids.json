@@ -296,7 +296,8 @@
         "save-upgrades",
         "act-2",
         "office-hours",
-        "the-box"
+        "the-box",
+        "box-reveals"
     ],
     "sets": [
         "base",

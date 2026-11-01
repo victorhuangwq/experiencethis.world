@@ -1,12 +1,14 @@
 /**
  * Box: the massive box of cards from the player's childhood room. The
- * chewed dragon is on top; the rest are sorted into a stack for each type,
- * one at a time, by hand or by the SORT-O-MATIC, which runs on the wall clock
- * and keeps going while the player is away. Things turn up along the way
- * (Rules.boxFinds), and an empty box brings Benny and his offer.
+ * chewed dragon is on top. Cards come out one at a time, most of them junk,
+ * and things turn up among them (Rules.boxFinds), some of them cards to put
+ * to one side (Rules.boxCardFinds). The bottom of the box is stuck together
+ * (Rules.boxStuckAt), and only the SORT-O-MATIC can get through it. It runs
+ * on the wall clock and keeps going while the player is away. An empty box
+ * brings Benny and his offer.
  *
- * The box's cards are bulk: they aren't added to the collection. What the
- * player keeps of it is decided by Benny's offer (shoebox.js).
+ * The junk isn't added to the collection. What the player keeps of the box
+ * is decided by Benny's offer (shoebox.js).
  */
 
 import { Format } from '../core/format.js';
@@ -19,12 +21,14 @@ export const Box = {
     id: 'box',
 
     defaults: () => ({
-        // Cards sorted so far, and how many are in each type's stack
+        // Cards out of the box so far
         sorted: 0,
-        stacks: { Fire: 0, Water: 0, Nature: 0 },
-        // The card in the player's hand, from the Base Set's commons
+        // The junk card last out, from the Base Set's commons, and what can
+        // be said about it (an index into Lines.box.quirks)
         top: null,
-        // The SORT-O-MATIC has sorted up to this time; 0 until it's bought
+        quirk: 0,
+        // The SORT-O-MATIC has gone through the box up to this time; 0 until
+        // it's bought
         sorterAt: 0
     }),
 
@@ -46,8 +50,36 @@ export const Box = {
     },
 
     /**
-     * The SORT-O-MATIC sorts what it has had time for, and an empty box
-     * brings Benny, as soon as nothing else is going on
+     * Whether a card can come out by hand
+     */
+    canTake(game) {
+        return Box.open(game) && !game.state.encounter && game.state.box.sorted < Rules.boxStuckAt;
+    },
+
+    /**
+     * What's come out worth keeping: the finds put to one side, and the dragon
+     */
+    pile(game) {
+        return 1 + Object.keys(Rules.boxCardFinds).filter(find => game.state.box.sorted >= Rules.boxFinds[find]).length;
+    },
+
+    /**
+     * What the last card out of the box was
+     * @returns {string|null} - Text, or null before the first card
+     */
+    reveal(game) {
+        const { sorted, top, quirk } = game.state.box;
+        const find = Object.keys(Rules.boxFinds).find(each => Rules.boxFinds[each] === sorted);
+        if (find) {
+            return Lines.box.finds[find];
+        }
+        const card = Catalog.find(top);
+        return card ? Lines.box.junk(card.name, Lines.box.quirks[quirk]) : null;
+    },
+
+    /**
+     * The SORT-O-MATIC goes through what it has had time for, and an empty
+     * box brings Benny, as soon as nothing else is going on
      */
     tick(game, now) {
         if (!Box.open(game)) {
@@ -64,7 +96,8 @@ export const Box = {
                 const count = Math.min(passes, Box.left(game));
                 if (count > 0) {
                     game.reportAway(Lines.box.sorterAway(count));
-                    Box.sort(game, Array.from({ length: count }, () => game.pick(Catalog.types)));
+                    Box.draw(game);
+                    Box.take(game, count);
                 }
             } else if (now < box.sorterAt) {
                 // The clock went backwards; start again from now
@@ -75,25 +108,23 @@ export const Box = {
     },
 
     /**
-     * Put a new card in the player's hand
+     * The next junk card out of the box
      */
     draw(game) {
         const commons = Catalog.inSet('base').filter(card => card.rarity === 'common');
         game.state.box.top = game.pick(commons).id;
+        game.state.box.quirk = game.randomInt(0, Lines.box.quirks.length - 1);
     },
 
     /**
-     * Add cards to their stacks, and find whatever was among them
+     * Take cards out of the box, and find whatever was among them
      * @param {Game} game - Game
-     * @param {Array} types - The type of each card
+     * @param {number} count - How many
      */
-    sort(game, types) {
+    take(game, count) {
         const box = game.state.box;
         const before = box.sorted;
-        for (const type of types) {
-            box.stacks[type]++;
-        }
-        box.sorted += types.length;
+        box.sorted += count;
 
         for (const [find, at] of Object.entries(Rules.boxFinds)) {
             if (before < at && box.sorted >= at) {
@@ -113,26 +144,19 @@ export const Box = {
 
     actions: {
         /**
-         * Put the card in hand on a type's stack. The wrong stack is not
-         * the end of the world, only of the card's trip there.
-         * @param {Object} args - type: the stack
+         * Take the next card out of the box
          */
-        sort(game, { type }) {
-            const box = game.state.box;
-            if (!Box.open(game) || game.state.encounter || Box.left(game) <= 0 || !box.top) {
+        take(game) {
+            if (!Box.canTake(game)) {
                 return;
             }
-            if (type !== Catalog.find(box.top).type) {
-                game.say(game.pick(Lines.box.wrong));
-                return;
-            }
-            Box.sort(game, [type]);
             Box.draw(game);
+            Box.take(game, 1);
             Box.checkEmpty(game);
         },
 
         /**
-         * Buy the SORT-O-MATIC, which sorts the rest of the box
+         * Buy the SORT-O-MATIC, which goes through the rest of the box
          */
         buySorter(game, args, now) {
             const box = game.state.box;
