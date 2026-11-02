@@ -38,6 +38,6 @@ bundle install
 bundle exec jekyll serve
 ```
 
-Preview at http://localhost:4000 on that machine. Build with `bundle exec jekyll build`.
+Preview at http://localhost:4000 on that machine. Build with `bundle exec jekyll build`. Google Analytics uses `google_analytics_4` in `_config.yml` and loads only in production (`JEKYLL_ENV=production bundle exec jekyll build`).
 
 [Agent instructions](AGENTS.md) · [License](LICENSE.md)
